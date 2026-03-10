@@ -4,11 +4,13 @@ import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
 import { getImage } from "astro:assets";
 import hideSeek1Raw from "../assets/screenshots/hide-and-seek-1.png";
-import hideSeek2 from "../assets/screenshots/hide-and-seek-2.png";
+import hideSeek2Raw from "../assets/screenshots/hide-and-seek-2.png";
 import endlessRunner1Raw from "../assets/screenshots/endless-runner-1.png";
-import endlessRunner2 from "../assets/screenshots/endless-runner-2.png";
+import endlessRunner2Raw from "../assets/screenshots/endless-runner-2.png";
 const hideSeek1 = await getImage({ src: hideSeek1Raw, format: "webp", width: 800 });
+const hideSeek2 = await getImage({ src: hideSeek2Raw, format: "webp", width: 800 });
 const endlessRunner1 = await getImage({ src: endlessRunner1Raw, format: "webp", width: 800 });
+const endlessRunner2 = await getImage({ src: endlessRunner2Raw, format: "webp", width: 800 });
 
 const recentPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
