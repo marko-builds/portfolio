@@ -1,8 +1,8 @@
 ---
-title: "How to Add a Game Loop to a Unity Endless Runner That Actually Keeps Players Engaged"
+title: "Unity Endless Runner Design Pivot: From Random Obstacles to Narrative Escape Game"
 date: "2026-03-11"
-excerpt: "My endless runner had solid systems but no reason to play. Here's why I scrapped the genre, what I learned from Temple Run, and what Relic Rush plans to become."
-tags: ["Unity", "endless-runner", "game-design", "game-loop", "procedural-generation", "Unity-C#"]
+excerpt: "My endless runner had solid systems but no reason to play. Here's why the loop wasn't working, what Temple Run got right, and what I rebuilt Relic Rush to be."
+tags: ["Unity", "game-design", "endless-runner", "narrative-design", "game-loop", "indie-game-dev"]
 draft: true
 ---
 
@@ -10,7 +10,7 @@ I built an endless runner for my thesis. The code was clean — object pooling, 
 
 ## The Game That Wasn't Working
 
-My thesis project started as a classic endless runner. Obstacles scrolled toward the player, the player dodged left and right, speed increased over time, and eventually it became impossible. I wrote about [building the object pooling system](/blog/object-pooling-endless-runner) for that game — the work was real and the lessons were useful. But every time I sat down to actually *play* it, I quit after about ninety seconds.
+My thesis project started as a classic endless runner. Obstacles scrolled toward the player, the player dodged left and right, speed increased over time, and eventually it became impossible. I wrote about [building the object pooling system](/blog/object-pooling-endless-runner) for that game — the work was real and the lessons were useful.
 
 Not because it was hard. Because there was nothing pulling me forward.
 
@@ -20,7 +20,7 @@ Playing my own game felt like the second thing.
 
 ## Why the Genre Wasn't Salvageable
 
-The problem wasn't execution — it was that the endless runner loop requires a specific context to work. It needs leaderboards, friends to compete against, or session-length sessions on mobile where the micro-tension of a near-miss is enough for a few minutes of commute. As a thesis project evaluated on its design decisions, none of those conditions exist. There's no leaderboard. There's no social pressure. There's no "just one more run" at 7am on a tram.
+The problem wasn't execution — it was that the endless runner loop requires a specific context to work. It needs leaderboards, friends to compete against, or session-length sessions on mobile where the micro-tension of a near-miss is enough for a few minutes of commute. As a thesis project evaluated on its design decisions, none of those conditions exist. There's no leaderboard, no social pressure, no "just one more run" at 7am on a tram.
 
 More importantly: "survive longer than last time" isn't a design conversation. There's no structure to analyse, no authored content to evaluate, no progression system to discuss. A thesis needs to demonstrate decisions, and an infinite random loop makes almost none.
 
@@ -32,7 +32,7 @@ The redesign started with one question: what does a runner feel like it's reachi
 
 Temple Run has a partial answer. You're fleeing something. You stole something. The world wants it back. That loop is more compelling than pure score-chasing because there's a *reason* you're running. The player isn't chasing a number — they're escaping with a prize. The run has a beginning, a middle, and an end that means something. You either got out or you didn't.
 
-That direction became the concept for Relic Rush: a **narrative escape runner**. Each run is a self-contained mission. You enter a biome, you pick up a relic, the environment reacts — traps trigger, a chaser activates, the world turns hostile — and you have to reach the exit alive within a time limit. Success reveals the artifact and its lore. Failure sends you back. The relic is the reason, and the escape is the game.
+That direction became the concept for Relic Rush: a **narrative escape runner**. Each run is a self-contained mission. You enter a biome, you pick up a relic, the environment reacts — traps trigger, a [chaser](/blog/enemy-ai-state-machine) activates, the world turns hostile — and you have to reach the exit alive within a time limit. Success reveals the artifact and its lore. Failure sends you back. The relic is the reason, and the escape is the game.
 
 The reference point for the player fantasy is Indiana Jones — a character who is brilliant and daring, always one step ahead of disaster, but only just. Near-misses feel earned because the character is skilled, not lucky. That framing shapes every system: obstacles have to be fair and readable so that deaths feel like mistakes. Chasers have to feel relentless so that reaching the exit feels like an escape and not just a finish line. Gadgets have to feel like field tools, not power-ups.
 
@@ -56,10 +56,20 @@ The scope is tiered. The MVP covers three biomes — Forest, Temple, Lava — wi
 
 ## What Changed in Practice
 
-The game's status on my portfolio changed from "completed" to "in development." That's the honest description. The systems from the original project — [object pooling](/blog/object-pooling-endless-runner), procedural chunk generation, event-driven architecture — carry over, but they're now foundations for something with more structure, not the product itself.
+The game's status on my portfolio changed from "completed" to "in development." The systems from the original project — [object pooling](/blog/object-pooling-endless-runner), procedural chunk generation, event-driven architecture — carry over, but they're now foundations for something with more structure, not the game's identity.
 
-Before writing more code, I've been writing design documents: a game concept document, a systems index, and individual GDDs for the player controller and obstacle system. That's new for me. Previous projects went straight from idea to implementation, which cost time on the original design because I built systems before I understood what the game was trying to do.
+Before writing more code, I've been writing design documents: a game concept document, a systems index, and individual GDDs for the player controller and obstacle system. That's new for me. Every previous project went straight to implementation. I built systems before I knew what the game was.
 
 The obstacle system redesign turned out to be the most consequential design decision so far. The original spawner placed obstacles randomly. The replacement uses a hand-authored pattern library — and the difference in how the game feels is not subtle. I cover that decision in detail in the [obstacle system redesign](/blog/relic-rush-obstacle-system).
 
-The game isn't done. It's not close to done. But for the first time, I know exactly what it's supposed to be.
+The game isn't done.
+
+## What I Learned
+
+**Genre fit is a deployment question.** The endless runner loop works in a specific context — mobile, social, short sessions. Evaluating a mechanic outside that context tells you nothing about whether the mechanic is good. I was blaming my design when I should have been questioning the genre's fit for the platform.
+
+**Writing design docs before code changed what I built.** On the original project, systems shaped the design. On Relic Rush, a game concept document shaped the systems. The resulting code is narrower and more intentional — less general, more purposeful.
+
+**A three-loop structure gives you a scope model for free.** Defining micro, meso, and macro loops explicitly made the MVP obvious: anything that doesn't serve all three loops is out of scope for the first version.
+
+But for the first time, I know exactly what it's supposed to be.

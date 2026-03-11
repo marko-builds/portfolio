@@ -2,7 +2,7 @@
 title: "Designing Fair Difficulty in Unity: From Random Spawning to a Hand-Authored Pattern System"
 date: "2026-03-11"
 excerpt: "Random obstacle placement felt unfair even when it wasn't. Here's how I replaced it with a ScriptableObject pattern library and weighted difficulty selection."
-tags: ["Unity", "ScriptableObject", "game-design", "obstacle-system", "difficulty-design", "endless-runner"]
+tags: ["unity-scriptableobject", "obstacle-spawning", "difficulty-scaling", "endless-runner-design", "pattern-library", "game-feel"]
 draft: true
 ---
 
@@ -16,7 +16,7 @@ It produced a game that was technically fair — at any given moment, at least o
 
 The subtler problem is that random placement makes the game unlearnable. Skilled players in action games improve by recognising patterns: they identify the setup, anticipate the sequence, respond before they even see the obstacle arrive. Random systems deny that entirely. There's no pattern to learn, no sequence to read ahead, no moment where experience creates a genuine near-miss. The player reacts to chaos indefinitely and never gets better at it. That undermines the core player fantasy for Relic Rush — the explorer who is *skilled*, not lucky.
 
-This is a documented problem in runner game design. Temple Run, Subway Surfers, and Alto's Adventure all use authored or semi-authored obstacle arrangements, not pure randomness. The perception of fairness is load-bearing.
+Temple Run, Subway Surfers, and Alto's Adventure all use authored or semi-authored arrangements — not because randomness is hard, but because perception of fairness is load-bearing.
 
 ## The Pattern Library
 
@@ -26,7 +26,7 @@ The replacement is a hand-authored pattern library. An obstacle **pattern** is a
 - The lane assignment and type of each obstacle
 - The Z spacing between obstacles within the sequence (in world units)
 - A difficulty rating: Easy, Medium, or Hard
-- Which player actions the pattern requires (used to gate patterns by mission progression)
+- Which player actions the pattern requires (used to gate patterns by mission progression — each run in Relic Rush is structured as a mission with mechanics that unlock progressively)
 - Biome tags (which biomes the pattern belongs to)
 
 The spawner selects patterns, not individual obstacles. Randomness applies to *which pattern runs next*, never to where individual obstacles go within it. The player still experiences variety — the order of patterns changes every run — but each obstacle makes sense relative to the one before it.
@@ -61,7 +61,7 @@ At runtime, the spawner picks the next pattern using a short filter chain:
 
 Step 3 is the repetition guard. Without it, the same pattern can fire twice in a row, which reads as a bug even when it isn't. Excluding the last two keeps the selection varied without needing a complex shuffle.
 
-The difficulty tier changes at checkpoints as the run progresses:
+The difficulty tier changes at checkpoints (fixed distances along the run that act as difficulty gates) as the run progresses:
 
 | Checkpoint Range | Active Tiers | Weights |
 |-----------------|--------------|---------|
@@ -77,7 +77,7 @@ Weights are normalised before selection. Hard patterns stay at 20% even at check
 
 Some failure modes need explicit prevention at selection time, not as tuning.
 
-**No consecutive Overhead patterns.** An Overhead obstacle requires the player to slide. After a slide, the player needs a moment in Running state before they can slide again — the collider height restores, the animation completes. Two Overheads back-to-back with no gap create a situation where the second one arrives before the player is physically able to respond. This is an unfair death. The selector rejects any choice that would place an Overhead immediately after another Overhead.
+**No consecutive Overhead patterns.** An Overhead obstacle requires the player to slide. After a slide, the player needs a moment in [Running state](/blog/enemy-ai-state-machine) before they can slide again — the collider height restores, the animation completes. Two Overheads back-to-back with no gap create a situation where the second one arrives before the player is physically able to respond. This is an unfair death. The selector rejects any choice that would place an Overhead immediately after another Overhead.
 
 **Action gating.** Missions introduce mechanics progressively. The first mission in a biome only requires left/right movement. Jump and slide are introduced at specific mission checkpoints. Any pattern tagged as requiring jump is excluded from selection until jump is introduced. This prevents new players from being killed by a mechanic they haven't been taught.
 
@@ -85,7 +85,7 @@ Some failure modes need explicit prevention at selection time, not as tuning.
 
 ## Telegraph Distance
 
-One more rule that isn't about pattern selection but is closely related: every obstacle must appear on screen far enough ahead that the player has time to react and respond.
+The original spawner spawned obstacles at a fixed Z offset. At high speeds, that was fine. At low speeds, it wasn't. Every obstacle must appear on screen far enough ahead that the player has time to read it and respond.
 
 Lead time varies with scroll speed:
 
@@ -102,7 +102,7 @@ minSpawnDistance = currentScrollSpeed × minimumLeadTime
 spawnZ = playerZ + minSpawnDistance
 ```
 
-The original spawner used a fixed spawn Z. At low speeds that was too close; at high speeds it was fine. The dynamic calculation means lead time is consistent regardless of how fast the run is going. At any speed, the player gets the same window to read the incoming obstacle and respond.
+The dynamic calculation means lead time is consistent regardless of how fast the run is going. At any speed, the player gets the same window to read the incoming obstacle and respond.
 
 ![Diagram showing minimum obstacle spawn distance at different scroll speeds in Relic Rush, illustrating 1.5–2.5 second lead time window for player reaction](/images/blog/relic-rush-obstacle-system/telegraph-distance-diagram.png)
 
@@ -110,8 +110,12 @@ The original spawner used a fixed spawn Z. At low speeds that was too close; at 
 
 The biggest shift in thinking was distinguishing **randomness in selection** from **randomness in placement**. The new system is still random — you never know which pattern is coming next. But the randomness operates at the authored-content level, not the individual-obstacle level. The player experiences variety without experiencing chaos.
 
-The trade-off is authoring cost. Eighteen to thirty patterns per biome, per three biomes, is 54–90 ScriptableObjects before MVP. That's a significant content investment compared to a spawner that generates itself. Whether the investment is worth it shows up in playtest: does the player feel like they're getting better? Do deaths generate understanding or frustration? Those answers justify the authoring time — or they don't, and the system needs another look.
+The trade-off is authoring cost. Eighteen to thirty patterns per biome, per three biomes, is 54–90 ScriptableObjects before MVP. That's a significant content investment compared to a spawner that generates itself. Whether the investment is worth it shows up in playtest: does the player feel like they're getting better? Do deaths generate understanding or frustration? Those answers justify the authoring time — or they don't, and the design reverts toward semi-authored generation with stricter placement rules.
+
+Safety rules are design, not tuning. The Overhead restriction and action gating aren't parameters to adjust — they're invariants. Putting them in code rather than in a spreadsheet makes that explicit.
+
+Dynamic spawn distance should have been in the original spawner. It's a one-line formula. The cost of not having it was every playtest at high speed feeling broken. The fix took less time than the debugging it would have prevented.
 
 The player controller redesign — adding jump, slide, and branching paths — is covered in the [Relic Rush redesign post](/blog/relic-rush-pivot) and will get its own technical breakdown once the implementation is done. The pooling system that manages obstacle prefabs is unchanged from what I [documented in the object pooling post](/blog/object-pooling-endless-runner); the pattern system sits on top of it.
 
-The pattern library is designed as a GDD first, implementation second. Nothing is built yet. Writing the acceptance criteria before touching code means I know exactly what "done" looks like — which is something the original spawner never had.
+Nothing is built yet — the pattern library exists as a GDD. Writing acceptance criteria before implementation means I know exactly what "done" looks like, which the original spawner never had.
