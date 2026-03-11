@@ -1,20 +1,12 @@
 ---
-title: "Zero-Allocation Object Pooling for an Endless Runner"
+title: "Fixing GC Allocation Spikes in Unity with a Queue-Based Object Pool"
 date: "2025-10-04"
 excerpt: "Why Instantiate/Destroy caused frame spikes in my Unity thesis project, how a Queue-based pool and a static PoolManager fixed it, and the trade-offs that came with that design."
-tags: ["Unity", "Performance"]
+tags: ["Unity", "C#", "Object Pooling", "GC Allocation", "Endless Runner", "Game Performance"]
 draft: false
 ---
 
-{/*
-TO ADD A NEW POST:
-
-1. Duplicate this file into src/content/blog/your-post-slug.mdx
-2. Update frontmatter: title, date, excerpt, tags
-3. Write content using h2/h3 headings (the // prefix is added by CSS)
-4. Set draft: false when ready to publish
-5. The post will appear automatically on /blog and the homepage teaser
-   */}
+`Instantiate` and `Destroy` are the obvious tools for spawning game objects. They're also a reliable source of frame spikes when you're calling them every few seconds. This post is about replacing them with a pool.
 
 ## The Problem
 
@@ -22,11 +14,13 @@ The first version of the Endless Runner spawned obstacles with `Instantiate()` a
 
 The cause is straightforward: `Instantiate` allocates memory for the new GameObject and all its components. `Destroy` doesn't free that memory immediately — it queues the object for destruction, and the garbage collector reclaims it later in a stop-the-world pause. The more objects you spawn and destroy per second, the more GC pressure you generate.
 
-The fix is an object pool: a pre-allocated collection of objects that you borrow and return instead of creating and destroying.
+The standard fix is an object pool — borrow objects instead of creating them, return instead of destroying.
+
+{/* IMAGE: Unity Profiler timeline showing GC allocation spikes before pooling vs. flat allocation line after. Alt: "Unity Profiler timeline showing GC allocation spikes eliminated after implementing Queue-based object pool" */}
 
 ## The Pool Implementation
 
-The project uses a non-generic, `Queue<GameObject>`-based pool. Each pool manages one prefab type, and a static `PoolManager` maps prefab references to their pools.
+The goal was a single allocation site at startup with zero allocations during normal gameplay. The project uses a non-generic, `Queue<GameObject>`-based pool. Each pool manages one prefab type, and a static `PoolManager` maps prefab references to their pools.
 
 ```cs
 // ObjectPooling/ObjectPool.cs
@@ -69,7 +63,7 @@ public class ObjectPool
 }
 ```
 
-`PooledObject` is a lightweight MonoBehaviour tag that holds a reference back to its pool. This lets any component on the object return itself without knowing about `PoolManager`:
+`PooledObject` is a lightweight MonoBehaviour tag that holds a reference back to its pool. This lets any component on the object return itself without knowing about `PoolManager` — obstacles don't need to know which pool they came from, they just call `Release()` on themselves:
 
 ```cs
 // ObjectPooling/PooledObject.cs
@@ -88,7 +82,7 @@ public class PooledObject : MonoBehaviour
 }
 ```
 
-`PoolManager` is a static class that initialises pools at scene load and serves as the single access point:
+A static `PoolManager` initialises pools at scene load and is the only place that hands out or takes back objects:
 
 ```cs
 // ObjectPooling/PoolManager.cs
@@ -121,16 +115,26 @@ public static class PoolManager
 }
 ```
 
-`Chunk.OnEnable()` calls `PoolManager.Get()` to populate its obstacle slots; `Chunk.OnDisable()` calls `GetComponent<PooledObject>().Release()` on each obstacle, returning them to their respective pools.
+Chunks are the scrolling world segments that make up the endless runner — each one populates a fixed set of obstacle slots when it enters the camera view. `Chunk.OnEnable()` calls `PoolManager.Get()` to populate its obstacle slots; `Chunk.OnDisable()` calls `GetComponent<PooledObject>().Release()` on each obstacle, returning them to their respective pools. How those obstacle slots are defined and selected is covered in [the obstacle system post](/blog/relic-rush-obstacle-system).
+
+{/* IMAGE: Unity Scene Hierarchy showing pooled obstacle GameObjects parented under a PoolManager container Transform. Alt: "Unity Scene Hierarchy showing pooled obstacle GameObjects under a PoolManager parent Transform" */}
 
 ## Results
 
 With the pool in place, the GC allocation during chunk population dropped to near-zero after the initial warm-up. The pool pre-allocates enough objects at startup to cover the maximum number of obstacles visible at any time. Beyond that point, `Instantiate` is only called on a cache miss — which doesn't happen during normal gameplay if the initial size is set correctly.
 
-The frame time spikes from GC collection disappeared.
+On the same test sequence that previously caused visible hitches, frame time was flat.
+
+{/* IMAGE: Unity Profiler frame time graph after pooling, showing stable frame times with no GC spikes. Alt: "Unity Profiler frame time graph showing stable frame times after object pool implementation" */}
 
 ## What I Learned
 
 The biggest trade-off is **pool sizing**. If you pre-allocate too few objects, you get cache misses and fall back to `Instantiate` — defeating the purpose. If you pre-allocate too many, you waste memory on objects that are never used. The right number depends on the maximum concurrent active count, which you need to measure or calculate from your spawn rates.
 
 The design I'd change is **`PoolManager` being static**. A static class can't be injected or mocked, which makes `ObstacleSpawner` untestable in isolation — any test that exercises spawning implicitly exercises the pool. A non-static `IPoolManager` interface with a concrete implementation would let me inject a fake pool in tests and verify spawn logic independently of pooling logic.
+
+**`PooledObject` as a self-release tag removes coupling in the right direction.** Obstacles don't need to know which pool they came from or how to call `PoolManager` — they call `Release()` on themselves. That's a useful pattern beyond pooling: components that clean themselves up without needing an external manager.
+
+**`GetComponentsInChildren<PooledObject>(true)` on release is an implicit contract.** If a parent obstacle has pooled child objects — particles, debris — they get returned automatically. But if a child outlives its parent between `OnDisable` and `Release`, you get a double-release. Worth knowing before you rely on this with complex prefabs.
+
+The pool is boring infrastructure now, which means it's doing its job.

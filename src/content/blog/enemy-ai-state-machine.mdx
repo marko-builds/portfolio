@@ -1,8 +1,8 @@
 ---
-title: "Building an Enemy AI State Machine in Unity"
+title: "Replacing a Monolithic Update Loop with an IState Machine in Unity"
 date: "2025-11-12"
-excerpt: "How I replaced a tangled update loop with a generic IState/StateMachine pattern — and what I learned about allocation, separation of concerns, and designing for change."
-tags: ["Unity", "Architecture"]
+excerpt: "How I replaced a tangled update loop with a generic IState/StateMachine pattern — what I learned about GC allocation, coupling, and designing for change."
+tags: ["Unity", "C#", "IState", "StateMachine", "NavMesh", "GC Allocation"]
 draft: false
 ---
 
@@ -16,15 +16,19 @@ TO ADD A NEW POST:
 5. The post will appear automatically on /blog and the homepage teaser
    */}
 
+When the enemy's Chase→Patrol transition started misfiring because two branches shared a variable, I knew the update loop had to go.
+
 ## The Problem
 
-The first version of the Hide & Seek enemy was a single `Update()` method with a chain of `if/else` blocks. Patrol logic, detection checks, chase behaviour, and navigation calls were all in one place. Every time I added a new behaviour — a search phase, an alert scan — the method grew, and changing one behaviour meant carefully reading the whole thing to understand what it might break.
+The first version of the Hide & Seek enemy — the pattern I later carried into Relic Rush — was a single `Update()` method with a chain of `if/else` blocks. Patrol logic, detection checks, chase behaviour, and navigation calls were all in one place. Adding a search phase or alert scan meant the method grew — and changing any branch required reading the entire function to understand what else it might affect.
 
-When I added the Search state, the Chase→Patrol transition started firing incorrectly because both branches read from the same _lastKnownPosition variable. Fixing one broke the other. That was the moment I stopped adding to the function and started replacing it.
+When I added the Search state, the Chase→Patrol transition started firing incorrectly because both branches read from the same `_lastKnownPosition` variable. Fixing one broke the other. That was the moment I stopped adding to the function and started replacing it.
 
 The problem isn't just readability. A monolithic update loop has hidden coupling: the `chase` branch reads variables set by the `patrol` branch, transition conditions are scattered across the function, and there's no clear moment where one behaviour ends and another begins. Any new state has to understand all the other states to slot in correctly.
 
 ## The IState Interface
+
+The core problem with the monolithic loop was shared mutable state — two branches reading and writing the same variables with no clear ownership. Extracting each behaviour into its own class removes that: each state owns its variables, and no other state can touch them.
 
 The solution was to extract each behaviour into its own class implementing a three-method interface. Each state owns its entry logic, its per-frame update, and its exit cleanup — nothing more.
 
@@ -39,6 +43,8 @@ public interface IState
 ```
 
 `Enter()` runs once when a state becomes active — a good place to set NavMesh destinations, start animations, or reset local timers. `Tick()` runs every frame from the owner's `Update()`. `Exit()` cleans up before the next state takes over.
+
+`BaseState` is an abstract class implementing `IState` with empty default methods — concrete states only override what they need.
 
 A concrete state looks like this:
 
@@ -78,11 +84,16 @@ public class EnemyPatrolState : BaseState
 }
 ```
 
-The state doesn't know about other states. It reads from `EnemyController` (which owns the suspicion meter, navigation wrapper, and shared data) and calls `_enemy.ChangeState(...)` when it decides to transition. The controller is a dumb service locator — it exposes subsystems and delegates all behaviour decisions to the active state.
+`SuspicionMeter` tracks how aware the enemy is of the player — `SeekState.Alert` means it has confirmed the player's position and is ready to chase. Waypoints are serialized `Transform` references on `EnemyController`, set in the Unity Inspector per-enemy.
+
+{/* IMAGE: Unity Inspector showing EnemyController with navigation wrapper, suspicion meter, and waypoint array
+    Alt: "Unity Inspector showing EnemyController with navigation wrapper, suspicion meter, and waypoint array" */}
+
+Adding a new state means writing one new class. Nothing else changes.
 
 ## State Transitions
 
-`StateMachine` manages the active state and drives transitions:
+`EnemyController` is a passive hub: it holds references to subsystems and passes itself to each state — states decide what to do with those references. `StateMachine` manages the active state and drives transitions:
 
 ```cs
 // Infrastructure/StateMachine/StateMachine.cs
@@ -103,8 +114,20 @@ public class StateMachine
 
 `EnemyController` owns one `StateMachine`, calls `Tick()` from `Update()`, and exposes a `ChangeState(IState)` wrapper so states can trigger transitions. The machine doesn't know what the states are — it only knows the `IState` interface.
 
+{/* IMAGE: Enemy AI state graph showing transitions between Patrol, Alert, and Chase states in Unity
+    Alt: "Enemy AI state graph showing transitions between Patrol, Alert, and Chase states in Unity" */}
+
 ## What I Learned
 
-The biggest practical benefit wasn't cleanliness — it was **testability**. Each state is a plain C# class with no MonoBehaviour dependency. I can instantiate `EnemyPatrolState` in a unit test, feed it a mock `EnemyController`, and verify that it transitions when suspicion crosses the threshold. That's impossible with a monolithic update method.
+The biggest practical benefit wasn't cleanliness — it was **testability**. Each state is a plain C# class with no MonoBehaviour dependency. I can instantiate `EnemyPatrolState` in a unit test, feed it a mock `EnemyController`, and verify that it transitions when suspicion crosses the threshold. With a monolithic method, there's no clean seam to inject a mock — the logic and the dependencies are fused.
 
-The thing I'd do differently: **pre-allocate states at `Awake()`** rather than calling `new EnemyChaseState(this)` on every transition. Each call allocates a new heap object. With six states and frequent transitions, this generates GC pressure. Creating all six states once at startup and passing them by reference eliminates that entirely.
+The thing I'd do differently: **pre-allocate states at `Awake()`** rather than calling `new EnemyChaseState(this)` on every transition. Each call allocates a new heap object. With six states and frequent transitions, this generates GC pressure. Creating all six states once at startup and passing them by reference eliminates that entirely. I tackle a related allocation problem differently in the [object pooling post](/blog/object-pooling-endless-runner).
+
+{/* IMAGE: Unity Profiler memory view comparing GC allocations before and after pre-allocating enemy AI states
+    Alt: "Unity Profiler memory view comparing GC allocations before and after pre-allocating enemy AI states" */}
+
+**State as the unit of change.** When requirements changed — adding a `Search` state between `Chase` and `Patrol` — the existing states were untouched. The cost of change stayed local to the new file. That's the property worth naming: not cleanliness, but isolation.
+
+**`EnemyController` as a contract, not a god object.** Passing the full controller into each state felt wrong at first. What stopped it from becoming a god object is that states only *read* from it — they don't *write* to shared fields. That discipline has to be maintained manually; the compiler won't enforce it.
+
+The pattern scales — every new behaviour is a new file, not a new risk to existing code.
