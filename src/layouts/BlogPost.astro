@@ -49,6 +49,19 @@ const articleSchema = {
   </Fragment>
 
     <style is:global>
+      /* ── Reading progress bar ── */
+      #reading-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: var(--color-accent);
+        z-index: 10000;
+        pointer-events: none;
+        will-change: width;
+      }
+
       /* ── Code blocks ── */
       pre code.hljs {
         background: #141414;
@@ -213,6 +226,9 @@ const articleSchema = {
     </style>
 
 
+    <!-- ─── READING PROGRESS BAR ────────────────────────────────────────── -->
+    <div id="reading-progress" aria-hidden="true"></div>
+
     <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
     <header class="fixed top-0 inset-x-0 z-50 border-b border-[#1F1F1F]/60 bg-[#0D0D0D]/80 backdrop-blur-md">
       <nav class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
@@ -326,6 +342,36 @@ const articleSchema = {
     </footer>
 
     <script>
+      // ── Reading progress bar ──────────────────────────────────────────────
+      (function () {
+        const bar = document.getElementById('reading-progress');
+        const article = document.querySelector('article.prose');
+        if (!bar || !article) return;
+
+        let ticking = false;
+
+        function updateProgress() {
+          const rect = article.getBoundingClientRect();
+          const articleDocTop = rect.top + window.scrollY;
+          const scrollable = articleDocTop + article.offsetHeight - window.innerHeight;
+          const progress = scrollable > 0
+            ? Math.min(Math.max(window.scrollY / scrollable, 0), 1)
+            : 0;
+          bar.style.width = (progress * 100) + '%';
+          ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(updateProgress);
+            ticking = true;
+          }
+        }, { passive: true });
+
+        // Set initial state
+        updateProgress();
+      })();
+
       // Normalise MDX fence language class so hljs uses the full grammar
       document.querySelectorAll('code.language-cs').forEach(el => {
         el.classList.remove('language-cs');
