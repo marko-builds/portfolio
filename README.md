@@ -1,79 +1,50 @@
-<h1 align="center">Marko Stankovic</h1>
-<h3 align="center">I think in systems first and reach for the engine second.</h3>
-<h4 align="center">Game Developer · Unity 3D · Unreal Engine · Godot · Serbia</h4>
+# markostankovic.org
 
-<p align="center">
-  <a href="mailto:contact@markostankovic.org">contact@markostankovic.org</a> ·
-  <a href="https://markostankovic.org">markostankovic.org</a> ·
-  <a href="https://www.linkedin.com/in/markostankovic-gamedev/">LinkedIn</a>
-</p>
+Personal portfolio site for [Marko Stankovic](https://markostankovic.org) — game developer based in Serbia.
 
-<p align="center">
-  🔍 Open to junior/mid game developer roles — remote or Serbia-based
-</p>
+→ **[markostankovic.org](https://markostankovic.org)**
 
 ---
 
-## About
+## Stack
 
-I build games with Unity 3D, Unreal Engine, and Godot. My background is in C# and game systems architecture — enemy AI, procedural generation, editor tooling — with 3+ years focused primarily on Unity.
-
-Currently working on a 3D hide-and-seek game with a full enemy AI state machine (Idle / Patrol / Chase / Investigate / Search) and a procedurally generated Endless Runner with object pooling and event-driven architecture.
-
-🛠 Currently: Adding FOV-based detection and sound propagation to the hide & seek AI
-
----
-
-## Skills
-
-![Unity](https://img.shields.io/badge/Unity-000000?style=for-the-badge&logo=unity&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
-![Unreal Engine](https://img.shields.io/badge/Unreal_Engine-0E1128?style=for-the-badge&logo=unrealengine&logoColor=white)
-![Godot](https://img.shields.io/badge/Godot-478CBF?style=for-the-badge&logo=godot-engine&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+- **[Astro](https://astro.build)** — static site framework
+- **MDX** — content collections for devlog and project pages
+- **Formspree** — contact form
+- **Vercel** — deployment and hosting
 
 ---
 
-## Featured Projects
+## Project structure
 
-### Hide & Seek — Unity 3D
-A top-down 3D stealth game built around a custom enemy AI system.
-
-- **AI state machine** — `IEnemyState` interface with Idle, Patrol, Chase, Investigate, and Search states
-- **NavMesh pathfinding** — `NavMeshAgent` with dynamic target tracking and area-based patrol routes
-- **Player controller** — Rigidbody-based movement with Cinemachine third-person camera
-- **Editor tooling** — custom Unity Editor scripts for level layout and AI waypoint placement
-
-[View Repository →](#)
-
----
-
-### Endless Runner — Unity 3D
-A 3rd-person 3D runner with systems designed for performance and extensibility.
-
-- **Procedural generation** — modular chunk system for levels, obstacles, and environment variation
-- **Object pooling** — pooled obstacles, VFX, and SFX to keep GC pressure low
-- **Lane-based movement** — smooth input-driven lane switching with Cinemachine follow camera
-- **Event-driven architecture** — decoupled systems communicating via C# events
-
-[View Repository →](#)
+```
+src/
+├── components/       # reusable UI components
+├── content/          # MDX content collections (devlog, projects)
+├── layouts/          # page layouts
+├── pages/            # routes
+└── styles/           # global CSS
+public/               # static assets
+```
 
 ---
 
-## Work Experience
+## Running locally
 
-**Unity Developer (Remote)** — Contract *(2025)*
-Developed gameplay features and maintained existing Unity codebases. Worked across the full development cycle from prototyping to build delivery.
+```bash
+npm install
+npm run dev
+```
 
-**Game Developer Intern — Inlustris Studio** *(2024)*
-Contributed to Unity 3D projects in a studio environment. Gained experience with team workflows, version control in production, and shipping game builds.
+Runs at `http://localhost:4321`
+
+```bash
+npm run build    # production build
+npm run preview  # preview production build locally
+```
 
 ---
 
-## Contact
+## License
 
-- **Email:** [contact@markostankovic.org](mailto:contact@markostankovic.org)
-- **Portfolio:** [markostankovic.org](https://markostankovic.org)
-- **LinkedIn:** [linkedin.com/in/markostankovic-gamedev](https://www.linkedin.com/in/markostankovic-gamedev/)
+Code is MIT licensed. Content and design are not for reuse.
