@@ -544,10 +544,114 @@ const personSchema = {
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Endless Runner -->
+          <article
+            class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-cyan-800/50 transition-colors duration-150 flex flex-col"
+            style="--card-glow: rgba(34,211,238,0.1); --delay: 0ms"
+            data-tags="Proc Gen,Object Pooling,Event-Driven,Utility Scripts,Lane Movement,C#"
+            data-screenshots={`${endlessRunner1.src},${endlessRunner2.src}`}
+          >
+            <!-- 16:9 thumbnail -->
+            <div
+              class="thumb-wrap w-full aspect-video shrink-0 cursor-pointer relative"
+              role="button"
+              tabindex="0"
+              aria-label="Open Endless Runner screenshots"
+            >
+              <video
+                class="w-full h-full object-cover"
+                autoplay
+                loop
+                muted
+                playsinline
+                preload="none"
+                poster={endlessRunner1.src}
+              >
+                <source
+                  src="/assets/thumbnails/endless-runner-thumb.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+
+            <!-- Card content -->
+            <div class="p-8 flex flex-col flex-1">
+              <header class="flex items-start justify-between mb-5">
+                <span
+                  class="text-xs font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1 rounded-full"
+                >
+                  Completed
+                </span>
+                <span class="text-xs text-[#666666] font-mono">Unity 3D</span>
+              </header>
+
+              <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">
+                Endless Runner
+              </h3>
+
+              <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
+                Third-person 3D runner with infinite levels. Chunk-based
+                procedural generation spawns terrain, obstacles, and
+                collectibles at runtime. Object pooling handles obstacles, VFX,
+                and SFX with zero allocations during play. Event-driven
+                architecture keeps all systems decoupled. Lane-based movement
+                with Cinemachine camera.
+              </p>
+
+              <div class="flex flex-wrap gap-2 mb-6">
+                {
+                  [
+                    "Proc Gen",
+                    "Object Pooling",
+                    "Event-Driven",
+                    "Utility Scripts",
+                    "Lane Movement",
+                    "C#",
+                  ].map((tag) => (
+                    <span class="project-tag text-xs bg-[#1F1F1F] text-[#888888] px-2 py-1 rounded">
+                      {tag}
+                    </span>
+                  ))
+                }
+              </div>
+
+              <!-- CTAs -->
+              <div class="flex flex-wrap gap-3">
+                <a
+                  href="https://github.com/Idzuo32/DiplomskiRad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#1F1F1F] hover:border-[#888888] text-sm text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150 min-h-[44px]"
+                >
+                  View on GitHub
+                  <svg
+                    class="arrow w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
+                <a
+                  href="/projects/endless-runner"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00FFC8]/10 hover:bg-[#00FFC8]/20 text-[#00FFC8] border border-[#00FFC8]/20 text-sm transition-colors duration-150 min-h-[44px]"
+                >
+                  View Details →
+                </a>
+              </div>
+            </div>
+          </article>
+
           <!-- Hide & Seek -->
           <article
             class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-violet-800/50 transition-colors duration-150 flex flex-col"
-            style="--card-glow: rgba(139,92,246,0.1); --delay: 0ms"
+            style="--card-glow: rgba(139,92,246,0.1); --delay: 150ms"
             data-tags="Data-Driven,State Machine,Strategy Pattern,Hiding System,Detection System"
             data-screenshots={`${hideSeek1.src},${hideSeek2.src}`}
           >
@@ -643,110 +747,6 @@ const personSchema = {
                 </a>
                 <a
                   href="/projects/hide-and-seek"
-                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00FFC8]/10 hover:bg-[#00FFC8]/20 text-[#00FFC8] border border-[#00FFC8]/20 text-sm transition-colors duration-150 min-h-[44px]"
-                >
-                  View Details →
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- Endless Runner -->
-          <article
-            class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-cyan-800/50 transition-colors duration-150 flex flex-col"
-            style="--card-glow: rgba(34,211,238,0.1); --delay: 150ms"
-            data-tags="Proc Gen,Object Pooling,Event-Driven,Utility Scripts,Lane Movement,C#"
-            data-screenshots={`${endlessRunner1.src},${endlessRunner2.src}`}
-          >
-            <!-- 16:9 thumbnail -->
-            <div
-              class="thumb-wrap w-full aspect-video shrink-0 cursor-pointer relative"
-              role="button"
-              tabindex="0"
-              aria-label="Open Endless Runner screenshots"
-            >
-              <video
-                class="w-full h-full object-cover"
-                autoplay
-                loop
-                muted
-                playsinline
-                preload="none"
-                poster={endlessRunner1.src}
-              >
-                <source
-                  src="/assets/thumbnails/endless-runner-thumb.mp4"
-                  type="video/mp4"
-                />
-              </video>
-            </div>
-
-            <!-- Card content -->
-            <div class="p-8 flex flex-col flex-1">
-              <header class="flex items-start justify-between mb-5">
-                <span
-                  class="text-xs font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1 rounded-full"
-                >
-                  Completed
-                </span>
-                <span class="text-xs text-[#666666] font-mono">Unity 3D</span>
-              </header>
-
-              <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">
-                Endless Runner
-              </h3>
-
-              <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
-                Third-person 3D runner with infinite levels. Chunk-based
-                procedural generation spawns terrain, obstacles, and
-                collectibles at runtime. Object pooling handles obstacles, VFX,
-                and SFX with zero allocations during play. Event-driven
-                architecture keeps all systems decoupled. Lane-based movement
-                with Cinemachine camera.
-              </p>
-
-              <div class="flex flex-wrap gap-2 mb-6">
-                {
-                  [
-                    "Proc Gen",
-                    "Object Pooling",
-                    "Event-Driven",
-                    "Utility Scripts",
-                    "Lane Movement",
-                    "C#",
-                  ].map((tag) => (
-                    <span class="project-tag text-xs bg-[#1F1F1F] text-[#888888] px-2 py-1 rounded">
-                      {tag}
-                    </span>
-                  ))
-                }
-              </div>
-
-              <!-- CTAs -->
-              <div class="flex flex-wrap gap-3">
-                <a
-                  href="https://github.com/Idzuo32/DiplomskiRad"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#1F1F1F] hover:border-[#888888] text-sm text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150 min-h-[44px]"
-                >
-                  View on GitHub
-                  <svg
-                    class="arrow w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                  </svg>
-                </a>
-                <a
-                  href="/projects/endless-runner"
                   class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00FFC8]/10 hover:bg-[#00FFC8]/20 text-[#00FFC8] border border-[#00FFC8]/20 text-sm transition-colors duration-150 min-h-[44px]"
                 >
                   View Details →
