@@ -6,21 +6,19 @@ tags: ["Unity", "C#", "Object Pooling", "GC Allocation", "Endless Runner", "Game
 draft: false
 ---
 
-`Instantiate` and `Destroy` are the obvious tools for spawning game objects. They're also a reliable source of frame spikes when you're calling them every few seconds. This post is about replacing them with a pool.
+`Instantiate` and `Destroy` are the obvious tools for spawning game objects. They're also a reliable source of frame spikes when you're calling them every few seconds.
 
 ## The Problem
 
-The first version of the Endless Runner spawned obstacles with `Instantiate()` and removed them with `Destroy()`. On a modern PC the frame times looked fine — but Unity's profiler told a different story. Every time a new chunk scrolled into view and populated its obstacle slots, there was a GC allocation spike. On lower-end devices (the kind that actually run mobile games) those spikes turned into visible hitches.
+The first version of the Endless Runner spawned obstacles with `Instantiate()` and removed them with `Destroy()`. Each chunk is a scrolling world segment that populates a set of obstacle slots when it enters the camera view, then clears them when it exits. On a modern PC the frame times looked fine — but Unity's profiler told a different story. Every time a new chunk scrolled into view and populated its obstacle slots, there was a GC allocation spike. On lower-end devices those spikes turned into visible hitches.
 
-The cause is straightforward: `Instantiate` allocates memory for the new GameObject and all its components. `Destroy` doesn't free that memory immediately — it queues the object for destruction, and the garbage collector reclaims it later in a stop-the-world pause. The more objects you spawn and destroy per second, the more GC pressure you generate.
-
-The standard fix is an object pool — borrow objects instead of creating them, return instead of destroying.
+The cause is straightforward: `Instantiate` allocates memory for the new GameObject and all its components. `Destroy` doesn't free that memory immediately — it queues the object for destruction, and the garbage collector reclaims it later in a stop-the-world pause. The more objects you spawn and destroy per second, the more GC pressure you generate. In an endless runner where chunks stream continuously, that pressure compounds.
 
 {/* IMAGE: Unity Profiler timeline showing GC allocation spikes before pooling vs. flat allocation line after. Alt: "Unity Profiler timeline showing GC allocation spikes eliminated after implementing Queue-based object pool" */}
 
 ## The Pool Implementation
 
-The goal was a single allocation site at startup with zero allocations during normal gameplay. The project uses a non-generic, `Queue<GameObject>`-based pool. Each pool manages one prefab type, and a static `PoolManager` maps prefab references to their pools.
+The goal was a single allocation site at startup with zero allocations during normal gameplay. A `Queue<GameObject>` rather than a generic `Pool<T>` keeps it simple — every pooled object in this project is a `GameObject`, so the type parameter buys nothing. Each pool manages one prefab type; a static `PoolManager` maps prefab references to their pools.
 
 ```cs
 // ObjectPooling/ObjectPool.cs
@@ -63,7 +61,7 @@ public class ObjectPool
 }
 ```
 
-`PooledObject` is a lightweight MonoBehaviour tag that holds a reference back to its pool. This lets any component on the object return itself without knowing about `PoolManager` — obstacles don't need to know which pool they came from, they just call `Release()` on themselves:
+`PooledObject` is a component tag that holds a reference back to its pool. Obstacles call `Release()` on themselves — they don't need to know which pool they came from or how to reach `PoolManager`:
 
 ```cs
 // ObjectPooling/PooledObject.cs
@@ -115,23 +113,15 @@ public static class PoolManager
 }
 ```
 
-Chunks are the scrolling world segments that make up the endless runner — each one populates a fixed set of obstacle slots when it enters the camera view. `Chunk.OnEnable()` calls `PoolManager.Get()` to populate its obstacle slots; `Chunk.OnDisable()` calls `GetComponent<PooledObject>().Release()` on each obstacle, returning them to their respective pools. How those obstacle slots are defined and selected is covered in [the obstacle system post](/blog/relic-rush-obstacle-system).
+`Chunk.OnEnable()` calls `PoolManager.Get()` to populate its obstacle slots; `Chunk.OnDisable()` calls `Release()` on each obstacle, returning them to their pools. The chunk itself is the consumer — it doesn't care what's in the pool, only that it can borrow and return.
 
 {/* IMAGE: Unity Scene Hierarchy showing pooled obstacle GameObjects parented under a PoolManager container Transform. Alt: "Unity Scene Hierarchy showing pooled obstacle GameObjects under a PoolManager parent Transform" */}
 
-## Results
-
-With the pool in place, the GC allocation during chunk population dropped to near-zero after the initial warm-up. The pool pre-allocates enough objects at startup to cover the maximum number of obstacles visible at any time. Beyond that point, `Instantiate` is only called on a cache miss — which doesn't happen during normal gameplay if the initial size is set correctly.
-
-On the same test sequence that previously caused visible hitches, frame time was flat.
-
-{/* IMAGE: Unity Profiler frame time graph after pooling, showing stable frame times with no GC spikes. Alt: "Unity Profiler frame time graph showing stable frame times after object pool implementation" */}
-
 ## What I Learned
 
-The biggest trade-off is **pool sizing**. If you pre-allocate too few objects, you get cache misses and fall back to `Instantiate` — defeating the purpose. If you pre-allocate too many, you waste memory on objects that are never used. The right number depends on the maximum concurrent active count, which you need to measure or calculate from your spawn rates.
+**Pool sizing is the main trade-off.** Pre-allocate too few and you get cache misses that fall back to `Instantiate`, defeating the purpose. Pre-allocate too many and you waste memory on objects that never get used. With the correct size, GC allocation during chunk population drops to near-zero after the initial warm-up — `Instantiate` is only called on a cache miss, which doesn't happen during normal gameplay. The right number depends on the maximum concurrent active count, which you need to measure or calculate from your spawn rates.
 
-The design I'd change is **`PoolManager` being static**. A static class can't be injected or mocked, which makes `ObstacleSpawner` untestable in isolation — any test that exercises spawning implicitly exercises the pool. A non-static `IPoolManager` interface with a concrete implementation would let me inject a fake pool in tests and verify spawn logic independently of pooling logic.
+**`PoolManager` being static is the design I'd change.** A static class can't be injected or mocked — any test that exercises spawning implicitly exercises the pool. An `IPoolManager` interface with the current static class as the default implementation would cost one extra line per call site and make `ObstacleSpawner` fully testable in isolation.
 
 **`PooledObject` as a self-release tag removes coupling in the right direction.** Obstacles don't need to know which pool they came from or how to call `PoolManager` — they call `Release()` on themselves. That's a useful pattern beyond pooling: components that clean themselves up without needing an external manager.
 
