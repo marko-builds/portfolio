@@ -333,11 +333,11 @@ const pageDescription =
       </div>
     </div>
 
-    <!-- ─── THE PROBLEM ───────────────────────────────────────────────────── -->
-    <section id="problem" class="py-20 border-t border-[#1F1F1F]/50">
+    <!-- ─── KEEPING OBJECT COUNT CONSTANT ────────────────────────────────── -->
+    <section id="object-count" class="py-20 border-t border-[#1F1F1F]/50">
       <div class="max-w-5xl mx-auto px-6">
         <h2 class="reveal text-2xl font-bold text-[#F0F0F0] mb-10">
-          The Problem
+          Keeping Object Count Constant at Runtime
         </h2>
 
         <div
@@ -345,10 +345,9 @@ const pageDescription =
           style="--delay: 100ms"
         >
           <p>
-            Infinite generation has one hard constraint: the active object count
-            must stay constant regardless of how long the run lasts. Spawning a
-            new prefab for every obstacle would cause GC pauses that players
-            feel as hitches. A <code
+            Spawning a new prefab for every obstacle means a GC allocation every
+            time one appears — and at higher speeds those pauses are noticeable.
+            A <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >Queue</code
             >-based <code
@@ -357,8 +356,8 @@ const pageDescription =
             >, managed by a static <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >PoolManager</code
-            > keyed by prefab, pre-warms instances at load time and then recycles
-            without ever calling <code
+            > keyed by prefab, pre-warms instances at load time and recycles
+            without calling <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >Instantiate</code
             > again during play. Each <code
@@ -367,42 +366,74 @@ const pageDescription =
             > component acts as a type tag so <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >PoolManager.Release()</code
-            > can recursively return a chunk and all its children in one call.
+            > can recursively return a chunk and all its children in one call —
+            the caller doesn't need to know what's inside the chunk.
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── INVERTING MOTION ─────────────────────────────────────────────── -->
+    <section id="inverting-motion" class="py-20 border-t border-[#1F1F1F]/50">
+      <div class="max-w-5xl mx-auto px-6">
+        <h2 class="reveal text-2xl font-bold text-[#F0F0F0] mb-10">
+          Inverting Motion to Sidestep Float Precision
+        </h2>
+
+        <div
+          class="reveal max-w-3xl space-y-5 text-[#888888] leading-relaxed"
+          style="--delay: 100ms"
+        >
           <p>
-            Moving the player forward while keeping the camera fixed would
-            require adding a camera-follow system and managing floating-point
-            precision over long distances. A simpler inversion: keep the <code
+            Moving the player forward accumulates floating-point error over long
+            runs, and you still need a camera-follow system. The simpler fix:
+            keep <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >PlayerController</code
-            > at a fixed world position and move the chunks toward it. <code
+            > at a fixed world position and move the world toward it. <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >LevelGenerator</code
             > translates every active chunk by <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >-Vector3.forward * moveSpeed * dt</code
-            > in <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-              >Update()</code
-            > and recycles via <code
+            > each frame and recycles via <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >PoolManager.Release()</code
-            > when a chunk passes the camera.
+            > when a chunk clears the camera. One direction, one transform
+            operation, no precision drift.
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SHAPING DIFFICULTY ───────────────────────────────────────────── -->
+    <section id="difficulty-curve" class="py-20 border-t border-[#1F1F1F]/50">
+      <div class="max-w-5xl mx-auto px-6">
+        <h2 class="reveal text-2xl font-bold text-[#F0F0F0] mb-10">
+          Shaping Difficulty as a Curve, Not a Step Function
+        </h2>
+
+        <div
+          class="reveal max-w-3xl space-y-5 text-[#888888] leading-relaxed"
+          style="--delay: 100ms"
+        >
           <p>
-            Difficulty had to feel like a smooth curve, not a step function.
-            Each <code
+            Linear difficulty — "add one obstacle every N checkpoints" —
+            produces a staircase the player can feel as sudden jumps. Exponential
+            decay gives you the opposite: early checkpoints bite hard, late ones
+            barely tighten the interval. Each <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >Checkpoint</code
-            > trigger decreases <code
+            > decreases <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >ObstacleSpawner.obstacleSpawnTime</code
-            > by an exponentially decaying amount — the first checkpoints feel dangerous,
-            later ones barely tighten the interval — and simultaneously increases
-            world speed while pushing <code
+            > by a decaying amount, so the game front-loads pressure and
+            asymptotically approaches a minimum spawn interval rather than
+            reaching it abruptly. Speed increases couple directly to <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >Physics.gravity.z</code
-            > and camera FOV for visceral speed feedback.
+            > and camera FOV, so the player reads faster as a physical sensation,
+            not just a number.
           </p>
         </div>
       </div>
@@ -426,23 +457,33 @@ const pageDescription =
                 <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >LevelGenerator</code
-                > maintains a <code
+                > owns a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >List&lt;GameObject&gt; chunks</code
-                >, moves them each frame, and recycles the rearmost chunk when
-                it passes the camera. Every <code
+                  >List&lt;GameObject&gt;</code
+                > of active chunks, moves them each frame, and calls <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >PoolManager.Release()</code
+                > on the rearmost chunk when it clears the camera. Every <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >checkpointChunkInterval</code
-                > spawns it places a <code
+                >-th spawn substitutes a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >checkpointChunkPrefab</code
-                > instead of a standard chunk. Each <code
+                > for a standard chunk — no external timer, just a modulo check
+                on <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >chunksSpawned</code
+                >. Each <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >Chunk</code
-                > handles its own content entirely in <code
+                > is fully self-contained: <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >OnEnable/OnDisable</code
-                > — no external system tells it what to spawn or clean up.
+                  >OnEnable</code
+                > spawns its fences, apple, and coins; <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >OnDisable</code
+                > is a safety cleanup. No external system coordinates a chunk's
+                contents — the chunk owns its own lifecycle entirely.
               </p>
               <pre><code class="language-csharp" set:text={`// Proc Gen/LevelGenerator.cs (namespace ProceduralGeneration)
 public class LevelGenerator : MonoBehaviour
@@ -522,27 +563,37 @@ public class Chunk : MonoBehaviour
                 <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >ObjectPool</code
-                > is a plain class (not a MonoBehaviour) using a <code
+                > is a plain class — not a <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >MonoBehaviour</code
+                > — using a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >Queue&lt;GameObject&gt;</code
-                > — FIFO recycling means the longest-inactive object is reused first,
-                distributing heat evenly. The static <code
+                > for FIFO recycling. The static <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >PoolManager</code
-                > maps each prefab <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >GameObject</code
-                > to its pool and creates pools on first use with no pre-registration.
-                <code
+                > maps each prefab to its pool and creates pools on first access
+                with no pre-registration step.
+              </p>
+              <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
+                The key detail is <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >PooledObject</code
-                > is added as a component tag during <code
+                >. It's stamped onto every instance as a component tag during <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >CreateInstance()</code
-                >, storing the prefab key — this lets <code
+                >, storing the originating prefab as a key. This is what enables
+                recursive release: when you call <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >Release()</code
-                > recursively return nested pooled children before returning the parent.
+                  >PoolManager.Release()</code
+                > on a chunk, it iterates the chunk's children, returns any <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >PooledObject</code
+                > children to their own pools first, then returns the chunk
+                itself. The caller passes one <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >GameObject</code
+                > — the pool handles the rest.
               </p>
               <pre><code class="language-csharp" set:text={`// Pooling/ObjectPool.cs (namespace Pooling) — plain class, not MonoBehaviour
 public class ObjectPool
@@ -634,29 +685,49 @@ public static class PoolManager
                 Each <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >Checkpoint</code
-                > that the player passes triggers two things: <code
+                > trigger fires two calls: <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >GameManager.IncreaseTime()</code
-                > (time reward) and <code
+                > extends the run, and <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >ObstacleSpawner.DecreaseObstacleSpawnTime()</code
-                > (difficulty increase). The decrease amount starts at <code
+                > tightens the spawn interval. The interesting part is <em>how</em>
+                it tightens: exponential decay rather than a fixed decrement. The
+                first checkpoint removes a large slice from the interval; each
+                subsequent one removes less. Concretely, <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >currentDecreaseAmount</code
+                > gets multiplied by <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >decayRate</code
+                > (0.8) every time — so checkpoint one hits for <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >0.1f</code
-                > and is multiplied by <code
+                >, checkpoint two for <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >decayRate=0.8f</code
-                > each checkpoint — so early checkpoints are punishing and later ones
-                barely change the interval. <code
+                  >0.08f</code
+                >, and so on down to the <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >LevelGenerator.ApplySpeedDelta()</code
-                > also adjusts <code
+                  >minimumDecreaseAmount</code
+                > floor. The player feels early pressure but the game never
+                becomes mechanically impossible.
+              </p>
+              <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
+                Speed increases go through <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >ApplySpeedDelta()</code
+                >, which remaps <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >moveSpeed</code
+                > to a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >Physics.gravity.z</code
-                > and calls <code
+                > value and calls <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >CameraController.ChangeCameraFOV()</code
-                > to make speed increases feel physical.
+                >. Faster world = stronger Z pull = wider FOV — three systems
+                agreeing that something has changed, so the player reads it as a
+                physical reality rather than a stat update.
               </p>
               <pre><code class="language-csharp" set:text={`// Proc Gen/ObstacleSpawner.cs
 public class ObstacleSpawner : MonoBehaviour
@@ -727,22 +798,39 @@ float ApplySpeedDelta(float delta)
                 > from <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >InputManager.MoveEvent</code
-                >, scales it by <code
+                >, applies it to <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >moveSpeed</code
-                >, and moves the Rigidbody on the X axis only — clamped to <code
+                  >Rigidbody.MovePosition</code
+                > on the X axis only, and clamps to <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >±xClamp=3f</code
-                >. Movement is analog, not discrete: holding a direction slides
-                the player to the edge rather than snapping to a lane center.
-                The <code
+                >. The obstacles in <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >Chunk</code
-                > obstacles are placed at three fixed X positions (<code
+                > sit at fixed X positions (<code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
-                  >-2.5f, 0f, 2.5f</code
-                >) so the player can dodge without snapping — you pass between
-                fences by reading lane width rather than pressing a lane key.
+                  >-2.5f</code
+                >, <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >0f</code
+                >, <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >2.5f</code
+                >) — the player dodges by sliding into the gap rather than
+                pressing a lane key. There's no snap-to-lane: hold the stick and
+                you drift to the hard edge. It also subscribes to <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >GameManager.OnGameStart</code
+                > and <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >OnGameOver</code
+                > via static events rather than holding a direct reference to <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >GameManager</code
+                > — so <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  >canControl</code
+                > flips without any scene coupling.
               </p>
               <pre><code class="language-csharp" set:text={`// Player/PlayerController.cs (namespace Player)
 [RequireComponent(typeof(Rigidbody))]
@@ -858,11 +946,24 @@ public class PlayerController : MonoBehaviour
             <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
-                >The final submission featured three interconnected systems.</strong
+                >The three systems were designed to be independent of each other.</strong
               >
-              Object pooling, event-driven architecture, and procedural
-              generation. Seeing them work together as a coherent whole was a
-              satisfying validation that the project held up beyond a prototype.
+              <code
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                >Chunk</code
+              > doesn't know about <code
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                >PoolManager</code
+              >. <code
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                >PlayerController</code
+              > doesn't know about <code
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                >LevelGenerator</code
+              >. That decoupling paid off in practice: swapping chunk prefabs,
+              changing spawn logic, or adding new obstacle types required zero
+              changes to player or input code. The architecture held under
+              extension.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
