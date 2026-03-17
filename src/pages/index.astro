@@ -260,7 +260,8 @@ const personSchema = {
         </div>
       </div>
 
-      <div class="relative max-w-5xl mx-auto px-6 py-28">
+      <div class="relative max-w-5xl mx-auto px-6 py-28 flex flex-col sm:flex-row items-center gap-12 sm:gap-16">
+        <div class="flex-1">
         <p
           class="hero-enter text-[#00FFC8] font-mono text-sm mb-5 tracking-wide"
           style="--delay: 0.1s"
@@ -283,7 +284,7 @@ const personSchema = {
         </p>
 
         <p
-          class="hero-enter text-[#888888] text-lg max-w-xl mb-12 leading-relaxed"
+          class="hero-enter text-[#888888] text-lg max-w-[520px] mb-12 leading-relaxed"
           style="--delay: 0.85s"
         >
           I build the systems that make games feel alive — AI that thinks,
@@ -306,6 +307,17 @@ const personSchema = {
             View Projects
           </a>
         </div>
+        </div>
+
+        <div class="hero-enter shrink-0" style="--delay: 0.6s">
+          <img
+            src="/profile.png"
+            alt="Marko Stankovic"
+            width="280"
+            height="280"
+            class="w-[280px] h-[280px] rounded-2xl object-cover border border-[#1F1F1F]"
+          />
+        </div>
       </div>
     </section>
 
@@ -318,8 +330,8 @@ const personSchema = {
           for and stayed with.
         </p>
 
-        <!-- Primary engine cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <!-- Skill cards: 2 rows × 3 columns -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           <!-- Unity 3D -->
           <div
             class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-violet-800/60 transition-colors duration-150"
@@ -445,10 +457,7 @@ const personSchema = {
               >
             </div>
           </div>
-        </div>
 
-        <!-- Arch Linux + AI Tools -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           <!-- Arch Linux -->
           <div
             class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-sky-800/60 transition-colors duration-150"
