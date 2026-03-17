@@ -710,36 +710,29 @@ const personSchema = {
 
               <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
                 The hardest part of enemy AI isn't the pathfinding — it's the
-                transitions. Five states (
-                <code
+                transitions. Five states (<code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >Idle</code
-                >,
-                <code
+                >, <code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >Patrol</code
-                >
-                ,
-                <code
+                >, <code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >Chase</code
-                >,
-                <code
+                >, <code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >Investigate</code
-                >,
-                <code
+                >, <code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >Search</code
-                >) each implement each implement
-                <code
+                >) each implement <code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >IEnemyState</code
-                >
-                , so every transition is explicit and every state is independently
-                testable. The real challenge was detection — a field-of-view raycast system
-                that accounts for cover geometry. Level layout built entirely with
-                custom Editor utilities, no manual GameObject placement
+                >, so every transition is explicit and every state is
+                independently testable. The real challenge was detection — a
+                field-of-view raycast system that accounts for cover geometry.
+                Level layout built entirely with custom Editor utilities, no
+                manual GameObject placement
               </p>
 
               <div class="flex flex-wrap gap-2 mb-6">
