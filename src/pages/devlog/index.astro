@@ -30,7 +30,7 @@ const ogImageURL = new URL('/og-default.png', Astro.site).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="google-site-verification" content="E7tgw1T5tN33WpBtQKaMPTkM6sIjSQEnNr33vyw-0ys" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalURL} />
@@ -113,6 +113,7 @@ const ogImageURL = new URL('/og-default.png', Astro.site).href;
     <!-- ─── POSTS ─────────────────────────────────────────────────────────── -->
     <section class="py-16 border-t border-[#1F1F1F]/50">
       <div class="max-w-5xl mx-auto px-6">
+        <h2 class="sr-only">Posts</h2>
 
         <!-- Filter bar -->
         <div id="filter-bar" class="flex gap-2 overflow-x-auto pb-2 mb-10 -mx-1 px-1">
