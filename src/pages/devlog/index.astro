@@ -147,7 +147,7 @@ const ogImageURL = new URL('/og-default.png', Astro.site).href;
         </div>
 
         <!-- Post list -->
-        <div id="post-list" class="max-w-[740px] space-y-4">
+        <div id="post-list" class="space-y-4">
           {posts.map((post, i) => (
             <div style={`--delay: ${i * 80}ms`}>
               <BlogCard
