@@ -288,9 +288,9 @@ const articleSchema = {
       </div>
 
       <div class="relative max-w-3xl mx-auto px-6 py-16">
-        <p class="hero-enter text-[#666666] font-mono text-xs mb-5 tracking-wide" style="--delay: 0.05s">
-          Devlog
-        </p>
+        <a href="/devlog" class="hero-enter inline-block text-[#666666] hover:text-[#00FFC8] font-mono text-xs mb-5 tracking-wide transition-colors duration-150" style="--delay: 0.05s">
+          &larr; Devlog
+        </a>
 
         <h1 class="hero-enter font-mono font-bold text-[#F0F0F0] mb-5" style="font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; letter-spacing: -0.02em; --delay: 0.15s">
           {title}
@@ -304,7 +304,7 @@ const articleSchema = {
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.35s">
           {tags.map(tag => (
-            <span class="text-xs font-mono bg-[#00FFC8]/10 text-[#00FFC8] border border-[#00FFC8]/20 px-3 py-1 rounded-full">
+            <span class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1 rounded-full">
               {tag}
             </span>
           ))}

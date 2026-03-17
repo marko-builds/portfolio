@@ -595,7 +595,7 @@ const personSchema = {
             <div class="p-8 flex flex-col flex-1">
               <header class="flex items-start justify-between mb-5">
                 <span
-                  class="text-xs font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3 py-1 rounded-full"
+                  class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1 rounded-full"
                 >
                   Completed
                 </span>
@@ -699,7 +699,7 @@ const personSchema = {
             <div class="p-8 flex flex-col flex-1">
               <header class="flex items-start justify-between mb-5">
                 <span
-                  class="text-xs font-mono bg-[#00FFC8]/10 text-[#00FFC8] border border-[#00FFC8]/20 px-3 py-1 rounded-full"
+                  class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1 rounded-full"
                 >
                   In Development
                 </span>
@@ -807,7 +807,7 @@ const personSchema = {
             <!-- Email -->
             <a
               href="mailto:contact@markostankovic.org"
-              class="contact-link reveal flex items-center gap-4 p-4 bg-[#141414] border border-[#1F1F1F] rounded-xl hover:border-[#888888] transition-colors duration-150 group min-h-[44px]"
+              class="contact-link reveal flex items-center gap-4 p-4 bg-[#141414] border border-[#1F1F1F] rounded-xl hover:border-cyan-400/30 hover:bg-cyan-400/[0.08] transition-colors duration-150 group min-h-[44px]"
               style="--delay: 0ms"
             >
               <div
@@ -843,14 +843,14 @@ const personSchema = {
               href="https://github.com/Idzuo32"
               target="_blank"
               rel="noopener noreferrer"
-              class="contact-link reveal flex items-center gap-4 p-4 bg-[#141414] border border-[#1F1F1F] rounded-xl hover:border-[#888888] transition-colors duration-150 group min-h-[44px]"
+              class="contact-link reveal flex items-center gap-4 p-4 bg-[#141414] border border-[#1F1F1F] rounded-xl hover:border-cyan-400/30 hover:bg-cyan-400/[0.08] transition-colors duration-150 group min-h-[44px]"
               style="--delay: 100ms"
             >
               <div
                 class="contact-icon w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center shrink-0"
               >
                 <svg
-                  class="w-5 h-5 text-[#888888]"
+                  class="w-5 h-5 text-[#00FFC8]"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -863,7 +863,7 @@ const personSchema = {
               <div>
                 <p class="text-xs text-[#666666] mb-0.5">GitHub</p>
                 <p
-                  class="contact-text text-[#F0F0F0] group-hover:text-[#888888] transition-colors duration-150 text-sm"
+                  class="contact-text text-[#F0F0F0] group-hover:text-[#00FFC8] transition-colors duration-150 text-sm"
                 >
                   github.com/Idzuo32
                 </p>
@@ -875,14 +875,14 @@ const personSchema = {
               href="https://www.linkedin.com/in/markostankovic-gamedev/"
               target="_blank"
               rel="noopener noreferrer"
-              class="contact-link reveal flex items-center gap-4 p-4 bg-[#141414] border border-[#1F1F1F] rounded-xl hover:border-[#888888] transition-colors duration-150 group min-h-[44px]"
+              class="contact-link reveal flex items-center gap-4 p-4 bg-[#141414] border border-[#1F1F1F] rounded-xl hover:border-cyan-400/30 hover:bg-cyan-400/[0.08] transition-colors duration-150 group min-h-[44px]"
               style="--delay: 200ms"
             >
               <div
                 class="contact-icon w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center shrink-0"
               >
                 <svg
-                  class="w-5 h-5 text-blue-400"
+                  class="w-5 h-5 text-cyan-300/75"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -895,7 +895,7 @@ const personSchema = {
               <div>
                 <p class="text-xs text-[#666666] mb-0.5">LinkedIn</p>
                 <p
-                  class="contact-text text-[#F0F0F0] group-hover:text-blue-300 transition-colors duration-150 text-sm"
+                  class="contact-text text-[#F0F0F0] group-hover:text-cyan-300/75 transition-colors duration-150 text-sm"
                 >
                   Marko Stankovic
                 </p>
@@ -930,7 +930,7 @@ const personSchema = {
                   required
                   autocomplete="name"
                   placeholder="Your name"
-                  class="contact-input w-full bg-[#141414] border border-[#1F1F1F] text-[#F0F0F0] rounded-lg px-4 py-3 text-sm transition-colors duration-150"
+                  class="contact-input w-full bg-[#141414] border border-cyan-400/20 text-[#F0F0F0] rounded-lg px-4 py-3 text-sm transition-colors duration-150"
                 />
               </div>
               <div>
@@ -946,7 +946,7 @@ const personSchema = {
                   required
                   autocomplete="email"
                   placeholder="your@email.com"
-                  class="contact-input w-full bg-[#141414] border border-[#1F1F1F] text-[#F0F0F0] rounded-lg px-4 py-3 text-sm transition-colors duration-150"
+                  class="contact-input w-full bg-[#141414] border border-cyan-400/20 text-[#F0F0F0] rounded-lg px-4 py-3 text-sm transition-colors duration-150"
                 />
               </div>
               <div>
@@ -961,13 +961,13 @@ const personSchema = {
                   rows="5"
                   required
                   placeholder="What's on your mind?"
-                  class="contact-input w-full bg-[#141414] border border-[#1F1F1F] text-[#F0F0F0] rounded-lg px-4 py-3 text-sm transition-colors duration-150 resize-none"
+                  class="contact-input w-full bg-[#141414] border border-cyan-400/20 text-[#F0F0F0] rounded-lg px-4 py-3 text-sm transition-colors duration-150 resize-none"
                 ></textarea>
               </div>
               <div>
                 <button
                   type="submit"
-                  class="px-6 py-3 bg-[#00FFC8] hover:bg-[#00FFD0] text-[#0D0D0D] rounded-lg font-medium text-sm transition-colors duration-150 min-h-[44px]"
+                  class="px-6 py-3 bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/20 text-cyan-300/75 rounded-lg font-medium text-sm transition-colors duration-150 min-h-[44px]"
                 >
                   Send Message
                 </button>
