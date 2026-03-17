@@ -7,10 +7,26 @@ import hideSeek1Raw from "../assets/screenshots/hide-and-seek-1.png";
 import hideSeek2Raw from "../assets/screenshots/hide-and-seek-2.png";
 import endlessRunner1Raw from "../assets/screenshots/endless-runner-1.png";
 import endlessRunner2Raw from "../assets/screenshots/endless-runner-2.png";
-const hideSeek1 = await getImage({ src: hideSeek1Raw, format: "webp", width: 800 });
-const hideSeek2 = await getImage({ src: hideSeek2Raw, format: "webp", width: 800 });
-const endlessRunner1 = await getImage({ src: endlessRunner1Raw, format: "webp", width: 800 });
-const endlessRunner2 = await getImage({ src: endlessRunner2Raw, format: "webp", width: 800 });
+const hideSeek1 = await getImage({
+  src: hideSeek1Raw,
+  format: "webp",
+  width: 800,
+});
+const hideSeek2 = await getImage({
+  src: hideSeek2Raw,
+  format: "webp",
+  width: 800,
+});
+const endlessRunner1 = await getImage({
+  src: endlessRunner1Raw,
+  format: "webp",
+  width: 800,
+});
+const endlessRunner2 = await getImage({
+  src: endlessRunner2Raw,
+  format: "webp",
+  width: 800,
+});
 
 const recentPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
@@ -22,210 +38,211 @@ const recentPosts = (await getCollection("blog"))
   });
 
 const pageTitle = "Marko Stankovic — Game Developer";
-const pageDescription = "Game developer building systems in Unity 3D, Unreal Engine, and Godot. AI state machines, procedural generation, editor tooling. Based in Serbia, open to remote.";
+const pageDescription =
+  "Game developer building systems in Unity 3D, Unreal Engine, and Godot. AI state machines, procedural generation, editor tooling. Based in Serbia, open to remote.";
 
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Marko Stankovic",
-  "url": "https://markostankovic.org",
-  "jobTitle": "Game Developer",
-  "sameAs": [
+  name: "Marko Stankovic",
+  url: "https://markostankovic.org",
+  jobTitle: "Game Developer",
+  sameAs: [
     "https://github.com/Idzuo32",
-    "https://www.linkedin.com/in/markostankovic-gamedev/"
-  ]
+    "https://www.linkedin.com/in/markostankovic-gamedev/",
+  ],
 };
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(personSchema)}
+    />
   </Fragment>
-    <style>
-      /* ── Thumbnail hover scale ── */
-      .thumb-wrap {
-        overflow: hidden;
-      }
-      .thumb-wrap video,
-      .thumb-wrap img {
-        transition: transform 0.3s ease;
-        will-change: transform;
-      }
-      .project-card:hover .thumb-wrap video,
-      .project-card:hover .thumb-wrap img {
-        transform: scale(1.03);
-      }
+  <style>
+    /* ── Thumbnail hover scale ── */
+    .thumb-wrap {
+      overflow: hidden;
+    }
+    .thumb-wrap video,
+    .thumb-wrap img {
+      transition: transform 0.3s ease;
+      will-change: transform;
+    }
+    .project-card:hover .thumb-wrap video,
+    .project-card:hover .thumb-wrap img {
+      transform: scale(1.03);
+    }
 
-      /* ── Lightbox ── */
-      #lightbox {
-        display: none;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-      }
-      #lightbox.lb-open {
-        display: flex;
-        opacity: 1;
-      }
-      #lightbox-content {
-        transform: scale(0.95);
-        transition: transform 0.2s ease;
-      }
-      #lightbox.lb-open #lightbox-content {
-        transform: scale(1);
-      }
-      #lightbox-img {
-        max-width: 90vw;
-        max-height: 90vh;
-        object-fit: contain;
-        border-radius: 0.5rem;
-        display: block;
-      }
-      .lb-btn {
-        width: 2.75rem;
-        height: 2.75rem;
-        border-radius: 9999px;
-        background: rgba(31, 31, 31, 0.8);
-        border: 1px solid #2a2a2a;
-        color: #f0f0f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        flex-shrink: 0;
-        transition:
-          background 0.15s ease,
-          border-color 0.15s ease;
-      }
-      .lb-btn:hover {
-        background: rgba(50, 50, 50, 0.9);
-        border-color: #888;
-      }
-      .lb-btn:disabled {
-        opacity: 0.3;
-        cursor: default;
-      }
-      #lightbox-close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-      }
-    </style>
+    /* ── Lightbox ── */
+    #lightbox {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    #lightbox.lb-open {
+      display: flex;
+      opacity: 1;
+    }
+    #lightbox-content {
+      transform: scale(0.95);
+      transition: transform 0.2s ease;
+    }
+    #lightbox.lb-open #lightbox-content {
+      transform: scale(1);
+    }
+    #lightbox-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 0.5rem;
+      display: block;
+    }
+    .lb-btn {
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 9999px;
+      background: rgba(31, 31, 31, 0.8);
+      border: 1px solid #2a2a2a;
+      color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
+    }
+    .lb-btn:hover {
+      background: rgba(50, 50, 50, 0.9);
+      border-color: #888;
+    }
+    .lb-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+  </style>
 
-    <!-- ─── NAV ──────────────────────────────────────────────────────────── -->
-    <header
-      class="fixed top-0 inset-x-0 z-50 border-b border-[#1F1F1F]/60 bg-[#0D0D0D]/80 backdrop-blur-md"
-    >
-      <nav
-        class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between"
+  <!-- ─── NAV ──────────────────────────────────────────────────────────── -->
+  <header
+    class="fixed top-0 inset-x-0 z-50 border-b border-[#1F1F1F]/60 bg-[#0D0D0D]/80 backdrop-blur-md"
+  >
+    <nav class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a
+        href="#hero"
+        class="font-bold font-mono tracking-tight text-[#F0F0F0] text-lg">MS</a
       >
-        <a
-          href="#hero"
-          class="font-bold font-mono tracking-tight text-[#F0F0F0] text-lg"
-          >MS</a
-        >
 
-        <!-- Desktop nav -->
-        <ul class="hidden sm:flex gap-6 text-sm text-[#888888]">
-          <li>
-            <a
-              href="#skills"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Skills</a
-            >
-          </li>
-          <li>
-            <a
-              href="#projects"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Projects</a
-            >
-          </li>
-          <li>
-            <a
-              href="/devlog"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Devlog</a
-            >
-          </li>
-          <li>
-            <a
-              href="#contact"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Contact</a
-            >
-          </li>
-        </ul>
-
-        <!-- Hamburger button (mobile only) -->
-        <button
-          id="menu-btn"
-          class="sm:hidden w-11 h-11 flex items-center justify-center text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
-          aria-label="Toggle menu"
-          aria-expanded="false"
-        >
-          <svg
-            id="icon-menu"
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-          <svg
-            id="icon-close"
-            class="w-5 h-5 hidden"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </nav>
-
-      <!-- Mobile nav dropdown -->
-      <div id="mobile-nav" aria-hidden="true">
-        <div class="max-w-5xl mx-auto px-6 py-2 flex flex-col">
+      <!-- Desktop nav -->
+      <ul class="hidden sm:flex gap-6 text-sm text-[#888888]">
+        <li>
           <a
             href="#skills"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
+            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
             >Skills</a
           >
+        </li>
+        <li>
           <a
             href="#projects"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
+            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
             >Projects</a
           >
+        </li>
+        <li>
           <a
             href="/devlog"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
+            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
             >Devlog</a
           >
+        </li>
+        <li>
           <a
             href="#contact"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150 min-h-[44px] flex items-center"
+            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
             >Contact</a
           >
-        </div>
-      </div>
-    </header>
+        </li>
+      </ul>
 
-    <main>
+      <!-- Hamburger button (mobile only) -->
+      <button
+        id="menu-btn"
+        class="sm:hidden w-11 h-11 flex items-center justify-center text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <svg
+          id="icon-menu"
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg
+          id="icon-close"
+          class="w-5 h-5 hidden"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile nav dropdown -->
+    <div id="mobile-nav" aria-hidden="true">
+      <div class="max-w-5xl mx-auto px-6 py-2 flex flex-col">
+        <a
+          href="#skills"
+          tabindex="-1"
+          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
+          >Skills</a
+        >
+        <a
+          href="#projects"
+          tabindex="-1"
+          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
+          >Projects</a
+        >
+        <a
+          href="/devlog"
+          tabindex="-1"
+          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
+          >Devlog</a
+        >
+        <a
+          href="#contact"
+          tabindex="-1"
+          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150 min-h-[44px] flex items-center"
+          >Contact</a
+        >
+      </div>
+    </div>
+  </header>
+
+  <main>
     <!-- ─── HERO ──────────────────────────────────────────────────────────── -->
     <section id="hero" class="relative min-h-screen flex items-center pt-14">
       <!-- Decorative background glows -->
@@ -590,12 +607,12 @@ const personSchema = {
               </h3>
 
               <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
-                Third-person 3D runner with infinite levels. Chunk-based
-                procedural generation spawns terrain, obstacles, and
-                collectibles at runtime. Object pooling handles obstacles, VFX,
-                and SFX with zero allocations during play. Event-driven
-                architecture keeps all systems decoupled. Lane-based movement
-                with Cinemachine camera.
+                Infinite levels mean the world can't be hand-authored. A
+                chunk-based proc-gen system spawns terrain segments, obstacles
+                and collectibles at runtime and recycles them via an object pool
+                — zero allocations during play, no GC spikes. Event-driven
+                architecture keeps spawning, scoring, and audio completely
+                decoupled.
               </p>
 
               <div class="flex flex-wrap gap-2 mb-6">
@@ -692,18 +709,37 @@ const personSchema = {
               <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">Hide & Seek</h3>
 
               <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
-                Top-down 3D stealth game. Built a full enemy AI using the
+                The hardest part of enemy AI isn't the pathfinding — it's the
+                transitions. Five states (
+                <code
+                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
+                  >Idle</code
+                >,
+                <code
+                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
+                  >Patrol</code
+                >
+                ,
+                <code
+                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
+                  >Chase</code
+                >,
+                <code
+                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
+                  >Investigate</code
+                >,
+                <code
+                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
+                  >Search</code
+                >) each implement each implement
                 <code
                   class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
                   >IEnemyState</code
                 >
-                interface — five states: Idle, Patrol, Chase, Investigate, Search.
-                <code
-                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
-                  >NavMeshAgent</code
-                >
-                drives pathfinding; Cinemachine handles the dynamic camera. Level
-                layout built with custom Editor utilities.
+                , so every transition is explicit and every state is independently
+                testable. The real challenge was detection — a field-of-view raycast system
+                that accounts for cover geometry. Level layout built entirely with
+                custom Editor utilities, no manual GameObject placement
               </p>
 
               <div class="flex flex-wrap gap-2 mb-6">
@@ -1037,82 +1073,38 @@ const personSchema = {
         </section>
       )
     }
+  </main>
 
-    </main>
-
-    <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-    <footer class="border-t border-[#1F1F1F]/50 py-8">
-      <div
-        class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3"
-      >
-        <p class="text-[#888888] text-sm">© 2026 Marko Stankovic</p>
-        <p class="text-[#666666] text-xs font-mono">Game Developer · Serbia</p>
-      </div>
-    </footer>
-
-    <!-- ─── LIGHTBOX ─────────────────────────────────────────────────────── -->
+  <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+  <footer class="border-t border-[#1F1F1F]/50 py-8">
     <div
-      id="lightbox"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Screenshot viewer"
-      class="fixed inset-0 z-[200] items-center justify-center"
+      class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3"
     >
-      <!-- Backdrop -->
-      <div id="lightbox-backdrop" class="absolute inset-0 bg-[#0D0D0D]/95">
-      </div>
+      <p class="text-[#888888] text-sm">© 2026 Marko Stankovic</p>
+      <p class="text-[#666666] text-xs font-mono">Game Developer · Serbia</p>
+    </div>
+  </footer>
 
-      <!-- Content row: prev · image · next -->
-      <div
-        id="lightbox-content"
-        class="relative z-10 flex items-center gap-3 px-4"
-      >
-        <button
-          id="lightbox-prev"
-          class="lb-btn"
-          aria-label="Previous screenshot"
-        >
-          <svg
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </button>
+  <!-- ─── LIGHTBOX ─────────────────────────────────────────────────────── -->
+  <div
+    id="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Screenshot viewer"
+    class="fixed inset-0 z-[200] items-center justify-center"
+  >
+    <!-- Backdrop -->
+    <div id="lightbox-backdrop" class="absolute inset-0 bg-[#0D0D0D]/95"></div>
 
-        <img id="lightbox-img" src="data:," alt="Project screenshot" />
-
-        <button id="lightbox-next" class="lb-btn" aria-label="Next screenshot">
-          <svg
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"></path>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Close button -->
+    <!-- Content row: prev · image · next -->
+    <div
+      id="lightbox-content"
+      class="relative z-10 flex items-center gap-3 px-4"
+    >
       <button
-        id="lightbox-close"
-        class="lb-btn z-10"
-        aria-label="Close lightbox"
+        id="lightbox-prev"
+        class="lb-btn"
+        aria-label="Previous screenshot"
       >
         <svg
           width="20"
@@ -1126,332 +1118,369 @@ const personSchema = {
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"></path>
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <img id="lightbox-img" src="data:," alt="Project screenshot" />
+
+      <button id="lightbox-next" class="lb-btn" aria-label="Next screenshot">
+        <svg
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"
+          ></path>
         </svg>
       </button>
     </div>
 
-    <script>
-      const prefersReduced = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
+    <!-- Close button -->
+    <button id="lightbox-close" class="lb-btn z-10" aria-label="Close lightbox">
+      <svg
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
 
-      // ─── Scroll Reveal ──────────────────────────────────────────────────
-      const revealEls = document.querySelectorAll(".reveal");
+  <script>
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-      if (!prefersReduced) {
-        const revealObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                revealObserver.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.15 },
-        );
-        revealEls.forEach((el) => revealObserver.observe(el));
-      } else {
-        revealEls.forEach((el) => el.classList.add("visible"));
-      }
+    // ─── Scroll Reveal ──────────────────────────────────────────────────
+    const revealEls = document.querySelectorAll(".reveal");
 
-      // ─── Active Nav Section ─────────────────────────────────────────────
-      const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
-      const sections = document.querySelectorAll("section[id]");
-      const sectionIds = Array.from(sections).map((s) => s.id);
-      const activeSet = new Set<string>();
-
-      const sectionObserver = new IntersectionObserver(
+    if (!prefersReduced) {
+      const revealObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) activeSet.add(entry.target.id);
-            else activeSet.delete(entry.target.id);
-          });
-
-          const topId = sectionIds.find((id) => activeSet.has(id));
-
-          navLinks.forEach((link) => {
-            link.classList.toggle(
-              "nav-active",
-              link.getAttribute("href") === `#${topId}`,
-            );
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
           });
         },
-        { rootMargin: "-20% 0px -50% 0px" },
+        { threshold: 0.15 },
       );
+      revealEls.forEach((el) => revealObserver.observe(el));
+    } else {
+      revealEls.forEach((el) => el.classList.add("visible"));
+    }
 
-      sections.forEach((s) => sectionObserver.observe(s));
+    // ─── Active Nav Section ─────────────────────────────────────────────
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+    const sections = document.querySelectorAll("section[id]");
+    const sectionIds = Array.from(sections).map((s) => s.id);
+    const activeSet = new Set<string>();
 
-      // ─── Hamburger Nav ──────────────────────────────────────────────────
-      const menuBtn = document.getElementById("menu-btn");
-      const mobileNav = document.getElementById("mobile-nav");
-      const iconMenu = document.getElementById("icon-menu");
-      const iconClose = document.getElementById("icon-close");
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) activeSet.add(entry.target.id);
+          else activeSet.delete(entry.target.id);
+        });
 
-      const mobileNavLinks = document.querySelectorAll<HTMLElement>(".mobile-nav-link");
+        const topId = sectionIds.find((id) => activeSet.has(id));
 
-      function closeMobileNav() {
-        mobileNav?.classList.remove("open");
+        navLinks.forEach((link) => {
+          link.classList.toggle(
+            "nav-active",
+            link.getAttribute("href") === `#${topId}`,
+          );
+        });
+      },
+      { rootMargin: "-20% 0px -50% 0px" },
+    );
+
+    sections.forEach((s) => sectionObserver.observe(s));
+
+    // ─── Hamburger Nav ──────────────────────────────────────────────────
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileNav = document.getElementById("mobile-nav");
+    const iconMenu = document.getElementById("icon-menu");
+    const iconClose = document.getElementById("icon-close");
+
+    const mobileNavLinks =
+      document.querySelectorAll<HTMLElement>(".mobile-nav-link");
+
+    function closeMobileNav() {
+      mobileNav?.classList.remove("open");
+      mobileNav?.setAttribute("aria-hidden", "true");
+      menuBtn?.setAttribute("aria-expanded", "false");
+      iconMenu?.classList.remove("hidden");
+      iconClose?.classList.add("hidden");
+      mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
+    }
+
+    menuBtn?.addEventListener("click", () => {
+      const isOpen = mobileNav?.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      iconMenu?.classList.toggle("hidden", !!isOpen);
+      iconClose?.classList.toggle("hidden", !isOpen);
+      if (isOpen) {
+        mobileNav?.removeAttribute("aria-hidden");
+        mobileNavLinks.forEach((link) => link.removeAttribute("tabindex"));
+      } else {
         mobileNav?.setAttribute("aria-hidden", "true");
-        menuBtn?.setAttribute("aria-expanded", "false");
-        iconMenu?.classList.remove("hidden");
-        iconClose?.classList.add("hidden");
         mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
       }
+    });
 
-      menuBtn?.addEventListener("click", () => {
-        const isOpen = mobileNav?.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", String(isOpen));
-        iconMenu?.classList.toggle("hidden", !!isOpen);
-        iconClose?.classList.toggle("hidden", !isOpen);
-        if (isOpen) {
-          mobileNav?.removeAttribute("aria-hidden");
-          mobileNavLinks.forEach((link) => link.removeAttribute("tabindex"));
-        } else {
-          mobileNav?.setAttribute("aria-hidden", "true");
-          mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
-        }
+    // Close mobile nav when a link is clicked
+    document.querySelectorAll(".mobile-nav-link").forEach((link) => {
+      link.addEventListener("click", closeMobileNav);
+    });
+
+    // ─── Filter Bar ─────────────────────────────────────────────────────
+    const filterBar = document.getElementById("filter-bar");
+    const projectCards =
+      document.querySelectorAll<HTMLElement>(".project-card");
+
+    if (filterBar) {
+      // Collect unique tags from project tags
+      const tagSet = new Set<string>();
+      document.querySelectorAll(".project-tag").forEach((el) => {
+        const t = el.textContent?.trim();
+        if (t) tagSet.add(t);
       });
 
-      // Close mobile nav when a link is clicked
-      document.querySelectorAll(".mobile-nav-link").forEach((link) => {
-        link.addEventListener("click", closeMobileNav);
+      const tags = ["All", ...Array.from(tagSet).sort()];
+
+      tags.forEach((tag) => {
+        const btn = document.createElement("button");
+        btn.textContent = tag;
+        btn.dataset.filter = tag;
+        btn.className = "filter-btn";
+        if (tag === "All") btn.classList.add("active");
+        filterBar.appendChild(btn);
       });
 
-      // ─── Filter Bar ─────────────────────────────────────────────────────
-      const filterBar = document.getElementById("filter-bar");
-      const projectCards =
-        document.querySelectorAll<HTMLElement>(".project-card");
-
-      if (filterBar) {
-        // Collect unique tags from project tags
-        const tagSet = new Set<string>();
-        document.querySelectorAll(".project-tag").forEach((el) => {
-          const t = el.textContent?.trim();
-          if (t) tagSet.add(t);
-        });
-
-        const tags = ["All", ...Array.from(tagSet).sort()];
-
-        tags.forEach((tag) => {
-          const btn = document.createElement("button");
-          btn.textContent = tag;
-          btn.dataset.filter = tag;
-          btn.className = "filter-btn";
-          if (tag === "All") btn.classList.add("active");
-          filterBar.appendChild(btn);
-        });
-
-        filterBar.addEventListener("click", (e) => {
-          const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
-            ".filter-btn",
-          );
-          if (!btn) return;
-
-          const filter = btn.dataset.filter ?? "All";
-
-          document
-            .querySelectorAll(".filter-btn")
-            .forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          projectCards.forEach((card) => {
-            if (filter === "All") {
-              card.classList.remove("filtered-out");
-            } else {
-              const cardTags = (card.dataset.tags ?? "")
-                .split(",")
-                .map((t) => t.trim());
-              card.classList.toggle("filtered-out", !cardTags.includes(filter));
-            }
-          });
-        });
-      }
-
-      // ─── Video Lazy Load (IntersectionObserver) ──────────────────────────
-      const thumbVideos =
-        document.querySelectorAll<HTMLVideoElement>(".thumb-wrap video");
-
-      const videoObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const video = entry.target as HTMLVideoElement;
-            if (entry.isIntersecting) {
-              if (video.readyState === 0) video.load();
-              video.play().catch(() => {});
-            } else {
-              video.pause();
-            }
-          });
-        },
-        { threshold: 0.25 },
-      );
-
-      thumbVideos.forEach((v) => videoObserver.observe(v));
-
-      // ─── Lightbox ────────────────────────────────────────────────────────
-      const lightbox = document.getElementById("lightbox")!;
-      const lbImg = document.getElementById("lightbox-img") as HTMLImageElement;
-      const lbPrev = document.getElementById(
-        "lightbox-prev",
-      ) as HTMLButtonElement;
-      const lbNext = document.getElementById(
-        "lightbox-next",
-      ) as HTMLButtonElement;
-      const lbClose = document.getElementById("lightbox-close")!;
-      const lbBackdrop = document.getElementById("lightbox-backdrop")!;
-
-      let lbScreenshots: string[] = [];
-      let lbIndex = 0;
-      let lbPrevFocus: HTMLElement | null = null;
-
-      const lbFocusable = () =>
-        Array.from(
-          lightbox.querySelectorAll<HTMLElement>("button, img[tabindex]"),
-        ).filter((el) => !el.hasAttribute("disabled"));
-
-      function lbShow(screenshots: string[], startIndex: number) {
-        lbScreenshots = screenshots;
-        lbIndex = startIndex;
-        lbPrevFocus = document.activeElement as HTMLElement;
-        lbUpdate();
-        lightbox.style.display = "flex";
-        // Force reflow then add open class for transition
-        lightbox.getBoundingClientRect();
-        lightbox.classList.add("lb-open");
-        document.body.style.overflow = "hidden";
-        lbClose.focus();
-      }
-
-      function lbHide() {
-        lightbox.classList.remove("lb-open");
-        // Wait for transition then hide
-        lightbox.addEventListener(
-          "transitionend",
-          () => {
-            lightbox.style.display = "none";
-            document.body.style.overflow = "";
-            lbPrevFocus?.focus();
-          },
-          { once: true },
+      filterBar.addEventListener("click", (e) => {
+        const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
+          ".filter-btn",
         );
-      }
+        if (!btn) return;
 
-      function lbUpdate() {
-        lbImg.src = lbScreenshots[lbIndex];
-        lbImg.alt = `Screenshot ${lbIndex + 1} of ${lbScreenshots.length}`;
-        lbPrev.disabled = lbIndex === 0;
-        lbNext.disabled = lbIndex === lbScreenshots.length - 1;
-      }
+        const filter = btn.dataset.filter ?? "All";
 
-      // Open lightbox when a thumb-wrap is clicked/keydown
-      document.querySelectorAll<HTMLElement>(".thumb-wrap").forEach((wrap) => {
-        const openLightbox = () => {
-          const card = wrap.closest<HTMLElement>("[data-screenshots]");
-          if (!card) return;
-          const shots = (card.dataset.screenshots ?? "")
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
-          if (!shots.length) return;
-          lbShow(shots, 0);
-        };
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
 
-        wrap.addEventListener("click", openLightbox);
-        wrap.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            openLightbox();
+        projectCards.forEach((card) => {
+          if (filter === "All") {
+            card.classList.remove("filtered-out");
+          } else {
+            const cardTags = (card.dataset.tags ?? "")
+              .split(",")
+              .map((t) => t.trim());
+            card.classList.toggle("filtered-out", !cardTags.includes(filter));
           }
         });
       });
+    }
 
-      lbClose.addEventListener("click", lbHide);
-      lbBackdrop.addEventListener("click", lbHide);
+    // ─── Video Lazy Load (IntersectionObserver) ──────────────────────────
+    const thumbVideos =
+      document.querySelectorAll<HTMLVideoElement>(".thumb-wrap video");
 
-      lbPrev.addEventListener("click", () => {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            if (video.readyState === 0) video.load();
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.25 },
+    );
+
+    thumbVideos.forEach((v) => videoObserver.observe(v));
+
+    // ─── Lightbox ────────────────────────────────────────────────────────
+    const lightbox = document.getElementById("lightbox")!;
+    const lbImg = document.getElementById("lightbox-img") as HTMLImageElement;
+    const lbPrev = document.getElementById(
+      "lightbox-prev",
+    ) as HTMLButtonElement;
+    const lbNext = document.getElementById(
+      "lightbox-next",
+    ) as HTMLButtonElement;
+    const lbClose = document.getElementById("lightbox-close")!;
+    const lbBackdrop = document.getElementById("lightbox-backdrop")!;
+
+    let lbScreenshots: string[] = [];
+    let lbIndex = 0;
+    let lbPrevFocus: HTMLElement | null = null;
+
+    const lbFocusable = () =>
+      Array.from(
+        lightbox.querySelectorAll<HTMLElement>("button, img[tabindex]"),
+      ).filter((el) => !el.hasAttribute("disabled"));
+
+    function lbShow(screenshots: string[], startIndex: number) {
+      lbScreenshots = screenshots;
+      lbIndex = startIndex;
+      lbPrevFocus = document.activeElement as HTMLElement;
+      lbUpdate();
+      lightbox.style.display = "flex";
+      // Force reflow then add open class for transition
+      lightbox.getBoundingClientRect();
+      lightbox.classList.add("lb-open");
+      document.body.style.overflow = "hidden";
+      lbClose.focus();
+    }
+
+    function lbHide() {
+      lightbox.classList.remove("lb-open");
+      // Wait for transition then hide
+      lightbox.addEventListener(
+        "transitionend",
+        () => {
+          lightbox.style.display = "none";
+          document.body.style.overflow = "";
+          lbPrevFocus?.focus();
+        },
+        { once: true },
+      );
+    }
+
+    function lbUpdate() {
+      lbImg.src = lbScreenshots[lbIndex];
+      lbImg.alt = `Screenshot ${lbIndex + 1} of ${lbScreenshots.length}`;
+      lbPrev.disabled = lbIndex === 0;
+      lbNext.disabled = lbIndex === lbScreenshots.length - 1;
+    }
+
+    // Open lightbox when a thumb-wrap is clicked/keydown
+    document.querySelectorAll<HTMLElement>(".thumb-wrap").forEach((wrap) => {
+      const openLightbox = () => {
+        const card = wrap.closest<HTMLElement>("[data-screenshots]");
+        if (!card) return;
+        const shots = (card.dataset.screenshots ?? "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        if (!shots.length) return;
+        lbShow(shots, 0);
+      };
+
+      wrap.addEventListener("click", openLightbox);
+      wrap.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openLightbox();
+        }
+      });
+    });
+
+    lbClose.addEventListener("click", lbHide);
+    lbBackdrop.addEventListener("click", lbHide);
+
+    lbPrev.addEventListener("click", () => {
+      if (lbIndex > 0) {
+        lbIndex--;
+        lbUpdate();
+      }
+    });
+
+    lbNext.addEventListener("click", () => {
+      if (lbIndex < lbScreenshots.length - 1) {
+        lbIndex++;
+        lbUpdate();
+      }
+    });
+
+    // Keyboard navigation
+    lightbox.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        lbHide();
+      } else if (e.key === "ArrowLeft") {
         if (lbIndex > 0) {
           lbIndex--;
           lbUpdate();
         }
-      });
-
-      lbNext.addEventListener("click", () => {
+      } else if (e.key === "ArrowRight") {
         if (lbIndex < lbScreenshots.length - 1) {
           lbIndex++;
           lbUpdate();
         }
-      });
-
-      // Keyboard navigation
-      lightbox.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          lbHide();
-        } else if (e.key === "ArrowLeft") {
-          if (lbIndex > 0) {
-            lbIndex--;
-            lbUpdate();
+      } else if (e.key === "Tab") {
+        // Focus trap
+        const focusable = lbFocusable();
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
           }
-        } else if (e.key === "ArrowRight") {
-          if (lbIndex < lbScreenshots.length - 1) {
-            lbIndex++;
-            lbUpdate();
-          }
-        } else if (e.key === "Tab") {
-          // Focus trap
-          const focusable = lbFocusable();
-          const first = focusable[0];
-          const last = focusable[focusable.length - 1];
-          if (e.shiftKey) {
-            if (document.activeElement === first) {
-              e.preventDefault();
-              last.focus();
-            }
-          } else {
-            if (document.activeElement === last) {
-              e.preventDefault();
-              first.focus();
-            }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
           }
         }
-      });
+      }
+    });
 
-      // ─── Contact Form ────────────────────────────────────────────────────
-      const contactForm = document.getElementById(
-        "contact-form",
-      ) as HTMLFormElement | null;
-      const formSuccess = document.getElementById("form-success");
+    // ─── Contact Form ────────────────────────────────────────────────────
+    const contactForm = document.getElementById(
+      "contact-form",
+    ) as HTMLFormElement | null;
+    const formSuccess = document.getElementById("form-success");
 
-      contactForm?.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    contactForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-        const submitBtn = contactForm.querySelector(
-          '[type="submit"]',
-        ) as HTMLButtonElement;
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Sending…";
+      const submitBtn = contactForm.querySelector(
+        '[type="submit"]',
+      ) as HTMLButtonElement;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending…";
 
-        try {
-          const res = await fetch(contactForm.action, {
-            method: "POST",
-            body: new FormData(contactForm),
-            headers: { Accept: "application/json" },
-          });
+      try {
+        const res = await fetch(contactForm.action, {
+          method: "POST",
+          body: new FormData(contactForm),
+          headers: { Accept: "application/json" },
+        });
 
-          if (res.ok) {
-            contactForm.classList.add("hidden");
-            formSuccess?.classList.remove("hidden");
-          } else {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Send Message";
-            alert("Something went wrong. Please try again.");
-          }
-        } catch {
+        if (res.ok) {
+          contactForm.classList.add("hidden");
+          formSuccess?.classList.remove("hidden");
+        } else {
           submitBtn.disabled = false;
           submitBtn.textContent = "Send Message";
-          alert("Network error. Please try again.");
+          alert("Something went wrong. Please try again.");
         }
-      });
-    </script>
+      } catch {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send Message";
+        alert("Network error. Please try again.");
+      }
+    });
+  </script>
 </BaseLayout>
