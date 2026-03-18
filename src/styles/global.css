@@ -277,10 +277,17 @@ section h2::before {
 }
 
 .filter-btn.active {
-  background: #00FFC8;
-  color: #0D0D0D;
-  border-color: #00FFC8;
+  background: rgb(0 255 200 / 0.08);
+  color: #00FFC8;
+  border-color: rgb(0 255 200 / 0.40);
   font-weight: 600;
+  cursor: default;
+}
+
+.filter-btn.active:hover {
+  background: rgb(0 255 200 / 0.08);
+  color: #00FFC8;
+  border-color: rgb(0 255 200 / 0.40);
 }
 
 /* ─── Mobile Nav ─────────────────────────────────────────────────────── */
