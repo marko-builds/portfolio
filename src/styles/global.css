@@ -302,7 +302,7 @@ section h2::before {
 }
 
 .contact-input:focus {
-  border-color: rgb(34 211 238 / 0.45);
+  border-color: rgb(0 255 200 / 0.45);
 }
 
 .contact-input::placeholder {
