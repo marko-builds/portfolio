@@ -1,0 +1,379 @@
+---
+// Pixel-art avatar — simpatic dev in Arch Linux beanie
+// 48×48 sprite, 200px circle, canvas-based animation
+---
+
+<div class="capy-wrap" id="capy-avatar">
+  <div class="capy-glow"></div>
+  <div class="capy-circle">
+    <div class="capy-boot" id="capy-boot">
+      <div class="capy-bar-track">
+        <div class="capy-bar-fill" id="capy-bar"></div>
+      </div>
+    </div>
+    <canvas id="capy-canvas" width="192" height="192"></canvas>
+    <div class="capy-scanlines"></div>
+    <div class="capy-sweep"></div>
+    <div class="capy-vignette"></div>
+  </div>
+  <div class="capy-online" id="capy-online"></div>
+</div>
+
+<style>
+  @keyframes capy-bob    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  @keyframes capy-pulse  { 0%,100%{opacity:1} 50%{opacity:0.15} }
+  @keyframes capy-ring   {
+    0%,100% { box-shadow: 0 0 0 2px rgba(0,255,200,0.35), 0 0 14px rgba(0,255,200,0.15); }
+    50%     { box-shadow: 0 0 0 2px rgba(0,255,200,0.6),  0 0 22px rgba(0,255,200,0.28); }
+  }
+  @keyframes capy-ringH  {
+    0%,100% { box-shadow: 0 0 0 2px rgba(0,255,200,0.9), 0 0 32px rgba(0,255,200,0.4); }
+    50%     { box-shadow: 0 0 0 3px #00FFC8,             0 0 48px rgba(0,255,200,0.6); }
+  }
+  @keyframes capy-scan   { 0%{top:-30%} 100%{top:130%} }
+  @keyframes capy-flick  { 0%,100%{opacity:1} 95%{opacity:0.94} 97%{opacity:0.88} 99%{opacity:0.94} }
+
+  .capy-wrap {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .capy-wrap.booted {
+    animation: capy-bob 4.5s ease-in-out infinite;
+  }
+
+  .capy-glow {
+    position: absolute;
+    inset: -24px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(0,255,200,0.07) 0%, transparent 65%);
+    transition: background 0.5s;
+    pointer-events: none;
+  }
+  .capy-wrap:hover .capy-glow {
+    background: radial-gradient(ellipse, rgba(0,255,200,0.2) 0%, transparent 65%);
+  }
+
+  .capy-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    background: #0D0D0D;
+    animation: capy-ring 3.5s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .capy-wrap:hover .capy-circle {
+    animation: capy-ringH 1.6s ease-in-out infinite;
+  }
+
+  .capy-boot {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0D0D0D;
+    z-index: 2;
+    transition: opacity 0.18s;
+  }
+  .capy-boot.hidden { opacity: 0; pointer-events: none; }
+
+  .capy-bar-track {
+    width: 60px;
+    height: 2px;
+    background: #111;
+    border: 1px solid rgba(0,255,200,0.13);
+  }
+  .capy-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg,#00CCA0,#00FFC8);
+    width: 0%;
+    transition: width 0.03s;
+  }
+
+  #capy-canvas {
+    image-rendering: pixelated;
+    position: absolute;
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+    animation: capy-flick 10s infinite;
+    opacity: 0;
+  }
+  #capy-canvas.visible {
+    opacity: 1;
+  }
+  .capy-wrap:hover #capy-canvas {
+    transform: scale(1.04);
+  }
+
+  .capy-scanlines, .capy-sweep, .capy-vignette {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .capy-wrap.booted .capy-scanlines,
+  .capy-wrap.booted .capy-sweep,
+  .capy-wrap.booted .capy-vignette { opacity: 1; }
+
+  .capy-scanlines {
+    inset: 0;
+    border-radius: 50%;
+    background-image: repeating-linear-gradient(0deg,transparent,transparent 5px,rgba(0,0,0,0.12) 6px);
+  }
+  .capy-sweep {
+    left: 0; right: 0;
+    height: 25%;
+    background: linear-gradient(transparent,rgba(0,255,200,0.028) 50%,transparent);
+    animation: capy-scan 5s linear infinite;
+  }
+  .capy-vignette {
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%);
+  }
+
+  .capy-online {
+    position: absolute;
+    bottom: 8px; right: 8px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #00FFC8;
+    border: 2px solid #0D0D0D;
+    box-shadow: 0 0 8px rgba(0,255,200,0.8);
+    animation: capy-pulse 2.8s ease-in-out infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .capy-wrap.booted .capy-online { opacity: 1; }
+</style>
+
+<script>
+  // ─── PALETTE ────────────────────────────────────────────────────────────────
+  const P = [
+    "transparent", // 0
+    "#C8956E",     // 1  skin base
+    "#DABA98",     // 2  skin highlight
+    "#A07050",     // 3  skin shadow
+    "#1A120B",     // 4  beard/hair dark
+    "#3C2A21",     // 5  beard/hair mid
+    "#4E3629",     // 6  hair base brown
+    "#6D4C41",     // 7  hair highlight brown
+    "#3E2723",     // 8  hair shadow brown
+    "#0D0D1A",     // 9  pupil
+    "#00FFC8",     // 10 brand green
+    "#00CCA0",     // 11 brand green shadow
+    "#008868",     // 12 brand green deep
+    "#1A1A1A",     // 13 mouth line
+    "#D4A880",     // 14 skin warm (nose)
+    "#dde8ff",     // 15 sclera white
+    "#b07848",     // 16 nostril warm
+    "#5C4033",     // 17 beard light
+    "#00ff9f",     // 18 eye green highlight
+    "#3E2723",     // 19 brow / hair dark
+    "#5D4037",     // 20 hair highlight
+  ];
+
+  // ─── SPRITE: 48w × 48h ─────────────────────────────────────────────────────
+  // MATHEMATICALLY CENTERED (Grid 48, Center at 23.5-24)
+  const BASE_RAW = Array(48).fill(0).map(() => Array(48).fill(0));
+
+  function setRow(row, content, offset) {
+    content.forEach((v, i) => { if (row < 48 && i + offset < 48) BASE_RAW[row][i + offset] = v; });
+  }
+
+  // Brown Hair (Rows 4-11) - Messy style
+  setRow(4,  [8,8,6,6,6,6,6,8,8,8], 19);
+  setRow(5,  [8,6,6,6,6,7,7,6,6,6,6,6,6,6,8], 16);
+  setRow(6,  [8,6,7,7,6,6,6,6,6,6,6,6,6,6,7,7,6,8], 15);
+  setRow(7,  [6,6,6,6,6,6,6,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6], 13);
+  setRow(8,  [6,6,7,7,6,6,6,6,6,6,6,6,6,6,6,6,7,7,6,6,6,6], 12);
+  setRow(9,  [8,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,8], 12);
+  setRow(10, [8,8,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,8,8], 12);
+  setRow(11, [8,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,8], 13);
+
+  // Face
+  for(let r=12; r<=25; r++) {
+    setRow(r, [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], 13);
+  }
+  // Refined Eyebrows (Rows 14-15)
+  setRow(14, [1,1,1, 1,19,19,1, 1,1,1,1,1,1, 1,19,19,1, 1,1,1,1,1], 13);
+  setRow(15, [1,1,1, 19,19,19,19, 1,1,1,1,1,1, 19,19,19,19, 1,1,1,1,1], 13);
+  
+  // Mole on cheek
+  BASE_RAW[18][20] = 4;
+
+  // Ears
+  for (let r = 17; r <= 20; r++) {
+    BASE_RAW[r][12] = 3;  // left ear
+    BASE_RAW[r][35] = 3;  // right ear
+  }
+  BASE_RAW[18][12] = 14; BASE_RAW[19][12] = 14;
+  BASE_RAW[18][35] = 14; BASE_RAW[19][35] = 14;
+
+  setRow(18, [1,1,1,15,9,9,15,1,1,1,1,1,1,15,9,9,15,1,1,1,1,1], 13);
+  setRow(19, [1,1,1,3,9,18,3,1,1,1,1,1,1,3,18,9,3,1,1,1,1,1], 13);
+  setRow(21, [14,14,14,14,14,14,14,14], 19);
+  setRow(22, [14,3,3,3,3,14], 21);
+  setRow(23, [16,3,14,14,3,16], 21);
+  
+  // Full Beard & Mustache
+  // Mustache
+  setRow(24, [4,4,4,4,4,4,4,4], 20);
+  setRow(25, [4,5,5,5,5,5,5,4], 20);
+  
+  // Mouth
+  setRow(26, [13,13,13,13,13,13], 21); 
+
+  // Beard cheeks & chin
+  for(let r=21; r<=25; r++) {
+    BASE_RAW[r][13] = 4; BASE_RAW[r][14] = 5;
+    BASE_RAW[r][33] = 5; BASE_RAW[r][34] = 4;
+  }
+  for(let r=26; r<=28; r++) {
+    setRow(r, [4,4,5,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,5,4,4], 12);
+  }
+  
+  setRow(29, [4,4,4,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,4,4,4], 12);
+  setRow(30, [4,4,5,4,4,4,4,5,4,4,4,4,5,4,4,4,4,5,4,4,4,4,5,4,4], 12);
+  setRow(31, [4,4,17,4,4,4,5,4,4,4,4,5,4,4,4,4,5,4,4,4,17,4,4], 13);
+  setRow(32, [4,4,17,4,5,4,4,4,4,4,4,5,4,17,4,4], 16);
+  setRow(33, [4,4,17,5,5,4,4,4,4,5,5,17,4,4], 18);
+
+  // Neck
+  setRow(34, [3,1,1,1,1,1,1,1,1,3], 19);
+  setRow(35, [3,3,1,1,1,1,1,1,3,3], 19);
+  setRow(36, [3,3,1,1,1,1,1,1,3,3], 19); // Fill gap between neck and shirt
+
+  // Shirt
+  setRow(37, [12,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,12], 15);
+  for(let r=38; r<=47; r++) {
+    const width = 20 + (r-38) * 4;
+    const offset = Math.max(0, Math.floor((48 - width) / 2));
+    const content = Array(Math.min(48, width)).fill(10);
+    if (content.length > 0) { content[0] = 12; content[content.length-1] = 12; }
+    setRow(r, content, offset);
+  }
+
+  const BASE = BASE_RAW;
+
+  function mapFrame(base, overrides) {
+    return base.map((r, i) => {
+      if (overrides[i]) {
+        const nr = [...r];
+        overrides[i].forEach((v, c) => { if(c + 13 < 48) nr[c + 13] = v; }); 
+        return nr;
+      }
+      return r;
+    });
+  }
+
+  const BLINK1 = mapFrame(BASE, {
+    18: [1,1,1,3,9,9,3,1,1,1,1,1,1,3,9,9,3,1,1,1,1,1],
+    19: [1,1,1,3,3,3,3,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1],
+  });
+  const BLINK2 = mapFrame(BASE, {
+    16: [1,1,1, 1,19,19,1, 1,1,1,1,1,1, 1,19,19,1, 1,1,1,1,1], // closed eye brows top
+    17: [1,1,1, 19,19,19,19, 1,1,1,1,1,1, 19,19,19,19, 1,1,1,1,1], // closed eye brows bottom
+    18: [1,1,1,3,3,3,3,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1],
+    19: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  });
+
+  const HOVER_FRAME = mapFrame(BASE, {
+    13: [1,1,1, 1,19,19,1, 1,1,1,1,1,1, 1,19,19,1, 1,1,1,1,1], // raised brows top
+    14: [1,1,1, 19,19,19,19, 1,1,1,1,1,1, 19,19,19,19, 1,1,1,1,1], // raised brows bottom
+    15: [1,1,1, 1,1,1,1, 1,1,1,1,1,1, 1,1,1,1, 1,1,1,1,1], // clear base brows
+    25: [1,1,1,1,1,1,1,1,13,1,1,1,1,13,1,1,1,1,1,1,1,1], // smile corners (row 25)
+    26: [1,1,1,1,1,1,1,1,1,13,13,13,13,1,1,1,1,1,1,1,1,1], // smile center (row 26)
+  });
+
+  const BOB = BASE;
+
+  const SEQ = [
+    { frame: BASE,   dur: 3000 },
+    { frame: BLINK1, dur: 60   },
+    { frame: BLINK2, dur: 80   },
+    { frame: BLINK1, dur: 60   },
+    { frame: BASE,   dur: 600  },
+    { frame: BOB,    dur: 500  },
+    { frame: BASE,   dur: 500  },
+    { frame: BOB,    dur: 500  },
+    { frame: BASE,   dur: 1400 },
+    { frame: BLINK1, dur: 60   },
+    { frame: BLINK2, dur: 80   },
+    { frame: BLINK1, dur: 60   },
+    { frame: BASE,   dur: 3400 },
+  ];
+
+  const PS = 4, W = 48, H = 48, CIRC = 200;
+
+  function drawFrame(ctx, grid) {
+    ctx.clearRect(0, 0, W * PS, H * PS);
+    for (let r = 0; r < H; r++) {
+      for (let c = 0; c < W; c++) {
+        const idx = grid[r][c];
+        if (!idx) continue;
+        ctx.fillStyle = P[idx];
+        ctx.fillRect(c * PS, r * PS, PS, PS);
+      }
+    }
+  }
+
+  const wrap   = document.getElementById("capy-avatar");
+  const canvas = document.getElementById("capy-canvas");
+  const boot   = document.getElementById("capy-boot");
+  const bar    = document.getElementById("capy-bar");
+  const ctx    = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+
+  canvas.style.width  = CIRC + "px";
+  canvas.style.height = CIRC + "px";
+  canvas.style.left   = "0px";
+  canvas.style.top    = "0px";
+
+  let hover = false;
+  wrap.addEventListener("mouseenter", () => { hover = true; });
+  wrap.addEventListener("mouseleave", () => { hover = false; });
+
+  let scanRow = 0;
+  const scanIv = setInterval(() => {
+    scanRow++;
+    bar.style.width = Math.min((scanRow / H) * 100, 100) + "%";
+    ctx.clearRect(0, 0, W * PS, H * PS);
+    for (let r = 0; r < Math.min(scanRow, H); r++) {
+      for (let c = 0; c < W; c++) {
+        const idx = BASE[r][c];
+        if (!idx) continue;
+        ctx.fillStyle = P[idx];
+        ctx.fillRect(c * PS, r * PS, PS, PS);
+      }
+    }
+    if (scanRow < H) {
+      ctx.fillStyle = "rgba(0,255,200,0.5)";
+      ctx.fillRect(0, scanRow * PS, W * PS, 2);
+    }
+    canvas.classList.add("visible");
+    if (scanRow >= H) {
+      clearInterval(scanIv);
+      setTimeout(() => {
+        boot.classList.add("hidden");
+        wrap.classList.add("booted");
+        startAnim();
+      }, 180);
+    }
+  }, 12);
+
+  let seqIdx = 0;
+  function startAnim() {
+    function tick() {
+      const { frame, dur } = SEQ[seqIdx];
+      drawFrame(ctx, hover ? HOVER_FRAME : frame);
+      seqIdx = (seqIdx + 1) % SEQ.length;
+      setTimeout(tick, dur);
+    }
+    tick();
+  }
+</script>

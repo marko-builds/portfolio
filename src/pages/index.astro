@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
+import CapybaraAvatar from "../components/CapybaraAvatar.astro";
 import { getImage } from "astro:assets";
 import hideSeek1Raw from "../assets/screenshots/hide-and-seek-1.png";
 import hideSeek2Raw from "../assets/screenshots/hide-and-seek-2.png";
@@ -310,13 +311,7 @@ const personSchema = {
         </div>
 
         <div class="hero-enter shrink-0" style="--delay: 0.6s">
-          <img
-            src="/profile.png"
-            alt="Marko Stankovic"
-            width="280"
-            height="280"
-            class="w-[280px] h-[280px] rounded-2xl object-cover border border-[#1F1F1F]"
-          />
+          <CapybaraAvatar />
         </div>
       </div>
     </section>
