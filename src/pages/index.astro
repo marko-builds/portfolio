@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
-import CapybaraAvatar from "../components/CapybaraAvatar.astro";
+import Avatar from "../components/Avatar.astro";
 import { getImage } from "astro:assets";
 import hideSeek1Raw from "../assets/screenshots/hide-and-seek-1.png";
 import hideSeek2Raw from "../assets/screenshots/hide-and-seek-2.png";
@@ -311,7 +311,7 @@ const personSchema = {
         </div>
 
         <div class="hero-enter shrink-0" style="--delay: 0.6s">
-          <CapybaraAvatar />
+          <Avatar />
         </div>
       </div>
     </section>
@@ -326,97 +326,97 @@ const personSchema = {
         </p>
 
         <!-- Skill cards: 2 rows × 3 columns -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div class="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-8">
           <!-- Unity 3D -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-violet-800/60 transition-colors duration-150"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-violet-800/60 transition-colors duration-150"
             style="--card-accent: rgb(167,139,250); --card-accent-dim: rgba(139,92,246,0.18); --delay: 0ms"
           >
             <div
-              class="w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-5"
+              class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-violet-400 font-mono text-base"
+              <span class="font-bold text-violet-400 font-mono text-xs sm:text-base"
                 >U3D</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1">Unity 3D</h3>
-            <p class="text-[#888888] text-xs">3+ years</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Unity 3D</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">3+ years</p>
           </div>
 
           <!-- Unreal Engine -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-blue-800/60 transition-colors duration-150"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-blue-800/60 transition-colors duration-150"
             style="--card-accent: rgb(96,165,250); --card-accent-dim: rgba(96,165,250,0.18); --delay: 100ms"
           >
             <div
-              class="w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-5"
+              class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-blue-400 font-mono text-base">UE</span
+              <span class="font-bold text-blue-400 font-mono text-xs sm:text-base">UE</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1">Unreal Engine</h3>
-            <p class="text-[#888888] text-xs">Supporting experience</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Unreal Engine</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Supporting experience</p>
           </div>
 
           <!-- Godot -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-cyan-800/60 transition-colors duration-150"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-cyan-800/60 transition-colors duration-150"
             style="--card-accent: rgb(34,211,238); --card-accent-dim: rgba(34,211,238,0.18); --delay: 200ms"
           >
             <div
-              class="w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-5"
+              class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-cyan-400 font-mono text-base">G4</span
+              <span class="font-bold text-cyan-400 font-mono text-xs sm:text-base">G4</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1">Godot</h3>
-            <p class="text-[#888888] text-xs">Supporting experience</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Godot</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Supporting experience</p>
           </div>
 
           <!-- C# -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-green-800/60 transition-colors duration-150"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-green-800/60 transition-colors duration-150"
             style="--card-accent: rgb(74,222,128); --card-accent-dim: rgba(74,222,128,0.18); --delay: 300ms"
           >
             <div
-              class="w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-5"
+              class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-green-400 font-mono text-base"
+              <span class="font-bold text-green-400 font-mono text-xs sm:text-base"
                 >C#</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1">C#</h3>
-            <p class="text-[#888888] text-xs">Primary language</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">C#</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Primary language</p>
           </div>
 
           <!-- Arch Linux -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-sky-800/60 transition-colors duration-150"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-sky-800/60 transition-colors duration-150"
             style="--card-accent: rgb(56,189,248); --card-accent-dim: rgba(56,189,248,0.18); --delay: 0ms"
           >
             <div
-              class="w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-5"
+              class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-sky-400 font-mono text-base">>_</span>
+              <span class="font-bold text-sky-400 font-mono text-xs sm:text-base">>_</span>
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1">Arch Linux</h3>
-            <p class="text-[#888888] text-xs">Daily driver</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Arch Linux</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Daily driver</p>
           </div>
 
           <!-- AI Tools -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-6 hover:border-purple-800/60 transition-colors duration-150"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-purple-800/60 transition-colors duration-150"
             style="--card-accent: rgb(192,132,252); --card-accent-dim: rgba(192,132,252,0.18); --delay: 100ms"
           >
             <div
-              class="w-11 h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-5"
+              class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-purple-400 font-mono text-base"
+              <span class="font-bold text-purple-400 font-mono text-xs sm:text-base"
                 >AI</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1">AI Tools</h3>
-            <p class="text-[#888888] text-xs">Coding & design workflow</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">AI Tools</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Coding & design workflow</p>
           </div>
         </div>
 
