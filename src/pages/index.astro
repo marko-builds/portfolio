@@ -4,20 +4,9 @@ import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
 import Avatar from "../components/Avatar.astro";
 import { getImage } from "astro:assets";
-import hideSeek1Raw from "../assets/screenshots/hide-and-seek-1.png";
-import hideSeek2Raw from "../assets/screenshots/hide-and-seek-2.png";
 import endlessRunner1Raw from "../assets/screenshots/endless-runner-1.png";
 import endlessRunner2Raw from "../assets/screenshots/endless-runner-2.png";
-const hideSeek1 = await getImage({
-  src: hideSeek1Raw,
-  format: "webp",
-  width: 800,
-});
-const hideSeek2 = await getImage({
-  src: hideSeek2Raw,
-  format: "webp",
-  width: 800,
-});
+import deploylog1Raw from "../assets/screenshots/deploylog-1.png";
 const endlessRunner1 = await getImage({
   src: endlessRunner1Raw,
   format: "webp",
@@ -25,6 +14,11 @@ const endlessRunner1 = await getImage({
 });
 const endlessRunner2 = await getImage({
   src: endlessRunner2Raw,
+  format: "webp",
+  width: 800,
+});
+const deploylog1 = await getImage({
+  src: deploylog1Raw,
   format: "webp",
   width: 800,
 });
@@ -38,16 +32,16 @@ const recentPosts = (await getCollection("blog"))
     return { ...post, readingTime: Math.max(1, Math.ceil(words / 200)) };
   });
 
-const pageTitle = "Marko Stankovic — Game Developer";
+const pageTitle = "Marko Stankovic — Generalist Technical Artist & Gameplay Programmer";
 const pageDescription =
-  "Game developer building systems in Unity 3D, Unreal Engine, and Godot. AI state machines, procedural generation, editor tooling. Based in Serbia, open to remote.";
+  "Generalist Technical Artist and gameplay programmer in Unity and Unreal Engine 5. Gameplay systems, AI state machines, editor tooling, and pipeline automation. C# and C++. Based in Serbia, open to remote / EU.";
 
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Marko Stankovic",
   url: "https://markostankovic.org",
-  jobTitle: "Game Developer",
+  jobTitle: "Generalist Technical Artist",
   sameAs: [
     "https://github.com/Idzuo32",
     "https://www.linkedin.com/in/markostankovic-gamedev/",
@@ -281,7 +275,7 @@ const personSchema = {
           class="hero-enter text-2xl sm:text-3xl text-[#888888] font-light mb-8 cursor-blink"
           style="--delay: 0.7s"
         >
-          Game Developer
+          Technical Artist · Gameplay Programmer
         </p>
 
         <p
@@ -290,8 +284,8 @@ const personSchema = {
         >
           I build the systems that make games feel alive — AI that thinks,
           procedural worlds that surprise, editor tools that get out of the way.
-          Three years deep in Unity 3D — with supporting experience in Unreal
-          Engine and Godot. Based in Serbia, open to remote.
+          Three years deep in Unity 3D, now extending into Unreal Engine 5 and
+          the art–engineering bridge. Based in Serbia, open to remote / EU.
         </p>
 
         <div class="hero-enter flex flex-wrap gap-4" style="--delay: 1s">
@@ -354,23 +348,23 @@ const personSchema = {
               <span class="font-bold text-blue-400 font-mono text-xs sm:text-base">UE</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Unreal Engine</h3>
-            <p class="text-[#888888] text-[10px] sm:text-xs">Supporting experience</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Unreal Engine 5</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Active · migrating</p>
           </div>
 
-          <!-- Godot -->
+          <!-- TypeScript -->
           <div
-            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-cyan-800/60 transition-colors duration-150"
-            style="--card-accent: rgb(34,211,238); --card-accent-dim: rgba(34,211,238,0.18); --delay: 200ms"
+            class="skill-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl p-3 sm:p-6 hover:border-blue-800/60 transition-colors duration-150"
+            style="--card-accent: rgb(96,165,250); --card-accent-dim: rgba(96,165,250,0.18); --delay: 200ms"
           >
             <div
               class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
-              <span class="font-bold text-cyan-400 font-mono text-xs sm:text-base">G4</span
+              <span class="font-bold text-blue-300 font-mono text-xs sm:text-base">TS</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Godot</h3>
-            <p class="text-[#888888] text-[10px] sm:text-xs">Supporting experience</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">TypeScript</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Node · Next.js</p>
           </div>
 
           <!-- C# -->
@@ -412,11 +406,11 @@ const personSchema = {
               class="w-9 h-9 sm:w-11 sm:h-11 bg-[#1F1F1F] rounded-lg flex items-center justify-center mb-3 sm:mb-5"
             >
               <span class="font-bold text-purple-400 font-mono text-xs sm:text-base"
-                >AI</span
+                >⚙</span
               >
             </div>
-            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">AI Tools</h3>
-            <p class="text-[#888888] text-[10px] sm:text-xs">Coding & design workflow</p>
+            <h3 class="font-semibold text-[#F0F0F0] mb-1 text-xs sm:text-base">Tooling & Automation</h3>
+            <p class="text-[#888888] text-[10px] sm:text-xs">Editor tools & pipelines</p>
           </div>
         </div>
 
@@ -503,7 +497,7 @@ const personSchema = {
               </header>
 
               <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">
-                Endless Runner
+                Relic Rush
               </h3>
 
               <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
@@ -532,7 +526,7 @@ const personSchema = {
               <!-- CTAs -->
               <div class="flex flex-wrap gap-3">
                 <a
-                  href="https://github.com/Idzuo32/DiplomskiRad"
+                  href="https://github.com/Idzuo32/relic-rush"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150 min-h-[44px]"
@@ -562,67 +556,57 @@ const personSchema = {
             </div>
           </article>
 
-          <!-- Hide & Seek -->
+          <!-- DeployLog -->
           <article
-            class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-violet-800/50 transition-colors duration-150 flex flex-col"
-            style="--card-glow: rgba(139,92,246,0.1); --delay: 150ms"
-            data-tags="Data-Driven,State Machine,Strategy Pattern,Hiding System,Detection System"
-            data-screenshots={`${hideSeek1.src},${hideSeek2.src}`}
+            class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-rose-800/50 transition-colors duration-150 flex flex-col"
+            style="--card-glow: rgba(230,57,70,0.1); --delay: 150ms"
+            data-tags="SaaS,Next.js,TypeScript,Supabase,Stripe,CLI"
+            data-screenshots={deploylog1.src}
           >
             <!-- 16:9 thumbnail -->
             <div
               class="thumb-wrap w-full aspect-video shrink-0 cursor-pointer relative"
               role="button"
               tabindex="0"
-              aria-label="Open Hide & Seek screenshots"
+              aria-label="Open DeployLog screenshot"
             >
-              <video
+              <img
                 class="w-full h-full object-cover"
-                autoplay
-                loop
-                muted
-                playsinline
-                preload="none"
-                poster={hideSeek1.src}
-              >
-                <source
-                  src="/assets/thumbnails/hide-and-seek-thumb.mp4"
-                  type="video/mp4"
-                />
-              </video>
+                src={deploylog1.src}
+                alt="DeployLog landing page"
+                loading="lazy"
+              />
             </div>
 
             <!-- Card content -->
             <div class="p-8 flex flex-col flex-1">
               <header class="flex items-start justify-between mb-5">
                 <span
-                  class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-[#00FFC8]/20 px-3 py-1 rounded-full"
+                  class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1 rounded-full"
                 >
-                  In Development
+                  Launching
                 </span>
-                <span class="text-xs text-[#666666] font-mono">Unity 3D</span>
+                <span class="text-xs text-[#666666] font-mono">Next.js · SaaS</span>
               </header>
 
-              <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">Hide & Seek</h3>
+              <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">DeployLog</h3>
 
               <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
-                Five-state AI (Idle → Patrol → Chase → Investigate → Search)
-                built on an <code
-                  class="font-mono text-[#00FFC8] text-xs bg-[#00FFC8]/10 px-1 rounded"
-                  >IEnemyState</code
-                > interface — every transition explicit, every state independently
-                testable. Detection runs through a field-of-view raycast system
-                that accounts for cover geometry.
+                A changelog &amp; release-notes platform for dev teams — hosted
+                page, embeddable widget, and a published npm CLI that turns git
+                commits into release notes with an LLM. Built full-stack:
+                Next.js, Supabase, Stripe.
               </p>
 
               <div class="flex flex-wrap gap-2 mb-6">
                 {
                   [
-                    "Data-Driven",
-                    "State Machine",
-                    "Strategy Pattern",
-                    "Hiding System",
-                    "Detection System",
+                    "SaaS",
+                    "Next.js",
+                    "TypeScript",
+                    "Supabase",
+                    "Stripe",
+                    "CLI",
                   ].map((tag) => (
                     <span class="project-tag text-xs bg-cyan-400/[0.08] border border-[#00FFC8]/20 text-cyan-300/75 px-2 py-1 rounded">
                       {tag}
@@ -634,12 +618,12 @@ const personSchema = {
               <!-- CTAs -->
               <div class="flex flex-wrap gap-3">
                 <a
-                  href="https://github.com/Idzuo32/hide_and_seek_3d"
+                  href="https://deploylog.dev"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150 min-h-[44px]"
                 >
-                  View on GitHub
+                  Visit site
                   <svg
                     class="arrow w-4 h-4"
                     fill="none"
@@ -655,7 +639,7 @@ const personSchema = {
                   </svg>
                 </a>
                 <a
-                  href="/projects/hide-and-seek"
+                  href="/projects/deploylog"
                   class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-[#00FFC8]/[0.08] border-[3px] border-[#00FFC8]/25 hover:border-[#00FFC8]/40 text-[#00FFC8]/80 text-sm transition-colors duration-150 min-h-[44px]"
                 >
                   View Details →
@@ -678,9 +662,9 @@ const personSchema = {
             class="reveal text-[#888888] mb-10 leading-relaxed"
             style="--delay: 100ms"
           >
-            Open to roles in Serbia and remote. If you're building game systems
-            and want someone who treats architecture as part of the craft —
-            let's talk.
+            Open to roles remote or across the EU. If you're building game
+            systems and want someone who treats architecture as part of the
+            craft — let's talk.
           </p>
 
           <div class="flex flex-col gap-3">
@@ -951,7 +935,7 @@ const personSchema = {
       class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3"
     >
       <p class="text-[#888888] text-sm">© 2026 Marko Stankovic</p>
-      <p class="text-[#666666] text-xs font-mono">Game Developer · Serbia</p>
+      <p class="text-[#666666] text-xs font-mono">Technical Artist · Gameplay Programmer · Serbia</p>
     </div>
   </footer>
 
