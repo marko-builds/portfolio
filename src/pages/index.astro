@@ -4,20 +4,8 @@ import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
 import Avatar from "../components/Avatar.astro";
 import { getImage } from "astro:assets";
-import endlessRunner1Raw from "../assets/screenshots/endless-runner-1.png";
-import endlessRunner2Raw from "../assets/screenshots/endless-runner-2.png";
 import deploylog1Raw from "../assets/screenshots/deploylog-1.png";
 import tictactoe1Raw from "../assets/screenshots/tictactoe-neon.png";
-const endlessRunner1 = await getImage({
-  src: endlessRunner1Raw,
-  format: "webp",
-  width: 800,
-});
-const endlessRunner2 = await getImage({
-  src: endlessRunner2Raw,
-  format: "webp",
-  width: 800,
-});
 const deploylog1 = await getImage({
   src: deploylog1Raw,
   format: "webp",
@@ -462,107 +450,6 @@ const personSchema = {
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Endless Runner -->
-          <article
-            class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-cyan-800/50 transition-colors duration-150 flex flex-col"
-            style="--card-glow: rgba(34,211,238,0.1); --delay: 0ms"
-            data-tags="Proc Gen,Object Pooling,Event-Driven,Utility Scripts,Lane Movement,C#"
-            data-screenshots={`${endlessRunner1.src},${endlessRunner2.src}`}
-          >
-            <!-- 16:9 thumbnail -->
-            <div
-              class="thumb-wrap w-full aspect-video shrink-0 cursor-pointer relative"
-              role="button"
-              tabindex="0"
-              aria-label="Open Endless Runner screenshots"
-            >
-              <video
-                class="w-full h-full object-cover"
-                autoplay
-                loop
-                muted
-                playsinline
-                preload="none"
-                poster={endlessRunner1.src}
-              >
-                <source
-                  src="/assets/thumbnails/endless-runner-thumb.mp4"
-                  type="video/mp4"
-                />
-              </video>
-            </div>
-
-            <!-- Card content -->
-            <div class="p-8 flex flex-col flex-1">
-              <header class="flex items-start justify-between mb-5">
-                <span
-                  class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1 rounded-full"
-                >
-                  Completed
-                </span>
-                <span class="text-xs text-[#666666] font-mono">Unity 3D</span>
-              </header>
-
-              <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">
-                Relic Rush
-              </h3>
-
-              <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
-                Infinite levels, zero GC spikes. Chunk-based proc gen with a
-                queue-based object pool — event-driven architecture keeps
-                spawning, scoring, and audio fully decoupled.
-              </p>
-
-              <div class="flex flex-wrap gap-2 mb-6">
-                {
-                  [
-                    "Proc Gen",
-                    "Object Pooling",
-                    "Event-Driven",
-                    "Utility Scripts",
-                    "Lane Movement",
-                    "C#",
-                  ].map((tag) => (
-                    <span class="project-tag text-xs bg-cyan-400/[0.08] border border-[#00FFC8]/20 text-cyan-300/75 px-2 py-1 rounded">
-                      {tag}
-                    </span>
-                  ))
-                }
-              </div>
-
-              <!-- CTAs -->
-              <div class="flex flex-wrap gap-3">
-                <a
-                  href="https://github.com/Idzuo32/relic-rush"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150 min-h-[44px]"
-                >
-                  View on GitHub
-                  <svg
-                    class="arrow w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                  </svg>
-                </a>
-                <a
-                  href="/projects/endless-runner"
-                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-[#00FFC8]/[0.08] border-[3px] border-[#00FFC8]/25 hover:border-[#00FFC8]/40 text-[#00FFC8]/80 text-sm transition-colors duration-150 min-h-[44px]"
-                >
-                  View Details →
-                </a>
-              </div>
-            </div>
-          </article>
-
           <!-- DeployLog -->
           <article
             class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-rose-800/50 transition-colors duration-150 flex flex-col"
