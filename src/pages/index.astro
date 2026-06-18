@@ -7,6 +7,7 @@ import { getImage } from "astro:assets";
 import endlessRunner1Raw from "../assets/screenshots/endless-runner-1.png";
 import endlessRunner2Raw from "../assets/screenshots/endless-runner-2.png";
 import deploylog1Raw from "../assets/screenshots/deploylog-1.png";
+import tictactoe1Raw from "../assets/screenshots/tictactoe-neon.png";
 const endlessRunner1 = await getImage({
   src: endlessRunner1Raw,
   format: "webp",
@@ -19,6 +20,11 @@ const endlessRunner2 = await getImage({
 });
 const deploylog1 = await getImage({
   src: deploylog1Raw,
+  format: "webp",
+  width: 800,
+});
+const tictactoe1 = await getImage({
+  src: tictactoe1Raw,
   format: "webp",
   width: 800,
 });
@@ -641,6 +647,100 @@ const personSchema = {
                 </a>
                 <a
                   href="/projects/deploylog"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-[#00FFC8]/[0.08] border-[3px] border-[#00FFC8]/25 hover:border-[#00FFC8]/40 text-[#00FFC8]/80 text-sm transition-colors duration-150 min-h-[44px]"
+                >
+                  View Details →
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Tic-Tac-Toe -->
+          <article
+            class="project-card reveal bg-[#141414] border border-[#1F1F1F] rounded-xl overflow-hidden hover:border-cyan-800/50 transition-colors duration-150 flex flex-col"
+            style="--card-glow: rgba(34,211,238,0.1); --delay: 300ms"
+            data-tags="Unity,C#,ScriptableObject,Interface Segregation,SOLID,Theming"
+            data-screenshots={tictactoe1.src}
+          >
+            <!-- 16:9 thumbnail -->
+            <div
+              class="thumb-wrap w-full aspect-video shrink-0 cursor-pointer relative"
+              role="button"
+              tabindex="0"
+              aria-label="Open Tic-Tac-Toe screenshot"
+            >
+              <img
+                class="w-full h-full object-cover"
+                src={tictactoe1.src}
+                alt="Tic-Tac-Toe — Neon theme: neon-grid board with pink X and cyan O marks"
+                loading="lazy"
+              />
+            </div>
+
+            <!-- Card content -->
+            <div class="p-8 flex flex-col flex-1">
+              <header class="flex items-start justify-between mb-5">
+                <span
+                  class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1 rounded-full"
+                >
+                  Shipped
+                </span>
+                <span class="text-xs text-[#666666] font-mono">Unity 6 · C#</span>
+              </header>
+
+              <h3 class="text-xl font-bold text-[#F0F0F0] mb-3">
+                Tic-Tac-Toe
+              </h3>
+
+              <p class="text-[#888888] text-sm leading-relaxed mb-5 flex-1">
+                A shipped local-multiplayer game whose real story is its
+                theming: six themes repaint board, UI, HUD, and audio from one
+                tap. Adding a seventh is one ScriptableObject and zero new code
+                — a theme split across five segregated interfaces.
+              </p>
+
+              <div class="flex flex-wrap gap-2 mb-6">
+                {
+                  [
+                    "Unity",
+                    "C#",
+                    "ScriptableObject",
+                    "Interface Segregation",
+                    "SOLID",
+                    "Theming",
+                  ].map((tag) => (
+                    <span class="project-tag text-xs bg-cyan-400/[0.08] border border-[#00FFC8]/20 text-cyan-300/75 px-2 py-1 rounded">
+                      {tag}
+                    </span>
+                  ))
+                }
+              </div>
+
+              <!-- CTAs -->
+              <div class="flex flex-wrap gap-3">
+                <a
+                  href="https://marko-builds.itch.io/tictactoe"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150 min-h-[44px]"
+                >
+                  Play on itch
+                  <svg
+                    class="arrow w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                  </svg>
+                </a>
+                <a
+                  href="/projects/tictactoe"
                   class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-transparent hover:bg-[#00FFC8]/[0.08] border-[3px] border-[#00FFC8]/25 hover:border-[#00FFC8]/40 text-[#00FFC8]/80 text-sm transition-colors duration-150 min-h-[44px]"
                 >
                   View Details →

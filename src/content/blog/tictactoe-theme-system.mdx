@@ -1,0 +1,75 @@
+---
+title: "One ScriptableObject Per Theme: A Data-Driven Theme System in Unity"
+date: "2026-06-18"
+excerpt: "My Tic-Tac-Toe has six themes that repaint the board, UI, HUD, and audio from a single menu tap. Adding a seventh is one ScriptableObject and zero new code. Here is the architecture, and why I split a theme into five interfaces to get there."
+tags: ["Unity", "C#", "ScriptableObject", "Interface Segregation", "SOLID", "technical-art", "game-architecture"]
+draft: false
+---
+
+My Tic-Tac-Toe ships with six themes. Tap one in the menu and the board, the buttons, the popups, the HUD text, and the background music all change at once, mid-match if you want. Adding a seventh theme is one new asset and zero new code. This is how I made theming a data problem instead of a code problem, and why I split a single theme into five interfaces to do it.
+
+The game is [live on itch](https://marko-builds.itch.io/tictactoe).
+
+## The problem: one switch, many surfaces
+
+A theme is not just a palette. It is the board background, the two cell sprites (with a checkerboard alternate), the X and O marks, each player's tint, the scene background, every button's normal and pressed sprite, the popup chrome, the HUD text and strike-line colors, and the background track. The naive version is one switch statement that reaches into every one of those objects. That version rots. Every new theme edits the same method, and every system that paints itself ends up knowing about every other system's data.
+
+## One asset per theme
+
+I made a theme a ScriptableObject. One asset per theme lives under `Assets/_Project/Themes`, and `ThemeManager` holds the list in an Inspector array. Adding a theme means creating an asset and filling its fields. No code, no recompile, and a designer can do it without me.
+
+```csharp
+[CreateAssetMenu(fileName = "Theme_Classic", menuName = "TicTacToe/Theme")]
+public class ThemeSO : ScriptableObject,
+    ITheme, IThemeBoard, IThemeUI, IThemeHUD, IThemeAudio
+{
+    // serialized fields for every surface, exposed through the interfaces
+}
+```
+
+## Five interfaces, not one
+
+`ThemeSO` implements five interfaces instead of exposing one fat type:
+
+- `ITheme`: identity only, the id and display name.
+- `IThemeBoard`: board background, cells, marks, player tints.
+- `IThemeUI`: scene background, buttons, popups.
+- `IThemeHUD`: HUD text, settings indicator, strike color.
+- `IThemeAudio`: the background clip.
+
+This is the Interface Segregation Principle, and it earns its place here. The audio system depends on `IThemeAudio` only. The board depends on `IThemeBoard` only. The theme-selection popup needs nothing but the id and name, so it depends on `ITheme`. No system depends on data it never reads, so a change to the board surface cannot ripple into the audio code.
+
+```csharp
+public interface ITheme
+{
+    string ThemeId { get; }      // stable id persisted in GameSettings
+    string DisplayName { get; }  // shown in the selection popup
+}
+```
+
+`ThemeManager` exposes the active theme through one property per surface (`ActiveThemeBoard`, `ActiveThemeUI`, and so on), and each consumer reaches for the narrowest one it needs.
+
+## Themes that ship without art
+
+Every sprite slot has a color fallback. If a theme leaves `BoardBackgroundSprite` null, the consumer uses `BoardBackgroundColor` instead. That let me ship flat-color themes early and add bespoke sprites later, per theme and per surface, without touching code. The art pipeline and the architecture stopped blocking each other.
+
+## Changing the theme without coupling anything
+
+`ThemeManager` is a persistent singleton. When the theme changes it persists the choice through `SaveManager` and fires one event that carries the identity view only:
+
+```csharp
+public static event Action<ITheme> OnThemeChanged;
+```
+
+The narrow payload is deliberate. A listener that needs richer data reads the `ActiveTheme...` property for its surface, so the broadcast itself stays small. Each painter is a small applier component that subscribes on enable and repaints on every change. `HUDThemeApplier` takes an `IThemeHUD` and tints its labels. `ButtonThemeApplier` takes the UI surface and swaps button sprites. Because they all listen and re-apply, a mid-match theme swap repaints the whole scene with no special-case code.
+
+## The small safeguards
+
+Two defensive choices I would keep on any project this size:
+
+- A stale theme id can never leave the game blank. `ApplyTheme` resolves the id against the list and falls back to the first theme when it finds no match, so an old save that references a deleted theme still loads.
+- Theme ids live in one `ThemeIds` class, not as scattered string literals. A renamed asset then surfaces as a compile error instead of a silent runtime fallback.
+
+## What I Learned
+
+The real win was reframing theming as data. The five-interface split looks like overkill for a Tic-Tac-Toe at first glance, and on a smaller feature it would be. It paid off the moment I had more than two themes and more than one system painting itself. Every surface stayed independent, and "add a theme" stayed a five-minute asset job for the whole life of the project. That is the property I want from any system a designer will touch more than once.
