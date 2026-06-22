@@ -10,7 +10,7 @@ const poster1 = await getImage({
 
 const pageTitle = "DeployLog — Marko Stankovic";
 const pageDescription =
-  "DeployLog: a changelog & release-notes platform for dev teams. Next.js 16 + Supabase + Stripe, an embeddable widget, a published npm CLI, and a GitHub Action — with AI-generated release notes.";
+  "DeployLog: a changelog & release-notes platform for dev teams. Next.js 16 + Supabase + Stripe, an embeddable widget, a published npm CLI, and a GitHub Action, with AI-generated release notes.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} codeHighlighting={true}>
@@ -219,15 +219,15 @@ const pageDescription =
           class="hero-enter text-[#888888] text-lg max-w-2xl leading-relaxed mb-8"
           style="--delay: 0.5s"
         >
-          A changelog &amp; release-notes platform for developers — write entries
-          in Markdown, publish them to a hosted page, an <code
+          Keeping a changelog current is the chore every dev team drops first.
+          DeployLog makes it automatic: publish entries to a hosted page and an <code
             class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
             >embeddable widget</code
-          >, and from a <code
+          >, or let a <code
             class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
             >published npm CLI</code
-          > that turns git commits into release notes with an LLM. Built solo,
-          end to end.
+          > turn git commits into release notes with an LLM. Built solo, end to
+          end.
         </p>
 
         <div class="hero-enter flex flex-wrap gap-3" style="--delay: 0.65s">
@@ -295,7 +295,7 @@ const pageDescription =
           class="reveal text-[#666666] text-xs font-mono mt-3 text-center"
           style="--delay: 100ms"
         >
-          deploylog.dev — the landing page also embeds DeployLog's own live widget
+          deploylog.dev: the landing page also embeds DeployLog's own live widget
         </p>
       </div>
     </div>
@@ -323,7 +323,7 @@ const pageDescription =
           </p>
           <p>
             The two write-paths (dashboard and CLI/Action) hit the same API but
-            never share an auth method — see below.
+            never share an auth method. See below.
           </p>
         </div>
         <div class="reveal mt-8 max-w-3xl" style="--delay: 150ms">
@@ -356,7 +356,7 @@ const pageDescription =
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >dk_</code
             >-prefixed API key (stored only as a SHA-256 hash) and run through the
-            service-role client, which bypasses RLS — so those endpoints must
+            service-role client, which bypasses RLS, so those endpoints must
             filter by <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >org_id</code
@@ -382,10 +382,10 @@ const pageDescription =
           style="--delay: 100ms"
         >
           <p>
-            Every paid feature reads through one primitive — <code
+            Every paid feature reads through one primitive (<code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >can(org, capability)</code
-            > — backed by a truth table keyed on the org's plan. Adding a new
+            >) backed by a truth table keyed on the org's plan. Adding a new
             gated feature is one row in the table plus one call at the gate site,
             rather than scattering <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
@@ -430,7 +430,7 @@ if (!can(org, "unlimited_projects") && projectCount >= FREE_PROJECT_LIMIT) {
             Both the dashboard editor and the CLI can turn raw commit messages
             into a clean, user-facing entry (title, type, Markdown body) with
             Claude Haiku. The two surfaces are thin auth shells over one shared
-            service — the prompt, the JSON-validated output, the rate limit, and
+            service: the prompt, the JSON-validated output, the rate limit, and
             the free-tier monthly cap all live in a single module, so the two
             entry points can't drift apart. From the terminal it's one flag:
           </p>
@@ -490,7 +490,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
               />
             </div>
             <p class="text-[#666666] text-xs font-mono mt-2">
-              deploylog.dev — hero, CTAs, and the self-hosted live widget
+              deploylog.dev: hero, CTAs, and the self-hosted live widget
             </p>
           </div>
         </div>
@@ -535,7 +535,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
                 >The widget being framework-free was the right call.</strong
               >
               A Shadow-DOM vanilla-TS bundle drops into any site without pulling in
-              React or clashing with host styles — the constraint that made it
+              React or clashing with host styles, the constraint that made it
               small also made it universal.
             </span>
           </li>
