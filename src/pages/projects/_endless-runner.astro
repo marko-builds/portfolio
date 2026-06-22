@@ -228,7 +228,7 @@ const pageDescription =
           class="hero-enter text-[#888888] text-lg max-w-2xl leading-relaxed mb-8"
           style="--delay: 0.5s"
         >
-          The world scrolls, the player stays fixed — <code
+          The world scrolls, the player stays fixed. <code
             class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
             >LevelGenerator</code
           > moves chunks toward a stationary <code
@@ -337,7 +337,7 @@ const pageDescription =
           class="reveal text-[#666666] text-xs font-mono mt-3 text-center"
           style="--delay: 100ms"
         >
-          Gameplay preview — world scrolling, obstacle pool recycling,
+          Gameplay preview: world scrolling, obstacle pool recycling,
           checkpoint difficulty spike
         </p>
       </div>
@@ -356,7 +356,7 @@ const pageDescription =
         >
           <p>
             Spawning a new prefab for every obstacle means a GC allocation every
-            time one appears — and at higher speeds those pauses are noticeable.
+            time one appears, and at higher speeds those pauses are noticeable.
             A <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >Queue</code
@@ -376,7 +376,7 @@ const pageDescription =
             > component acts as a type tag so <code
               class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
               >PoolManager.Release()</code
-            > can recursively return a chunk and all its children in one call — the
+            > can recursively return a chunk and all its children in one call. The
             caller doesn't need to know what's inside the chunk.
           </p>
         </div>
@@ -428,7 +428,7 @@ const pageDescription =
           style="--delay: 100ms"
         >
           <p>
-            Linear difficulty — "add one obstacle every N checkpoints" —
+            Linear difficulty ("add one obstacle every N checkpoints")
             produces a staircase the player can feel as sudden jumps.
             Exponential decay gives you the opposite: early checkpoints bite
             hard, late ones barely tighten the interval. Each <code
@@ -479,7 +479,7 @@ const pageDescription =
                 >-th spawn substitutes a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >checkpointChunkPrefab</code
-                > for a standard chunk — no external timer, just a modulo check on
+                > for a standard chunk. No external timer, just a modulo check on
                 <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >chunksSpawned</code
@@ -492,8 +492,8 @@ const pageDescription =
                 > spawns its fences, apple, and coins; <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >OnDisable</code
-                > is a safety cleanup. No external system coordinates a chunk's contents
-                — the chunk owns its own lifecycle entirely.
+                > is a safety cleanup. No external system coordinates a chunk's contents.
+                The chunk owns its own lifecycle entirely.
               </p>
               <pre><code class="language-csharp" set:text={`// Proc Gen/LevelGenerator.cs (namespace ProceduralGeneration)
 public class LevelGenerator : MonoBehaviour
@@ -573,10 +573,10 @@ public class Chunk : MonoBehaviour
                 <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >ObjectPool</code
-                > is a plain class — not a <code
+                > is a plain class (not a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >MonoBehaviour</code
-                > — using a <code
+                >) using a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >Queue&lt;GameObject&gt;</code
                 > for FIFO recycling. The static <code
@@ -603,7 +603,7 @@ public class Chunk : MonoBehaviour
                 The caller passes one <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >GameObject</code
-                > — the pool handles the rest.
+                >. The pool handles the rest.
               </p>
               <pre><code class="language-csharp" set:text={`// Pooling/ObjectPool.cs (namespace Pooling) — plain class, not MonoBehaviour
 public class ObjectPool
@@ -712,7 +712,7 @@ public static class PoolManager
                 > gets multiplied by <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >decayRate</code
-                > (0.8) every time — so checkpoint one hits for <code
+                > (0.8) every time. So checkpoint one hits for <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >0.1f</code
                 >, checkpoint two for <code
@@ -737,7 +737,7 @@ public static class PoolManager
                 > value and calls <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >CameraController.ChangeCameraFOV()</code
-                >. Faster world = stronger Z pull = wider FOV — three systems
+                >. Faster world = stronger Z pull = wider FOV: three systems
                 agreeing that something has changed, so the player reads it as a
                 physical reality rather than a stat update.
               </p>
@@ -828,7 +828,7 @@ float ApplySpeedDelta(float delta)
                 >, <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >2.5f</code
-                >) — the player dodges by sliding into the gap rather than
+                >). The player dodges by sliding into the gap rather than
                 pressing a lane key. There's no snap-to-lane: hold the stick and
                 you drift to the hard edge. It also subscribes to <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
@@ -839,7 +839,7 @@ float ApplySpeedDelta(float delta)
                 > via static events rather than holding a direct reference to <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >GameManager</code
-                > — so <code
+                >, so <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >canControl</code
                 > flips without any scene coupling.
@@ -917,7 +917,7 @@ public class PlayerController : MonoBehaviour
               />
             </div>
             <p class="text-[#666666] text-xs font-mono mt-2">
-              Third-person gameplay — chunks scrolling at full speed
+              Third-person gameplay: chunks scrolling at full speed
             </p>
           </div>
 
@@ -938,7 +938,7 @@ public class PlayerController : MonoBehaviour
               />
             </div>
             <p class="text-[#666666] text-xs font-mono mt-2">
-              Mid-run — obstacle spawn interval decreasing after several
+              Mid-run: obstacle spawn interval decreasing after several
               checkpoints
             </p>
           </div>
@@ -989,7 +989,7 @@ public class PlayerController : MonoBehaviour
                 class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                 >-2.5f, 0f, 2.5f</code
               >, but the player slides freely between them. This means
-              experienced players treat it as analog — which works — but it
+              experienced players treat it as analog (which works) but it
               makes the game harder to learn because there's no satisfying
               snap-to-lane feedback. Discrete lane input would have made the
               safe zones more legible without much gameplay cost.
