@@ -227,13 +227,13 @@ const pageDescription =
           class="hero-enter text-[#888888] text-lg max-w-2xl leading-relaxed mb-8"
           style="--delay: 0.5s"
         >
-          A shipped, local-multiplayer Tic-Tac-Toe whose real story is its
-          theming. Six themes repaint the board, UI, HUD, and audio from a
-          single menu tap, and adding a seventh is one <code
+          Add a whole new theme in one <code
             class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
             >ScriptableObject</code
-          > and zero new code. The trick: a theme is split across five segregated
-          interfaces, so every system depends only on the data it actually paints.
+          > and zero new code. A shipped, local-multiplayer Tic-Tac-Toe whose
+          real story is its theming: six themes repaint the board, UI, HUD, and
+          audio from a single menu tap, split across five segregated interfaces,
+          so every system depends only on the data it actually paints.
         </p>
 
         <div class="hero-enter flex flex-wrap gap-3" style="--delay: 0.65s">
@@ -332,7 +332,7 @@ const pageDescription =
             class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
             >ThemeSO</code
           > assets. One menu tap repaints the grid, the marks, the HUD, the background,
-          and the music — no code path changes.
+          and the music. No code path changes.
         </p>
 
         <!-- Desktop theme boards (16:10) -->
@@ -438,7 +438,7 @@ const pageDescription =
 
         <!-- Mobile (portrait) -->
         <h3 class="reveal font-mono text-sm text-[#888888] mt-14 mb-4">
-          On mobile — portrait
+          On mobile (portrait)
         </h3>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div class="reveal" style="--delay: 0ms">
@@ -508,7 +508,7 @@ const pageDescription =
     <section id="architecture" class="py-20 border-t border-[#1F1F1F]/50">
       <div class="max-w-5xl mx-auto px-6">
         <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
-          Architecture — Theming as Data, Not Code
+          Architecture: Theming as Data, Not Code
         </h2>
 
         <div class="space-y-14">
@@ -522,8 +522,8 @@ const pageDescription =
                 A theme is a <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >ThemeSO</code
-                > asset. Adding one means creating an asset and filling its fields
-                — no code, no recompile, and a designer can do it. The asset implements
+                > asset. Adding one means creating an asset and filling its
+                fields. No code, no recompile, and a designer can do it. The asset implements
                 five interfaces instead of exposing one fat type, so each system
                 depends only on the surface it paints: the audio system on <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
@@ -576,7 +576,7 @@ public interface ITheme
                 <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >SaveManager</code
-                > and fires one event carrying the identity view only — a deliberately
+                > and fires one event carrying the identity view only, a deliberately
                 narrow payload. Painters that need richer data read the <code
                   class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
                   >ActiveTheme...</code
