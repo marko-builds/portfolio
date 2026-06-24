@@ -1,0 +1,53 @@
+# Marko Stankovic
+
+> Generalist Technical Artist and gameplay programmer based in Serbia, open to
+> remote or EU roles. Anchored on tools and pipeline: editor tooling, asset
+> pipelines, and automation in Unity and Unreal Engine 5, plus gameplay systems
+> and AI state machines. Primary languages C# and C++.
+
+Marko has three years in Unity 3D and is extending into Unreal Engine 5 and the
+art-engineering bridge. He builds the systems under a game: AI that thinks,
+procedural worlds, and editor tools that get out of the way. He also ships
+full-stack web work in TypeScript on Next.js, and is currently building a Claude
+Code video studio for short-form developer content on a Remotion backbone. He
+works CLI-first on Arch Linux.
+
+## Skills
+- Unity 3D, three years, primary engine
+- Unreal Engine 5, active, migrating from Unity
+- C#, primary language; C++
+- TypeScript, Node and Next.js
+- Editor tooling, asset pipelines, and automation
+- AI state machines, procedural generation, object pooling, event-driven architecture
+
+## Projects
+- [DeployLog](https://deploylog.dev): changelog and release-notes platform that
+  turns git commits into a published changelog (hosted page, embeddable widget,
+  npm CLI, and a GitHub Action) from one source, with AI-drafted notes. Built
+  full-stack on Next.js, Supabase, and Stripe. Status: launching. Details:
+  https://markostankovic.org/projects/deploylog
+- [BlenderBridge](https://github.com/marko-builds/BlenderBridge): five manual
+  cleanup steps on every Blender-to-Unreal import, cut to one click. A UE5 editor
+  plugin that enforces asset naming, fixes normal maps, generates lightmap UVs,
+  and runs a pre-flight validation pass. Hybrid build: a thin C++ Slate panel over
+  a Python core. Open source, v0.1.
+- [Tic-Tac-Toe](https://marko-builds.itch.io/tictactoe): shipped local-multiplayer
+  Unity 6 game whose real story is a data-driven theme system. Six themes repaint
+  board, UI, HUD, and audio from one ScriptableObject and zero new code, split
+  across five segregated interfaces. Details:
+  https://markostankovic.org/projects/tictactoe
+- [Hide & Seek](https://markostankovic.org/projects/hide-and-seek): Unity 6 stealth
+  game with NavMesh AI, a six-state generic StateMachine, continuous suspicion
+  tracking, and nine custom Level Builder editor tools.
+
+## Writing
+- [Devlog](https://markostankovic.org/devlog): build notes on game systems and tooling
+- [Replacing a Tangled Update Loop with a Generic State Machine in Unity](https://markostankovic.org/devlog/enemy-ai-state-machine)
+- [Fixing GC Allocation Spikes in Unity with a Queue-Based Object Pool](https://markostankovic.org/devlog/object-pooling-endless-runner)
+- [One ScriptableObject Per Theme: A Data-Driven Theme System in Unity](https://markostankovic.org/devlog/tictactoe-theme-system)
+
+## Contact
+- Email: contact@markostankovic.org
+- GitHub: https://github.com/marko-builds
+- LinkedIn: https://www.linkedin.com/in/markostankovic-gamedev/
+- Instagram: https://www.instagram.com/marko.builds/
