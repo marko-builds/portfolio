@@ -1,0 +1,51 @@
+---
+title: "How I Build Blender to Unreal Pipeline Tooling with Claude Code"
+date: "2026-06-24"
+excerpt: "The method I use to build reliable game pipeline tools with an AI agent: align before any code, ship vertical slices test-first, and keep every build deterministic so nothing reaches the engine unverified."
+tags: ["Claude Code", "Blender", "Unreal Engine", "Technical Art", "Pipeline", "TDD"]
+draft: true
+---
+
+I build the tooling around our game with Claude Code. The headless Blender exporters, the Unreal import plugin, the validation that rejects a bad asset before it reaches the engine. The model writes a lot of that code. The reason the tools are reliable is not the model. It is the loop I put around it.
+
+## The work AI is actually good at here
+
+Pipeline tooling is repetitive, well specified, and testable. That is the sweet spot for an agent. A normal-map channel flip, a scale check, a folder contract between two programs: each one has a right answer you can write down and verify.
+
+The creative work stays with me. The agent does not design the asset or make the look calls. It builds the plumbing that moves an asset from a script in Blender to a correct prop in Unreal, the same way every time. That split is the whole point. Automate the setup and the checks, keep the judgment.
+
+## Align before any code gets written
+
+Most of the bad output I have seen from an AI agent was not a coding mistake. It was an alignment mistake. The agent built the wrong thing correctly.
+
+So I do not start with code. I start with a short interview, one question at a time, until the agent and I are describing the same tool. Then a one page spec: the inputs, the output, the edge cases, what done means. Ten minutes of this removes most of the rework.
+
+## Build in vertical slices, test first
+
+I never ask for the whole tool at once. One behaviour, one failing test, one implementation, then repeat.
+
+Take the importer's normal-map fix. Blender writes normals in OpenGL convention, Unreal reads DirectX, so the green channel has to invert or every surface lights wrong. The slice is small: write a test that asserts the green channel flips, watch it fail, then make it pass. Nothing else.
+
+Working test-first is what stops an agent from handing back a wall of plausible code that does not actually run. The test is the spec the agent cannot talk its way around.
+
+## Keep the build deterministic
+
+The Blender side is headless and scripted. Same input, same output, no clicking. Before anything is written to disk, a validation step checks the triangle budget, the dimensions, and that the scale is a clean 1, 1, 1. A fluffed run just re-runs clean.
+
+Determinism is what makes the test loop trustworthy. If the build wandered between runs, a passing test would prove nothing. Because it does not, green means green.
+
+## Nothing ships done without evidence
+
+The rule I hold hardest: the agent does not get to decide a task is finished. A passing check does. "It looks correct" is exactly what ships the regression. The build runs, the test passes, I see the output, and only then is the slice done.
+
+That sounds strict for solo work. It is the reason I can lean on these tools instead of babysitting them.
+
+## What I learned
+
+The discipline matters more than the model. A capable agent with no feedback loop produces fast, confident, broken work. The same agent inside a loop of align, test, then verify produces tooling I trust in the pipeline.
+
+The loop is also a ceiling. The agent is only ever as good as the check that grades it, so most of my effort goes into making the check sharp, not into prompting.
+
+And this is where tech art is heading. Unreal 5.8 shipped a native MCP server, which lets an agent drive the editor directly. The studios that get value from that will be the ones with the discipline to keep it reliable. That is the skill I am building now.
+
+Code is at [github.com/marko-builds](https://github.com/marko-builds). The pipeline this post describes is in the BlenderBridge plugin and the Blender studio repo.
