@@ -64,10 +64,15 @@ if (doBuild) {
 console.log('routes:');
 {
   const baseline = readFileSync(join(BASE, 'routes.txt'), 'utf8').trim().split('\n').sort();
-  const built = walk(join(ROOT, 'dist'))
+  const all = walk(join(ROOT, 'dist'))
     .filter((f) => f.endsWith('.html'))
     .map((f) => '/' + relative(join(ROOT, 'dist'), f).replace(/index\.html$/, ''))
     .sort();
+  // /proto/ pages are issue-03 throwaway review artifacts; excluded from parity,
+  // must be deleted after the direction pick (issue 03 acceptance).
+  const proto = all.filter((r) => r.startsWith('/proto/'));
+  if (proto.length) console.log(`  NOTE ${proto.length} /proto/ route(s) present (throwaway, delete after the pick): ${proto.join(' ')}`);
+  const built = all.filter((r) => !r.startsWith('/proto/'));
   const missing = baseline.filter((r) => !built.includes(r));
   const added = built.filter((r) => !baseline.includes(r));
   if (missing.length || added.length)
