@@ -34,3 +34,5 @@ yarn-error.log*
 
 # Private (should never be in public subtree)
 .claude/
+.qa-reports/
+.gstack/
