@@ -23,3 +23,7 @@ flag to Marko when the products section needs one; never fake it.
 - [ ] First viewport reads builder/products positioning; no game-dev framing in hero or title
 - [ ] Motion behaves per the P14 vocabulary and disappears under prefers-reduced-motion
 - [ ] capture-web screenshots + design-critique delivered; Marko's look verdict recorded
+
+## Completion note (2026-07-03)
+Built + Marko look-verdict APPROVED (with his corrections: REPL one-arg, "software products",
+game work section cut). Shipped JS 9.1 KB to ~1 KB inlined; Lighthouse home 0.98/1.00/1.00.

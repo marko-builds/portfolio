@@ -1,0 +1,80 @@
+---
+// Custom 404 (GitHub Pages serves dist/404.html automatically).
+// Marko-directed route addition 2026-07-03; recorded in verify/baseline/BASELINE.md.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteNav from "../components/SiteNav.astro";
+---
+
+<BaseLayout title="404 | Marko Stankovic" description="There is nothing at this address.">
+  <SiteNav />
+
+  <main class="wrap pt-14">
+    <div class="frame">
+      <p class="repl"><span class="chev">&gt;</span> GET /this-page<span class="semi">;</span></p>
+      <h1>404</h1>
+      <p class="msg">There is nothing at this address.</p>
+      <div class="links">
+        <a class="btn-fill" href="/">Back to home</a>
+        <a class="btn-ghost" href="/devlog">Read the devlog</a>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .wrap {
+      min-height: calc(100vh - 56px);
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(#1f1f1f80 1px, transparent 1px) 0 0 / 100% 96px,
+        linear-gradient(90deg, #1f1f1f80 1px, transparent 1px) 0 0 / 96px 100%;
+    }
+    .frame {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 96px 56px;
+      width: 100%;
+    }
+    @media (max-width: 720px) {
+      .frame { padding-inline: 28px; }
+    }
+    .repl {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      margin: 0 0 28px;
+    }
+    .chev { color: var(--color-accent); }
+    .semi { color: var(--color-text-muted); }
+    h1 {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: clamp(4rem, 14vw, 9rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin: 0 0 20px;
+      color: transparent;
+      -webkit-text-stroke: 2px var(--color-text-secondary);
+    }
+    .msg {
+      color: var(--color-text-secondary);
+      font-size: 17px;
+      margin: 0 0 40px;
+    }
+    .links { display: flex; flex-wrap: wrap; gap: 14px; }
+    .btn-fill,
+    .btn-ghost {
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 12px 24px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    .btn-fill { background: var(--color-text-primary); color: var(--color-bg); }
+    .btn-fill:hover { background: #cfcfcf; }
+    .btn-ghost { color: var(--color-text-primary); border: 1px solid var(--color-border-strong); }
+    .btn-ghost:hover { border-color: var(--color-text-secondary); }
+  </style>
+</BaseLayout>

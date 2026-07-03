@@ -1,0 +1,84 @@
+---
+// Shared top nav for secondary pages (devlog, posts, projects, 404), in the
+// Vercel-monochrome direction. The home page has no nav (single-viewport hero).
+interface Props {
+  active?: "work" | "devlog" | "contact";
+}
+const { active } = Astro.props;
+
+const links = [
+  { href: "/#work", key: "work", label: "work" },
+  { href: "/devlog", key: "devlog", label: "devlog" },
+  { href: "/#contact", key: "contact", label: "contact" },
+] as const;
+---
+
+<header class="site-nav">
+  <nav aria-label="Site">
+    <a class="mark" href="/"><span class="chev">&gt;</span> ms<span class="cursor-blink"></span></a>
+    <ul>
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href} class:list={[{ active: active === l.key }]} aria-current={active === l.key ? "page" : undefined}>
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--color-border);
+    background: #0d0d0dcc;
+    backdrop-filter: blur(10px);
+  }
+  nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-inline: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  @media (max-width: 720px) {
+    nav { padding-inline: 28px; }
+  }
+  .mark {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+  .mark .chev { color: var(--color-accent); }
+  ul {
+    display: flex;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul a {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding-block: 6px;
+    transition: color 0.15s ease;
+  }
+  ul a:hover { color: var(--color-text-primary); }
+  ul a.active { color: var(--color-accent); }
+  @media (max-width: 480px) {
+    ul { gap: 18px; }
+  }
+</style>

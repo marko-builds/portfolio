@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteNav from "../../components/SiteNav.astro";
 import { Image, getImage } from "astro:assets";
 import screenshot1 from "../../assets/screenshots/deploylog-1.png";
 const poster1 = await getImage({
@@ -8,7 +9,7 @@ const poster1 = await getImage({
   width: 1200,
 });
 
-const pageTitle = "DeployLog — Marko Stankovic";
+const pageTitle = "DeployLog | Marko Stankovic";
 const pageDescription =
   "DeployLog: a changelog & release-notes platform for dev teams. Next.js 16 + Supabase + Stripe, an embeddable widget, a published npm CLI, and a GitHub Action, with AI-generated release notes.";
 ---
@@ -34,175 +35,28 @@ const pageDescription =
   </Fragment>
 
   <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
-  <header
-    class="fixed top-0 inset-x-0 z-50 border-b border-[#1F1F1F]/60 bg-[#0D0D0D]/80 backdrop-blur-md"
-  >
-    <nav class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
-      <div class="flex items-center gap-5">
-        <a
-          href="/"
-          class="nav-link text-sm text-[#888888] hover:text-[#00FFC8] transition-colors duration-150 flex items-center gap-1.5"
-        >
-          <svg
-            class="w-3.5 h-3.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"></path>
-          </svg>
-          Back to Portfolio
-        </a>
-        <span class="text-[#1F1F1F]">|</span>
-        <a
-          href="/"
-          class="font-bold font-mono tracking-tight text-[#F0F0F0] text-lg">MS</a
-        >
-      </div>
-
-      <ul class="hidden sm:flex gap-6 text-sm text-[#888888]">
-        <li>
-          <a
-            href="/#skills"
-            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-            >Skills</a
-          >
-        </li>
-        <li>
-          <a
-            href="/#projects"
-            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-            >Projects</a
-          >
-        </li>
-        <li>
-          <a
-            href="/devlog"
-            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-            >Devlog</a
-          >
-        </li>
-        <li>
-          <a
-            href="/#contact"
-            class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-            >Let's Build</a
-          >
-        </li>
-      </ul>
-
-      <button
-        id="menu-btn"
-        class="sm:hidden w-11 h-11 flex items-center justify-center text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
-        aria-label="Toggle menu"
-        aria-expanded="false"
-      >
-        <svg
-          id="icon-menu"
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-        <svg
-          id="icon-close"
-          class="w-5 h-5 hidden"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-    </nav>
-
-    <div id="mobile-nav" aria-hidden="true">
-      <div class="max-w-5xl mx-auto px-6 py-2 flex flex-col">
-        <a
-          href="/"
-          tabindex="-1"
-          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#00FFC8] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-          >← Back to Portfolio</a
-        >
-        <a
-          href="/#skills"
-          tabindex="-1"
-          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-          >Skills</a
-        >
-        <a
-          href="/#projects"
-          tabindex="-1"
-          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-          >Projects</a
-        >
-        <a
-          href="/devlog"
-          tabindex="-1"
-          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-          >Devlog</a
-        >
-        <a
-          href="/#contact"
-          tabindex="-1"
-          class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150 min-h-[44px] flex items-center"
-          >Let's Build</a
-        >
-      </div>
-    </div>
-  </header>
+  <SiteNav active="work" />
 
   <main>
     <!-- ─── HERO ──────────────────────────────────────────────────────────── -->
     <div class="relative pt-14">
-      <div
-        class="absolute inset-0 overflow-hidden pointer-events-none"
-        aria-hidden="true"
-      >
-        <div
-          class="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-rose-500/5 rounded-full blur-3xl"
-        >
-        </div>
-        <div
-          class="absolute top-1/2 left-1/3 w-[300px] h-[300px] bg-[#00FFC8]/3 rounded-full blur-3xl"
-        >
-        </div>
-      </div>
-
       <div class="relative max-w-5xl mx-auto px-6 py-20">
         <a
-          href="/#projects"
+          href="/#work"
           class="hero-enter inline-block text-[#666666] hover:text-[#00FFC8] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
           style="--delay: 0.05s"
         >
-          &larr; Projects
+          Projects
         </a>
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.15s">
           <span
-            class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1 rounded-full"
+            class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1"
           >
             Launching · solo, full-stack
           </span>
           <span
-            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1 rounded-full"
+            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1"
           >
             Next.js · Supabase · Stripe
           </span>
@@ -221,10 +75,10 @@ const pageDescription =
         >
           Keeping a changelog current is the chore every dev team drops first.
           DeployLog makes it automatic: publish entries to a hosted page and an <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
+            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
             >embeddable widget</code
           >, or let a <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
+            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
             >published npm CLI</code
           > turn git commits into release notes with an LLM. Built solo, end to
           end.
@@ -235,7 +89,7 @@ const pageDescription =
             href="https://deploylog.dev"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
           >
             Visit deploylog.dev
             <svg
@@ -256,7 +110,7 @@ const pageDescription =
             href="https://www.npmjs.com/package/deploylog"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-link inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150"
+            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150"
           >
             The CLI on npm
             <svg
@@ -281,11 +135,11 @@ const pageDescription =
     <div class="border-t border-[#1F1F1F]/50 py-12">
       <div class="max-w-4xl mx-auto px-6">
         <div
-          class="reveal rounded-xl overflow-hidden border border-[#1F1F1F] bg-[#141414]"
+          class="reveal overflow-hidden border border-[#1F1F1F] bg-[#141414]"
         >
           <Image
             src={screenshot1}
-            alt="DeployLog landing page — Ship the update. Skip the busywork."
+            alt="DeployLog landing page: Ship the update. Skip the busywork."
             widths={[600, 1000, 1280]}
             sizes="(max-width: 900px) 100vw, 900px"
             loading="lazy"
@@ -353,17 +207,17 @@ const pageDescription =
               class="text-[#F0F0F0] font-medium">Row-Level Security</strong
             > does the access control. The CLI and integrations authenticate with
             a <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >dk_</code
             >-prefixed API key (stored only as a SHA-256 hash) and run through the
             service-role client, which bypasses RLS, so those endpoints must
             filter by <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >org_id</code
             > explicitly. The rule that keeps it safe: a given route handler uses
             exactly one of these, never both. CLI-only routes live under their own
             <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >/api/cli/*</code
             > namespace.
           </p>
@@ -383,24 +237,24 @@ const pageDescription =
         >
           <p>
             Every paid feature reads through one primitive (<code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >can(org, capability)</code
             >) backed by a truth table keyed on the org's plan. Adding a new
             gated feature is one row in the table plus one call at the gate site,
             rather than scattering <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >plan === "pro"</code
             > checks across the codebase. Stripe is the source of truth for plan
             state: Checkout and the Customer Portal drive everything, and a
             webhook reconciles the org's plan on every subscription change, with a
             <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >stripe_events</code
             > table providing idempotency.
           </p>
         </div>
         <div class="reveal mt-8 max-w-3xl" style="--delay: 150ms">
-          <pre><code class="language-typescript" set:text={`// src/lib/plan.ts — one source of truth for every feature gate
+          <pre><code class="language-typescript" set:text={`// src/lib/plan.ts: one source of truth for every feature gate
 export function can(
   org: { plan: Plan } | null,
   capability: Capability,
@@ -408,7 +262,7 @@ export function can(
   return CAPABILITIES[org?.plan ?? "free"].includes(capability);
 }
 
-// Gate site — projects API
+// Gate site: projects API
 if (!can(org, "unlimited_projects") && projectCount >= FREE_PROJECT_LIMIT) {
   return error("PLAN_LIMIT", "Upgrade to add more projects", 403);
 }`} /></pre>
@@ -450,14 +304,14 @@ deploylog push --from-git --ai-summarize`} /></pre>
           class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl text-[#888888]"
           style="--delay: 100ms"
         >
-          <p><span class="text-[#F0F0F0] font-medium">Frontend / API</span> — Next.js 16 (App Router, RSC), React 19, TypeScript (strict), Tailwind v4</p>
-          <p><span class="text-[#F0F0F0] font-medium">Database / auth</span> — Supabase (PostgreSQL + RLS, GitHub OAuth)</p>
-          <p><span class="text-[#F0F0F0] font-medium">Payments</span> — Stripe (Checkout, Portal, webhooks)</p>
-          <p><span class="text-[#F0F0F0] font-medium">Email</span> — Resend + React Email templates</p>
-          <p><span class="text-[#F0F0F0] font-medium">AI</span> — Anthropic Claude (Haiku) for release-note summarization</p>
-          <p><span class="text-[#F0F0F0] font-medium">Editor / widget</span> — CodeMirror 6 · vanilla-TS Shadow-DOM widget (esbuild)</p>
-          <p><span class="text-[#F0F0F0] font-medium">Infra</span> — Vercel · Cloudflare Pages (widget CDN) · Upstash · Sentry</p>
-          <p><span class="text-[#F0F0F0] font-medium">Distribution</span> — npm CLI · GitHub Action on the Marketplace</p>
+          <p><span class="text-[#F0F0F0] font-medium">Frontend / API:</span> Next.js 16 (App Router, RSC), React 19, TypeScript (strict), Tailwind v4</p>
+          <p><span class="text-[#F0F0F0] font-medium">Database / auth:</span> Supabase (PostgreSQL + RLS, GitHub OAuth)</p>
+          <p><span class="text-[#F0F0F0] font-medium">Payments:</span> Stripe (Checkout, Portal, webhooks)</p>
+          <p><span class="text-[#F0F0F0] font-medium">Email:</span> Resend + React Email templates</p>
+          <p><span class="text-[#F0F0F0] font-medium">AI:</span> Anthropic Claude (Haiku) for release-note summarization</p>
+          <p><span class="text-[#F0F0F0] font-medium">Editor / widget:</span> CodeMirror 6 · vanilla-TS Shadow-DOM widget (esbuild)</p>
+          <p><span class="text-[#F0F0F0] font-medium">Infra:</span> Vercel · Cloudflare Pages (widget CDN) · Upstash · Sentry</p>
+          <p><span class="text-[#F0F0F0] font-medium">Distribution:</span> npm CLI · GitHub Action on the Marketplace</p>
         </div>
       </div>
     </section>
@@ -505,20 +359,20 @@ deploylog push --from-git --ai-summarize`} /></pre>
         </h2>
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
+            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >One capability table beats scattered plan checks.</strong
               >
               Routing every gate through <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >can()</code
               > meant adding the Pro tier late in development touched one file, not
               twenty.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
+            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >Sharing one service across CLI and dashboard prevents drift.</strong
@@ -529,7 +383,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
+            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >The widget being framework-free was the right call.</strong
@@ -555,7 +409,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
           href="/projects/tictactoe"
           class="nav-link text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
         >
-          Tic-Tac-Toe →
+          Tic-Tac-Toe
         </a>
       </div>
       <p class="text-[#666666] text-xs font-mono">
@@ -671,39 +525,6 @@ deploylog push --from-git --ai-summarize`} /></pre>
     } else {
       revealEls.forEach((el) => el.classList.add("visible"));
     }
-
-    const menuBtn = document.getElementById("menu-btn");
-    const mobileNav = document.getElementById("mobile-nav");
-    const iconMenu = document.getElementById("icon-menu");
-    const iconClose = document.getElementById("icon-close");
-    const mobileNavLinks =
-      document.querySelectorAll<HTMLElement>(".mobile-nav-link");
-
-    function closeMobileNav() {
-      mobileNav?.classList.remove("open");
-      mobileNav?.setAttribute("aria-hidden", "true");
-      menuBtn?.setAttribute("aria-expanded", "false");
-      iconMenu?.classList.remove("hidden");
-      iconClose?.classList.add("hidden");
-      mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
-    }
-
-    menuBtn?.addEventListener("click", () => {
-      const isOpen = mobileNav?.classList.toggle("open");
-      menuBtn.setAttribute("aria-expanded", String(isOpen));
-      iconMenu?.classList.toggle("hidden", !!isOpen);
-      iconClose?.classList.toggle("hidden", !isOpen);
-      if (isOpen) {
-        mobileNav?.removeAttribute("aria-hidden");
-        mobileNavLinks.forEach((link) => link.removeAttribute("tabindex"));
-      } else {
-        mobileNav?.setAttribute("aria-hidden", "true");
-        mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
-      }
-    });
-    mobileNavLinks.forEach((link) => {
-      link.addEventListener("click", closeMobileNav);
-    });
 
     const lightbox = document.getElementById("lightbox");
     const lbImg = document.getElementById("lightbox-img");

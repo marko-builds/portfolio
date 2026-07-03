@@ -21,3 +21,11 @@ the set to Marko. The pick gates everything downstream; prototypes are deleted a
 - [ ] Screenshot set + design-critique report per direction delivered to Marko
 - [ ] Marko's pick recorded (direction name + what to keep/drop from the runners-up)
 - [ ] Prototype routes removed after the pick
+
+## Completion note (2026-07-03)
+
+**Marko's pick: VERCEL-MONOCHROME** ("I love vercel. It looks great."), approved to proceed.
+Grafts from runners-up (recommended with the pick): Linear's grain texture + section spacing
+discipline; Raycast's real-screenshot treatment for project detail pages. Copy verdict parked
+for issue 04 by Marko. Prototype routes deleted this commit; screenshots kept in
+verify/proto-shots/ as the pick record.
