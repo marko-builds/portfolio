@@ -129,7 +129,7 @@ const dateFmt = (d: Date) =>
             </div>
             <div class="post-rows io">
               {recentPosts.map((post) => (
-                <a class="post-row" href={`/devlog/${post.id}/`}>
+                <a class="post-row" href={`/devlog/${post.slug}/`}>
                   <span class="post-date">{dateFmt(post.data.date)}</span>
                   <span class="post-title">{post.data.title}</span>
                   <span class="post-time">{post.readingTime} min</span>
