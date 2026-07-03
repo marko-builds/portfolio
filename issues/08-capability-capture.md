@@ -20,3 +20,15 @@ tagline, token itches) toward the parked brand pass.
 - [ ] Website-builder skill authored via /skill-builder and approved by Marko
 - [ ] Studio capability backlog row + lessons entry written
 - [ ] All proposals filed as proposal docs; none applied
+
+## Completion note (2026-07-03)
+
+- **/website-builder skill authored** (monolith `.claude/skills/website-builder/`) from the
+  job's evidence: the gated path (baseline, gate runner, prototypes, copy pack, build,
+  QA, PR) + every gotcha that cost time once. Awaiting Marko's approval read.
+- **Studio capability row**: P15 in claude-video-studio `plans/capability-backlog.md`
+  (DONE, Marko-driven session); **lessons entry** for the web dialect of the motion
+  vocabulary + the Lighthouse-drift and verification-time findings in `docs/lessons.md`.
+- **Proposals filed, none applied**: `verify/proposals/brand-tagline.md` (the stale
+  "Game developer & technical artist" tagline) toward the parked brand pass. No token
+  itches accumulated; CSS stayed value-identical to brands/marko.
