@@ -21,3 +21,10 @@ if previews are off, note the local-build + capture-web fallback as the review m
 - [ ] Lighthouse + JS-weight baseline recorded per key template (home, projects index, project detail, devlog index, post)
 - [ ] Redesign branch exists and pushes; Vercel preview behavior confirmed and documented
 - [ ] Main HEAD sha at job start recorded
+
+## Completion note (2026-07-03)
+
+Done on `feat/redesign` @ 5315e7f. Baseline in `verify/baseline/` (routes.txt, BASELINE.md,
+lighthouse-summary.json, main-sha.txt, devlog-bodies.json). Main sha 2bc6308. **Deploy probe:
+GitHub Pages via Actions on push to main only; no branch previews. Review medium = local build
++ capture-web screenshots (the PRD fallback). Any commit to main auto-publishes.**
