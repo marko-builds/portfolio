@@ -20,3 +20,11 @@ redesign after HIS merge, with main's pre-merge history unchanged since the 01 s
 - [ ] /qa, design-critique, Lighthouse ≥ baseline, gate 02: all green on the preview, findings triaged
 - [ ] Marko reviewed the preview on his devices; his fixes folded in
 - [ ] Marko merged (or explicitly said "merge it"); zero other commits reached main during the job
+
+## Completion note (2026-07-03, machine half)
+/qa full pass: 13 routes 200, zero console errors; interactions verified (tag filter, copy
+buttons, IO reveals); 1 bug found + fixed (stale /#projects back-links to /#work). Reduced
+motion verified visually (chromium --force-prefers-reduced-motion). Lighthouse: home
+0.98/1.00/1.00, devlog 0.99, post 0.96; deploylog perf delta vs same-session pristine main
+-0.02 (noise band, per the BASELINE.md drift procedure). Gate GREEN. Remaining: Marko's device
+pass + HIS merge (PR opened).

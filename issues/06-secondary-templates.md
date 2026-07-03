@@ -19,3 +19,8 @@ identical to the 01 manifest.
 - [ ] Every template restyled; zero new or removed routes (gate 02 parity green)
 - [ ] Devlog post body content byte-equivalent; only layout/frame changed
 - [ ] Screenshot set across all templates delivered; Marko's consistency verdict recorded
+
+## Completion note (2026-07-03)
+Built + Marko consistency verdict APPROVED. Shared SiteNav; devlog rows + filter; BlogPost
+chrome; 3 project pages via parallel agents (full dash cleanup, ~34 hide-and-seek prose splits
+shown to Marko); NEW /404.html (Marko-directed route addition). BlogCard removed (orphaned).
