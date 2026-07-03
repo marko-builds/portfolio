@@ -1,14 +1,15 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteNav from "../../components/SiteNav.astro";
 import { Image, getImage } from "astro:assets";
 import screenshot1 from "../../assets/screenshots/hide-and-seek-1.png";
 import screenshot2 from "../../assets/screenshots/hide-and-seek-2.png";
 const base = import.meta.env.BASE_URL;
 const poster1 = await getImage({ src: screenshot1, format: "webp", width: 800 });
 
-const pageTitle = "Hide & Seek — Marko Stankovic";
+const pageTitle = "Hide & Seek | Marko Stankovic";
 const pageDescription =
-  "A Unity 6 stealth game where enemy suspicion builds continuously — six NavMesh AI states, a generic StateMachine, and nine custom Level Builder editor tools.";
+  "A Unity 6 stealth game where enemy suspicion builds continuously: six NavMesh AI states, a generic StateMachine, and nine custom Level Builder editor tools.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} codeHighlighting={true}>
@@ -29,168 +30,18 @@ const pageDescription =
     </script>
   </Fragment>
     <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
-    <header
-      class="fixed top-0 inset-x-0 z-50 border-b border-[#1F1F1F]/60 bg-[#0D0D0D]/80 backdrop-blur-md"
-    >
-      <nav
-        class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between"
-      >
-        <div class="flex items-center gap-5">
-          <a
-            href="/"
-            class="nav-link text-sm text-[#888888] hover:text-[#00FFC8] transition-colors duration-150 flex items-center gap-1.5"
-          >
-            <svg
-              class="w-3.5 h-3.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Back to Portfolio
-          </a>
-          <span class="text-[#1F1F1F]">|</span>
-          <a
-            href="/"
-            class="font-bold font-mono tracking-tight text-[#F0F0F0] text-lg"
-            >MS</a
-          >
-        </div>
-
-        <ul class="hidden sm:flex gap-6 text-sm text-[#888888]">
-          <li>
-            <a
-              href="/#skills"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Skills</a
-            >
-          </li>
-          <li>
-            <a
-              href="/#projects"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Projects</a
-            >
-          </li>
-          <li>
-            <a
-              href="/devlog"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Devlog</a
-            >
-          </li>
-          <li>
-            <a
-              href="/#contact"
-              class="nav-link hover:text-[#F0F0F0] transition-colors duration-150"
-              >Let's Build</a
-            >
-          </li>
-        </ul>
-
-        <button
-          id="menu-btn"
-          class="sm:hidden w-11 h-11 flex items-center justify-center text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
-          aria-label="Toggle menu"
-          aria-expanded="false"
-        >
-          <svg
-            id="icon-menu"
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-          <svg
-            id="icon-close"
-            class="w-5 h-5 hidden"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </nav>
-
-      <div id="mobile-nav" aria-hidden="true">
-        <div class="max-w-5xl mx-auto px-6 py-2 flex flex-col">
-          <a
-            href="/"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#00FFC8] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-            >← Back to Portfolio</a
-          >
-          <a
-            href="/#skills"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-            >Skills</a
-          >
-          <a
-            href="/#projects"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-            >Projects</a
-          >
-          <a
-            href="/devlog"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] border-b border-[#1F1F1F] transition-colors duration-150 min-h-[44px] flex items-center"
-            >Devlog</a
-          >
-          <a
-            href="/#contact"
-            tabindex="-1"
-            class="mobile-nav-link py-3 text-sm text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150 min-h-[44px] flex items-center"
-            >Let's Build</a
-          >
-        </div>
-      </div>
-    </header>
+    <SiteNav active="work" />
 
     <main>
     <!-- ─── HERO ──────────────────────────────────────────────────────────── -->
     <div class="relative pt-14">
-      <div
-        class="absolute inset-0 overflow-hidden pointer-events-none"
-        aria-hidden="true"
-      >
-        <div
-          class="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-violet-600/5 rounded-full blur-3xl"
-        >
-        </div>
-        <div
-          class="absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#00FFC8]/3 rounded-full blur-3xl"
-        >
-        </div>
-      </div>
-
       <div class="relative max-w-5xl mx-auto px-6 py-20">
         <a
-          href="/#projects"
+          href="/#work"
           class="hero-enter inline-block text-[#666666] hover:text-[#00FFC8] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
           style="--delay: 0.05s"
         >
-          &larr; Projects
+          Projects
         </a>
 
         <div
@@ -198,12 +49,12 @@ const pageDescription =
           style="--delay: 0.15s"
         >
           <span
-            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1 rounded-full"
+            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1"
           >
             In Development
           </span>
           <span
-            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1 rounded-full"
+            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1"
           >
             Unity 6 · URP
           </span>
@@ -220,10 +71,10 @@ const pageDescription =
           class="hero-enter text-[#888888] text-lg max-w-2xl leading-relaxed mb-8"
           style="--delay: 0.5s"
         >
-          Detection isn't a flag — it's a continuous suspicion float with
+          Detection isn't a flag. It's a continuous suspicion float with
           per-state hysteresis, six behaviours implemented as self-contained
           states in a generic <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5 rounded"
+            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
             >StateMachine</code
           >, and a static noise event bus that decouples every sound source from
           every listener.
@@ -234,7 +85,7 @@ const pageDescription =
             href="https://github.com/marko-builds/hide_and_seek_3d"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-link inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150"
+            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150"
           >
             <svg
               class="w-4 h-4"
@@ -263,7 +114,7 @@ const pageDescription =
           </a>
           <a
             href="/devlog/enemy-ai-state-machine"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
           >
             <svg
               class="w-4 h-4"
@@ -302,7 +153,7 @@ const pageDescription =
     <div class="border-t border-[#1F1F1F]/50 py-12">
       <div class="max-w-4xl mx-auto px-6">
         <div
-          class="reveal rounded-xl overflow-hidden border border-[#1F1F1F] bg-[#141414]"
+          class="reveal overflow-hidden border border-[#1F1F1F] bg-[#141414]"
         >
           <video
             class="w-full aspect-video object-cover"
@@ -325,7 +176,7 @@ const pageDescription =
           class="reveal text-[#666666] text-xs font-mono mt-3 text-center"
           style="--delay: 100ms"
         >
-          Gameplay preview — suspicion build-up, patrol → investigate → chase
+          Gameplay preview: suspicion build-up, patrol to investigate to chase
           sequence
         </p>
       </div>
@@ -343,14 +194,14 @@ const pageDescription =
           style="--delay: 100ms"
         >
           <p>
-            Binary detection — seen or unseen — removes player agency the moment
+            Binary detection (seen or unseen) removes player agency the moment
             it fires. A continuous <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >float</code
-            > (0–100) fixes this: the player can see the meter rising, duck
+            > (0 to 100) fixes this: the player can see the meter rising, duck
             behind cover, and let it bleed back down before the enemy commits.
-            Hysteresis makes that bleed-down reliable — each <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+            Hysteresis makes that bleed-down reliable: each <code
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >SeekState</code
             > has separate rising and falling thresholds, so the enemy doesn't
             flicker between states at the boundary. You need to genuinely break
@@ -372,17 +223,17 @@ const pageDescription =
           style="--delay: 100ms"
         >
           <p>
-            Idle, Patrol, Investigate, Alert, Chase, Search — each state needs
+            Idle, Patrol, Investigate, Alert, Chase, Search: each state needs
             to read from the suspicion meter, drive the NavMesh, play
             animations, and trigger camera responses. None of those concerns
             belong in a single <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >Update()</code
             > loop. A generic <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >StateMachine</code
             > (plain C# class, no Unity dependency) paired with an <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >IState</code
             > interface makes each state a self-contained class that owns its
             own enter, tick, and exit logic. Adding a state or changing a
@@ -404,21 +255,21 @@ const pageDescription =
           style="--delay: 100ms"
         >
           <p>
-            Anything that makes noise — a sprinting player, a knocked-over
-            prop — needs to alert every enemy within range. Neither the emitter
+            Anything that makes noise (a sprinting player, a knocked-over
+            prop) needs to alert every enemy within range. Neither the emitter
             nor the enemy should hold a reference to the other: the set of
             listening enemies changes at runtime, and emitters shouldn't need to
             know what's listening. A static <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >NoiseEmitter</code
             > event bus with a <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >readonly struct</code
             > payload solves this. Emitters fire-and-forget. Each enemy's <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >NoiseListener</code
             > filters by <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
               >_hearingRadius</code
             > before raising its own local event. No allocation, no coupling, no
             broadcast-to-all overhead.
@@ -437,49 +288,49 @@ const pageDescription =
         <div class="space-y-14">
           <!-- Decision 1: IState + StateMachine -->
           <div class="reveal" style="--delay: 0ms">
-            <div class="border border-[#1F1F1F] rounded-xl p-8">
+            <div class="border border-[#1F1F1F] p-8">
               <h3 class="font-mono font-semibold text-[#F0F0F0] text-lg mb-3">
-                IState + StateMachine — Plain Classes, Not MonoBehaviours
+                IState + StateMachine: Plain Classes, Not MonoBehaviours
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >StateMachine</code
                 > and <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >BaseState</code
                 > live in <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Infrastructure/StateMachine/</code
-                > with no Unity dependency — they're plain C# classes that could
+                > with no Unity dependency: they're plain C# classes that could
                 run in a test harness without an editor. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >StateMachine</code
                 > holds the current <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >IState</code
                 >, calls <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Exit()</code
                 > then <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Enter()</code
                 > on transition, and exposes <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Tick()</code
                 >. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >EnemyController</code
                 > owns one instance, calls <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Tick()</code
                 > from <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Update()</code
                 >, and constructs each concrete state with a reference to
                 itself. The states get everything they need through that owner
-                reference — no singletons, no <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                reference: no singletons, no <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >FindObjectOfType</code
                 >.
               </p>
@@ -527,7 +378,7 @@ public class EnemyController : MonoBehaviour
 }`} /></pre>
               <!-- Concrete states -->
               <div
-                class="mt-6 p-4 bg-[#0D0D0D] rounded-lg border border-[#1F1F1F]"
+                class="mt-6 p-4 bg-[#0D0D0D] border border-[#1F1F1F]"
               >
                 <p class="text-[#666666] text-xs font-mono mb-3">
                   Six concrete states in AI/Enemy/States/
@@ -554,7 +405,7 @@ public class EnemyController : MonoBehaviour
                       ],
                       [
                         "EnemySearchState",
-                        "Three-phase sweep: LKP → rotate through N directions → nearest patrol waypoints",
+                        "Three-phase sweep: LKP, then rotate through N directions, then nearest patrol waypoints",
                       ],
                     ].map(([name, desc]) => (
                       <div class="flex gap-3 text-xs">
@@ -572,29 +423,29 @@ public class EnemyController : MonoBehaviour
 
           <!-- Decision 2: SuspicionMeter -->
           <div class="reveal" style="--delay: 50ms">
-            <div class="border border-[#1F1F1F] rounded-xl p-8">
+            <div class="border border-[#1F1F1F] p-8">
               <h3 class="font-mono font-semibold text-[#F0F0F0] text-lg mb-3">
-                SuspicionMeter — Continuous Float with Hysteresis
+                SuspicionMeter: Continuous Float with Hysteresis
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >SuspicionMeter</code
                 > is a MonoBehaviour on the enemy that accumulates suspicion each
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >FixedUpdate</code
                 >. The visual delta from <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >EnemyDetection.ComputeVisualDelta()</code
                 > applies three modifiers: distance falloff, angle falloff, and
-                a crouch stealth multiplier. The result is a per-frame rate —
-                not a spike — so suspicion rises smoothly and the player has
+                a crouch stealth multiplier. The result is a per-frame rate,
+                not a spike, so suspicion rises smoothly and the player has
                 time to react.
               </p>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >ComputeTargetState()</code
                 > uses separate rising and falling thresholds per state. The gap
                 between them is the hysteresis band: you need to lose suspicion
@@ -610,7 +461,7 @@ public class SuspicionMeter : MonoBehaviour
     public event Action<SeekState, SeekState> OnStateChanged;
     public event Action                   OnPlayerCaught;
 
-    public float     Suspicion           { get; private set; }  // 0–100
+    public float     Suspicion           { get; private set; }  // 0-100
     public float     SuspicionNormalized => Suspicion / 100f;
     public SeekState State               { get; private set; }
     public float     Phase2SuspicionFloor { get; set; }         // set by LevelPhaseManager
@@ -623,19 +474,19 @@ public class SuspicionMeter : MonoBehaviour
     SeekState ComputeTargetState()
     {
         // Rising thresholds (from EnemyData ScriptableObject):
-        //   Unaware → Alert:     suspicion >= alertThreshold     (25f)
-        //   Alert   → Searching: suspicion >= searchingThreshold (60f)
-        //   Searching → Chase:   suspicion >= chaseThreshold     (85f)
+        //   Unaware to Alert:     suspicion >= alertThreshold     (25f)
+        //   Alert to Searching:   suspicion >= searchingThreshold (60f)
+        //   Searching to Chase:   suspicion >= chaseThreshold     (85f)
         //
         // Falling thresholds (hysteresis gap prevents flickering):
-        //   Chase   → Searching: suspicion < chaseRevertThreshold     (75f)
-        //   Searching → Alert:   suspicion < searchingRevertThreshold  (50f)
-        //   Alert   → Unaware:   suspicion < alertRevertThreshold      (15f)
+        //   Chase to Searching:   suspicion < chaseRevertThreshold      (75f)
+        //   Searching to Alert:   suspicion < searchingRevertThreshold  (50f)
+        //   Alert to Unaware:     suspicion < alertRevertThreshold      (15f)
         // ...
     }
 }
 
-// AI/Enemy/EnemyDetection.cs — visual delta per GDD formula F2
+// AI/Enemy/EnemyDetection.cs: visual delta per GDD formula F2
 float ComputeVisualDelta(float distance, float angleToPlayer)
 {
     // distanceFactor: falloff using distanceFalloffExponent (2f) over detectionRange (15f)
@@ -650,35 +501,35 @@ float ComputeVisualDelta(float distance, float angleToPlayer)
 
           <!-- Decision 3: EnemyNavigation wrapper + NoiseEmitter bus -->
           <div class="reveal" style="--delay: 100ms">
-            <div class="border border-[#1F1F1F] rounded-xl p-8">
+            <div class="border border-[#1F1F1F] p-8">
               <h3 class="font-mono font-semibold text-[#F0F0F0] text-lg mb-3">
-                EnemyNavigation — NavMeshAgent Behind an Interface
+                EnemyNavigation: NavMeshAgent Behind an Interface
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 States never touch <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >NavMeshAgent</code
                 > directly. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >EnemyNavigation</code
                 > wraps it and exposes only what states need: <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >SetDestination()</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Stop()</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >IsNear()</code
                 >, and <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >RotateToward()</code
-                >. That last one is the non-obvious method — <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                >. That last one is the non-obvious method: <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >EnemyAlertState</code
                 > uses it to smoothly scan toward the last-known position, and
                 it returns <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >true</code
                 > when the rotation is within 1° of the target so the state
                 knows when to stop waiting. Wrapping the agent means you can
@@ -686,39 +537,39 @@ float ComputeVisualDelta(float distance, float angleToPlayer)
                 any state logic.
               </p>
               <h3 class="font-mono font-semibold text-[#F0F0F0] text-lg mb-3 mt-8">
-                NoiseEmitter — Static Event Bus with Zero Allocation
+                NoiseEmitter: Static Event Bus with Zero Allocation
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >NoiseEmitter</code
                 > is a static class that fires a <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >readonly struct</code
-                > — <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                > (<code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >NoiseEvent</code
-                > — carrying world position, intensity, and a source tag.
+                >) carrying world position, intensity, and a source tag.
                 Emitters call <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >NoiseEmitter.Emit()</code
                 > and forget it. Each enemy's <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >NoiseListener</code
                 > subscribes on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >OnEnable</code
                 >, unsubscribes on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >OnDisable</code
                 >, and filters incoming events by <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >_hearingRadius</code
                 > before raising its own local event. The struct allocates
                 nothing on the heap: no boxing, no list allocation per
-                broadcast. Adding a new noise source — a door slam, a
-                grenade — means one <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                broadcast. Adding a new noise source (a door slam, a
+                grenade) means one <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Emit()</code
                 > call. Nothing else changes.
               </p>
@@ -741,7 +592,7 @@ public class EnemyNavigation : MonoBehaviour
     public bool RotateToward(Vector3 target, float degreesPerSecond) { /* returns true when < 1° */ }
 }
 
-// Detection/NoiseSystem/NoiseEvent.cs — heap-free event payload
+// Detection/NoiseSystem/NoiseEvent.cs: heap-free event payload
 public readonly struct NoiseEvent
 {
     public Vector3 WorldPosition { get; init; }
@@ -749,14 +600,14 @@ public readonly struct NoiseEvent
     public string  SourceTag     { get; init; }
 }
 
-// Detection/NoiseSystem/NoiseEmitter.cs — static fire-and-forget bus
+// Detection/NoiseSystem/NoiseEmitter.cs: static fire-and-forget bus
 public static class NoiseEmitter
 {
     public static event Action<NoiseEvent> OnNoiseEmitted;
     public static void Emit(NoiseEvent e) => OnNoiseEmitted?.Invoke(e);
 }
 
-// Detection/NoiseSystem/NoiseListener.cs — per-enemy filtered subscriber
+// Detection/NoiseSystem/NoiseListener.cs: per-enemy filtered subscriber
 public class NoiseListener : MonoBehaviour
 {
     [SerializeField] float _hearingRadius;
@@ -776,50 +627,50 @@ public class NoiseListener : MonoBehaviour
 
           <!-- Decision 4: LevelBuilder editor suite -->
           <div class="reveal" style="--delay: 150ms">
-            <div class="border border-[#1F1F1F] rounded-xl p-8">
+            <div class="border border-[#1F1F1F] p-8">
               <h3 class="font-mono font-semibold text-[#F0F0F0] text-lg mb-3">
-                LevelBuilder — Nine Custom Editor Tools
+                LevelBuilder: Nine Custom Editor Tools
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 The <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >Editor/LevelBuilder/</code
                 > directory is nine tools designed to hand off to each other
                 across the full layout workflow. Placement (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >SurfaceDropTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >BoundsSnapTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >PrefabPaletteWindow</code
                 >), alignment and distribution (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >BoundsAlignTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >DistributeTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >ScatterTool</code
                 >), and auditing (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >OverlapChecker</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >ComponentAuditTool</code
-                >) — you scatter props with <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                >). You scatter props with <code
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >ScatterTool</code
                 >, snap them to geometry with <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >SurfaceDropTool</code
                 >, then run <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >OverlapChecker</code
                 > to catch collider intersections before hitting play. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                   >LevelBuilderUtility</code
                 > provides the shared selection queries, undo helpers, and gizmo
                 drawing that all nine tools depend on.
@@ -830,7 +681,7 @@ public class NoiseListener : MonoBehaviour
                   [
                     [
                       "SurfaceDropTool",
-                      "Raycasts selection onto underlying geometry — snaps props to floor/ceiling in one click",
+                      "Raycasts selection onto underlying geometry: snaps props to floor/ceiling in one click",
                     ],
                     [
                       "BoundsSnapTool",
@@ -846,15 +697,15 @@ public class NoiseListener : MonoBehaviour
                     ],
                     [
                       "ScatterTool",
-                      "Random-placement with overlap avoidance — configurable radius, count, and normal alignment",
+                      "Random-placement with overlap avoidance: configurable radius, count, and normal alignment",
                     ],
                     [
                       "OverlapChecker",
-                      "Highlights objects whose collider bounds intersect — catches layout errors before play",
+                      "Highlights objects whose collider bounds intersect: catches layout errors before play",
                     ],
                     [
                       "PrefabPaletteWindow",
-                      "Click-to-place prefab palette with preview — eliminates drag from Project window",
+                      "Click-to-place prefab palette with preview: eliminates drag from Project window",
                     ],
                     [
                       "ComponentAuditTool",
@@ -862,10 +713,10 @@ public class NoiseListener : MonoBehaviour
                     ],
                     [
                       "LevelBuilderUtility",
-                      "Shared helpers used by all tools — selection queries, undo helpers, gizmo drawing",
+                      "Shared helpers used by all tools: selection queries, undo helpers, gizmo drawing",
                     ],
                   ].map(([name, desc]) => (
-                    <div class="flex flex-col gap-1 p-3 bg-[#0D0D0D] rounded-lg border border-[#1F1F1F]">
+                    <div class="flex flex-col gap-1 p-3 bg-[#0D0D0D] border border-[#1F1F1F]">
                       <code class="font-mono text-violet-400 text-xs">
                         {name}
                       </code>
@@ -876,7 +727,7 @@ public class NoiseListener : MonoBehaviour
                   ))
                 }
               </div>
-              <pre><code class="language-csharp" set:text={`// Editor/LevelBuilder/ — all tools live here as EditorWindow or static utility classes
+              <pre><code class="language-csharp" set:text={`// Editor/LevelBuilder/: all tools live here as EditorWindow or static utility classes
 // Example: SurfaceDropTool drops selected transforms onto the nearest surface below
 
 // Representative pattern (actual implementation details [VERIFY]):
@@ -923,14 +774,14 @@ public class SurfaceDropTool : EditorWindow
             >
               <Image
                 src={screenshot1}
-                alt="Hide and Seek — top-down gameplay view: patrol route and suspicion meter visible"
+                alt="Hide and Seek, top-down gameplay view: patrol route and suspicion meter visible"
                 loading="lazy"
                 widths={[400, 800, 1200]}
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
             </div>
             <p class="text-[#666666] text-xs font-mono mt-2">
-              Top-down view — patrol route and suspicion meter visible
+              Top-down view: patrol route and suspicion meter visible
             </p>
           </div>
 
@@ -944,14 +795,14 @@ public class SurfaceDropTool : EditorWindow
             >
               <Image
                 src={screenshot2}
-                alt="Hide and Seek — enemy chase state: EnemyChaseState active with suspicion meter at maximum"
+                alt="Hide and Seek, enemy chase state: EnemyChaseState active with suspicion meter at maximum"
                 loading="lazy"
                 widths={[400, 800, 1200]}
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
             </div>
             <p class="text-[#666666] text-xs font-mono mt-2">
-              Chase state — EnemyChaseState active, suspicion at max
+              Chase state: EnemyChaseState active, suspicion at max
             </p>
           </div>
         </div>
@@ -967,72 +818,72 @@ public class SurfaceDropTool : EditorWindow
 
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
+            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >State transitions allocate.</strong
               >
               Each <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >ChangeState(new EnemyChaseState(this))</code
               > creates a new heap object. With six states and frequent transitions,
               this generates measurable GC. Pre-allocating all states at <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >Awake()</code
               > and passing them by reference would eliminate that allocation entirely.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
+            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >Phase 2 escalation is three loose properties, not a profile.</strong
               >
               <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >LevelPhaseManager</code
               > escalates the enemy by setting <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >Phase2SpeedMultiplier</code
               >, <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >Phase2SuspicionFloor</code
               >, and <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >Phase2SkipAlertScan</code
               > directly on <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >EnemyController</code
               >. There's already an <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >EscalationProfile</code
               > ScriptableObject in the <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >Data/</code
-              > folder — it should drive all phase transitions instead of the three
+              > folder. It should drive all phase transitions instead of the three
               ad-hoc setters.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">—</span>
+            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >SuspicionMeter has four separate timer floats.</strong
               >
               <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >_detectionCooldownTimer</code
               >, <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >_chaseNoInputTimer</code
               >, <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >_catchDwellTimer</code
               >, and <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >_caughtFired</code
               > are all managed inline. A small reusable <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1 rounded"
+                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
                 >CountdownTimer</code
               > struct that ticks and fires a callback would cut this down significantly
               and make the intent explicit.
@@ -1052,11 +903,11 @@ public class SurfaceDropTool : EditorWindow
         <ul class="reveal space-y-3 max-w-3xl" style="--delay: 100ms">
           {
             [
-              "<strong class='text-[#F0F0F0] font-medium'>SFX pass on the noise system.</strong> Footstep intensity varies by stance — walk, sprint, crouch — via PlayerNoiseEmitter. The wiring is in place; it needs audio assets and an alert sting on SeekState transitions.",
-              "<strong class='text-[#F0F0F0] font-medium'>Hiding spots.</strong> The wardrobe interaction is wired up. What's missing is the tension layer: a slow creeping suspicion drain rate while inside — distinct from normal falloff — and a VFX pass to sell the dread.",
+              "<strong class='text-[#F0F0F0] font-medium'>SFX pass on the noise system.</strong> Footstep intensity varies by stance (walk, sprint, crouch) via PlayerNoiseEmitter. The wiring is in place; it needs audio assets and an alert sting on SeekState transitions.",
+              "<strong class='text-[#F0F0F0] font-medium'>Hiding spots.</strong> The wardrobe interaction is wired up. What's missing is the tension layer: a slow creeping suspicion drain rate while inside (distinct from normal falloff) and a VFX pass to sell the dread.",
               "<strong class='text-[#F0F0F0] font-medium'>Win condition.</strong> RoundTimer expiry already calls WinConditionEvaluator. The evaluation logic is done; the win screen and score display aren't.",
               "<strong class='text-[#F0F0F0] font-medium'>Phase 2 escalation.</strong> LevelPhaseManager and the EscalationProfile ScriptableObject both exist. The remaining work is connecting the profile to the game loop through the LevelPhase enum so phase transitions are data-driven rather than the three ad-hoc setters called out in the Retrospective.",
-              "<strong class='text-[#F0F0F0] font-medium'>More level layouts.</strong> The LevelBuilder toolset makes iteration low-effort — scatter, drop to surface, audit. The constraint is art assets, not tooling.",
+              "<strong class='text-[#F0F0F0] font-medium'>More level layouts.</strong> The LevelBuilder toolset makes iteration low-effort: scatter, drop to surface, audit. The constraint is art assets, not tooling.",
             ].map((item) => (
               <li class="flex gap-3 text-[#888888]">
                 <span class="text-violet-400 font-mono shrink-0">›</span>
@@ -1081,7 +932,7 @@ public class SurfaceDropTool : EditorWindow
             href="/projects/deploylog"
             class="nav-link text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
           >
-            DeployLog →
+            DeployLog
           </a>
         </div>
         <p class="text-[#666666] text-xs font-mono">Technical Artist · Gameplay Programmer · Serbia</p>
@@ -1160,7 +1011,7 @@ public class SurfaceDropTool : EditorWindow
     </div>
 
     <script>
-      // Syntax highlighting — called directly since module scripts run after DOM is parsed
+      // Syntax highlighting: called directly since module scripts run after DOM is parsed
       // @ts-ignore
       if (typeof hljs !== "undefined") hljs.highlightAll();
 
@@ -1231,38 +1082,6 @@ public class SurfaceDropTool : EditorWindow
         );
         videoObs.observe(lazyVideo);
       }
-
-      const menuBtn = document.getElementById("menu-btn");
-      const mobileNav = document.getElementById("mobile-nav");
-      const iconMenu = document.getElementById("icon-menu");
-      const iconClose = document.getElementById("icon-close");
-      const mobileNavLinks = document.querySelectorAll<HTMLElement>(".mobile-nav-link");
-
-      function closeMobileNav() {
-        mobileNav?.classList.remove("open");
-        mobileNav?.setAttribute("aria-hidden", "true");
-        menuBtn?.setAttribute("aria-expanded", "false");
-        iconMenu?.classList.remove("hidden");
-        iconClose?.classList.add("hidden");
-        mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
-      }
-
-      menuBtn?.addEventListener("click", () => {
-        const isOpen = mobileNav?.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", String(isOpen));
-        iconMenu?.classList.toggle("hidden", !!isOpen);
-        iconClose?.classList.toggle("hidden", !isOpen);
-        if (isOpen) {
-          mobileNav?.removeAttribute("aria-hidden");
-          mobileNavLinks.forEach((link) => link.removeAttribute("tabindex"));
-        } else {
-          mobileNav?.setAttribute("aria-hidden", "true");
-          mobileNavLinks.forEach((link) => link.setAttribute("tabindex", "-1"));
-        }
-      });
-      mobileNavLinks.forEach((link) => {
-        link.addEventListener("click", closeMobileNav);
-      });
 
       const lightbox = document.getElementById("lightbox");
       const lbImg = document.getElementById("lightbox-img");
