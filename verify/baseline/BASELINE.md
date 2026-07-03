@@ -56,3 +56,9 @@ build measured the identical 0.74 at that moment. When the `--full` perf gate fa
 re-measure pristine main (worktree at the baseline sha, build, serve, Lighthouse) in the
 same session before believing a regression; the verdict is branch vs same-session main,
 not branch vs the recorded absolute. a11y/seo stay absolute (they do not drift).
+
+## Route addition: /404.html (Marko-directed, 2026-07-03)
+
+Issue 06 adds a custom 404 page (src/pages/404.astro); GitHub Pages serves dist/404.html for
+unknown URLs automatically. Marko asked for the 404 template explicitly, so this is the one
+deliberate exception to "route sets identical": routes.txt now includes /404.html.
