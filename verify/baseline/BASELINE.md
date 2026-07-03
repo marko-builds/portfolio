@@ -47,3 +47,12 @@ Consequences:
   local `astro build` + `astro preview`, screenshots via capture-web.
 - Pushing `feat/redesign` is safe — the workflow ignores non-main branches.
 - **Any commit to main auto-publishes production.** The branch discipline is load-bearing.
+
+## Lighthouse drift caveat (learned 2026-07-03, issue 05)
+
+Local absolute Lighthouse scores drift with machine state: the untouched deploylog page
+measured 0.97 at baseline time and 0.74 the same afternoon, and a pristine main worktree
+build measured the identical 0.74 at that moment. When the `--full` perf gate fails,
+re-measure pristine main (worktree at the baseline sha, build, serve, Lighthouse) in the
+same session before believing a regression; the verdict is branch vs same-session main,
+not branch vs the recorded absolute. a11y/seo stay absolute (they do not drift).

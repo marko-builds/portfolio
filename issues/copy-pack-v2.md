@@ -1,8 +1,6 @@
-> **SUPERSEDED by copy-pack-v2.md** (Marko forked mid-edit; v2 is canonical).
+# Copy pack v2 (issue 04) — Marko's edits folded in, English pass applied
 
-# Copy pack v1 (issue 04) — DRAFTS, nothing ships until Marko approves
-
-**Status:** Marko's adjustments · **Parent:** issues/04-repositioning-copy-pack.md · **Date:** 2026-07-03
+**Status:** Marko's adjustments + language corrections, awaiting his final OK · **Parent:** issues/04-repositioning-copy-pack.md · **Date:** 2026-07-03
 
 Every changed visitor-facing string for the redesign, in the voice.md register: warm but
 economical, short direct sentences, no hype, no em/en dashes or arrows, no banned marketing
@@ -12,30 +10,33 @@ Legend: [KEEP] = current string survives unchanged; everything else is a draft r
 current string shown in *(now: ...)*.
 
 ## Home page
-Net title status: **Approved**
+
 **Title tag** *(now: "Marko Stankovic — Generalist Technical Artist & Gameplay Programmer")*
+**Approved by Marko.**
 > Marko Stankovic | I build my own products and ship them
 
 **Meta description** *(now: the Technical Artist / Unity / UE5 paragraph)*
-> Solo builder. DeployLog turns deploys into release notes. Habitagram turns habits into a
-> journey. A homegrown generative studio renders the art for both.
-
-Marko's meta description version:
+Marko's version, typo fixed ("inot" to "into"):
 > Solo developer. DeployLog turns deploys into release notes. Habitagram turns your habits
-> inot a journey. A homegrown generative media studio renders the art for both.
+> into a journey. A homegrown generative media studio renders the art for both.
 
-**Person schema jobTitle** *(now: "Generalist Technical Artist")
+**Person schema jobTitle** *(now: "Generalist Technical Artist")*
+Fact note from Marko: he is not the founder of Monolithiq (his brother is); he builds under it.
+No Monolithiq mention anywhere in site copy.
+> Solo Developer
 
 **Hero prompt block** *(new element, from the picked direction)*
 > $ whoami
-> marko stankovic, builder
+> marko stankovic, developer
 
 **Hero headline** *(now: "Marko Stankovic" + "Technical Artist · Tools, Pipeline & Gameplay")*
 > I build my own products and ship them.
 
 **Hero subline** *(now: "I build the systems that make games feel alive...")*
-> DeployLog turns deploys into release notes. Habitagram turns habits into a journey.
-> A homegrown generative studio renders the art for both.
+Aligned with Marko's meta description edits ("your habits", "generative media studio"), so the
+two read as one voice. CONFIRM this alignment:
+> DeployLog turns deploys into release notes. Habitagram turns your habits into a journey.
+> A homegrown generative media studio renders the art for both.
 
 **Hero CTAs** *(now: "Let's Build" / "View Projects")*
 > See the work · Read the devlog
@@ -63,7 +64,7 @@ Game project cards keep their current titles and one-liners (unchanged strings).
 
 **Heading:** About
 **Blurb** *(now: skills-focused game-dev framing)*
-> I'm Marko, solo founder of Monolithiq. I spent three years building game systems in Unity
+> I'm Marko, a solo developer. I spent three years building game systems in Unity
 > and Unreal, then turned the same craft on my own products. Now I ship small software with
 > an AI-heavy workflow: two apps in flight, and a generative studio that renders their art,
 > video, and sound. I write about the process on the devlog.
@@ -81,7 +82,7 @@ Email / GitHub / LinkedIn link labels: [KEEP]
 ## Footer
 
 **Mono line** *(now: "Technical Artist · Gameplay Programmer · Serbia")*
-> Builder · Serbia
+> Developer · Serbia
 
 "© 2026 Marko Stankovic": [KEEP]
 
