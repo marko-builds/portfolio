@@ -1,0 +1,235 @@
+---
+// Throwaway direction prototype (issue 03): RAYCAST-WARM.
+// Product-forward: real app screenshots in floating cards, more color play
+// (all colors still from brand.json: mint accent, sky-cyan gold slot, codeKeyword violet).
+// Habitagram has no screenshot in the repo: honest labeled placeholder, never faked.
+// Copy is DRAFT ONLY; issue 04 owns approval. Delete this page after the pick.
+import '../../styles/global.css';
+import deploylogShot from '../../assets/screenshots/deploylog-1.png';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Proto: Raycast-warm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700&display=swap"
+    />
+  </head>
+  <body>
+    <div class="blob b1" aria-hidden="true"></div>
+    <div class="blob b2" aria-hidden="true"></div>
+    <div class="blob b3" aria-hidden="true"></div>
+
+    <main class="hero">
+      <p class="eyebrow reveal">Marko Stankovic</p>
+      <h1 class="headline reveal">
+        I build my own products<br />and <span class="grad">ship them</span>.
+      </h1>
+      <p class="sub reveal">
+        DeployLog turns deploys into release notes. Habitagram turns habits into
+        a journey. A homegrown generative studio renders the art for both.
+      </p>
+      <div class="ctas reveal">
+        <a class="btn-fill" href="#work">See the work</a>
+        <a class="btn-ghost" href="#devlog">Read the devlog</a>
+      </div>
+    </main>
+
+    <section class="stage" id="work">
+      <figure class="card float-a">
+        <img src={deploylogShot.src} alt="DeployLog dashboard" width="520" height="325" />
+        <figcaption>
+          <strong>DeployLog</strong>
+          <span>Release notes from your deploys</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card float-b placeholder">
+        <div class="ph">
+          <span class="ph-mark">Habitagram</span>
+          <span class="ph-note">screenshot pending</span>
+        </div>
+        <figcaption>
+          <strong>Habitagram</strong>
+          <span>Habit tracking as a journey</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card float-c studio">
+        <div class="studio-art" aria-hidden="true"></div>
+        <figcaption>
+          <strong>The Studio</strong>
+          <span>Generative media engine behind both</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: var(--font-sans);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      body::before { display: none; }
+
+      .blob {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(90px);
+        pointer-events: none;
+        opacity: 0.16;
+      }
+      .b1 { width: 44vw; height: 44vw; top: -14vw; right: -10vw; background: var(--color-accent); }
+      .b2 { width: 36vw; height: 36vw; bottom: -12vw; left: -10vw; background: #38bdf8; }
+      .b3 { width: 22vw; height: 22vw; top: 44vh; left: 42vw; background: #a78bfa; opacity: 0.1; }
+
+      .hero {
+        max-width: 860px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 16vh 32px 48px;
+      }
+      .eyebrow {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--color-text-secondary);
+        margin: 0 0 24px;
+      }
+      .headline {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: clamp(2.6rem, 6.6vw, 5rem);
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        color: var(--color-text-primary);
+        margin: 0 0 28px;
+      }
+      .grad {
+        background: linear-gradient(100deg, var(--color-accent) 10%, #38bdf8 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .sub {
+        color: var(--color-text-secondary);
+        font-size: 18px;
+        line-height: 1.75;
+        max-width: 54ch;
+        margin: 0 auto 40px;
+      }
+      .ctas { display: flex; gap: 16px; justify-content: center; }
+      .btn-fill,
+      .btn-ghost {
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 12px 26px;
+        border-radius: 999px;
+      }
+      .btn-fill {
+        background: linear-gradient(100deg, var(--color-accent), #38bdf8);
+        color: #0d0d0d;
+      }
+      .btn-fill:hover { filter: brightness(1.1); }
+      .btn-ghost {
+        color: var(--color-text-primary);
+        border: 1px solid var(--color-border-strong);
+        background: #14141480;
+        backdrop-filter: blur(8px);
+      }
+      .btn-ghost:hover { border-color: var(--color-text-secondary); }
+
+      .stage {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 36px;
+        padding: 24px 32px 120px;
+        flex-wrap: wrap;
+      }
+      .card {
+        margin: 0;
+        width: min(420px, 88vw);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border-strong);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 24px 60px #00000090, 0 0 40px #00ffc814;
+      }
+      .card img { display: block; width: 100%; height: auto; }
+      .card figcaption {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        padding: 14px 18px;
+      }
+      .card strong { font-size: 15px; }
+      .card figcaption span {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+      }
+      .float-a { transform: rotate(-2deg); }
+      .float-b { transform: rotate(1.6deg) translateY(26px); width: min(320px, 80vw); }
+      .float-c { transform: rotate(-1deg) translateY(52px); width: min(300px, 76vw); }
+
+      .ph {
+        aspect-ratio: 16 / 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: repeating-linear-gradient(
+          45deg, var(--color-surface), var(--color-surface) 12px,
+          #191919 12px, #191919 24px
+        );
+        border-bottom: 1px solid var(--color-border-strong);
+      }
+      .ph-mark { font-weight: 600; font-size: 18px; color: var(--color-text-secondary); }
+      .ph-note {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--color-text-muted);
+      }
+      .studio-art {
+        aspect-ratio: 16 / 10;
+        background:
+          radial-gradient(ellipse 70% 60% at 30% 70%, #00ffc835, transparent 65%),
+          radial-gradient(ellipse 60% 50% at 75% 25%, #38bdf83d, transparent 60%),
+          radial-gradient(ellipse 40% 40% at 60% 80%, #a78bfa2e, transparent 60%),
+          #101010;
+        border-bottom: 1px solid var(--color-border-strong);
+      }
+
+      .reveal { animation: pop 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      .reveal:nth-child(2) { animation-delay: 0.07s; }
+      .reveal:nth-child(3) { animation-delay: 0.14s; }
+      .reveal:nth-child(4) { animation-delay: 0.21s; }
+      @keyframes pop {
+        from { opacity: 0; transform: translateY(16px) scale(0.985); }
+        to { opacity: 1; transform: none; }
+      }
+      .float-a, .float-b, .float-c { animation: drift 7s ease-in-out infinite alternate; }
+      .float-b { animation-duration: 8.5s; }
+      .float-c { animation-duration: 9.5s; }
+      @keyframes drift {
+        from { translate: 0 0; }
+        to { translate: 0 -10px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal, .float-a, .float-b, .float-c { animation: none; }
+      }
+    </style>
+  </body>
+</html>
