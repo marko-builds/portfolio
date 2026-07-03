@@ -12,8 +12,9 @@ current string shown in *(now: ...)*.
 ## Home page
 
 **Title tag** *(now: "Marko Stankovic — Generalist Technical Artist & Gameplay Programmer")*
-**Approved by Marko.**
-> Marko Stankovic | I build my own products and ship them
+**Approved by Marko** (2026-07-03 revision: "my own products" to "software products", his call
+after seeing 05 rendered; Claude recommended "software products" over "digital"/bare "products").
+> Marko Stankovic | I build software products and ship them
 
 **Meta description** *(now: the Technical Artist / Unity / UE5 paragraph)*
 Marko's version, typo fixed ("inot" to "into"):
@@ -25,12 +26,12 @@ Fact note from Marko: he is not the founder of Monolithiq (his brother is); he b
 No Monolithiq mention anywhere in site copy.
 > Solo Developer
 
-**Hero prompt block** *(new element, from the picked direction)*
-> $ whoami
-> marko stankovic, developer
+**Hero prompt block** *(new element, from the picked direction; Marko simplified to one arg
+after seeing 05 rendered)*
+> \> MarkoStankovic(Developer);_
 
 **Hero headline** *(now: "Marko Stankovic" + "Technical Artist · Tools, Pipeline & Gameplay")*
-> I build my own products and ship them.
+> I build software products and ship them.
 
 **Hero subline** *(now: "I build the systems that make games feel alive...")*
 Aligned with Marko's meta description edits ("your habits", "generative media studio"), so the
@@ -52,13 +53,10 @@ two read as one voice. CONFIRM this alignment:
 - **studio** · The generative media engine behind both. · status: internal
   (unlinked, or points at the devlog)
 
-## Game work section (present, no longer leading)
+## Game work section
 
-**Heading:** Game work
-**Intro line (new):**
-> Three years of Unity and Unreal before the products. The craft still shows.
-
-Game project cards keep their current titles and one-liners (unchanged strings).
+**CUT ENTIRELY by Marko after seeing 05 rendered** ("not representative currently"). The game
+detail pages keep their routes (parity contract) but are no longer linked from the home page.
 
 ## About section
 

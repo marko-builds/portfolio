@@ -1,14 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
-import { getImage } from "astro:assets";
-import tictactoe1Raw from "../assets/screenshots/tictactoe-neon.png";
-
-const tictactoe1 = await getImage({
-  src: tictactoe1Raw,
-  format: "webp",
-  width: 800,
-});
 
 const recentPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
@@ -19,7 +11,7 @@ const recentPosts = (await getCollection("blog"))
     return { ...post, readingTime: Math.max(1, Math.ceil(words / 200)) };
   });
 
-const pageTitle = "Marko Stankovic | I build my own products and ship them";
+const pageTitle = "Marko Stankovic | I build software products and ship them";
 const pageDescription =
   "Solo developer. DeployLog turns deploys into release notes. Habitagram turns your habits into a journey. A homegrown generative media studio renders the art for both.";
 
@@ -55,11 +47,11 @@ const dateFmt = (d: Date) =>
     <section class="hero">
       <div class="frame">
         <p class="repl kinetic k1">
-          <span class="chevron">&gt;</span> MarkoStankovic(<span class="arg">Developer</span>, <span class="arg">Creator</span>)<span class="semi">;</span><span class="cursor-blink"></span>
+          <span class="chevron">&gt;</span> MarkoStankovic(<span class="arg">Developer</span>)<span class="semi">;</span><span class="cursor-blink"></span>
         </p>
 
         <h1 class="headline">
-          <span class="kinetic k2">I build my own products</span>
+          <span class="kinetic k2">I build software products</span>
           <span class="kinetic k3 outline">and ship them.</span>
         </h1>
 
@@ -106,48 +98,6 @@ const dateFmt = (d: Date) =>
             <p>The generative media engine behind both.</p>
             <span class="status">status: internal</span>
           </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- GAME WORK -->
-    <section class="band" id="games">
-      <div class="frame">
-        <h2 class="section-label io mask"><span>Game work</span></h2>
-        <p class="band-intro io">
-          Three years of Unity and Unreal before the products. The craft still shows.
-        </p>
-
-        <div class="game-grid io">
-          <article class="game-card">
-            <img
-              src={tictactoe1.src}
-              alt="Tic-Tac-Toe neon theme: neon-grid board with pink X and cyan O marks"
-              width="800"
-              height="450"
-              loading="lazy"
-            />
-            <div class="game-body">
-              <h3>Tic-Tac-Toe</h3>
-              <p>
-                Add a whole new theme in one ScriptableObject and zero new code.
-                A shipped local-multiplayer game whose real story is the theming
-                system: six themes repaint board, UI, HUD, and audio from a
-                single tap, split across five segregated interfaces so new
-                content is data, not code.
-              </p>
-              <div class="game-links">
-                <a href="https://marko-builds.itch.io/tictactoe" target="_blank" rel="noopener noreferrer">Play on itch</a>
-                <a href="/projects/tictactoe/">Details</a>
-              </div>
-            </div>
-          </article>
-
-          <div class="game-more">
-            <p class="mono-meta">more</p>
-            <a class="more-link" href="/projects/hide-and-seek/">Hide and Seek</a>
-            <p class="more-desc">Enemy AI as a finite state machine in Unity.</p>
-          </div>
         </div>
       </div>
     </section>
@@ -380,42 +330,7 @@ const dateFmt = (d: Date) =>
   .card p { margin: 0 0 16px; font-size: 14px; color: var(--color-text-secondary); line-height: 1.55; }
   .status { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
 
-  /* GAME WORK */
-  .game-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1px;
-    background: var(--color-border-strong);
-    border: 1px solid var(--color-border-strong);
-  }
-  @media (max-width: 720px) {
-    .game-grid { grid-template-columns: 1fr; }
-  }
-  .game-card { background: var(--color-bg); margin: 0; }
-  .game-card img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-bottom: 1px solid var(--color-border-strong);
-    filter: saturate(0.85);
-    transition: filter 0.2s ease;
-  }
-  .game-card:hover img { filter: saturate(1); }
-  .game-body { padding: 22px; }
-  .game-body h3 { margin: 0 0 10px; font-family: var(--font-sans); font-size: 17px; font-weight: 600; }
-  .game-body p { margin: 0 0 18px; font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
-  .game-links { display: flex; gap: 20px; }
-  .game-links a {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--color-text-primary);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-border-strong);
-    padding-bottom: 2px;
-    transition: border-color 0.15s ease, color 0.15s ease;
-  }
-  .game-links a:hover { border-color: var(--color-accent); color: var(--color-accent); }
-  .game-more { background: var(--color-bg); padding: 22px; }
+  /* shared mono meta label */
   .mono-meta {
     font-family: var(--font-mono);
     font-size: 11px;
@@ -424,17 +339,6 @@ const dateFmt = (d: Date) =>
     color: var(--color-text-muted);
     margin: 0 0 10px;
   }
-  .more-link {
-    display: inline-block;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    text-decoration: none;
-    margin-bottom: 8px;
-  }
-  .more-link:hover { color: var(--color-accent); }
-  .more-desc { margin: 0; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
-
   /* ABOUT */
   .about-text {
     color: var(--color-text-secondary);
