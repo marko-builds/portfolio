@@ -1,0 +1,38 @@
+{
+  "home": {
+    "performance": 0.93,
+    "accessibility": 0.96,
+    "seo": 1,
+    "fcp_ms": 906.0823,
+    "lcp_ms": 3288.0571,
+    "cls": 0.016291,
+    "tbt_ms": 63
+  },
+  "projects_deploylog": {
+    "performance": 0.97,
+    "accessibility": 0.96,
+    "seo": 1,
+    "fcp_ms": 1888.6379,
+    "lcp_ms": 1888.6379,
+    "cls": 0,
+    "tbt_ms": 110
+  },
+  "devlog": {
+    "performance": 0.92,
+    "accessibility": 0.95,
+    "seo": 1,
+    "fcp_ms": 2671.9873999999995,
+    "lcp_ms": 2671.9873999999995,
+    "cls": 1.8e-05,
+    "tbt_ms": 0
+  },
+  "devlog_tictactoe-theme-system": {
+    "performance": 0.95,
+    "accessibility": 0.95,
+    "seo": 1,
+    "fcp_ms": 1892.4863999999998,
+    "lcp_ms": 2693.8141,
+    "cls": 0,
+    "tbt_ms": 52
+  }
+}
