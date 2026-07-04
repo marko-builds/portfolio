@@ -1,6 +1,6 @@
 # markostankovic.org
 
-Personal portfolio site for [Marko Stankovic](https://markostankovic.org) — game developer based in Serbia.
+Personal portfolio site for [Marko Stankovic](https://markostankovic.org), a solo developer based in Serbia.
 
 → **[markostankovic.org](https://markostankovic.org)**
 
