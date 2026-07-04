@@ -23,7 +23,7 @@ const personSchema = {
   jobTitle: "Solo Developer",
   sameAs: [
     "https://github.com/marko-builds",
-    "https://www.linkedin.com/in/markostankovic-gamedev/",
+    "https://www.linkedin.com/in/marko-builds/",
     "https://www.instagram.com/marko.builds/",
   ],
 };
@@ -157,9 +157,9 @@ const dateFmt = (d: Date) =>
             <span class="mono-meta">github</span>
             <span>github.com/marko-builds</span>
           </a>
-          <a class="contact-row" href="https://www.linkedin.com/in/markostankovic-gamedev/" target="_blank" rel="noopener noreferrer">
+          <a class="contact-row" href="https://www.linkedin.com/in/marko-builds/" target="_blank" rel="noopener noreferrer">
             <span class="mono-meta">linkedin</span>
-            <span>markostankovic-gamedev</span>
+            <span>marko-builds</span>
           </a>
         </div>
       </div>
@@ -314,7 +314,8 @@ const dateFmt = (d: Date) =>
     .cards { grid-template-columns: 1fr; }
   }
   .card {
-    display: block;
+    display: flex;
+    flex-direction: column;
     background: var(--color-bg);
     padding: 22px;
     text-decoration: none;
@@ -328,7 +329,7 @@ const dateFmt = (d: Date) =>
   .dot.idle { background: var(--color-text-muted); }
   .label { font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); }
   .card p { margin: 0 0 16px; font-size: 14px; color: var(--color-text-secondary); line-height: 1.55; }
-  .status { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
+  .status { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); margin-top: auto; }
 
   /* shared mono meta label */
   .mono-meta {
