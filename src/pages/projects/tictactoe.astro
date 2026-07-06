@@ -47,7 +47,7 @@ const pageDescription =
       <div class="relative max-w-5xl mx-auto px-6 py-20">
         <a
           href="/#work"
-          class="hero-enter inline-block text-[#666666] hover:text-[#00FFC8] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
+          class="hero-enter inline-block text-[#666666] hover:text-[#5FCEDB] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
           style="--delay: 0.05s"
         >
           back
@@ -58,7 +58,7 @@ const pageDescription =
           style="--delay: 0.15s"
         >
           <span
-            class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1"
+            class="text-xs font-mono bg-[#5FCEDB]/[0.08] text-[#5FCEDB]/75 border border-[#5FCEDB]/20 px-3 py-1"
           >
             Shipped · Live on itch
           </span>
@@ -81,7 +81,7 @@ const pageDescription =
           style="--delay: 0.5s"
         >
           Add a whole new theme in one <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
+            class="font-mono text-[#5FCEDB] text-base bg-[#5FCEDB]/10 px-1.5"
             >ScriptableObject</code
           > and zero new code. A shipped, local-multiplayer Tic-Tac-Toe whose
           real story is its theming: six themes repaint the board, UI, HUD, and
@@ -94,7 +94,7 @@ const pageDescription =
             href="https://marko-builds.itch.io/tictactoe"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
+            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#5FCEDB]/[0.08] border border-[#5FCEDB]/15 hover:border-[#5FCEDB]/30 text-sm text-[#5FCEDB]/55 hover:text-[#5FCEDB]/75 transition-colors duration-150"
           >
             <svg
               class="w-4 h-4"
@@ -132,7 +132,7 @@ const pageDescription =
           </a>
           <a
             href="/devlog/tictactoe-theme-system"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#5FCEDB]/[0.08] border border-[#5FCEDB]/15 hover:border-[#5FCEDB]/30 text-sm text-[#5FCEDB]/55 hover:text-[#5FCEDB]/75 transition-colors duration-150"
           >
             <svg
               class="w-4 h-4"
@@ -182,7 +182,7 @@ const pageDescription =
           style="--delay: 100ms"
         >
           Same board, four <code
-            class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+            class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
             >ThemeSO</code
           > assets. One menu tap repaints the grid, the marks, the HUD, the background,
           and the music. No code path changes.
@@ -373,19 +373,19 @@ const pageDescription =
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 A theme is a <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ThemeSO</code
                 > asset. Adding one means creating an asset and filling its
                 fields. No code, no recompile, and a designer can do it. The asset implements
                 five interfaces instead of exposing one fat type, so each system
                 depends only on the surface it paints: the audio system on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >IThemeAudio</code
                 >, the board on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >IThemeBoard</code
                 >, the selection popup on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ITheme</code
                 > (id and name only). A change to the board surface cannot ripple
                 into audio code. Each sprite slot has a color fallback, so a theme
@@ -423,22 +423,22 @@ public interface ITheme
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ThemeManager</code
                 > is a persistent singleton. On a change it persists the choice through
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >SaveManager</code
                 > and fires one event carrying the identity view only, a deliberately
                 narrow payload. Painters that need richer data read the <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ActiveTheme...</code
                 > property for their own surface. Each painter is a small applier that
                 subscribes on enable and re-applies on every change, so a mid-match
                 theme swap repaints the whole scene with no special-case code. Two
                 safeguards: a stale theme id falls back to the first theme (an old save
                 never loads blank), and ids live in one <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ThemeIds</code
                 > class so a rename is a compile error, not a silent fallback.
               </p>
@@ -482,7 +482,7 @@ private void HandleThemeChanged(ITheme _)
 
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">&bull;</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">&bull;</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >Interface segregation earned its place at more than two themes.</strong
@@ -494,7 +494,7 @@ private void HandleThemeChanged(ITheme _)
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">&bull;</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">&bull;</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >The sprite-or-color fallback unblocked the art pipeline.</strong
@@ -505,13 +505,13 @@ private void HandleThemeChanged(ITheme _)
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">&bull;</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">&bull;</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >A narrow event payload kept the broadcast honest.</strong
               >
               Carrying only <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >ITheme</code
               > in the change event, and letting listeners pull the surface they
               need, stopped the broadcast from becoming a dumping ground as

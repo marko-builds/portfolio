@@ -31,9 +31,9 @@ const TOKEN_MAP = {
 };
 // site-local derived tones with no brand.json counterpart; frozen at baseline values
 const TOKEN_FROZEN = {
-  '--color-border': '#1F1F1F',
-  '--color-accent-dim': '#00FFC820',
-  '--color-text-muted': '#5C5C5C',
+  '--color-border': '#1E2430',
+  '--color-accent-dim': '#5FCEDB20',
+  '--color-text-muted': '#767F8F',
 };
 const FONT_PREFIX = { '--font-sans': "'Geist'", '--font-mono': "'JetBrains Mono'" };
 

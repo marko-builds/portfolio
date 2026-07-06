@@ -43,7 +43,7 @@ const pageDescription =
       <div class="relative max-w-5xl mx-auto px-6 py-20">
         <a
           href="/#work"
-          class="hero-enter inline-block text-[#666666] hover:text-[#00FFC8] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
+          class="hero-enter inline-block text-[#666666] hover:text-[#5FCEDB] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
           style="--delay: 0.05s"
         >
           Projects
@@ -51,7 +51,7 @@ const pageDescription =
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.15s">
           <span
-            class="text-xs font-mono bg-[#00FFC8]/[0.08] text-[#00FFC8]/75 border border-[#00FFC8]/20 px-3 py-1"
+            class="text-xs font-mono bg-[#5FCEDB]/[0.08] text-[#5FCEDB]/75 border border-[#5FCEDB]/20 px-3 py-1"
           >
             Launching · solo, full-stack
           </span>
@@ -75,10 +75,10 @@ const pageDescription =
         >
           Keeping a changelog current is the chore every dev team drops first.
           DeployLog makes it automatic: publish entries to a hosted page and an <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
+            class="font-mono text-[#5FCEDB] text-base bg-[#5FCEDB]/10 px-1.5"
             >embeddable widget</code
           >, or let a <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
+            class="font-mono text-[#5FCEDB] text-base bg-[#5FCEDB]/10 px-1.5"
             >published npm CLI</code
           > turn git commits into release notes with an LLM. Built solo, end to
           end.
@@ -89,7 +89,7 @@ const pageDescription =
             href="https://deploylog.dev"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#5FCEDB]/[0.08] border border-[#5FCEDB]/15 hover:border-[#5FCEDB]/30 text-sm text-[#5FCEDB]/55 hover:text-[#5FCEDB]/75 transition-colors duration-150"
           >
             Visit deploylog.dev
             <svg
@@ -207,17 +207,17 @@ const pageDescription =
               class="text-[#F0F0F0] font-medium">Row-Level Security</strong
             > does the access control. The CLI and integrations authenticate with
             a <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >dk_</code
             >-prefixed API key (stored only as a SHA-256 hash) and run through the
             service-role client, which bypasses RLS, so those endpoints must
             filter by <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >org_id</code
             > explicitly. The rule that keeps it safe: a given route handler uses
             exactly one of these, never both. CLI-only routes live under their own
             <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >/api/cli/*</code
             > namespace.
           </p>
@@ -237,18 +237,18 @@ const pageDescription =
         >
           <p>
             Every paid feature reads through one primitive (<code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >can(org, capability)</code
             >) backed by a truth table keyed on the org's plan. Adding a new
             gated feature is one row in the table plus one call at the gate site,
             rather than scattering <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >plan === "pro"</code
             > checks across the codebase. Stripe is the source of truth for plan
             state: Checkout and the Customer Portal drive everything, and a
             webhook reconciles the org's plan on every subscription change, with a
             <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >stripe_events</code
             > table providing idempotency.
           </p>
@@ -359,20 +359,20 @@ deploylog push --from-git --ai-summarize`} /></pre>
         </h2>
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >One capability table beats scattered plan checks.</strong
               >
               Routing every gate through <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >can()</code
               > meant adding the Pro tier late in development touched one file, not
               twenty.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >Sharing one service across CLI and dashboard prevents drift.</strong
@@ -383,7 +383,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >The widget being framework-free was the right call.</strong
