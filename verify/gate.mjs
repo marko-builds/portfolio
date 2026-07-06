@@ -26,6 +26,7 @@ const TOKEN_MAP = {
   '--color-surface': 'background',
   '--color-border-strong': 'surface',
   '--color-accent': 'accent',
+  '--color-warm': 'gold',
   '--color-text-primary': 'text',
   '--color-text-secondary': 'textDim',
 };
