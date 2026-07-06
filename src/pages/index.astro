@@ -11,7 +11,7 @@ const recentPosts = (await getCollection("blog"))
     return { ...post, readingTime: Math.max(1, Math.ceil(words / 200)) };
   });
 
-const pageTitle = "Marko Stankovic | I build software products and ship them";
+const pageTitle = "Marko Stankovic | Developer";
 const pageDescription =
   "Solo developer. DeployLog turns deploys into release notes. Habitagram turns your habits into a journey. A homegrown generative media studio renders the art for both.";
 
@@ -80,7 +80,7 @@ const dateFmt = (d: Date) =>
               <span class="label">deploylog</span>
             </div>
             <p>Release notes from your deploys.</p>
-            <span class="status">status: launching</span>
+            <span class="status live">status: launching</span>
           </a>
           <div class="card">
             <div class="card-top">
@@ -324,12 +324,13 @@ const dateFmt = (d: Date) =>
   a.card:hover { background: var(--color-surface); }
   .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot.live { background: var(--color-accent); box-shadow: 0 0 8px var(--color-accent); }
+  .dot.live { background: var(--color-warm); box-shadow: 0 0 8px var(--color-warm); }
   .dot.warm { background: var(--color-text-primary); }
   .dot.idle { background: var(--color-text-muted); }
   .label { font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); }
   .card p { margin: 0 0 16px; font-size: 14px; color: var(--color-text-secondary); line-height: 1.55; }
   .status { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); margin-top: auto; }
+  .status.live { color: var(--color-warm); }
 
   /* shared mono meta label */
   .mono-meta {

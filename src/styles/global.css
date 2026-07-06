@@ -8,15 +8,16 @@
 
 /* ─── Design Token Variables ─────────────────────────────────────────── */
 :root {
-  --color-bg: #0D0D0D;
-  --color-surface: #141414;
-  --color-border: #1F1F1F;
-  --color-accent: #00FFC8;
-  --color-accent-dim: #00FFC820;
-  --color-border-strong: #2A2A2A;
-  --color-text-primary: #F0F0F0;
-  --color-text-secondary: #888888;
-  --color-text-muted: #5C5C5C;
+  --color-bg: #0B0E15;
+  --color-surface: #12151C;
+  --color-border: #1E2430;
+  --color-accent: #5FCEDB;
+  --color-accent-dim: #5FCEDB20;
+  --color-warm: #D99A5E;
+  --color-border-strong: #2A3242;
+  --color-text-primary: #E4E9EC;
+  --color-text-secondary: #8792A0;
+  --color-text-muted: #767F8F;
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
@@ -121,8 +122,8 @@ section h2::before {
 }
 
 @keyframes namePulse {
-  0%, 100% { text-shadow: 0 0 40px rgba(0, 255, 200, 0); }
-  50%       { text-shadow: 0 0 40px rgba(0, 255, 200, 0.18); }
+  0%, 100% { text-shadow: 0 0 40px rgba(95, 206, 219, 0); }
+  50%       { text-shadow: 0 0 40px rgba(95, 206, 219, 0.18); }
 }
 
 /* Base hero entrance: fades up on load using CSS animation-delay */
@@ -210,7 +211,7 @@ section h2::before {
 
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 20px var(--card-glow, rgba(0, 255, 200, 0.08));
+  box-shadow: 0 0 20px var(--card-glow, rgba(95, 206, 219, 0.08));
 }
 
 /* Arrow icon slides right on link hover */
@@ -280,22 +281,22 @@ section h2::before {
 }
 
 .filter-btn:hover {
-  border-color: rgb(0 255 200 / 0.4);
-  color: rgb(0 255 200 / 0.8);
+  border-color: rgb(95 206 219 / 0.4);
+  color: rgb(95 206 219 / 0.8);
 }
 
 .filter-btn.active {
-  background: rgb(0 255 200 / 0.08);
-  color: #00FFC8;
-  border-color: rgb(0 255 200 / 0.40);
+  background: rgb(95 206 219 / 0.08);
+  color: #5FCEDB;
+  border-color: rgb(95 206 219 / 0.40);
   font-weight: 600;
   cursor: default;
 }
 
 .filter-btn.active:hover {
-  background: rgb(0 255 200 / 0.08);
-  color: #00FFC8;
-  border-color: rgb(0 255 200 / 0.40);
+  background: rgb(95 206 219 / 0.08);
+  color: #5FCEDB;
+  border-color: rgb(95 206 219 / 0.40);
 }
 
 /* ─── Mobile Nav ─────────────────────────────────────────────────────── */
@@ -317,12 +318,12 @@ section h2::before {
 }
 
 .contact-input:focus {
-  border-color: rgb(0 255 200 / 0.45);
+  border-color: rgb(95 206 219 / 0.45);
 }
 
 .contact-input:focus-visible {
   outline: none;
-  border-color: rgb(0 255 200 / 0.45);
+  border-color: rgb(95 206 219 / 0.45);
   box-shadow: 0 0 0 2px var(--color-accent-dim);
 }
 
