@@ -11,7 +11,7 @@ const recentPosts = (await getCollection("blog"))
     return { ...post, readingTime: Math.max(1, Math.ceil(words / 200)) };
   });
 
-const pageTitle = "Marko Stankovic | I build software products and ship them";
+const pageTitle = "Marko Stankovic | Developer";
 const pageDescription =
   "Solo developer. DeployLog turns deploys into release notes. Habitagram turns your habits into a journey. A homegrown generative media studio renders the art for both.";
 
