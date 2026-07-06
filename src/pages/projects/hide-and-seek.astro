@@ -38,7 +38,7 @@ const pageDescription =
       <div class="relative max-w-5xl mx-auto px-6 py-20">
         <a
           href="/#work"
-          class="hero-enter inline-block text-[#666666] hover:text-[#00FFC8] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
+          class="hero-enter inline-block text-[#666666] hover:text-[#5FCEDB] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
           style="--delay: 0.05s"
         >
           Projects
@@ -74,7 +74,7 @@ const pageDescription =
           Detection isn't a flag. It's a continuous suspicion float with
           per-state hysteresis, six behaviours implemented as self-contained
           states in a generic <code
-            class="font-mono text-[#00FFC8] text-base bg-[#00FFC8]/10 px-1.5"
+            class="font-mono text-[#5FCEDB] text-base bg-[#5FCEDB]/10 px-1.5"
             >StateMachine</code
           >, and a static noise event bus that decouples every sound source from
           every listener.
@@ -114,7 +114,7 @@ const pageDescription =
           </a>
           <a
             href="/devlog/enemy-ai-state-machine"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#00FFC8]/[0.08] border border-[#00FFC8]/15 hover:border-[#00FFC8]/30 text-sm text-[#00FFC8]/55 hover:text-[#00FFC8]/75 transition-colors duration-150"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#5FCEDB]/[0.08] border border-[#5FCEDB]/15 hover:border-[#5FCEDB]/30 text-sm text-[#5FCEDB]/55 hover:text-[#5FCEDB]/75 transition-colors duration-150"
           >
             <svg
               class="w-4 h-4"
@@ -196,12 +196,12 @@ const pageDescription =
           <p>
             Binary detection (seen or unseen) removes player agency the moment
             it fires. A continuous <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >float</code
             > (0 to 100) fixes this: the player can see the meter rising, duck
             behind cover, and let it bleed back down before the enemy commits.
             Hysteresis makes that bleed-down reliable: each <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >SeekState</code
             > has separate rising and falling thresholds, so the enemy doesn't
             flicker between states at the boundary. You need to genuinely break
@@ -227,13 +227,13 @@ const pageDescription =
             to read from the suspicion meter, drive the NavMesh, play
             animations, and trigger camera responses. None of those concerns
             belong in a single <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >Update()</code
             > loop. A generic <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >StateMachine</code
             > (plain C# class, no Unity dependency) paired with an <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >IState</code
             > interface makes each state a self-contained class that owns its
             own enter, tick, and exit logic. Adding a state or changing a
@@ -260,16 +260,16 @@ const pageDescription =
             nor the enemy should hold a reference to the other: the set of
             listening enemies changes at runtime, and emitters shouldn't need to
             know what's listening. A static <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >NoiseEmitter</code
             > event bus with a <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >readonly struct</code
             > payload solves this. Emitters fire-and-forget. Each enemy's <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >NoiseListener</code
             > filters by <code
-              class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
               >_hearingRadius</code
             > before raising its own local event. No allocation, no coupling, no
             broadcast-to-all overhead.
@@ -294,43 +294,43 @@ const pageDescription =
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >StateMachine</code
                 > and <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >BaseState</code
                 > live in <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Infrastructure/StateMachine/</code
                 > with no Unity dependency: they're plain C# classes that could
                 run in a test harness without an editor. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >StateMachine</code
                 > holds the current <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >IState</code
                 >, calls <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Exit()</code
                 > then <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Enter()</code
                 > on transition, and exposes <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Tick()</code
                 >. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >EnemyController</code
                 > owns one instance, calls <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Tick()</code
                 > from <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Update()</code
                 >, and constructs each concrete state with a reference to
                 itself. The states get everything they need through that owner
                 reference: no singletons, no <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >FindObjectOfType</code
                 >.
               </p>
@@ -429,14 +429,14 @@ public class EnemyController : MonoBehaviour
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >SuspicionMeter</code
                 > is a MonoBehaviour on the enemy that accumulates suspicion each
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >FixedUpdate</code
                 >. The visual delta from <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >EnemyDetection.ComputeVisualDelta()</code
                 > applies three modifiers: distance falloff, angle falloff, and
                 a crouch stealth multiplier. The result is a per-frame rate,
@@ -445,7 +445,7 @@ public class EnemyController : MonoBehaviour
               </p>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ComputeTargetState()</code
                 > uses separate rising and falling thresholds per state. The gap
                 between them is the hysteresis band: you need to lose suspicion
@@ -507,29 +507,29 @@ float ComputeVisualDelta(float distance, float angleToPlayer)
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 States never touch <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >NavMeshAgent</code
                 > directly. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >EnemyNavigation</code
                 > wraps it and exposes only what states need: <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >SetDestination()</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Stop()</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >IsNear()</code
                 >, and <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >RotateToward()</code
                 >. That last one is the non-obvious method: <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >EnemyAlertState</code
                 > uses it to smoothly scan toward the last-known position, and
                 it returns <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >true</code
                 > when the rotation is within 1° of the target so the state
                 knows when to stop waiting. Wrapping the agent means you can
@@ -541,35 +541,35 @@ float ComputeVisualDelta(float distance, float angleToPlayer)
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >NoiseEmitter</code
                 > is a static class that fires a <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >readonly struct</code
                 > (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >NoiseEvent</code
                 >) carrying world position, intensity, and a source tag.
                 Emitters call <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >NoiseEmitter.Emit()</code
                 > and forget it. Each enemy's <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >NoiseListener</code
                 > subscribes on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >OnEnable</code
                 >, unsubscribes on <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >OnDisable</code
                 >, and filters incoming events by <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >_hearingRadius</code
                 > before raising its own local event. The struct allocates
                 nothing on the heap: no boxing, no list allocation per
                 broadcast. Adding a new noise source (a door slam, a
                 grenade) means one <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Emit()</code
                 > call. Nothing else changes.
               </p>
@@ -633,44 +633,44 @@ public class NoiseListener : MonoBehaviour
               </h3>
               <p class="text-[#888888] leading-relaxed mb-6 max-w-3xl">
                 The <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >Editor/LevelBuilder/</code
                 > directory is nine tools designed to hand off to each other
                 across the full layout workflow. Placement (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >SurfaceDropTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >BoundsSnapTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >PrefabPaletteWindow</code
                 >), alignment and distribution (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >BoundsAlignTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >DistributeTool</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ScatterTool</code
                 >), and auditing (<code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >OverlapChecker</code
                 >, <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ComponentAuditTool</code
                 >). You scatter props with <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >ScatterTool</code
                 >, snap them to geometry with <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >SurfaceDropTool</code
                 >, then run <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >OverlapChecker</code
                 > to catch collider intersections before hitting play. <code
-                  class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                  class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                   >LevelBuilderUtility</code
                 > provides the shared selection queries, undo helpers, and gizmo
                 drawing that all nine tools depend on.
@@ -818,72 +818,72 @@ public class SurfaceDropTool : EditorWindow
 
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >State transitions allocate.</strong
               >
               Each <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >ChangeState(new EnemyChaseState(this))</code
               > creates a new heap object. With six states and frequent transitions,
               this generates measurable GC. Pre-allocating all states at <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >Awake()</code
               > and passing them by reference would eliminate that allocation entirely.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >Phase 2 escalation is three loose properties, not a profile.</strong
               >
               <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >LevelPhaseManager</code
               > escalates the enemy by setting <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >Phase2SpeedMultiplier</code
               >, <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >Phase2SuspicionFloor</code
               >, and <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >Phase2SkipAlertScan</code
               > directly on <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >EnemyController</code
               >. There's already an <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >EscalationProfile</code
               > ScriptableObject in the <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >Data/</code
               > folder. It should drive all phase transitions instead of the three
               ad-hoc setters.
             </span>
           </li>
           <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#00FFC8] font-mono mt-0.5 shrink-0">//</span>
+            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
             <span>
               <strong class="text-[#F0F0F0] font-medium"
                 >SuspicionMeter has four separate timer floats.</strong
               >
               <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >_detectionCooldownTimer</code
               >, <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >_chaseNoInputTimer</code
               >, <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >_catchDwellTimer</code
               >, and <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >_caughtFired</code
               > are all managed inline. A small reusable <code
-                class="font-mono text-[#00FFC8] text-sm bg-[#00FFC8]/10 px-1"
+                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
                 >CountdownTimer</code
               > struct that ticks and fires a callback would cut this down significantly
               and make the intent explicit.
