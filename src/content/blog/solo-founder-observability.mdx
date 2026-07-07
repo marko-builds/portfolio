@@ -1,0 +1,45 @@
+---
+title: "Observability for a Solo Launch: What I Wired Before DeployLog Went Live"
+date: "2026-07-07"
+excerpt: "When you launch alone, nobody pages you. You find out from a user, or you never find out. Here is the monitoring I set up before launching DeployLog: Sentry across three runtimes, two uptime monitors, a public status page, and one drill most people skip."
+tags: ["DeployLog", "Observability", "Sentry", "Next.js", "SaaS", "Launch"]
+draft: true
+---
+
+A solo launch has a specific failure mode: the product breaks and you learn about it from a polite email three days later, or from silence. There is no on-call rotation. Either the system tells you, or nobody does.
+
+DeployLog is my changelog tool for indie devs, and before launch I closed this gap with a small, deliberate stack. Nothing here is novel. The point is that all of it was verified working before the first user arrived, not after.
+
+## Errors: Sentry across all three runtimes
+
+Next.js code runs in three places (browser, server, edge), and each needs its own Sentry init. All three share one DSN and only enable in production, so local dev noise never reaches the project.
+
+The sample rates are a launch-phase choice: 100% of traces, 10% of sessions recorded as replays, and 100% replay capture on errors. At launch traffic, full tracing costs nothing and every error comes with a replay attached. I'll dial it down when volume makes it expensive.
+
+One gotcha cost me an evening: the DSN ships in the browser bundle by design, so it lives in a `NEXT_PUBLIC_` env var. In Vercel, that variable must be marked non-sensitive, and it only takes effect after a rebuild. Get either wrong and the SDK silently no-ops. No error, no events, just a dashboard that stays quiet while you assume you're covered.
+
+## Uptime: two monitors, chosen deliberately
+
+UptimeRobot polls two endpoints, and the pair is the point.
+
+The first is `/api/ready`, a readiness route I wrote for exactly this. It checks the launch-critical dependencies (Supabase and Upstash) and returns 200 with `{ status: 'ready' }`, or a 503 that names the failed dependency. When it goes down, the alert already contains the diagnosis.
+
+The second is the public widget-data endpoint, with a real project id. That one guards the promise customers actually depend on: the changelog widget embedded on their sites. The app being up is worthless if the embed endpoint is down, so the embed endpoint gets its own monitor.
+
+Both feed a public status page, linked in the footer. It costs nothing and answers "is it just me?" without a support email.
+
+## The drill: force a failure before you trust the alert
+
+This is the step I'd argue for hardest. After wiring everything, I created a throwaway monitor pointed at a route that 404s, and waited for the DOWN email to land in my inbox.
+
+An alert path you have never seen fire is a hope, not an alert. Any link in the chain can be silently wrong: a typo'd address, a spam filter, a notification setting. The drill takes ten minutes and converts "should work" into "watched it work." Mine passed, and now a real DOWN email has a known shape I'll recognize at a glance.
+
+The same logic applied to Sentry: I confirmed a real captured event end to end before calling it done, because a dashboard with zero events is indistinguishable from a dashboard that was never wired.
+
+## The runbook: written when calm
+
+Last piece: an incident-response runbook, written before launch while nothing was on fire. It is deliberately simple. All alerts route to a single inbox, there is no escalation because there is nobody to escalate to, and the fast path for a bad deploy is Vercel's instant rollback. Triage, roll back, communicate on the status page, investigate after.
+
+A solo runbook mostly exists to remove decisions from the worst moment. Future me, reading alerts on a phone at 2am, follows steps instead of improvising.
+
+None of this took longer than a day. DeployLog is at [deploylog.dev](https://deploylog.dev), and the status page is linked in the footer, doing its quiet job.

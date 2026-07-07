@@ -1,0 +1,51 @@
+---
+title: "The Uniqueness Check You Cannot Write in App Code"
+date: "2026-07-07"
+excerpt: "I spec'd a pre-insert slug check for DeployLog and a review caught it as structurally impossible: under row-level security, the app can only see one tenant's rows. In a multi-tenant database, the UNIQUE constraint is not a backstop. It is the only enforcement that can exist."
+tags: ["DeployLog", "Postgres", "Supabase", "RLS", "Multi-Tenancy", "SaaS"]
+draft: true
+---
+
+While hardening DeployLog before launch, I wrote a remediation plan with an item that looked obviously right: before inserting a new project, check its slug against all existing projects and suggest a free one. Standard defensive move. A review pass killed it with a sentence I keep coming back to: the check is impossible by construction.
+
+Not hard. Not racy. Impossible.
+
+## Why the app literally cannot look
+
+DeployLog is multi-tenant on Supabase, and every table has row-level security enabled. The create-project route runs on the session client, the one carrying the user's auth, and RLS filters every query it makes down to rows the caller's organization owns.
+
+So "select all projects with this slug" doesn't fail on that client. It does something worse: it succeeds and returns only your own org's rows. Another tenant's `my-app` project is invisible to the query by design. The pre-insert check would come back clean, the insert would violate the constraint anyway, and the code would read like it handled a case it cannot see.
+
+The classic argument against check-then-insert is the race window between the two statements. RLS is stronger than that: there is no window because there is no check. The database's isolation guarantee, the entire point of RLS, is exactly what makes the app-level invariant unenforceable.
+
+## The constraint is the only enforcement
+
+Slugs in DeployLog need to be globally unique, not per-org, because public changelog URLs resolve slugs across all tenants. That invariant lives where an invariant across tenants has to live, in the schema:
+
+```sql
+ALTER TABLE projects ADD CONSTRAINT projects_slug_unique UNIQUE (slug);
+```
+
+The migration that added it also had to backfill: existing cross-org collisions got suffixed `-2`, `-3` by creation order before the constraint could apply. Retrofitting an invariant means paying for the time it didn't exist.
+
+With the constraint in place, the app's job inverts. Instead of preventing the conflict, it responds to one. Postgres reports a unique violation as error code 23505, and the create route maps it:
+
+```ts
+if (error.code === '23505') {
+  // slug taken somewhere in the system; try the next candidate
+}
+```
+
+The route slugifies the name, attempts the insert, and on 23505 retries with `base-2` up to `base-11`. Only when every candidate collides does the user see a 409 asking for a different name. In practice nobody sees it; the suffixing absorbs collisions silently.
+
+One nuance in the error message: the route cannot say "taken by another organization," because it cannot know that, and confirming another tenant's slug would itself be a small information leak. The generic message is not lazy copy. It is the only honest sentence available.
+
+## The wider lesson
+
+The transferable rule: in an RLS-scoped app, any app-level check of a cross-tenant invariant is theater. Your query runs inside one tenant's bubble, so it validates against a fraction of the data and returns confident nonsense. Uniqueness, quotas across tenants, global reservations, all the same shape. Declare the invariant in the schema, let the database throw, and translate the error at the boundary.
+
+There is a service-role client that bypasses RLS, and the temptation is to use it for the check. Don't. Widening a user-facing route's privileges to make an unnecessary query is backwards; the constraint already enforces the invariant atomically, race-free, with no privilege escalation.
+
+I'd also note how this was caught: not by tests, but by an adversarial review of the plan before any code existed. The reviewer had no context on the feature and one job, poke holes. "The client you'd run this check on cannot see the rows" is precisely the kind of structural fact a plan's author glides past, because the plan reads correct from the inside.
+
+DeployLog is at [deploylog.dev](https://deploylog.dev).

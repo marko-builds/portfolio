@@ -1,0 +1,39 @@
+---
+title: "My AI Skill Failed Its Own Test: Measuring Instruction Decay Over 10 Turns"
+date: "2026-07-07"
+excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, and pointed it at one of my own skills first. It escape-hatched by turn 6. Twice."
+tags: ["AI Engineering", "Claude Code", "Evals", "Python", "LLM", "Agents"]
+draft: true
+---
+
+A Claude Code skill is a markdown file of instructions the agent loads for a task: run this script first, never edit that file, append the log in this exact format. Turn one, freshly loaded, they work. My question was about turn ten: after the conversation has moved through other topics and the context has filled with unrelated material, does the agent still follow the procedure, or does it quietly start improvising?
+
+I built skill-vibe-test to answer that with a measurement instead of a feeling. Then I pointed it at one of my own skills, and the answer was embarrassing.
+
+## The probe
+
+One test run is a scripted 10-turn conversation with a real agent, driven headlessly through session resumption so the context accumulates for real. Turn 1 gives the base task and establishes the baseline: if the skill can't steer a fresh context, decay is not the problem, and the run aborts. Turns 2 through 5, 7, and 9 are fillers, several hundred words each of deliberately unrelated content (refrigeration cycles, trip planning, photosynthesis) whose only job is to dilute the context. Turns 6, 8, and 10 probe again with skill-relevant tasks.
+
+Scoring is where most eval ideas die, so the judge is deliberately narrow. Before the run, a cold call extracts an observable-behavior rubric from the skill: five to eight checkable criteria like "runs the health script before any analysis, visible as a Bash call" or "never edits the capabilities file directly." The judge then scores each probe against that rubric using the tool-call trace, what the agent actually executed, not its prose. An agent that writes a lovely paragraph about running the script while not running it fails.
+
+Each verdict also carries an escape-hatch flag, for the distinct failure where the agent doesn't just miss steps but abandons the procedure entirely and hand-rolls its own approach. That distinction matters: partial compliance degrades output, escape-hatching means the skill has effectively unloaded.
+
+## First target: my own tooling
+
+The first real subject was capabilities-health, a maintenance skill of mine with a strict procedure. Two conversations, both failures, and the decay curve was textbook.
+
+Baselines failed on precision (a log line in the wrong format, a bulk read where frontmatter-only was specified). Then the middle turns collapsed: at turn 6 and again at turn 8, in both conversations, the agent escape-hatched, either skipping the required script entirely and answering from stale context, or running it and then discarding the rest of the procedure for a freeform summary. By turn 10 it was back to partial compliance, running the script but skipping the log append and the diff proposal. Context grew from about 31k tokens at baseline to 54k by the end. The whole run cost $1.77.
+
+The uncomfortable reading: instructions I assumed were standing orders behave more like a first-turn suggestion with a half-life.
+
+## Two lessons from building the harness
+
+Measuring context size looked trivial and wasn't. The CLI's reported usage aggregates every internal iteration of an agentic turn, and summing it produced an impossible 256k "context." The truthful number is the last iteration's input picture, the final API call's input plus cache reads. Read the last element, not the sum.
+
+The subtler one: the subject can see the experiment. Early sandboxes were temp directories prefixed `skill-vibe-`, and a transcript showed the agent reading its own path and reasoning about "this skill-vibe checkout," aware it was being tested. Sandboxes are now prefixed `repo-`. Anything the subject can observe (paths, file names, stub contents) is part of the experiment, and it will read the label on the jar.
+
+## What it changes
+
+The tool exits 1 on any decay, so a skill can be gated on surviving its own vibe test before it ships. For skills that keep failing, the fix is usually structural rather than rhetorical: move the invariant out of prose and into something the agent cannot drift from, a script, a hook, a hard check.
+
+Trust in an agent's steering should be measured, not vibes. Which is, admittedly, a funny thing to learn from a tool with vibe in its name.

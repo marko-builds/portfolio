@@ -1,0 +1,41 @@
+---
+title: "One Product, Four Repos: DeployLog's Satellite Architecture"
+date: "2026-07-07"
+excerpt: "DeployLog is a Next.js app plus three satellites: a 4 KB embeddable widget on Cloudflare, a CLI on npm, and a GitHub Action on the Marketplace. Splitting them was right. The tax is that 'merged' stops meaning 'deployed', and I paid it twice."
+tags: ["DeployLog", "Architecture", "TypeScript", "CDN", "Edge Caching", "SaaS"]
+draft: true
+---
+
+DeployLog turns your deploys into a changelog your users can actually see. That promise has four delivery surfaces, and each one ended up in its own repo: the Next.js app on Vercel, an embeddable widget served from Cloudflare Pages, a CLI on npm, and a GitHub Action on the Marketplace.
+
+Four repos for a solo project sounds like overhead. The split earns its keep because each artifact has a different shape, a different consumer, and a different deploy pipeline. But it also created a class of bug I had to learn to respect.
+
+## The satellites, briefly
+
+The widget is the piece I'm most careful with, because it runs on other people's sites. It is vanilla TypeScript compiled to a single IIFE, about 4 KB gzipped, rendering into a Shadow DOM so the host page's CSS and mine can't touch each other. Integration is one script tag with data attributes for project, position, and theme. No framework, because a changelog bubble has no business shipping one to someone else's page.
+
+The CLI (`npm i -g deploylog`, or its alias `dpl`) posts entries from the terminal: `dpl push -t "v1.2 shipped" --from-git --ai-summarize`. The Action does the same from CI, turning a GitHub release into a published changelog entry with five inputs in a workflow file.
+
+Both talk to the same API with `dk_` keys. The app itself is the dashboard, the public changelog pages, and that API.
+
+## The tax: merged is not deployed
+
+With one repo on Vercel, merge means live. With satellites, every repo has its own definition of shipped: the widget ships when Cloudflare Pages builds it, the CLI ships when a version hits npm, the Action ships when a release is tagged and the Marketplace picks it up.
+
+This bit me concretely. I merged a widget fix and moved on, but the CDN kept serving the old bundle, because the widget's `dist/` is gitignored and Cloudflare Pages had no build command set. It was publishing the repo as-is, which meant a stale artifact. The fix was one settings field. The lesson was bigger: for every satellite, know exactly which event produces the deployed artifact, and verify at the consumer's end after shipping.
+
+## Edge caching makes it subtler
+
+The widget's data endpoint runs on the edge and serves with `s-maxage=300, stale-while-revalidate=60`. Five-minute cache, and the right call: this endpoint gets hit by every visitor of every customer's site, and a changelog does not change every five minutes.
+
+But it means one product now has two clocks. Publish an entry and the SSR page and RSS feed show it instantly, while embedded widgets keep serving the pre-publish payload for up to five minutes. Nothing is broken. The surfaces just disagree for a window.
+
+I hit this while recording demo footage: published an entry, pointed the capture at a widget, and got the old notification state. Now the rule is to verify freshness at the exact surface I'm about to look at, `curl` the cached endpoint and check the `x-vercel-cache` and `age` headers, not the origin. A cache-busting fetch also re-populates the edge, so the check doubles as the fix.
+
+## Would I split again?
+
+Yes, with one caveat. The split is not really about code organization. It is about blast radius and cadence: the widget must stay tiny and boring, the CLI versions independently, the Action's releases follow Marketplace conventions, and none of them should redeploy because I restyled the dashboard.
+
+The caveat is discipline. Four repos means four deploy pipelines to hold in your head, and a mental model where "it's merged" is the beginning of shipped, not the end. Write down how each satellite deploys the day you create it. You will need the note sooner than you think.
+
+DeployLog is at [deploylog.dev](https://deploylog.dev).

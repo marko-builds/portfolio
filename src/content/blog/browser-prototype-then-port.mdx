@@ -1,0 +1,39 @@
+---
+title: "Prototype in the Browser, Ship in Python: How I Look-Dev Generative Art"
+date: "2026-07-07"
+excerpt: "Tuning art needs sliders and instant redraw. Shipping art needs determinism and tests. My workflow uses both: a zero-dependency browser canvas for the feel, a shared math spec with a conformance fixture, and a 1:1 port into the production engine."
+tags: ["Generative Media", "Workflow", "JavaScript", "Python", "Look Dev"]
+draft: true
+---
+
+There are two jobs in generative art and they want opposite tools. Finding the look is an interactive job: drag a slider, watch the seam curve move, try a bluer deep water, undo. Shipping the look is an engineering job: the render must be deterministic, tested, and reproducible on any machine. I used to do both jobs in the production engine and it was slow in the worst way, a full Python render per tweak.
+
+Now I split them. Prototype in a browser canvas, lock the parameters, port the math 1:1 into the Python engine. The port is protected by a shared spec, so "1:1" is a tested claim, not a hope.
+
+## The harness: one HTML file, no dependencies
+
+The look-dev harness is a plain canvas page. No framework, no build step, no npm install. For the sea biome it exposes exactly what the look needs: five color pickers (sand, sky reflection, shallow water, deep water, desert body), a seam editor with a position slider and a choice of edge kinds, sliders for the ripple texture's frequency and strength, and draggable waypoints for the path. Every control redraws immediately.
+
+When the look lands, one button validates the parameters and downloads a JSON file. Another takes a screenshot. There is also a headless variant that renders the same compose module under Node and writes a PNG, so I can eyeball a candidate without opening a browser.
+
+The point of zero dependencies is speed of iteration on the harness itself. Adding a slider is four lines. Nothing to install, nothing to break.
+
+## The contract: one spec, two implementations, one fixture
+
+The dangerous step is the port. JS and Python both have floating point, but they don't share your intentions: which Catmull-Rom parameterization, how gradient stops interpolate, what happens outside the domain. A visually identical port that quietly disagrees at the edges will bite months later.
+
+So the portable math lives in a spec with four functions: Catmull-Rom evaluation, multi-stop gradient interpolation, band-local position remapping, and a contour-line field. Both stacks implement it, and both are asserted against the same committed conformance fixture, a JSON file of inputs and expected outputs at 1e-6 tolerance. If the JS harness and the Python engine ever disagree about what `catmull_eval` returns, a test fails before an eyeball has to notice.
+
+What stays out of the contract matters too. The paper grain and torn-edge texture are Python-only, built on numpy's RNG and gaussian filters. The browser only approximates them, and no test pretends otherwise. Grain drift is caught downstream by the engine's golden fingerprint instead.
+
+## The port, concretely
+
+The sea look I locked last week exported as a JSON of parameters, and the port is those values baked into the engine's biome spec. The seam became a Catmull-Rom edge at 0.26 from the top with control points at (0.0, 0.24), (0.5, 0.29), (1.0, 0.25). The water became a three-stop gradient from sky reflection through shallow to deep. The ripple became a contour signature at frequency 5.5, gated to render only below the seam so the sand shore stays smooth.
+
+That gating didn't exist in the engine, so the port added it as a capability with its own test: sand rows byte-identical to before, water rows visibly modulated. Ports grow the engine; each look leaves a reusable feature behind.
+
+The last step is the sign-off. The engine renders at the pinned seed, I compare against the prototype on an actual device, and only then does the golden fingerprint get re-pinned. Until that eyeball happens the golden stays red on purpose.
+
+## Why this beats picking one tool
+
+JS is the feel surface, Python is the production truth, and the conformance fixture is the bridge that lets them disagree loudly instead of silently. I get sub-second iteration while exploring and full determinism while shipping, and the cost is one spec file and a fixture I wrote once.
