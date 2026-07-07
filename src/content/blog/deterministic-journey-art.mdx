@@ -1,0 +1,45 @@
+---
+title: "From SDXL to NumPy: Making Habitagram's Journey Art Deterministic"
+date: "2026-07-07"
+excerpt: "Habitagram's journey climbs six biomes from sea to summit. I started generating the backgrounds with SDXL and ended up rewriting them as a deterministic numpy engine. Why diffusion lost, how the paper-cut style is built from math, and the seam model it took a phone to find."
+tags: ["Habitagram", "Generative Media", "Python", "NumPy", "React Native", "Stable Diffusion"]
+draft: true
+---
+
+Habitagram is my habit tracker where progress is a journey: your habit streaks carry a wanderer up through six biomes, sea, desert, steppe, forest, volcano, mountain. The journey screen stacks them into one tall climb, six slabs of 1080x2400 forming a 14,400-pixel canvas from navy sea floor to snow.
+
+The first version of that art came out of Stable Diffusion XL, running locally with IP-Adapter to anchor a consistent style. It got surprisingly far. It also taught me why diffusion was the wrong tool for this asset.
+
+## Where SDXL lost
+
+Three compounding problems. First, style anchoring bled more than style: at full anchor strength, a desert-crop reference turned the sea biome into ochre dunes, palette and all. Targeting only the style attention blocks did not strip color the way the technique promises. Tunable, but every biome became a negotiation.
+
+Second, no reproducibility. Every prompt tweak rerolled the whole image, so "make the shore slightly warmer" meant a new image with a hundred other uninvited changes. Art direction under diffusion is diplomacy, not engineering.
+
+Third, and decisive: these six backgrounds must tile into one continuous climb. Each biome's bottom edge has to meet its neighbor's top edge exactly. A diffusion model cannot promise an edge.
+
+So SDXL got demoted to what it is good at, one-off hero sprites, and I rebuilt the backgrounds as a deterministic engine: `journey_biome.py`, numpy and PIL, about 600 lines.
+
+## A paper-cut style, from formulas
+
+The look is layered paper: flat color bands with torn edges, like cut construction paper. Each biome is a stack of bands with one of three edge types: torn (a wavy line plus gaussian-filtered noise for the deckle), hard (a crisp cut for cross-hue boundaries where any gradient would bleed), or a Catmull-Rom curve through control points for shaped coastlines.
+
+What sells the paper is the grain. Two orthogonal passes of smoothed value noise, vertical fibres and horizontal fibres, blended half and half into a weave, then high-passed so only the ~4px tooth remains, plus a very soft large-scale mottle for uneven lighting. Applied at 16% strength it reads as canvas texture instead of pixel noise.
+
+One determinism bug is worth confessing. Per-biome RNG streams were keyed with Python's built-in `hash()`, which is salted per process. Every run rendered slightly different art while the code claimed seed 42, invisible until I diffed two renders byte for byte. The fix is `hashlib.sha256` for any seed derivation that must reproduce. Golden-fingerprint tests now pin every biome's exact bytes, so this class of bug cannot return silently.
+
+## The seam model a montage hid and a phone exposed
+
+The seams between biomes went through a full redesign, and the bug that forced it never appeared on my monitor.
+
+The first model gave every slab transitions at both its top and bottom, each ramping to a shared junction color. In my review montage, all six seams side by side and vertically compressed, it looked clean. On the actual phone at full scale, every boundary showed two torn edges and a wedge of junction color between them: stacked cards, not one continuous world.
+
+The redesign gives each seam a single owner. The lower biome carries the one torn edge; the upper biome ends flat, its bottom painted in the junction color the lower biome tears into. One edge per boundary, and the junction line itself becomes invisible. Ten pixels of flat margin at each slab end insure the crop.
+
+The meta-lesson outlived the feature: judge stacked art at true device scale, one screen cropped at the seam. Compressed montages hide exactly the vertical artifacts that matter.
+
+## The app's end of the deal
+
+React Native holds up the last piece. The images render in an `Image` with explicit width and height, because under the new architecture an inset-styled image silently renders at intrinsic bitmap size, which is how I got a 1080-wide slab drawn at nonsense scale. Locked tiers show a pre-desaturated `_gray` variant shipped alongside each biome, cheaper and more consistent than runtime tinting.
+
+Same seed, same bytes, every render. After weeks of negotiating with a diffusion model, that sentence is the whole argument.

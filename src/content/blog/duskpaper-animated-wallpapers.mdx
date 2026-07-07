@@ -1,0 +1,41 @@
+---
+title: "Duskpaper: Animated Wallpapers Synthesized From NumPy, Looped Forever"
+date: "2026-07-07"
+excerpt: "Duskpaper renders original animated wallpapers for Wayland from pure math: six scenes, five palettes, perfect loops by construction. Also the story of why one scene needed 10-bit HEVC, and a uv packaging gotcha that shipped me a stale build of my own fix."
+tags: ["Duskpaper", "Linux", "Hyprland", "Wayland", "Python", "NumPy", "Open Source"]
+draft: true
+---
+
+I wanted a live wallpaper for my Hyprland desktop that wasn't a downloaded MP4 of someone else's render. So I built duskpaper: a small CLI that synthesizes original animated scenes from numpy math, encodes them once, and runs them as your wallpaper. Six scenes (aurora, galaxy, silk, embers, fireflies, tide), five palettes, MIT licensed.
+
+`duskpaper set aurora` is the whole interface. First run renders, every run after that reuses the cached encode.
+
+## Loops that close by construction
+
+A wallpaper loop plays thousands of times a day, so the seam has to be mathematically absent, not hidden by a crossfade. Every engine follows one contract: a `frame(t)` function returning an RGB array, where all motion is built from integer-frequency harmonics of `tau = 2*pi*t/period`. At `t = period`, every sine and cosine in the scene has completed a whole number of cycles and lands exactly on its starting value. The last frame flows into the first because the math cannot do otherwise.
+
+Each engine carries a self-test asserting `frame(0)` and `frame(period)` differ by at most 1 per channel. Frames pipe as raw bytes straight into ffmpeg's stdin; there is no intermediate image sequence on disk.
+
+Rendering happens at a native width of 1280 and upscales to your monitor with Lanczos, because the scene's character survives upscaling but render time doesn't: scenes range from about a minute (fireflies) to twenty (silk) for a two-minute 30 fps loop. Playback is mpvpaper with hardware decode, around 5% of one core at 1600p, and it pauses itself when a fullscreen window covers the wallpaper.
+
+## The tide scene and the case for 10 bits
+
+The tide scene is a moonlit sea: a dark sky, a glade of moonlight on slow swell. It looked right in the raw frames and shimmered as a wallpaper, a faint per-frame crawl in the smooth gradient around the moon.
+
+The cause is 8-bit quantization meeting a slow animation. The sky gradient spans only a handful of 8-bit code values, so h264 places visible bands, and because the scene drifts slowly, the band boundaries re-quantize differently every frame. Static banding is hard to spot. Banding that flickers is impossible not to.
+
+The fix is precision, not bitrate: tide encodes as HEVC 10-bit (`libx265`, `yuv420p10le`, tagged `hvc1` so players accept it). Four times the tonal resolution dissolves the bands, and modern GPUs decode HEVC in hardware anyway. The other five scenes keep plain 8-bit h264; their palettes never put a slow gradient near the noise floor. The codec choice is per-scene, driven by content.
+
+## The stale-build gotcha that tested my own fix
+
+Shipping that fix produced the best bug of the project. I edited the encoder, reinstalled with `uv tool install --force .`, ran `duskpaper set tide`, and watched it flicker. My fix, apparently doing nothing.
+
+It was doing nothing, because it wasn't installed. uv had cached the wheel for version 0.1.0, and `--force` reinstalls the tool entry, not the build: same version number, same cached wheel, my edit never left the source tree. And duskpaper's own render cache added a second layer: `set` reuses an existing encode, so even a fresh binary would happily serve the stale MP4.
+
+The escape is `--reinstall --no-cache` (or bumping the version), plus clearing the scene's cache file. The durable lesson is to verify against ground truth: after editing an installed tool, grep the installed copy for your change before trusting a test run. "I reinstalled it" is a claim about a command you typed, not about the bytes on disk.
+
+## Small tool, honest scope
+
+Duskpaper stops static wallpaper daemons when it starts, records what it stopped, and `duskpaper off` restores exactly what you had. It is a wallpaper toy with a render cache, not a compositor plugin, and it took a weekend plus one codec lesson.
+
+Code is at [github.com/marko-builds/duskpaper](https://github.com/marko-builds/duskpaper).

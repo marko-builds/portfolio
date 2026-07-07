@@ -1,0 +1,39 @@
+---
+title: "Golden Fingerprints: Regression Tests for Generative Art"
+date: "2026-07-07"
+excerpt: "A refactor can shift one gradient band by a pixel and no test notices, until it ships. I regression-test my generative engines by committing SHA-256 hashes of the raw pixel and sample arrays. Here is the harness, and the rules that keep it from lying."
+tags: ["Testing", "Generative Media", "Python", "NumPy", "Determinism"]
+draft: true
+---
+
+My media engines render app art, music beds, and wallpapers from seeded math. The renders ship in real products, so a silent change is a real bug: a refactor that nudges a gradient stop, a "harmless" cleanup that reorders RNG draws. Unit tests on the math don't catch this class. The output is an image or a waveform, and the question is whether the bytes changed.
+
+So the bytes are the test. I call them golden fingerprints.
+
+## Hash the array, not the file
+
+The harness lives in one small module, `goldens.py`. A fingerprint is three fields: the array's shape, its dtype, and the SHA-256 of its raw bytes. The hash is taken on the ndarray before any encoding, deliberately. PNG bytes vary across libpng versions; pixels don't. Hashing the render itself makes the fingerprint portable across image libraries.
+
+A reference file per engine commits the fingerprints. The music engine pins all six moods at seed 30. The journey-biome engine pins six biomes plus the full stacked canvas at seed 42. Landscape pins six palettes, aurora pins five palettes at two timepoints each, and the progress panorama pins all twelve of its tiles. A test renders, hashes, and compares. Any drift in geometry, palette, grain, or RNG consumption fails loudly with the exact case name.
+
+`run-goldens.sh` runs the whole lane in seconds because nothing touches ffmpeg. It hashes raw render output and also runs a JS conformance suite, which matters for the look-dev workflow I'll cover separately.
+
+## The rules that keep the goldens honest
+
+A golden test is easy to build and easy to ruin. Three rules came out of building this one.
+
+**Updating a reference is per-engine and explicit.** Each engine has its own environment variable: `UPDATE_MUSIC_REF=1` regenerates the music reference and nothing else. I rejected a single global `UPDATE_REF` flag on purpose. Run under test discovery, a global flag would re-pin every engine at once, including the one you just broke. The blast radius of "I meant to update one reference" should be one reference.
+
+**The pin never precedes the eyeball.** A fingerprint asserts "the output has not changed since a human approved it." That makes human approval the load-bearing step. When I ported the sea biome's new look into the engine last week, the tests for the math went green and the golden stayed intentionally red, because the render hadn't been reviewed on an actual phone yet. Pinning first would have enshrined an unreviewed image as correct forever.
+
+**Verify the test can fail.** Before trusting the guard, I broke an engine on purpose and watched the fingerprint trip. A regression test that has never been red is a hope. This cost five minutes and caught a case where a skipped-reference path made a whole suite silently pass.
+
+## The toolchain is part of the fingerprint
+
+One caveat is worth the whole post. The visual engines output uint8, which is stable everywhere. The music engine outputs float64, and float64 is only bit-exact on one toolchain. A different numpy, BLAS, or FFT backend can flip low-order bits and trip a false regression while the audio is identical to any ear.
+
+The fix is to treat the toolchain as pinned along with the reference: refs are generated on one machine, numpy gets pinned before the suite runs anywhere else, and an intentional change regenerates refs on that same machine. The comment at the top of the script says exactly this, because future me will forget.
+
+## What this buys
+
+The engines are now refactorable. I rewrote the biome seam model, restructured band fills, and added new edge types, all against a wall of fingerprints that would have caught any accidental change to shipped art. For deterministic generative work, this is the cheapest safety net I know: one hash per approved output, an explicit ritual to move it, and a human eyeball as the only thing allowed to bless a new one.

@@ -1,0 +1,43 @@
+---
+title: "One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Art"
+date: "2026-07-07"
+excerpt: "Habitagram's progress screen is one mountain ridge rising from sea to summit, rendered as a single 6480x1920 panorama and sliced into six swipeable pages. Slicing continuous art into a paged carousel breaks in specific ways. Here are the ones I hit."
+tags: ["Habitagram", "Generative Media", "React Native", "Python", "Mobile UI"]
+draft: true
+---
+
+Habitagram's progress screen answers "how far have I climbed?" with a picture: one continuous mountain ridge rising out of the sea, across desert, steppe, forest, and volcano, to a snowed summit. You swipe through it page by page, each page one milestone, your reached pages in color and the locked ones in grey.
+
+The art is a single panorama, 6480x1920, rendered by a numpy engine and sliced into six 1080x1920 portrait tiles. Continuity across swipes is the entire point, and almost every bug in this feature was some way of accidentally breaking it.
+
+## Heights are fractions, or the sea eats the desert
+
+The ridge is a Catmull-Rom curve through one crest per biome, and the crests encode progress: desert at 20% of the climb, steppe at 38%, forest 56%, volcano 76%, summit at 100%.
+
+The first version hard-coded crest heights as absolute pixel y-values tuned against a sea level of 1500. Then I lowered the sea level to 1300 for composition, and the desert crests ended up below the waterline. Land, underwater, silently: no error, just wrong art.
+
+The fix is the rule: geometry that sits relative to a baseline must be stored as fractions of that baseline. Each crest is now `y = lerp(sealevel, summit_y, h)` with `h` the climb fraction, so the sea-level knob rescales the whole ridge coherently. Whenever one constant is a baseline others sit on, make the others relative, or moving the baseline breaks them all at once.
+
+## Render whole, then slice
+
+The engine never renders a page in isolation. It draws the full 6480-wide world (ridge, waves, dashed trail, milestone flags, film grain) and then crops six tiles.
+
+Grain is why. The texture is per-column fractal noise defined over global x. Rendering per page would restart the noise at every boundary, a faint but visible jump at each swipe. Same for the ridge itself and the dashed trail's phase. Continuity is only free if every operator sees the whole world before the knife comes out.
+
+The greyed "locked" variants follow the same rule: the full panorama is rendered twice, color and desaturated, and both are sliced identically. Color and grey tiles are pixel-aligned by construction, so the swipe from your last reached page to the first locked one moves nothing but the palette.
+
+## The crop that undid all of it
+
+The tiles are exactly 9:16. Modern phones are taller, and React Native's `resizeMode="cover"` handles that by scaling up and cropping the sides. On a 20:9 screen that quietly removes about 9% of each tile's width, and which 9%? The left and right edges. The exact columns where each tile connects to its neighbors.
+
+Every seam I had engineered to be invisible became a step: swipe, and the ridge jumps sideways by the cropped amount. The art had no seams; the display manufactured them.
+
+The fix inverts the layout contract. Each page renders at exact screen width with no horizontal crop, bottom-aligned so the terrain hugs the bottom and the transparent sky above blends into the theme background. Cover-crop is fine for standalone images. For edge-matched slices it is never acceptable, because the edges are the feature.
+
+## Two smaller traps
+
+The wanderer marker sits at each page's horizontal center, anchored per page as fractions and riding the ridge's y at that point. Center placement is deliberate: it is the furthest a sprite can be from both seams.
+
+And the reached-versus-locked split depends on the user's current tier, which arrives from an async query. Render before it resolves and the frontier defaults to zero, flashing the user's own past biomes grey for a frame. The sibling journey screen already gated on the loading state; the new screen didn't, until it did. When you copy a pattern to a new screen, copy its load-gate too.
+
+The engine's output is locked by golden-fingerprint tests, all twelve tiles hashed at the approved seed, so the ridge you swipe through today is provably the one that was signed off on a real device.

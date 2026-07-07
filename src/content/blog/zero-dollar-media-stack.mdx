@@ -1,0 +1,41 @@
+---
+title: "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math"
+date: "2026-07-07"
+excerpt: "My apps needed launch media: music beds, UI sounds, ambient video. Instead of licensing stock, I built numpy engines that synthesize all of it. Six music moods, 33 sound effects, full scenery kits, every render deterministic and copyright-clean."
+tags: ["Generative Media", "Python", "NumPy", "DSP", "Audio Synthesis", "Indie Dev"]
+draft: false
+---
+
+Launching an app means producing media: a music bed for the demo video, a click and a success chime for the UI, an ambient loop for the channel. Stock libraries bring licensing fine print. AI generators bring training-data questions I don't want attached to my products. So I took a third path: synthesize everything from math, in Python, on my own machine.
+
+The stack is three engines in one folder. `music.py`, `sfx.py`, and a set of scenery renderers behind one orchestrator. No samples, no models, no downloads. If a sound exists in the output, a formula in the repo produced it.
+
+## Music from oscillators and patterns
+
+`music.py` has six moods: lofi, chiptune, tension, upbeat, corporate, trap. A mood is a data block, not a separate composition. It sets the tempo, a chord progression, which instruments play, and 16-step drum patterns. Lofi runs at 75 bpm with a ii-V-I-vi progression, 16% swing, and a vinyl crackle overlay. Trap runs at 140 with a gliding 808 sub that drops seven semitones over the first third of each note.
+
+The instruments are DSP primitives. The kick is a sine sweep from 118 Hz down to 48 Hz with a click transient. The snare is band-filtered noise plus a sine body. The marimba is a pluck with a quiet 4th and 6th partial. Humanity comes from per-hit velocity and a few milliseconds of timing jitter, all from a seeded RNG.
+
+Two details make the output usable rather than a toy. First, loudness: a two-pass loudnorm to -14 LUFS with a -1.5 dB true-peak ceiling, so a rendered bed sits at streaming level without manual mastering. Second, the loop seam. The reverb is a circular convolution, so the tail of the last bar wraps around into the first. The loop closes with no crossfade and no click. The render even measures the seam delta at exit.
+
+There is also a `--stems` flag that exports per-bus loops (drums, bass, pad, lead) with a manifest, which is how the same engine feeds game audio.
+
+## Sound effects are envelopes and filters
+
+`sfx.py` synthesizes 33 sounds: clicks, whooshes, impacts, zaps, coins, explosions, a teleport. Each one is a small recipe. A whoosh is noise interpolated from dark to bright while panning left to right under a hann window. A zap is a saw sweep from 1900 Hz to 200 Hz with a 75 Hz amplitude buzz and some crackle on top. The coin is two square waves, 988 Hz then 1319 Hz, straight out of the arcade lineage.
+
+Every recipe takes an RNG and jitters pitch, timing, and filter cutoffs, so one seed gives one variant and the variant count is unlimited. `--pack` renders the whole library with a manifest in one command.
+
+The honest limit: this covers designed sounds, not recordings. Applause, animals, a real camera shutter are not synthesizable, and the tooling says so and points to CC0 sources instead of faking it.
+
+## Scenery kits in one command
+
+The visual side works the same way. Engines render aurora curtains, rain, starfields, terminal code rain, silk flow, and water caustics as numpy frames. `scenery.py` orchestrates a full kit: it renders one seamless base loop (60 seconds minimum), stitches it to an hour with ffmpeg stream looping, then cuts a 15-second vertical reel, LinkedIn and YouTube banners, and a thumbnail from the same frames. One command, one folder of deliverables.
+
+The video studio consumes all of this through vendored wrappers (`bin/music`, `bin/sfx`), so a motion-graphics comp can request a mood or a whoosh without leaving its own repo.
+
+## Why bother
+
+Cost is the obvious answer, but determinism is the real one. Every engine renders the same bytes for the same seed, which means the media pipeline can be tested like code. That is a separate post, because regression-testing art turned out to be its own problem.
+
+Code is at [github.com/marko-builds](https://github.com/marko-builds).
