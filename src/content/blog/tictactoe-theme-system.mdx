@@ -3,7 +3,7 @@ title: "One ScriptableObject Per Theme: A Data-Driven Theme System in Unity"
 date: "2026-06-18"
 excerpt: "My Tic-Tac-Toe has six themes that repaint the board, UI, HUD, and audio from a single menu tap. Adding a seventh is one ScriptableObject and zero new code. Here is the architecture, and why I split a theme into five interfaces to get there."
 tags: ["Unity", "C#", "ScriptableObject", "Interface Segregation", "SOLID", "technical-art", "game-architecture"]
-draft: false
+draft: true
 ---
 
 My Tic-Tac-Toe ships with six themes. Tap one in the menu and the board, the buttons, the popups, the HUD text, and the background music all change at once, mid-match if you want. Adding a seventh theme is one new asset and zero new code. This is how I made theming a data problem instead of a code problem, and why I split a single theme into five interfaces to do it.
