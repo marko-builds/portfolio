@@ -10,6 +10,9 @@ export default defineConfig({
   redirects: {
     '/blog': '/devlog',
     '/blog/[slug]': '/devlog/[slug]',
+    // Permanent CV link for job applications. Points at the base CV in public/,
+    // so the downloaded filename stays Marko-Stankovic-CV.pdf.
+    '/cv': '/Marko-Stankovic-CV.pdf',
   },
   markdown: { syntaxHighlight: false },
   integrations: [mdx(), sitemap()],
