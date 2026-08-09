@@ -3,7 +3,8 @@ title: "Golden Fingerprints: Regression Tests for Generative Art"
 date: "2026-07-07"
 excerpt: "A refactor can shift one gradient band by a pixel and no test notices, until it ships. I regression-test my generative engines by committing SHA-256 hashes of the raw pixel and sample arrays. Here is the harness, and the rules that keep it from lying."
 tags: ["Testing", "Generative Media", "Python", "NumPy", "Determinism"]
-draft: true
+ogImage: "/images/blog/golden-fingerprints-generative-art/golden-fingerprint-trip.png"
+draft: false
 ---
 
 My media engines render app art, music beds, and wallpapers from seeded math. The renders ship in real products, so a silent change is a real bug: a refactor that nudges a gradient stop, a "harmless" cleanup that reorders RNG draws. Unit tests on the math don't catch this class. The output is an image or a waveform, and the question is whether the bytes changed.
@@ -14,9 +15,9 @@ So the bytes are the test. I call them golden fingerprints.
 
 The harness lives in one small module, `goldens.py`. A fingerprint is three fields: the array's shape, its dtype, and the SHA-256 of its raw bytes. The hash is taken on the ndarray before any encoding, deliberately. PNG bytes vary across libpng versions; pixels don't. Hashing the render itself makes the fingerprint portable across image libraries.
 
-A reference file per engine commits the fingerprints. The music engine pins all six moods at seed 30. The journey-biome engine pins six biomes plus the full stacked canvas at seed 42. Landscape pins six palettes, aurora pins five palettes at two timepoints each, and the progress panorama pins all twelve of its tiles. A test renders, hashes, and compares. Any drift in geometry, palette, grain, or RNG consumption fails loudly with the exact case name.
+A reference file per engine commits the fingerprints. The music engine pins all six moods at seed 30. The journey-biome engine pins six biomes at seed 42, plus the full stacked canvas and two sea variants. Landscape pins six palettes, aurora pins five palettes at two timepoints each, and the progress panorama pins all twelve of its tiles. A test renders, hashes, and compares. Any drift in geometry, palette, grain, or RNG consumption fails loudly with the exact case name.
 
-`run-goldens.sh` runs the whole lane in seconds because nothing touches ffmpeg. It hashes raw render output and also runs a JS conformance suite, which matters for the look-dev workflow I'll cover separately.
+`run-goldens.sh` runs the whole lane in about a minute, 38 tests, because it hashes raw render output and never touches ffmpeg. Pulling in the encode-heavy suites would turn a fast pixel-pin into a multi-minute run. It also runs a JS conformance suite, which matters for the look-dev workflow I'll cover separately.
 
 ## The rules that keep the goldens honest
 
@@ -24,9 +25,13 @@ A golden test is easy to build and easy to ruin. Three rules came out of buildin
 
 **Updating a reference is per-engine and explicit.** Each engine has its own environment variable: `UPDATE_MUSIC_REF=1` regenerates the music reference and nothing else. I rejected a single global `UPDATE_REF` flag on purpose. Run under test discovery, a global flag would re-pin every engine at once, including the one you just broke. The blast radius of "I meant to update one reference" should be one reference.
 
-**The pin never precedes the eyeball.** A fingerprint asserts "the output has not changed since a human approved it." That makes human approval the load-bearing step. When I ported the sea biome's new look into the engine last week, the tests for the math went green and the golden stayed intentionally red, because the render hadn't been reviewed on an actual phone yet. Pinning first would have enshrined an unreviewed image as correct forever.
+**The pin never precedes the eyeball.** A fingerprint asserts "the output has not changed since a human approved it." That makes human approval the load-bearing step. When I ported the sea biome's new look into the engine, the tests for the math went green and the golden stayed intentionally red, because the render hadn't been reviewed on an actual phone yet. Pinning first would have enshrined an unreviewed image as correct forever.
 
 **Verify the test can fail.** Before trusting the guard, I broke an engine on purpose and watched the fingerprint trip. A regression test that has never been red is a hope. This cost five minutes and caught a case where a skipped-reference path made a whole suite silently pass.
+
+![Two result rows. The first, marked PASS in green, reads "render at seed 42, untouched: sha256 matches the committed reference". The second, marked FAIL in red, reads "same render, one pixel's low bit flipped" and shows an expected hash beginning dbf8ca0c against a different hash beginning 856b11cc. Below: the array is 2400 by 1080 by 3, so that is one changed value out of 7,776,000.](/images/blog/golden-fingerprints-generative-art/golden-fingerprint-trip.png)
+
+That is the whole contract in two rows. One flipped bit in one channel of one pixel, out of nearly eight million values, and the guard trips with the case name attached.
 
 ## The toolchain is part of the fingerprint
 
