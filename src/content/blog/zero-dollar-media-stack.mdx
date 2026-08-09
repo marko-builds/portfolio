@@ -1,7 +1,7 @@
 ---
 title: "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math"
 date: "2026-07-07"
-excerpt: "My apps needed launch media: music beds, UI sounds, ambient video. Instead of licensing stock, I built numpy engines that synthesize all of it. Six music moods, 33 sound effects, full scenery kits, every render deterministic and copyright-clean."
+excerpt: "My apps needed launch media: music beds, UI sounds, ambient video. Instead of licensing stock, I built numpy engines that synthesize all of it. Six music moods, 33 sound effects, fifteen scenes, nine overlay loops, every render deterministic and copyright-clean."
 tags: ["Generative Media", "Python", "NumPy", "DSP", "Audio Synthesis", "Indie Dev"]
 ogImage: "/images/blog/zero-dollar-media-stack/synth-engines.png"
 draft: false
@@ -9,9 +9,9 @@ draft: false
 
 Launching an app means producing media: a music bed for the demo video, a click and a success chime for the UI, an ambient loop for the channel. Stock libraries bring licensing fine print. AI generators bring training-data questions I don't want attached to my products. So I took a third path: synthesize everything from math, in Python, on my own machine.
 
-The stack is three engines in one folder. `music.py`, `sfx.py`, and a set of scenery renderers behind one orchestrator. No samples, no models, no downloads. If a sound exists in the output, a formula in the repo produced it.
+The stack is four engines in one folder. `music.py`, `sfx.py`, a set of scenery renderers behind one orchestrator, and `vfx.py` for overlay loops. No samples, no models, no downloads. If a sound exists in the output, a formula in the repo produced it.
 
-![Three panels. Left: a spectrogram of the synthesized zap, showing a bank of falling diagonal lines as the saw sweep drops from 1900 Hz to 200 Hz, with a horizontal ripple from the 75 Hz buzz. Middle: the waveform envelope of four bars of the lofi loop, two either side of the loop point, where the wrap is marked in amber and looks like the ordinary bar lines marked in grey. Right: a single frame of the caustics scenery loop, pale blue light filaments on a dark blue field.](/images/blog/zero-dollar-media-stack/synth-engines.png)
+![Four panels, one per engine. First: a spectrogram of the synthesized zap, a bank of falling diagonal lines as the saw sweep drops from 1900 Hz to 200 Hz, with a horizontal ripple from the 75 Hz buzz. Second: the waveform envelope of four bars of the lofi loop, two either side of the loop point, where the wrap is marked in amber and looks like the ordinary bar lines marked in grey. Third: a frame of the embers scene, warm orange sparks scattered over black. Fourth: a frame of the god rays overlay, pale gold shafts fanning down from a source above the top edge, with the bottom corners fading to pure black.](/images/blog/zero-dollar-media-stack/synth-engines.png)
 
 ## Music from oscillators and patterns
 
@@ -25,7 +25,7 @@ There is also a `--stems` flag that exports per-bus loops (drums, bass, pad, lea
 
 ## Sound effects are envelopes and filters
 
-`sfx.py` synthesizes 33 sounds: clicks, whooshes, impacts, zaps, coins, explosions, a teleport. Each one is a small recipe. A whoosh is noise interpolated from dark to bright while panning left to right under a hann window. A zap is a saw sweep from 1900 Hz to 200 Hz with a 75 Hz amplitude buzz and some crackle on top. The coin is two square waves, 988 Hz then 1319 Hz, straight out of the arcade lineage.
+`sfx.py` synthesizes 33 sounds: clicks, whooshes, impacts, zaps, coins, explosions, a teleport. Each one is a small recipe. A whoosh is noise swept dark to bright and back under a hann window, panning left to right as it goes. A zap is a saw sweep from 1900 Hz to 200 Hz with a 75 Hz amplitude buzz and some crackle on top. The coin is two square waves, 988 Hz then 1319 Hz, straight out of the arcade lineage.
 
 Every recipe takes an RNG and jitters pitch, timing, and filter cutoffs, so one seed gives one variant and the variant count is unlimited. `--pack` renders the whole library with a manifest in one command.
 
@@ -33,7 +33,17 @@ The honest limit: this covers designed sounds, not recordings. Applause, animals
 
 ## Scenery kits in one command
 
-The visual side works the same way. Engines render aurora curtains, rain, starfields, terminal code rain, silk flow, and water caustics as numpy frames. `scenery.py` orchestrates a full kit: it renders one seamless base loop (60 seconds minimum), stitches it to an hour with ffmpeg stream looping, then cuts a 15-second vertical reel, LinkedIn and YouTube banners, and a thumbnail from the same frames. One command, one folder of deliverables.
+The visual side works the same way. Fifteen scene engines render numpy frames: aurora curtains, rain, starfields, terminal code rain, silk flow, water caustics, drifting embers. `scenery.py` orchestrates a full kit: it renders one seamless base loop (60 seconds by default), stitches it to an hour with ffmpeg stream looping, then cuts a 15-second vertical reel, LinkedIn and YouTube banners, and a thumbnail from the same frames. One command, one folder of deliverables.
+
+Embers is the clearest look at how a seamless loop gets engineered rather than crossfaded. Sparks are splatted into a buffer and blurred into soft glowing dots over black. Each one drifts upward a whole number of frame-heights per loop, so it re-enters the bottom exactly as it leaves the top, and a vertical edge fade hides the moment it wraps. Same trick as the reverb tail: make the period divide the motion and the seam has nowhere to appear.
+
+## Overlays that composite onto anything
+
+`vfx.py` renders nine overlay assets, among them dust, bokeh, smoke, light leaks, sparkles and god rays. All of them are additive light on true black, exported with an alpha channel so a comp can drop one over footage without a matte.
+
+God rays shows what that constraint buys. A source point sits above the top edge, and for every pixel the engine takes the angle back to it and carves bright shafts out of a smooth angular pattern built from a few integer frequencies. The shimmer is those same modes drifting, so the beams breathe without the loop breaking. Then a radial raised-cosine window fades the whole thing to exactly zero past a finite radius, which is what makes the bottom corners genuinely black instead of nearly black. Nearly black is a grey rectangle over someone's footage.
+
+The module's self-test asserts both properties: that frame zero equals frame period, and that the far corners are pure black.
 
 The video studio consumes all of this through vendored wrappers (`bin/music`, `bin/sfx`), so a motion-graphics comp can request a mood or a whoosh without leaving its own repo.
 
