@@ -1,8 +1,9 @@
 ---
 title: "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate."
 date: "2026-07-07"
-excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and got a result I had to throw most of away. Here is the part that held up, and how I know which part that is."
+excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and had to throw most of the result away. Here is the part that held up, and how I know which part that is."
 tags: ["AI Engineering", "Claude Code", "Evals", "Python", "LLM", "Agents"]
+ogImage: "/images/blog/skill-vibe-test-decay-probe/decay-flatline.png"
 draft: false
 ---
 
@@ -18,15 +19,15 @@ Scoring is where most eval ideas die, so the judge is deliberately narrow. Befor
 
 Each verdict also carries an escape-hatch flag, for the distinct failure where the agent doesn't just miss steps but abandons the procedure entirely and hand-rolls its own approach. That distinction matters: partial compliance degrades output, escape-hatching means the skill has effectively unloaded.
 
-There is one more piece, and it is the piece this post is really about. The baseline is a gate. If the skill cannot steer a fresh, undiluted context, then whatever happens at turn 10 is not decay, it is a skill that never worked. So the harness stops:
+There's one more piece, and it's the piece this post is really about. The baseline is a gate. If the skill cannot steer a fresh, undiluted context, then whatever happens at turn 10 isn't decay, it's a skill that never worked. So the harness stops:
 
 ```python
-if cfg.baseline_gate and not v.passed:
+if cfg.baseline_gate:
     result.status = "baseline-failed"
     result.error = (
-        "the baseline probe (turn 1, pre-dilution) already fails — a "
-        "decay curve from a failing baseline is meaningless. Fix the "
-        "skill or base prompt first (or pass --no-baseline-gate)."
+        "the baseline probe (turn 1, pre-dilution) already fails, so a "
+        "decay curve from it is meaningless. Fix the skill or base "
+        "prompt first (or pass --no-baseline-gate)."
     )
     return result
 ```
@@ -39,21 +40,23 @@ Every probe failed. Both baselines, both turn 6s, both turn 8s, both turn 10s. E
 
 Baselines failed on precision. The agent ran the census script and did the analysis, then replaced the existing line in my decision log instead of appending a new one, and in the second conversation read a whole skill file where the procedure says to read only the frontmatter. Then the middle turns got worse, and the judge flagged four of them as escape hatches.
 
-That is the point where I wrote this post the first time, and the sentence I wrote was that the decay curve was textbook.
+That's the point where I wrote this post the first time, and the sentence I wrote was that the decay curve was textbook.
 
 ## What the run actually supports
 
 Going back to the transcripts a month later, three things were wrong with that.
 
-There is no curve. Eight failures out of eight is a flat line at FAIL. A metric that returns the same value at every point cannot show a trend, and this is the chart the tool actually generated:
+There's no curve. Eight failures out of eight is a flat line at FAIL. A metric that returns the same value at every point cannot show a trend. Here is that run, redrawn from its saved transcripts by the current harness:
 
-![Chart titled "does capabilities-health still steer sonnet as context fills?" plotting two conversations across baseline, turn 6, turn 8 and turn 10. Both lines sit flat on the FAIL axis at every probe point, with no point anywhere near PASS. Red X markers mark escape hatches at turns 6 and 8.](/images/blog/skill-vibe-test-decay-probe/decay-flatline.png)
+![Chart titled "skill-vibe-test: does capabilities-health still steer sonnet as context fills?" plotting two conversations across baseline, turn 6, turn 8 and turn 10. Both lines sit flat on the FAIL axis at every probe point, with no point anywhere near PASS. Red X markers mark escape hatches at turns 6 and 8. A red banner across the top of the plot reads "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve".](/images/blog/skill-vibe-test-decay-probe/decay-flatline.png)
+
+The red banner is the fix described at the end of this post, applied to the run that motivated it. The original chart carried no such warning, which is exactly how I came to publish it.
 
 I had read that as a decay curve because I already believed the conclusion.
 
-The run should not have completed at all. Both baselines failed, which is exactly the condition the gate above exists to catch. The saved runs are marked `completed` rather than `baseline-failed`, which means the run was executed with `--no-baseline-gate`. I wrote a gate that says a decay curve from a failing baseline is meaningless, then turned it off and published the curve. I do not remember making that decision, which is worse than making it deliberately.
+The run should not have completed at all. Both baselines failed, which is exactly the condition the gate above exists to catch. The saved runs are marked `completed` rather than `baseline-failed`, which means the run was executed with `--no-baseline-gate`. I wrote a gate that says a decay curve from a failing baseline is meaningless, then turned it off and published the curve. I don't remember making that decision, which is worse than making it deliberately.
 
-Two of the four escape hatches are over-called. In the second conversation, at both turn 6 and turn 8, the agent ran `capabilities-health.py`, which is the first and most important line of the rubric. It then skipped the log append and the diff proposal. That is partial compliance. My own definition of escape-hatching is abandoning the procedure entirely, and running the required script is not that. The judge stretched the label and I repeated it.
+Two of the four escape hatches are over-called. In the second conversation, at both turn 6 and turn 8, the agent ran `capabilities-health.py`, which is the first and most important line of the rubric. It then skipped the log append and the diff proposal. That's partial compliance. My own definition of escape-hatching is abandoning the procedure entirely, and running the required script isn't that. The judge stretched the label and I repeated it.
 
 ## What survives, and why I trust that part
 
@@ -61,9 +64,9 @@ One finding holds, and it holds without trusting the judge at all, because it is
 
 In the first conversation, the agent was asked at turn 6 whether any skills on disk were missing from the index. It made **zero tool calls** and answered from memory. At turn 8 it was asked whether the index reflected two newly added scripts. It made **one** call, an `ls` of two directories, and reasoned about the answer from that.
 
-Compare that to the same agent's baseline in the same conversation, where it made fourteen calls including the census script the procedure requires. The skill did not stop working between turn 1 and turn 6. It stopped being consulted. The agent went from running the prescribed script and getting the log format wrong, to not running the script at all.
+Compare that to the same agent's baseline in the same conversation, where it made fourteen calls including the census script the procedure requires. The skill didn't stop working between turn 1 and turn 6. It stopped being consulted. The agent went from running the prescribed script and getting the log format wrong, to not running the script at all.
 
-That is a degradation in the behavior the skill was written to produce, and you can check it yourself in the committed transcripts without agreeing with a single one of the judge's verdicts. It is a smaller claim than the one I originally made. It is the one I can defend.
+That's a degradation in the behavior the skill was written to produce, and you can check it yourself in the committed transcripts without agreeing with a single one of the judge's verdicts. It's a smaller claim than the one I originally made. It's the one I can defend.
 
 For the record, the honest version of the numbers: context went from about 31k to 40k tokens in the first conversation and 38k to 54k in the second. My original write-up quoted "31k to 54k," which is the start of one run and the end of the other.
 
@@ -77,8 +80,8 @@ The subtler one: the subject can see the experiment. Early sandboxes were temp d
 
 The tool exits 1 on any decay, so a skill can be gated on surviving its own vibe test before it ships. For skills that keep failing, the fix is usually structural rather than rhetorical: move the invariant out of prose and into something the agent cannot drift from, a script, a hook, a hard check.
 
-The harness change I actually made after re-reading this: `--no-baseline-gate` should be loud. A run that bypassed the gate should say so on every artifact it produces, in the report and on the chart, not just in the status field of a JSON file nobody opens. A safeguard you can silently switch off is a safeguard that will be silently switched off.
+The harness change I made after re-reading this: a bypassed gate is now loud. When the turn-1 probe fails and `--no-baseline-gate` is set, the run records it and every artifact says so. The terminal summary leads with it, the report carries it as a banner above the results, and the chart gets a red stamp across the top reading "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve." Not just a status field in a JSON file nobody opens. A safeguard you can silently switch off is a safeguard that will be silently switched off.
 
-It is easy to build an instrument, point it at something, and then read its output through the conclusion you were hoping for. The judge was too generous with one label. I was too generous with the whole run.
+It's easy to build an instrument, point it at something, and then read its output through the conclusion you were hoping for. The judge was too generous with one label. I was too generous with the whole run.
 
 Trust in an agent's steering should be measured, not vibed. So should trust in the thing doing the measuring, which is a funny lesson to get from a tool with vibe in its name.

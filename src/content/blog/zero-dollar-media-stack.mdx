@@ -3,12 +3,15 @@ title: "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math"
 date: "2026-07-07"
 excerpt: "My apps needed launch media: music beds, UI sounds, ambient video. Instead of licensing stock, I built numpy engines that synthesize all of it. Six music moods, 33 sound effects, full scenery kits, every render deterministic and copyright-clean."
 tags: ["Generative Media", "Python", "NumPy", "DSP", "Audio Synthesis", "Indie Dev"]
+ogImage: "/images/blog/zero-dollar-media-stack/synth-engines.png"
 draft: false
 ---
 
 Launching an app means producing media: a music bed for the demo video, a click and a success chime for the UI, an ambient loop for the channel. Stock libraries bring licensing fine print. AI generators bring training-data questions I don't want attached to my products. So I took a third path: synthesize everything from math, in Python, on my own machine.
 
 The stack is three engines in one folder. `music.py`, `sfx.py`, and a set of scenery renderers behind one orchestrator. No samples, no models, no downloads. If a sound exists in the output, a formula in the repo produced it.
+
+![Three panels. Left: a spectrogram of the synthesized zap, showing a bank of falling diagonal lines as the saw sweep drops from 1900 Hz to 200 Hz, with a horizontal ripple from the 75 Hz buzz. Middle: the waveform envelope of four bars of the lofi loop, two either side of the loop point, where the wrap is marked in amber and looks like the ordinary bar lines marked in grey. Right: a single frame of the caustics scenery loop, pale blue light filaments on a dark blue field.](/images/blog/zero-dollar-media-stack/synth-engines.png)
 
 ## Music from oscillators and patterns
 
