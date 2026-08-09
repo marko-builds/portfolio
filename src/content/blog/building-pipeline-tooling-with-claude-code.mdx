@@ -1,8 +1,8 @@
 ---
-title: "How I Build Blender to Unreal Pipeline Tooling with Claude Code"
+title: "The Agent Is Only as Good as the Check That Grades It"
 date: "2026-06-24"
-excerpt: "The method I use to build reliable game pipeline tools with an AI agent: align before any code, ship vertical slices test-first, and keep every build deterministic so nothing reaches the engine unverified."
-tags: ["Claude Code", "Blender", "Unreal Engine", "Technical Art", "Pipeline", "TDD"]
+excerpt: "How I ship tooling an AI agent wrote and actually trust the result: align before any code, build in vertical slices test first, and keep the build deterministic so a passing check means something."
+tags: ["Claude Code", "AI Agents", "TDD", "Verification", "Blender", "Unreal Engine"]
 draft: true
 ---
 
@@ -46,6 +46,6 @@ The discipline matters more than the model. A capable agent with no feedback loo
 
 The loop is also a ceiling. The agent is only ever as good as the check that grades it, so most of my effort goes into making the check sharp, not into prompting.
 
-And this is where tech art is heading. Unreal 5.8 shipped a native MCP server, which lets an agent drive the editor directly. The studios that get value from that will be the ones with the discipline to keep it reliable. That is the skill I am building now.
+This is where the tooling layer is heading. Unreal 5.8 shipped an experimental MCP server that lets an agent drive the editor directly. The teams that get value from that will be the ones whose checks are sharp enough to grade what the agent produces. That is the part I work on.
 
 Code is at [github.com/marko-builds](https://github.com/marko-builds). The pipeline this post describes is in the BlenderBridge plugin and the Blender studio repo.
