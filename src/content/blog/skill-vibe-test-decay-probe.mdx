@@ -3,7 +3,7 @@ title: "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate."
 date: "2026-07-07"
 excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and got a result I had to throw most of away. Here is the part that held up, and how I know which part that is."
 tags: ["AI Engineering", "Claude Code", "Evals", "Python", "LLM", "Agents"]
-draft: true
+draft: false
 ---
 
 A Claude Code skill is a markdown file of instructions the agent loads for a task: run this script first, never edit that file, append the log in this exact format. Turn one, freshly loaded, they work. My question was about turn ten: after the conversation has moved through other topics and the context has filled with unrelated material, does the agent still follow the procedure, or does it quietly start improvising?
