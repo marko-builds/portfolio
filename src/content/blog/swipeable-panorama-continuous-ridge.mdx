@@ -3,12 +3,15 @@ title: "One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Ar
 date: "2026-07-09"
 excerpt: "Habitagram's progress screen is one mountain ridge rising from sea to summit, rendered as a single 6480x1920 panorama and sliced into six swipeable pages. Slicing continuous art into a paged carousel breaks in specific ways. Here are the ones I hit."
 tags: ["Habitagram", "Generative Media", "React Native", "Python", "Mobile UI"]
+ogImage: "/images/blog/swipeable-panorama-continuous-ridge/panorama-continuous-ridge.png"
 draft: false
 ---
 
 Habitagram's progress screen answers "how far have I climbed?" with a picture: one continuous mountain ridge rising out of the sea, across desert, steppe, forest, and volcano, to a snowed summit. You swipe through it page by page, each page one milestone, your reached pages in color and the locked ones in grey.
 
 The art is a single panorama, 6480x1920, rendered by a numpy engine and sliced into six 1080x1920 portrait tiles. Continuity across swipes is the entire point, and almost every bug in this feature was some way of accidentally breaking it.
+
+![The full panorama at 6480x1920, downscaled to a wide strip. A single mountain ridge climbs from a blue sea on the left, through desert, steppe, forest and volcano, to a snowed summit on the right. Five cyan tick marks show where the strip is cut into six pages; the ridge, the dashed trail and the paper grain all run continuously across every cut.](/images/blog/swipeable-panorama-continuous-ridge/panorama-continuous-ridge.png)
 
 ## Heights are fractions, or the sea eats the desert
 
@@ -22,7 +25,7 @@ The fix is the rule: geometry that sits relative to a baseline must be stored as
 
 The engine never renders a page in isolation. It draws the full 6480-wide world (ridge, waves, dashed trail, milestone flags, film grain) and then crops six tiles.
 
-Grain is why. The texture is per-column fractal noise defined over global x. Rendering per page would restart the noise at every boundary, a faint but visible jump at each swipe. Same for the ridge itself and the dashed trail's phase. Continuity is only free if every operator sees the whole world before the knife comes out.
+Grain is why. The texture is a woven-paper noise field generated once across the full 6480 width. Rendering per page would restart the noise at every boundary, a faint but visible jump at each swipe. Same for the ridge itself and the dashed trail's phase. Continuity is only free if every operator sees the whole world before the knife comes out.
 
 The greyed "locked" variants follow the same rule: the full panorama is rendered twice, color and desaturated, and both are sliced identically. Color and grey tiles are pixel-aligned by construction, so the swipe from your last reached page to the first locked one moves nothing but the palette.
 
@@ -31,6 +34,8 @@ The greyed "locked" variants follow the same rule: the full panorama is rendered
 The tiles are exactly 9:16. Modern phones are taller, and React Native's `resizeMode="cover"` handles that by scaling up and cropping the sides. On a 20:9 screen that quietly removes about 9% of each tile's width, and which 9%? The left and right edges. The exact columns where each tile connects to its neighbors.
 
 Every seam I had engineered to be invisible became a step: swipe, and the ridge jumps sideways by the cropped amount. The art had no seams; the display manufactured them.
+
+![Two versions of the same steppe-to-forest page boundary, zoomed in, with the terrain silhouette traced as a line. In the top version, labelled cover, each page has been scaled up and cropped by about nine percent and the traced ridge jumps vertically at the boundary. In the bottom version, labelled contain, the same two pages sit at exact screen width and the traced ridge runs straight through the boundary with no step.](/images/blog/swipeable-panorama-continuous-ridge/panorama-cover-crop.png)
 
 The fix inverts the layout contract. Each page renders at exact screen width with no horizontal crop, bottom-aligned so the terrain hugs the bottom and the transparent sky above blends into the theme background. Cover-crop is fine for standalone images. For edge-matched slices it is never acceptable, because the edges are the feature.
 
@@ -41,3 +46,19 @@ The wanderer marker sits at each page's horizontal center, anchored per page as 
 And the reached-versus-locked split depends on the user's current tier, which arrives from an async query. Render before it resolves and the frontier defaults to zero, flashing the user's own past biomes grey for a frame. The sibling journey screen already gated on the loading state; the new screen didn't, until it did. When you copy a pattern to a new screen, copy its load-gate too.
 
 The engine's output is locked by golden-fingerprint tests, all twelve tiles hashed at the approved seed, so the ridge you swipe through today is provably the one that was signed off on a real device.
+
+## The seam I put back on the way out
+
+Writing this up, I measured the seams instead of trusting the argument. The engine draws one continuous cross-biome gradient across all 6480 pixels and cuts afterwards, so a page boundary should be indistinguishable from any other pair of adjacent columns. Across the whole strip, the median column-to-column change in brightness is 0.26. In a fresh render, the four inland seams measure 0.03, 0.10, 0.10 and 0.41. That's the noise floor.
+
+The tiles I actually shipped measure 2.50, 2.02, 1.66 and 0.87 at those same four seams.
+
+The export loop runs `img.quantize(colors=255)` on each tile before saving it. Six pages, six independent palettes, each one fitted to a different slice of the same gradient. So the render is continuous and the files are not, and the banding is visible, not just measurable.
+
+![Two versions of the same four pages, stacked. The top strip, from the shipped tiles, shows flat bands of color with a distinct step at each page boundary. The bottom strip, from a fresh RGBA render, shows one smooth gradient running through the same boundaries. Seam measurements are printed under each: 2.50, 2.02, 1.66 and 0.87 for the shipped tiles against 0.03, 0.10, 0.10 and 0.41 for the fresh render.](/images/blog/swipeable-panorama-continuous-ridge/panorama-quantized-seam.png)
+
+The golden tests never saw it. They pin the raw RGBA bytes of the render, so they guard the art before the knife and never look at the PNG that ships. Green the whole time.
+
+The fix is to quantize the full strip once and slice after, which is the same rule as the grain and the trail. Continuity is only free if every operator sees the whole world before the knife comes out, and the export quantizer is an operator I forgot to count.
+
+One boundary in that image is not a bug. The sea meets the desert at exactly one sixth of the strip because that's where the shore is placed, and it measures the same in both renders.
