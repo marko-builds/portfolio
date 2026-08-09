@@ -1,6 +1,7 @@
 ---
-// Shared top nav for secondary pages (devlog, posts, projects, 404), in the
-// Vercel-monochrome direction. The home page has no nav (single-viewport hero).
+// Shared top nav for every page, in the Vercel-monochrome direction. The home
+// page carries it too as of 2026-08-09: the hero's REPL line was its only
+// identity mark, and removing that left the page with none.
 interface Props {
   active?: "work" | "devlog" | "contact";
 }

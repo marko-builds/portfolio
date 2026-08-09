@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteNav from "../components/SiteNav.astro";
 import { getCollection } from "astro:content";
 
 const recentPosts = (await getCollection("blog"))
@@ -11,16 +12,16 @@ const recentPosts = (await getCollection("blog"))
     return { ...post, readingTime: Math.max(1, Math.ceil(words / 200)) };
   });
 
-const pageTitle = "Marko Stankovic | Developer";
+const pageTitle = "Marko Stankovic | I build AI systems and prove they work";
 const pageDescription =
-  "Solo developer. DeployLog turns deploys into release notes. Habitagram turns your habits into a journey. A homegrown generative media studio renders the art for both.";
+  "AI engineer in Serbia. Most teams ship AI features they cannot check. I build the tools that measure whether they worked, and I publish the numbers.";
 
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Marko Stankovic",
   url: "https://markostankovic.org",
-  jobTitle: "Solo Developer",
+  jobTitle: "AI Engineer",
   sameAs: [
     "https://github.com/marko-builds",
     "https://www.linkedin.com/in/marko-builds/",
@@ -42,23 +43,20 @@ const dateFmt = (d: Date) =>
     <span class="cross c3">+</span><span class="cross c4">+</span>
   </div>
 
+  <SiteNav />
+
   <main id="main">
     <!-- HERO -->
     <section class="hero">
       <div class="frame">
-        <p class="repl kinetic k1">
-          <span class="chevron">&gt;</span> MarkoStankovic(<span class="arg">Developer</span>)<span class="semi">;</span><span class="cursor-blink"></span>
-        </p>
-
         <h1 class="headline">
-          <span class="kinetic k2">I build software products</span>
-          <span class="kinetic k3 outline">and ship them.</span>
+          <span class="kinetic k2">I build AI systems</span>
+          <span class="kinetic k3 outline">and prove they work.</span>
         </h1>
 
         <p class="sub kinetic k4">
-          DeployLog turns deploys into release notes. Habitagram turns your
-          habits into a journey. A homegrown generative media studio renders
-          the art for both.
+          Most teams ship AI features they cannot check. I build the tools that
+          measure whether they worked, and I publish the numbers.
         </p>
 
         <div class="ctas kinetic k5">
@@ -107,11 +105,12 @@ const dateFmt = (d: Date) =>
       <div class="frame">
         <h2 class="section-label io mask"><span>About</span></h2>
         <p class="about-text io">
-          I'm Marko, a solo developer. I spent three years building game
-          systems in Unity and Unreal, then turned the same craft on my own
-          products. Now I ship small software with an AI-heavy workflow: two
-          apps in flight, and a generative studio that renders their art,
-          video, and sound. I write about the process on the devlog.
+          I'm Marko, an AI engineer. I build agent systems and the tools that
+          measure whether they actually worked: an overnight loop that ships
+          reviewed code while I sleep, a probe that checks whether a skill still
+          steers a model after ten turns, and eval gates that fail loudly
+          instead of passing quietly. Three years of Unity and Unreal systems
+          work sits underneath. I write about all of it on the devlog.
         </p>
       </div>
     </section>
@@ -169,7 +168,7 @@ const dateFmt = (d: Date) =>
   <footer>
     <div class="frame foot">
       <p>&copy; 2026 Marko Stankovic</p>
-      <p class="mono-meta">Developer &middot; Serbia</p>
+      <p class="mono-meta">AI engineer &middot; Serbia</p>
     </div>
   </footer>
 </BaseLayout>
@@ -214,19 +213,6 @@ const dateFmt = (d: Date) =>
       linear-gradient(#1f1f1f80 1px, transparent 1px) 0 0 / 100% 96px,
       linear-gradient(90deg, #1f1f1f80 1px, transparent 1px) 0 0 / 96px 100%;
   }
-  .repl {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--color-text-primary);
-    margin: 0 0 40px;
-  }
-  @media (max-width: 380px) {
-    .repl { font-size: 12px; }
-  }
-  .chevron { color: var(--color-accent); }
-  .arg { color: var(--color-text-secondary); }
-  .semi { color: var(--color-text-muted); }
-
   .headline {
     font-family: var(--font-sans);
     font-weight: 700;
@@ -421,7 +407,6 @@ const dateFmt = (d: Date) =>
 
   /* MOTION (P14 vocabulary, CSS dialect): kinetic hero on load, io reveals on scroll */
   .kinetic { animation: rise 0.6s ease-out both; }
-  .k1 { animation-delay: 0.05s; }
   .k2 { animation-delay: 0.12s; }
   .k3 { animation-delay: 0.19s; }
   .k4 { animation-delay: 0.26s; }
