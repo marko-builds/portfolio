@@ -8,6 +8,8 @@ draft: true
 
 I build the tooling around our game with Claude Code. The headless Blender exporters, the Unreal import plugin, the validation that rejects a bad asset before it reaches the engine. The model writes a lot of that code. The reason the tools are reliable is not the model. It is the loop I put around it.
 
+![Diagram of the loop around the model: align on a one page spec, write one failing test, make it pass, verify against a deterministic build, then return for the next slice. Done is a passing check, never "it looks correct".](/images/blog/building-pipeline-tooling-with-claude-code/the-loop.svg)
+
 ## The work AI is actually good at here
 
 Pipeline tooling is repetitive, well specified, and testable. That is the sweet spot for an agent. A normal-map channel flip, a scale check, a folder contract between two programs: each one has a right answer you can write down and verify.

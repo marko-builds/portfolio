@@ -71,7 +71,7 @@ The difficulty tier changes at checkpoints (fixed distances along the run that a
 
 Weights are normalised before selection. Hard patterns stay at 20% even at checkpoint 5+. They're pressure, not the default. This replaces the original exponential decay of `obstacleSpawnTime`, which had no concept of authored content to promote.
 
-![Graph showing how obstacle difficulty weights shift across run checkpoints in Relic Rush, from Easy-only at start to a Hard-weighted mix at checkpoint 5+](/images/blog/relic-rush-obstacle-system/difficulty-ramp-chart.png)
+![Graph showing how obstacle difficulty weights shift across run checkpoints in Relic Rush, from Easy-only at start to a Hard-weighted mix at checkpoint 5+](/images/blog/relic-rush-obstacle-system/difficulty-ramp-chart.svg)
 
 ## Safety Rules
 
@@ -104,7 +104,7 @@ spawnZ = playerZ + minSpawnDistance
 
 The dynamic calculation means lead time is consistent regardless of how fast the run is going. At any speed, the player gets the same window to read the incoming obstacle and respond.
 
-![Diagram showing minimum obstacle spawn distance at different scroll speeds in Relic Rush, illustrating 1.5 - 2.5 second lead time window for player reaction](/images/blog/relic-rush-obstacle-system/telegraph-distance-diagram.png)
+![Diagram showing minimum obstacle spawn distance at different scroll speeds in Relic Rush, illustrating 1.5 - 2.5 second lead time window for player reaction](/images/blog/relic-rush-obstacle-system/telegraph-distance-diagram.svg)
 
 ## What I Learned
 
