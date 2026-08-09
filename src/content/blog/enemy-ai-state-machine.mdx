@@ -16,13 +16,13 @@ TO ADD A NEW POST:
 5. The post will appear automatically on /blog and the homepage teaser
    */}
 
-When the enemy's Chase→Patrol transition started misfiring because two branches shared a variable, I knew the update loop had to go.
+When the enemy's Chase to Patrol transition started misfiring because two branches shared a variable, I knew the update loop had to go.
 
 ## The Problem
 
 The first version of the Hide & Seek enemy was a single `Update()` method with a chain of `if/else` blocks. Patrol logic, detection checks, chase behaviour, and navigation calls were all in one place. Adding a search phase or alert scan meant the method grew, and changing any branch required reading the entire function to understand what else it might affect.
 
-When I added the Search state, the Chase→Patrol transition started firing incorrectly because both branches read from the same `_lastKnownPosition` variable. Fixing one broke the other. The root cause wasn't the length of the function. It was shared mutable state with no clear ownership.
+When I added the Search state, the Chase to Patrol transition started firing incorrectly because both branches read from the same `_lastKnownPosition` variable. Fixing one broke the other. The root cause wasn't the length of the function. It was shared mutable state with no clear ownership.
 
 ## The IState Interface
 

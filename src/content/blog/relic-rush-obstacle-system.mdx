@@ -22,7 +22,7 @@ Temple Run, Subway Surfers, and Alto's Adventure all use authored or semi-author
 
 The replacement is a hand-authored pattern library. An obstacle **pattern** is a ScriptableObject that defines:
 
-- A sequence of 1–5 obstacles
+- A sequence of 1 - 5 obstacles
 - The lane assignment and type of each obstacle
 - The Z spacing between obstacles within the sequence (in world units)
 - A difficulty rating: Easy, Medium, or Hard
@@ -36,16 +36,16 @@ A few examples from the Forest biome to illustrate the difficulty spread:
 | Pattern | Sequence | Difficulty | Required Actions |
 |---------|----------|------------|-----------------|
 | F_E_01 | Ground Blocker (left) | Easy | Dodge right |
-| F_M_01 | Ground Blocker (left) → Ground Blocker (right) | Medium | Right, then left |
-| F_M_03 | Aerial (centre) → Ground Blocker (right) | Medium | Jump, then dodge left |
-| F_H_01 | Ground Blocker (left) → Overhead → Ground Blocker (right) | Hard | Right, slide, left |
-| F_H_02 | Moving obstacle (left-to-right) → Ground Blocker (centre) | Hard | Time the dodge, change lane |
+| F_M_01 | Ground Blocker (left) to Ground Blocker (right) | Medium | Right, then left |
+| F_M_03 | Aerial (centre) to Ground Blocker (right) | Medium | Jump, then dodge left |
+| F_H_01 | Ground Blocker (left) to Overhead to Ground Blocker (right) | Hard | Right, slide, left |
+| F_H_02 | Moving obstacle (left-to-right) to Ground Blocker (centre) | Hard | Time the dodge, change lane |
 
 ![Unity ScriptableObject inspector showing a Hard-tier obstacle pattern with lane assignments, Z spacing, and required player actions for the Forest biome](/images/blog/relic-rush-obstacle-system/scriptableobject-inspector.png)
 
 The Hard patterns are legitimately demanding, but they're demanding in a way the player can learn. `F_H_01` is a three-input sequence. A player who dies to it the first time, watches the replay in their head, and recognises the setup will dodge it the next time. That's the difference between difficulty that teaches and difficulty that punishes.
 
-MVP target is 18–30 patterns per biome (6–10 per difficulty tier). Each biome uses its own prefab set (Forest has logs and root ridges, Temple has stone blocks and pendulums, Lava has lava rocks and falling stalactites) but the pattern structure is shared across biomes.
+MVP target is 18 - 30 patterns per biome (6 - 10 per difficulty tier). Each biome uses its own prefab set (Forest has logs and root ridges, Temple has stone blocks and pendulums, Lava has lava rocks and falling stalactites) but the pattern structure is shared across biomes.
 
 ## Selection Logic
 
@@ -65,8 +65,8 @@ The difficulty tier changes at checkpoints (fixed distances along the run that a
 
 | Checkpoint Range | Active Tiers | Weights |
 |-----------------|--------------|---------|
-| 1–2 | Easy only | 100 / 0 / 0 |
-| 3–4 | Easy + Medium | 70 / 30 / 0 |
+| 1 - 2 | Easy only | 100 / 0 / 0 |
+| 3 - 4 | Easy + Medium | 70 / 30 / 0 |
 | 5+ | All tiers | 30 / 50 / 20 |
 
 Weights are normalised before selection. Hard patterns stay at 20% even at checkpoint 5+. They're pressure, not the default. This replaces the original exponential decay of `obstacleSpawnTime`, which had no concept of authored content to promote.
@@ -81,7 +81,7 @@ Some failure modes need explicit prevention at selection time, not as tuning.
 
 **Action gating.** Missions introduce mechanics progressively. The first mission in a biome only requires left/right movement. Jump and slide are introduced at specific mission checkpoints. Any pattern tagged as requiring jump is excluded from selection until jump is introduced. This prevents new players from being killed by a mechanic they haven't been taught.
 
-**Gauntlet spacing.** Gauntlets are extended sequences of 3–5 obstacles forming a mini-challenge. They're treated as a single pattern selection. Two rules apply unconditionally: a 2-second breathing gap before every gauntlet, and a 3-second recovery gap after. Gauntlets also cannot appear in the first 30 seconds of a run. These rules exist because gauntlets are intentionally demanding: the gaps are the game acknowledging that it's about to ask something harder.
+**Gauntlet spacing.** Gauntlets are extended sequences of 3 - 5 obstacles forming a mini-challenge. They're treated as a single pattern selection. Two rules apply unconditionally: a 2-second breathing gap before every gauntlet, and a 3-second recovery gap after. Gauntlets also cannot appear in the first 30 seconds of a run. These rules exist because gauntlets are intentionally demanding: the gaps are the game acknowledging that it's about to ask something harder.
 
 ## Telegraph Distance
 
@@ -92,7 +92,7 @@ Lead time varies with scroll speed:
 | Scroll Speed | Minimum Lead Time | Minimum Spawn Distance |
 |-------------|-------------------|----------------------|
 | ≤ 8 m/s | 1.5s | 12 units |
-| 8–12 m/s | 2.0s | 20 units |
+| 8 - 12 m/s | 2.0s | 20 units |
 | > 12 m/s | 2.5s | 30+ units |
 
 The spawn Z offset is calculated dynamically each pattern based on current speed:
@@ -104,13 +104,13 @@ spawnZ = playerZ + minSpawnDistance
 
 The dynamic calculation means lead time is consistent regardless of how fast the run is going. At any speed, the player gets the same window to read the incoming obstacle and respond.
 
-![Diagram showing minimum obstacle spawn distance at different scroll speeds in Relic Rush, illustrating 1.5–2.5 second lead time window for player reaction](/images/blog/relic-rush-obstacle-system/telegraph-distance-diagram.png)
+![Diagram showing minimum obstacle spawn distance at different scroll speeds in Relic Rush, illustrating 1.5 - 2.5 second lead time window for player reaction](/images/blog/relic-rush-obstacle-system/telegraph-distance-diagram.png)
 
 ## What I Learned
 
 The biggest shift in thinking was distinguishing **randomness in selection** from **randomness in placement**. The new system is still random. You never know which pattern is coming next. But the randomness operates at the authored-content level, not the individual-obstacle level. The player experiences variety without experiencing chaos.
 
-The trade-off is authoring cost. Eighteen to thirty patterns per biome, per three biomes, is 54–90 ScriptableObjects before MVP. That's a significant content investment compared to a spawner that generates itself. Whether the investment is worth it shows up in playtest: does the player feel like they're getting better? Do deaths generate understanding or frustration? Those answers justify the authoring time. Or they don't, and the design reverts toward semi-authored generation with stricter placement rules.
+The trade-off is authoring cost. Eighteen to thirty patterns per biome, per three biomes, is 54 - 90 ScriptableObjects before MVP. That's a significant content investment compared to a spawner that generates itself. Whether the investment is worth it shows up in playtest: does the player feel like they're getting better? Do deaths generate understanding or frustration? Those answers justify the authoring time. Or they don't, and the design reverts toward semi-authored generation with stricter placement rules.
 
 Safety rules are design, not tuning. The Overhead restriction and action gating aren't parameters to adjust. They're invariants. Putting them in code rather than in a spreadsheet makes that explicit.
 
