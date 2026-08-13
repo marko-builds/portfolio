@@ -55,3 +55,46 @@ obstacle-system still `draft`). Honest history, no longer the spine.
 3. **#4 DeployLog** — write at launch, for HN/dev.to/Reddit.
 4. **Build Abyssal Glow**, then **#5** — this is what makes the shaders/VFX anchor real.
 5. #6 / #7 as SEO/depth fill.
+
+---
+
+## Value pass on the standing drafts (2026-08-13)
+
+**Staleness warning on everything above.** The "reality check" and the backlog table were written
+2026-06-18, before the 2026-07-28 reposition. The locked "shaders + rendering/VFX" social anchor and
+the games-studio "Recruiter value" column are the drawered Technical-Artist framing. Do not act on
+the ordering above without re-deciding the anchor against the AI-engineer target.
+
+**Census:** 16 posts in `src/content/blog/`, **12 still `draft: true`**, 4 published.
+
+Method: `knowledge/pages/concept-instability-not-continuity.md` — a reader decides in two paragraphs,
+and they are scanning for a problem with a cost, not for background or a definition. Verdict is on
+the **opening line only**; it says nothing about the body.
+
+**Opens on the reader's problem (publish-ready on value grounds):**
+
+| Draft | Opening move |
+|---|---|
+| `relic-rush-obstacle-system` | "Random obstacle placement is easy to implement and bad to play." Instability + cost in one sentence. The best opener in the folder. |
+| `solo-founder-observability` | Names a specific failure mode the reader recognizes and fears. |
+| `object-pooling-endless-runner` | "The obvious tools... are also a reliable [problem]." Obvious-but-wrong is the strongest shape available. |
+| `browser-prototype-then-port` | "Two jobs... and they want opposite tools." A tension the reader already feels. |
+
+**Opens on Marko, or on a definition (fix the first two sentences before publishing):**
+
+| Draft | Problem |
+|---|---|
+| `deterministic-journey-art` | "Habitagram is my habit tracker where..." Definition opener. |
+| `duskpaper-animated-wallpapers` | "I wanted a live wallpaper..." The what-I-was-curious-about opener. |
+| `tictactoe-theme-system` | "My Tic-Tac-Toe ships with six themes." Describes the artifact, names no problem. |
+| `building-pipeline-tooling-with-claude-code` | Self-opener, **and it says "our game"** on a solo project. Fix both. |
+| `one-product-four-repos` | Opens on the product tagline, but the tension ("that promise has four repos") is one sentence away. Cheapest fix here. |
+| `multi-tenant-uniqueness-postgres` · `relic-rush-pivot` | Self-openers that set up a real trap. Weakest of the strong group; leave if short on time. |
+
+**Content defect, not a value issue:** `enemy-ai-state-machine.mdx` opens with a raw `{/*` JSX comment.
+Check that file before anything else in the folder ships.
+
+**Observation worth holding, not a conclusion:** three of the four *published* posts open on a
+definition or on Marko's own setup, while three of the four sharpest problem-openers are still sitting
+in draft. Publishing order was decided on other grounds, so this is not causal. It does suggest the
+draft flag is not tracking readiness.
