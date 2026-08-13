@@ -1,6 +1,6 @@
 ---
 title: "The Agent Is Only as Good as the Check That Grades It"
-date: "2026-06-24"
+date: "2026-08-19"
 excerpt: "How I ship tooling an AI agent wrote and actually trust the result: align before any code, build in vertical slices test first, and keep the build deterministic so a passing check means something."
 tags: ["Claude Code", "AI Agents", "TDD", "Verification", "Blender", "Unreal Engine"]
 draft: true
@@ -28,7 +28,11 @@ I never ask for the whole tool at once. One behaviour, one failing test, one imp
 
 Take the importer's normal-map fix. Blender writes normals in OpenGL convention, Unreal reads DirectX, so the green channel has to invert or every surface lights wrong. The slice is small: write a test that asserts the green channel flips, watch it fail, then make it pass. Nothing else.
 
+![The slice as a single question. Blender bakes tangent space normals in OpenGL convention, where green is plus Y. One check asks whether the file is a normal map. If it is, the green channel inverts for Unreal's DirectX convention, where green is minus Y. If it is not, the texture passes through untouched, base colour and roughness included. A note underneath reads: the bug the test exists to catch is that the old script flipped every texture, and a blanket flip quietly corrupting base colour is the expensive failure, not the wrongly lit surface.](/images/blog/building-pipeline-tooling-with-claude-code/normal-map-green-flip.svg)
+
 Working test-first is what stops an agent from handing back a wall of plausible code that does not actually run. The test is the spec the agent cannot talk its way around.
+
+Note what the slice is not. It is not "fix normal maps". It is one question, `is_normal_map`, with a right answer on both branches. The earlier version of this code flipped every texture it touched, which looks fine on a normal map and quietly wrecks a base colour map. A slice small enough to test is also small enough to be wrong in only one way.
 
 ## Keep the build deterministic
 
@@ -36,9 +40,15 @@ The Blender side is headless and scripted. Same input, same output, no clicking.
 
 Determinism is what makes the test loop trustworthy. If the build wandered between runs, a passing test would prove nothing. Because it does not, green means green.
 
+![Two columns comparing builds. On the left, a deterministic build: three runs all produce hash 9f2c and pass the budget check, with the note that a fluffed run just re-runs clean, and the verdict that red means the code changed and green means green. On the right, a build that wanders: three runs produce hashes 9f2c, 41ab and c07e while nothing in the code changed, and the verdict that green proves only that this run agreed with itself. A band underneath reads: a check is only worth what its inputs are worth, so make the build boring first.](/images/blog/building-pipeline-tooling-with-claude-code/determinism.svg)
+
 ## Nothing ships done without evidence
 
 The rule I hold hardest: the agent does not get to decide a task is finished. A passing check does. "It looks correct" is exactly what ships the regression. The build runs, the test passes, I see the output, and only then is the slice done.
+
+![The pre-flight report as five checks with their thresholds. Triangle budget of 300 to 1500 tris for props at LOD0. Scale drift, where the longest axis must land between 1 and 100000 unreal units and a 1 metre crate should read about 100. Lightmap UVs present on static meshes. A naming contract requiring the SM underscore prefix so the folder contract between the two programs holds. Normal map compression set to TC_NORMALMAP, the flag the green-channel slice depends on. A line underneath reads: read only, it reports and never mutates, so the report is evidence rather than a repair that hides the fault.](/images/blog/building-pipeline-tooling-with-claude-code/preflight-validation.svg)
+
+The thresholds are the interesting part. They are written down, so the check has an answer it can be wrong about. A validator with no numbers in it is a comment.
 
 That sounds strict for solo work. It is the reason I can lean on these tools instead of babysitting them.
 

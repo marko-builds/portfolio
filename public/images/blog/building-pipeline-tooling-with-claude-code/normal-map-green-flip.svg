@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 356" width="880" height="356" role="img" aria-labelledby="t d">
+<title id="t">One slice: flip the green channel, but only on normal maps</title>
+<desc id="d">Blender bakes tangent space normals in OpenGL convention with green pointing up. A check asks whether the file is a normal map. If yes, the green channel inverts for Unreal's DirectX convention. If no, the texture passes through untouched. The earlier script flipped every texture, which corrupted base colour and roughness.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:1.5;rx:4}
+ .lab{font:600 15px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 12.5px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .mono{font:400 12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .gate{font:600 13px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+ .yes{font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .no{font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0;letter-spacing:.08em}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<g>
+ <text class="k" x="16" y="30">THE SLICE</text>
+ <text class="lab" x="16" y="54">One behaviour, one failing test, nothing else</text>
+
+ <rect class="n" x="16" y="88" width="236" height="84"/>
+ <text class="lab" x="34" y="116">Blender bake</text>
+ <text class="sub" x="34" y="137">tangent space, OpenGL</text>
+ <text class="mono" x="34" y="157">green = +Y</text>
+
+ <rect class="n" x="316" y="88" width="236" height="84" style="stroke:#D99A5E"/>
+ <text class="lab" x="334" y="116">Is this a normal map?</text>
+ <text class="mono" x="334" y="137">is_normal_map(basename)</text>
+ <text class="sub" x="334" y="157">the whole slice is this one question</text>
+
+ <rect class="n" x="620" y="32" width="244" height="76" style="stroke:#5FCEDB"/>
+ <text class="lab" x="638" y="60">Invert green</text>
+ <text class="sub" x="638" y="81">Unreal reads DirectX</text>
+ <text class="mono" x="638" y="99">green = -Y</text>
+
+ <rect class="n" x="620" y="164" width="244" height="76"/>
+ <text class="lab" x="638" y="192">Pass through untouched</text>
+ <text class="sub" x="638" y="213">base colour, roughness,</text>
+ <text class="sub" x="638" y="231">anything not a normal map</text>
+
+ <path d="M256 130 H310" stroke="#5A6675" stroke-width="1.5" marker-end="url(#a)"/>
+ <path d="M556 130 H586 V70 H616" fill="none" stroke="#5A6675" stroke-width="1.5" marker-end="url(#a)"/>
+ <path d="M556 130 H586 V202 H616" fill="none" stroke="#5A6675" stroke-width="1.5" marker-end="url(#a)"/>
+ <text class="yes" x="594" y="60">YES</text>
+ <text class="no" x="594" y="226">NO</text>
+
+ <rect x="16" y="272" width="848" height="68" fill="#12151C" stroke="#2A3242" stroke-width="1.5" rx="4"/>
+ <text class="gate" x="36" y="298">The bug the test exists to catch: the old script flipped every texture.</text>
+ <text class="sub" x="36" y="320">Surfaces lit wrong is the loud failure. A blanket flip quietly corrupting base colour is the expensive one.</text>
+</g></svg>
