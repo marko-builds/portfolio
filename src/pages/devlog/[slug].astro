@@ -4,8 +4,9 @@ import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
+  // Dev only, so a draft has a real URL to review at. `astro build` sets DEV false and drops them.
   return posts
-    .filter(p => !p.data.draft)
+    .filter(p => import.meta.env.DEV || !p.data.draft)
     .map(post => ({
       params: { slug: post.slug },
       props: { post },
@@ -26,6 +27,7 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
   tags={post.data.tags}
   readingTime={readingTime}
   ogImage={post.data.ogImage}
+  draft={post.data.draft}
 >
   <Content />
 </BlogPost>

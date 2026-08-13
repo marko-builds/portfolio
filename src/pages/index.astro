@@ -3,8 +3,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteNav from "../components/SiteNav.astro";
 import { getCollection } from "astro:content";
 
+// Same rule as the devlog pages: in dev the site shows drafts, in a build it never does.
+// Kept identical in all three places on purpose, so "is this visible?" has one answer.
 const recentPosts = (await getCollection("blog"))
-  .filter((p) => !p.data.draft)
+  .filter((p) => import.meta.env.DEV || !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3)
   .map((post) => {
