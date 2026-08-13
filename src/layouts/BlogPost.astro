@@ -23,12 +23,18 @@ const formattedDate = date.toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
+// BlogPosting, not TechArticle: Google's Article docs say the type "must be based on one of
+// Article, NewsArticle, BlogPosting" and never mention subtypes. Search Console has no rich-result
+// report for Articles, so a wrong type here is unflaggable — validate with the Rich Results Test.
+// image is emitted only when the post has a real ogImage; the og-default fallback would violate
+// Google's "images must represent the marked up content" rule.
 const articleSchema = {
   "@context": "https://schema.org",
-  "@type": "TechArticle",
+  "@type": "BlogPosting",
   "headline": title,
   "description": excerpt,
   "datePublished": date.toISOString(),
+  ...(ogImage ? { "image": new URL(ogImage, Astro.site).href } : {}),
   "author": {
     "@type": "Person",
     "name": "Marko Stankovic",

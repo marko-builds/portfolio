@@ -32,6 +32,12 @@ const ogImageURL = ogImage
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Marko Stankovic — Devlog"
+      href={new URL("/rss.xml", Astro.site).href}
+    />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
