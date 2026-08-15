@@ -8,11 +8,105 @@ import { getCollection } from "astro:content";
 const recentPosts = (await getCollection("blog"))
   .filter((p) => import.meta.env.DEV || !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 3)
-  .map((post) => {
-    const words = (post.body ?? "").split(/\s+/).filter(Boolean).length;
-    return { ...post, readingTime: Math.max(1, Math.ceil(words / 200)) };
-  });
+  .slice(0, 4);
+
+// Identity rail. Facts only, all verifiable.
+// No availability statement (map decision 10) and no CV link (ticket 05 owns CV
+// delivery through the call). The /cv redirect route stays either way.
+const identity = {
+  name: "Marko Stankovic",
+  role: "AI Engineer",
+  location: "Belgrade, Serbia",
+  languages: "Serbian (native), English",
+  email: "contact@markostankovic.org",
+  github: "https://github.com/marko-builds",
+  linkedin: "https://www.linkedin.com/in/marko-builds/",
+  call: "/call",
+};
+
+// The proof band leads the page. Every card carries a link, a number and a date.
+// Repo visibility and every metric below were read off the repos themselves on
+// 2026-08-15 (gh repo list + each README), not copied from the prototype, whose
+// numbers were placeholders. claimcheck does not exist on GitHub at all yet, so
+// the band ships a sized slot rather than waiting for it (map-public-proof/14).
+const proof = [
+  {
+    name: "skill-vibe-test",
+    what: "Does an agent skill still steer the model after ten turns? It runs the skill live in one growing context and an LLM judge scores every probe.",
+    metric: "4 probes over 10 turns",
+    date: "Jul 2026",
+    href: "https://github.com/marko-builds/skill-vibe-test",
+  },
+  {
+    name: "adpreflight",
+    what: "Checks a hand-coded HTML5 playable ad against network rule packs before you submit it, so the rejection lands on your machine instead of in an email three days later.",
+    metric: "2 network rule packs",
+    date: "Aug 2026",
+    href: "https://github.com/marko-builds/adpreflight",
+  },
+  {
+    name: "duskpaper",
+    what: "Renders animated wallpapers on your machine, at your resolution, from your seed. Every loop is seamless by construction, not by luck.",
+    metric: "6 scene engines",
+    date: "Jul 2026",
+    href: "https://github.com/marko-builds/duskpaper",
+  },
+];
+
+// Products, demoted beneath the proof band. habitagram has no public URL yet, so
+// it renders as a card without a link rather than pointing at a dead domain.
+const products = [
+  {
+    name: "deploylog",
+    what: "Release notes from real git history.",
+    href: "/projects/deploylog/",
+    status: "launching",
+  },
+  { name: "habitagram", what: "Habit tracking as a journey.", href: null, status: "near launch" },
+  {
+    name: "studio",
+    what: "The generative media engine behind both.",
+    href: "/devlog",
+    status: "internal",
+  },
+];
+
+// Records from issues/map-site-v2/04-experience-timeline.md. The current role
+// deliberately carries NO organization line: Marko cut both "Independent" and
+// the Monolithiq invoicing-entity line on 2026-08-15. Do not fill this gap.
+const timeline = [
+  {
+    role: "AI Engineer",
+    org: "",
+    where: "Belgrade",
+    when: "Sep 2025 to present",
+    bullets: [
+      "Built an agent harness that implements whole feature branches overnight behind tests and an automated review gate.",
+      "Shipped skill-vibe-test and adpreflight as open source, each with a check suite calibrated against a known-bad input.",
+    ],
+  },
+  {
+    role: "Unity Game Developer",
+    org: "Replai",
+    where: "Belgrade (Remote)",
+    when: "Mar 2025 to Sep 2025",
+    bullets: ["Gameplay and tooling work in Unity and C# on a live product."],
+  },
+  {
+    role: "Unity Developer Intern",
+    org: "Inlustris Studio",
+    where: "Belgrade",
+    when: "Jun 2024 to Nov 2024",
+    bullets: ["Gameplay systems and editor tooling."],
+  },
+];
+
+const education = {
+  degree: "BSc, Computer Games & Programming",
+  org: "Univerzitet Metropolitan",
+  where: "Belgrade",
+  when: "2021 to 2025",
+};
 
 const pageTitle = "Marko Stankovic | I build AI systems and prove they work";
 const pageDescription =
@@ -24,6 +118,12 @@ const personSchema = {
   name: "Marko Stankovic",
   url: "https://markostankovic.org",
   jobTitle: "AI Engineer",
+  image: "https://markostankovic.org/portrait.webp",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Belgrade",
+    addressCountry: "RS",
+  },
   sameAs: [
     "https://github.com/marko-builds",
     "https://www.linkedin.com/in/marko-builds/",
@@ -31,8 +131,7 @@ const personSchema = {
   ],
 };
 
-const dateFmt = (d: Date) =>
-  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" });
+const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month: "short" });
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -40,436 +139,654 @@ const dateFmt = (d: Date) =>
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
   </Fragment>
 
-  <div class="rails" aria-hidden="true">
-    <span class="cross c1">+</span><span class="cross c2">+</span>
-    <span class="cross c3">+</span><span class="cross c4">+</span>
-  </div>
-
   <SiteNav />
 
-  <main id="main">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="frame">
-        <h1 class="headline">
-          <span class="kinetic k2">I build AI systems</span>
-          <span class="kinetic k3 outline">and prove they work.</span>
-        </h1>
-
-        <p class="sub kinetic k4">
-          Most teams ship AI features they cannot check. I build the tools that
-          measure whether they worked, and I publish the numbers.
-        </p>
-
-        <div class="ctas kinetic k5">
-          <a class="btn-fill" href="#work">See the work</a>
-          <a class="btn-ghost" href="/devlog">Read the devlog</a>
+  <div class="shell">
+    <!-- The persistent identity rail. On mobile it splits: the chip stays on top,
+         the facts and links drop to the end of the page as the contact band. -->
+    <aside class="rail">
+      <div class="rail-id">
+        <img
+          class="portrait"
+          src="/portrait.webp"
+          alt="Marko Stankovic"
+          width="480"
+          height="480"
+        />
+        <div class="rail-id-text">
+          <p class="ident-name">{identity.name}</p>
+          <p class="ident-role">{identity.role}</p>
         </div>
       </div>
-    </section>
 
-    <!-- PRODUCTS -->
-    <section class="band" id="work">
-      <div class="frame">
-        <h2 class="section-label io mask"><span>Products</span></h2>
-
-        <div class="cards io">
-          <a class="card" href="/projects/deploylog/">
-            <div class="card-top">
-              <span class="dot live"></span>
-              <span class="label">deploylog</span>
-            </div>
-            <p>Release notes from your deploys.</p>
-            <span class="status live">status: launching</span>
-          </a>
-          <div class="card">
-            <div class="card-top">
-              <span class="dot warm"></span>
-              <span class="label">habitagram</span>
-            </div>
-            <p>Habit tracking as a journey.</p>
-            <span class="status">status: near launch</span>
-          </div>
-          <a class="card" href="/devlog/">
-            <div class="card-top">
-              <span class="dot idle"></span>
-              <span class="label">studio</span>
-            </div>
-            <p>The generative media engine behind both.</p>
-            <span class="status">status: internal</span>
-          </a>
-        </div>
+      <div class="rail-meta" id="contact">
+        <h2 class="rail-meta-head">Contact</h2>
+        <dl class="ident-facts">
+          <div><dt>Based</dt><dd>{identity.location}</dd></div>
+          <div><dt>Languages</dt><dd>{identity.languages}</dd></div>
+        </dl>
+        <ul class="ident-links">
+          <li><a href={`mailto:${identity.email}`}>Email</a></li>
+          <li>
+            <a href={identity.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+          </li>
+          <li>
+            <a href={identity.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </li>
+          <li><a href={identity.call} class="call-link">Book a call</a></li>
+        </ul>
       </div>
-    </section>
+    </aside>
 
-    <!-- ABOUT -->
-    <section class="band" id="about">
-      <div class="frame">
-        <h2 class="section-label io mask"><span>About</span></h2>
-        <p class="about-text io">
-          I'm Marko, an AI engineer. I build agent systems and the tools that
-          measure whether they actually worked: an overnight loop that ships
-          reviewed code while I sleep, a probe that checks whether a skill still
-          steers a model after ten turns, and eval gates that fail loudly
-          instead of passing quietly. Three years of Unity and Unreal systems
-          work sits underneath. I write about all of it on the devlog.
+    <main class="body" id="main">
+      <!-- 1. HERO -->
+      <section class="lede">
+        <h1 class="lede-line">I build AI systems and prove they work.</h1>
+        <p class="lede-sub">
+          Most teams ship AI features they cannot check. I build the tools that measure
+          whether they worked, and I publish the numbers.
         </p>
-      </div>
-    </section>
+        <p class="lede-about">
+          I build agent systems and the tools that measure whether they actually worked:
+          an overnight loop that ships reviewed code while I sleep, a probe that checks
+          whether a skill still steers a model after ten turns, and eval gates that fail
+          loudly instead of passing quietly. Three years of Unity and Unreal systems work
+          sits underneath. I write about all of it on the devlog.
+        </p>
+      </section>
 
-    <!-- DEVLOG -->
-    {
-      recentPosts.length > 0 && (
-        <section class="band" id="devlog">
-          <div class="frame">
-            <div class="band-head">
-              <h2 class="section-label io mask">
-                <span>Devlog</span>
-              </h2>
-              <a class="all-link" href="/devlog">All posts</a>
-            </div>
-            <div class="post-rows io">
-              {recentPosts.map((post) => (
-                <a class="post-row" href={`/devlog/${post.slug}/`}>
-                  <span class="post-date">{dateFmt(post.data.date)}</span>
-                  <span class="post-title">{post.data.title}</span>
-                  <span class="post-time">{post.readingTime} min</span>
+      <!-- 2. PROOF, leading. #work is SiteNav's anchor. -->
+      <section class="band" id="work">
+        <h2>Proof</h2>
+        <p class="band-intro">
+          Open source. Every one has a repo you can read and a check you can run.
+        </p>
+        <ul class="proof-grid">
+          {
+            proof.map((p) => (
+              <li class="proof-card">
+                <a
+                  class="proof-title"
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {p.name}
                 </a>
-              ))}
-            </div>
-          </div>
-        </section>
-      )
-    }
+                <p class="proof-what">{p.what}</p>
+                <p class="proof-meta">
+                  <span class="metric">{p.metric}</span>
+                  <span class="sep">·</span>
+                  <span>{p.date}</span>
+                </p>
+              </li>
+            ))
+          }
+          <li class="proof-card is-slot">
+            <p class="slot-label">Fourth card</p>
+            <p class="proof-what">
+              Reserved. Sized so the band does not reflow when it lands.
+            </p>
+          </li>
+        </ul>
+      </section>
 
-    <!-- CONTACT -->
-    <section class="band" id="contact">
-      <div class="frame">
-        <h2 class="section-label io mask"><span>Contact</span></h2>
-        <p class="band-intro io">
-          Building something similar, or want to compare notes? My inbox is open.
-        </p>
-        <div class="contact-rows io">
-          <a class="contact-row" href="mailto:contact@markostankovic.org">
-            <span class="mono-meta">email</span>
-            <span>contact@markostankovic.org</span>
-          </a>
-          <a class="contact-row" href="https://github.com/marko-builds" target="_blank" rel="noopener noreferrer">
-            <span class="mono-meta">github</span>
-            <span>github.com/marko-builds</span>
-          </a>
-          <a class="contact-row" href="https://www.linkedin.com/in/marko-builds/" target="_blank" rel="noopener noreferrer">
-            <span class="mono-meta">linkedin</span>
-            <span>marko-builds</span>
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
+      <!-- 3. PRODUCTS, demoted -->
+      <section class="band" id="products">
+        <h2>Products</h2>
+        <ul class="product-rows">
+          {
+            products.map((p) => (
+              <li class="product-row">
+                {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
+                <span class="product-what">{p.what}</span>
+                <span class="product-status">{p.status}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- 4. EXPERIENCE -->
+      <section class="band" id="experience">
+        <h2>Experience</h2>
+        <ol class="timeline">
+          {
+            timeline.map((t) => (
+              <li class="record">
+                <div class="record-head">
+                  <h3 class="record-role">{t.role}</h3>
+                  <span class="record-when">{t.when}</span>
+                </div>
+                <p class="record-org">
+                  {t.org && (
+                    <>
+                      {t.org}
+                      <span class="sep">·</span>
+                    </>
+                  )}
+                  {t.where}
+                </p>
+                <ul class="record-bullets">
+                  {t.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </li>
+            ))
+          }
+          <li class="record">
+            <div class="record-head">
+              <h3 class="record-role">{education.degree}</h3>
+              <span class="record-when">{education.when}</span>
+            </div>
+            <p class="record-org">
+              {education.org}<span class="sep">·</span>{education.where}
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- 5. DEVLOG -->
+      {
+        recentPosts.length > 0 && (
+          <section class="band" id="devlog">
+            <div class="band-head">
+              <h2>Devlog</h2>
+              <a class="all-link" href="/devlog">
+                All posts
+              </a>
+            </div>
+            <ul class="post-rows">
+              {recentPosts.map((p) => (
+                <li class="post-row">
+                  <a class="post-title" href={`/devlog/${p.slug}/`}>
+                    {p.data.title}
+                  </a>
+                  <p class="post-excerpt">{p.data.excerpt}</p>
+                  <span class="post-date">{fmt(p.data.date)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </main>
+  </div>
 
   <footer>
-    <div class="frame foot">
+    <div class="foot">
       <p>&copy; 2026 Marko Stankovic</p>
-      <p class="mono-meta">AI engineer &middot; Serbia</p>
+      <p class="foot-meta">AI engineer · Belgrade</p>
     </div>
   </footer>
 </BaseLayout>
 
 <style>
-  /* Vercel-monochrome direction (issue 03 pick). Colors are the frozen brand
-     tokens or alpha/blend derivations of them; no new hues. */
+  /* Light direction, locked by issues/map-site-v2/02 (screen A). The tokens are
+     global.css's; nothing here reintroduces a hex literal. */
 
-  .rails {
-    position: fixed;
-    inset: 0 max(24px, calc(50vw - 560px));
-    border-left: 1px solid var(--color-border);
-    border-right: 1px solid var(--color-border);
-    pointer-events: none;
-    z-index: 1;
-  }
-  .cross {
-    position: absolute;
-    font-family: var(--font-mono);
-    color: var(--color-text-muted);
-    font-size: 14px;
-    transform: translate(-50%, -50%);
-  }
-  .c1 { top: 14vh; left: 0; }
-  .c2 { top: 14vh; right: 0; transform: translate(50%, -50%); }
-  .c3 { bottom: 10vh; left: 0; transform: translate(-50%, 50%); }
-  .c4 { bottom: 10vh; right: 0; transform: translate(50%, 50%); }
-
-  .frame {
+  /* ── Shell: the sticky identity rail plus the reading column ───────────
+     The shell shares SiteNav's grid exactly (max-width 1000px, 56px inline
+     padding) so the `> ms` mark lines up with the rail's left edge and the nav
+     links line up with the content column's right edge. Changing either value
+     without changing SiteNav.astro is what knocked the header out of alignment
+     in the prototype. SiteNav is fixed and 56px tall, so the 7rem top padding
+     is nav height plus a full gap; 3.5rem cleared it by exactly zero and the
+     portrait snapped to the bar. */
+  .shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 3.5rem;
     max-width: 1000px;
     margin: 0 auto;
-    padding-inline: 56px;
-  }
-  @media (max-width: 720px) {
-    .frame { padding-inline: 28px; }
+    padding: 7rem 56px 6rem;
+    align-items: start;
   }
 
-  /* HERO */
-  .hero {
-    padding-block: 148px 104px;
-    background:
-      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
-      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
-  }
-  .headline {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: clamp(2.8rem, 7vw, 5.4rem);
-    line-height: 1.04;
-    letter-spacing: -0.045em;
-    color: var(--color-text-primary);
-    margin: 0 0 28px;
-  }
-  .headline span { display: block; }
-  .outline {
-    color: transparent;
-    -webkit-text-stroke: 1.5px var(--color-text-primary);
-  }
-
-  .sub {
-    color: var(--color-text-secondary);
-    font-size: 17px;
-    line-height: 1.7;
-    max-width: 56ch;
-    margin: 0 0 48px;
-  }
-
-  .ctas { display: flex; flex-wrap: wrap; gap: 14px; }
-  .btn-fill,
-  .btn-ghost {
-    font-size: 15px;
-    font-weight: 500;
-    text-decoration: none;
-    padding: 12px 24px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-  }
-  .btn-fill { background: var(--color-text-primary); color: var(--color-bg); }
-  .btn-fill:hover { background: var(--color-surface-raised); }
-  .btn-ghost {
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-strong);
-  }
-  .btn-ghost:hover { border-color: var(--color-text-secondary); }
-
-  /* SECTIONS */
-  .band {
-    border-top: 1px solid var(--color-border);
-    padding-block: 88px;
-  }
-  .section-label {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-text-secondary);
-    margin: 0 0 36px;
-  }
-  .section-label::before { content: "// "; color: var(--color-accent); }
-  .band-intro {
-    color: var(--color-text-secondary);
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 56ch;
-    margin: -16px 0 40px;
-  }
-
-  /* mask-reveal heading (P14 vocabulary, CSS dialect) */
-  .mask { overflow: hidden; }
-  .mask span {
-    display: inline-block;
-    transform: translateY(120%);
-    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .mask.in span { transform: none; }
-
-  /* PRODUCTS */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--color-border-strong);
-    border: 1px solid var(--color-border-strong);
-  }
-  @media (max-width: 720px) {
-    .cards { grid-template-columns: 1fr; }
-  }
-  .card {
+  .rail {
+    position: sticky;
+    top: 7rem;
     display: flex;
     flex-direction: column;
-    background: var(--color-bg);
-    padding: 22px;
-    text-decoration: none;
-    transition: background-color 0.15s ease;
+    gap: 1.25rem;
   }
-  a.card:hover { background: var(--color-surface); }
-  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot.live { background: var(--color-warm); box-shadow: 0 0 8px var(--color-warm); }
-  .dot.warm { background: var(--color-text-primary); }
-  .dot.idle { background: var(--color-text-muted); }
-  .label { font-family: var(--font-mono); font-size: 13px; color: var(--color-text-primary); }
-  .card p { margin: 0 0 16px; font-size: 14px; color: var(--color-text-secondary); line-height: 1.55; }
-  .status { font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); margin-top: auto; }
-  .status.live { color: var(--color-warm); }
 
-  /* shared mono meta label */
-  .mono-meta {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin: 0 0 10px;
+  .rail-id {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
   }
-  /* ABOUT */
-  .about-text {
-    color: var(--color-text-secondary);
-    font-size: 17px;
-    line-height: 1.8;
-    max-width: 62ch;
+
+  .portrait {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .ident-name {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 0.4rem 0 0;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+  .ident-role {
+    color: var(--color-accent);
     margin: 0;
+    font-weight: 500;
   }
 
-  /* DEVLOG */
+  /* On desktop the rail IS the contact band, so its heading is for screen
+     readers and for the /#contact anchor only. It becomes visible on mobile,
+     where this block moves to the end of the page. */
+  .rail-meta-head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .ident-facts {
+    margin: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .ident-facts dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+  .ident-facts dd {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+  }
+
+  .ident-links {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .ident-links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .ident-links a:hover {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+  .call-link {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  /* ── Reading column ───────────────────────────────────────────────────── */
+  .body {
+    max-width: 68ch;
+  }
+
+  .lede-line {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.15;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+    font-family: var(--font-sans);
+    color: var(--color-text-primary);
+  }
+  .lede-sub {
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-size: 1.05rem;
+  }
+  .lede-about {
+    color: var(--color-text-secondary);
+    margin: 1.1rem 0 0;
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  .band {
+    margin-top: 4.5rem;
+  }
+  /* global.css:82 puts a mono `// ` before every `section h2`. That is the dark
+     register's voice, and the locked direction (ticket 02, screen A) keeps mono
+     for exactly one thing: the metric. Scoped off here rather than in global.css,
+     which the devlog and project pages still read. */
+  .band > h2::before,
+  .band-head h2::before {
+    content: none;
+  }
+  .band > h2,
+  .band-head h2 {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+  }
+  .band-intro {
+    color: var(--color-text-secondary);
+    margin: 0 0 1.5rem;
+  }
   .band-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 16px;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .band-head h2 {
+    margin: 0;
   }
   .all-link {
-    font-family: var(--font-mono);
-    font-size: 13px;
     color: var(--color-text-secondary);
     text-decoration: none;
-  }
-  .all-link:hover { color: var(--color-text-primary); }
-  .post-rows { border-top: 1px solid var(--color-border); }
-  .post-row {
-    display: grid;
-    grid-template-columns: 110px 1fr auto;
-    gap: 20px;
-    align-items: baseline;
-    padding: 16px 4px;
-    border-bottom: 1px solid var(--color-border);
-    text-decoration: none;
-    transition: background-color 0.15s ease;
-  }
-  .post-row:hover { background: var(--color-surface); }
-  .post-date, .post-time {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--color-text-muted);
+    font-size: 0.9rem;
     white-space: nowrap;
   }
-  .post-title { font-size: 15px; color: var(--color-text-primary); }
-  @media (max-width: 720px) {
-    .post-row { grid-template-columns: 1fr auto; }
-    .post-date { display: none; }
+  .all-link:hover {
+    color: var(--color-accent);
   }
 
-  /* CONTACT */
-  .contact-rows { border-top: 1px solid var(--color-border); max-width: 560px; }
-  .contact-row {
+  /* ── Proof cards. Deliberately heavier than the product rows. ─────────── */
+  .proof-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 20px;
-    align-items: baseline;
-    padding: 14px 4px;
-    border-bottom: 1px solid var(--color-border);
-    text-decoration: none;
-    font-size: 15px;
-    color: var(--color-text-primary);
-    transition: background-color 0.15s ease;
-    min-height: 44px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
   }
-  .contact-row:hover { background: var(--color-surface); }
-  .contact-row .mono-meta { margin: 0; }
+  .proof-card {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    background: var(--color-surface);
+    box-shadow:
+      0 1px 2px var(--color-grid),
+      0 8px 24px -16px var(--color-grid);
+  }
+  .proof-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-accent);
+  }
+  .proof-title:hover {
+    color: var(--color-accent);
+  }
+  .proof-what {
+    color: var(--color-text-secondary);
+    margin: 0.5rem 0 0.9rem;
+    font-size: 0.94rem;
+  }
+  .proof-meta {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  /* The one thing that stays mono: the metric. */
+  .metric {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    white-space: nowrap;
+  }
+  .proof-card.is-slot {
+    border-style: dashed;
+    background: transparent;
+    box-shadow: none;
+  }
+  .slot-label {
+    margin: 0;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+  .sep {
+    color: var(--color-text-muted);
+  }
 
-  /* FOOTER */
-  footer { border-top: 1px solid var(--color-border); }
+  /* ── Products, deliberately lighter than the proof band ───────────────── */
+  .product-rows,
+  .post-rows,
+  .timeline,
+  .record-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .product-rows {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .product-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .product-row a,
+  .product-name {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .product-row a:hover {
+    color: var(--color-accent);
+  }
+  .product-what {
+    color: var(--color-text-secondary);
+    font-size: 0.94rem;
+  }
+  .product-status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  /* ── Timeline ─────────────────────────────────────────────────────────── */
+  .timeline {
+    display: grid;
+    gap: 2rem;
+  }
+  .record-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .record-role {
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+  .record-when {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+  .record-org {
+    color: var(--color-text-secondary);
+    margin: 0.15rem 0 0.6rem;
+    font-size: 0.94rem;
+  }
+  .record-org .sep {
+    margin: 0 0.5rem;
+  }
+  .record-bullets {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .record-bullets li {
+    color: var(--color-text-secondary);
+    padding-left: 1rem;
+    position: relative;
+    font-size: 0.95rem;
+  }
+  .record-bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 1px;
+    background: var(--color-accent);
+  }
+
+  /* ── Devlog rows ──────────────────────────────────────────────────────── */
+  .post-rows {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .post-row {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  /* The last row's rule would sit a gap above the contact band's own rule on
+     mobile, reading as a doubled divider. */
+  .post-row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  .post-title {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    display: inline-block;
+  }
+  .post-title:hover {
+    color: var(--color-accent);
+  }
+  .post-excerpt {
+    color: var(--color-text-secondary);
+    margin: 0.4rem 0 0.5rem;
+    font-size: 0.94rem;
+  }
+  .post-date {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+  }
+
+  /* ── Footer ───────────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--color-border);
+  }
   .foot {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.75rem 56px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    padding-block: 28px;
+    gap: 0.5rem;
   }
-  .foot p { margin: 0; font-size: 13px; color: var(--color-text-secondary); }
-  .foot .mono-meta { margin: 0; }
+  .foot p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+  .foot-meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem !important;
+    color: var(--color-text-muted) !important;
+  }
 
-  /* MOTION (P14 vocabulary, CSS dialect): kinetic hero on load, io reveals on scroll */
-  .kinetic { animation: rise 0.6s ease-out both; }
-  .k2 { animation-delay: 0.12s; }
-  .k3 { animation-delay: 0.19s; }
-  .k4 { animation-delay: 0.26s; }
-  .k5 { animation-delay: 0.33s; }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: none; }
-  }
-  .io:not(.mask) {
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 0.55s ease-out, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .io.in:not(.mask) { opacity: 1; transform: none; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .kinetic { animation: none; }
-    .io:not(.mask) { opacity: 1; transform: none; transition: none; }
-    .mask span { transform: none; transition: none; }
+  /* ── Mobile: the rail splits ──────────────────────────────────────────
+     Marko's call 2026-08-15, resolving the question ticket 02 handed over.
+     The prototype put the whole rail above the headline, so a phone reader
+     met the photo and the link list before the positioning line. Now the
+     chip (photo, name, role) stays on top and the facts and links drop to
+     the end of the page, where the contact band belongs. `display: contents`
+     dissolves the rail so its two halves become grid children the shell can
+     order; the DOM stays single-source, so /#contact resolves on both. */
+  @media (max-width: 860px) {
+    .shell {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      padding: 5.5rem 28px 4rem;
+    }
+    .rail {
+      display: contents;
+    }
+    .rail-id {
+      order: 1;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.9rem;
+    }
+    .portrait {
+      width: 56px;
+      height: 56px;
+    }
+    .ident-name {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+    .ident-role {
+      font-size: 0.95rem;
+    }
+    .body {
+      order: 2;
+      max-width: none;
+    }
+    .rail-meta {
+      order: 3;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .rail-meta-head {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 0 0 1rem;
+      clip: auto;
+      overflow: visible;
+      font-family: var(--font-sans);
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--color-text-primary);
+    }
+    .ident-links {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.75rem 1rem;
+    }
+    .ident-links a {
+      display: inline-block;
+      min-height: 44px;
+      line-height: 44px;
+    }
+    .foot {
+      padding-inline: 28px;
+    }
   }
 </style>
-
-<script>
-  // The one home-page script: scroll reveals + the count-up utility
-  // (P14 stat-counter dialect; consumed by any [data-count] element).
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const countUp = (el: HTMLElement) => {
-    const target = Number(el.dataset.count || "0");
-    if (reduced || !target) {
-      el.textContent = String(target);
-      return;
-    }
-    const t0 = performance.now();
-    const dur = 900;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - t0) / dur);
-      el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  };
-
-  const els = document.querySelectorAll<HTMLElement>(".io");
-  if (reduced || !("IntersectionObserver" in window)) {
-    els.forEach((el) => el.classList.add("in"));
-    document.querySelectorAll<HTMLElement>("[data-count]").forEach(countUp);
-  } else {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          e.target.classList.add("in");
-          (e.target as HTMLElement)
-            .querySelectorAll<HTMLElement>("[data-count]")
-            .forEach(countUp);
-          io.unobserve(e.target);
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
-    );
-    els.forEach((el) => io.observe(el));
-  }
-</script>
