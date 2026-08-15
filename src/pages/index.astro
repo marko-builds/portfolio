@@ -110,7 +110,7 @@ const education = {
 
 const pageTitle = "Marko Stankovic | I build AI systems and prove they work";
 const pageDescription =
-  "AI engineer in Serbia. Most teams ship AI features they cannot check. I build the tools that measure whether they worked, and I publish the numbers.";
+  "AI engineer in Serbia. A demo shows an AI feature running, not whether it worked. I build the tools that measure the difference, and I publish the numbers.";
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -183,8 +183,8 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
       <section class="lede">
         <h1 class="lede-line">I build AI systems and prove they work.</h1>
         <p class="lede-sub">
-          Most teams ship AI features they cannot check. I build the tools that measure
-          whether they worked, and I publish the numbers.
+          A demo shows an AI feature running, not whether it worked. I build the
+          tools that measure the difference, and I publish the numbers.
         </p>
         <p class="lede-about">
           I build agent systems and the tools that measure whether they actually worked:
@@ -222,12 +222,6 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
               </li>
             ))
           }
-          <li class="proof-card is-slot">
-            <p class="slot-label">Fourth card</p>
-            <p class="proof-what">
-              Reserved. Sized so the band does not reflow when it lands.
-            </p>
-          </li>
         </ul>
       </section>
 
@@ -549,16 +543,6 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     font-family: var(--font-mono);
     font-size: 0.85em;
     white-space: nowrap;
-  }
-  .proof-card.is-slot {
-    border-style: dashed;
-    background: transparent;
-    box-shadow: none;
-  }
-  .slot-label {
-    margin: 0;
-    font-weight: 600;
-    color: var(--color-text-muted);
   }
   .sep {
     color: var(--color-text-muted);
