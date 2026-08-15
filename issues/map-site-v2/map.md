@@ -120,7 +120,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 |---|---|---|---|---|---|
 | [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 | **resolved 2026-08-15** |
 | [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 | **resolved 2026-08-15 — A (light) wins** |
-| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | **06 → 08 → 03** | 1.5 | open |
+| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | ~~06 → 08 → 03~~ cleared | 1.5 | **built 2026-08-15 — awaiting Marko's review** |
 | [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
 | [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | open |
 | [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
@@ -144,6 +144,19 @@ its last link: **03 is unblocked and is the next thing to build**, 1.5 sessions.
 **04** (0.5) and **05** (0.75) are unblocked and off the path. **09** (0.75) is unblocked. **10**
 closes out and must re-baseline `verify/gate.mjs` (tension 6) — including its token check, which
 now contradicts decision 4 and cannot pass as written.
+
+**03 built 2026-08-15**, so six of eleven tickets are done. Two things it produced that the rest of
+the map has to carry:
+
+- **`/call` is linked from the identity rail and 404s** until [ticket 05](05-call-page.md) ships.
+  Verified against a preview server, not assumed. **Ticket 10 must not cascade the surfaces while
+  this stands** — a live home page whose most prominent rail link is dead is worse than no link.
+  This makes **05 the highest-priority remaining ticket**, ahead of 04 and 09.
+- **`global.css` holds 13 dark-brand literals that ticket 08 never saw**, because its "zero
+  literals" grep was scoped `--include='*.astro'`. Old cyan in the filter bar and the
+  contact-input focus ring, `#0D0D0D` on `::selection`, `rgba(31,31,31)` on the lightbox buttons.
+  A scope narrower than the claim, which is the shape the root `CLAUDE.md` names. Belongs to
+  **09 or 10**.
 
 **11 is new and is not a build ticket.** The favicon and OG card left 08 when Marko asked to
 discuss a new mark rather than recolour the old one. It needs a conversation before it can be
