@@ -1,0 +1,450 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteNav from "../components/SiteNav.astro";
+
+// issues/map-site-v2/05-call-page.md. Survey first, scheduler last, CV alongside.
+//
+// Marko's calls on 2026-08-15, made when this ticket was built:
+//   * The CV link is unconditional on this page. It is not gated behind the
+//     survey and it appears nowhere else on the site (map decision 9, reversed).
+//     A recruiter who only wants to skim gets one click and no form.
+//   * The survey posts to the Formspree form that predates the 2026-07-03
+//     rebuild. The map called it "already wired for the contact form"; the form
+//     was deleted in cfdd76c and only this endpoint survived, in git history.
+//     Nothing shares its quota now.
+const FORMSPREE_ACTION = "https://formspree.io/f/xlgpgwva";
+
+// Google Calendar appointment schedule. Marko-only to create; paste the
+// calendar.app.google link here. While it is empty the booking section renders
+// an email fallback instead of a dead button, because the identity rail links
+// this page and a dead primary CTA is worse than a plain instruction.
+const BOOKING_URL = "";
+
+// Formspree posts, then redirects here with ?sent=1 and the #book fragment, so a
+// reader with JS off still lands on the booking section. The inline script only
+// adds the confirmation note.
+const RETURN_URL = new URL("/call?sent=1#book", Astro.site).href;
+
+const CONTACT_EMAIL = "contact@markostankovic.org";
+
+const purposes = [
+  "Hiring for a role",
+  "A project of mine",
+  "Working on something together",
+  "Something else",
+];
+
+const pageTitle = "Book a call | Marko Stankovic";
+const pageDescription =
+  "Pick a slot to talk. Tell me what the call is about first, and read the CV while you are here.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <SiteNav />
+
+  <main class="page">
+    <div class="head-band">
+      <div class="frame">
+        <h1>Book a call</h1>
+        <p class="lede">
+          Pick a slot that works for you. If you tell me what it is about first, I show
+          up already knowing the context.
+        </p>
+      </div>
+    </div>
+
+    <div class="frame body">
+      <!-- 1. THE SURVEY. Optional by design: a form in front of a recruiter is
+           friction on the primary audience. -->
+      <section class="band" id="survey">
+        <h2>What is the call about?</h2>
+        <p class="band-intro" id="survey-intro">
+          Optional. Skip it and book a slot if you would rather just talk.
+        </p>
+
+        <p class="sent-note" id="sent-note" hidden>
+          Got it, thanks. Pick a slot below and I will see you there.
+        </p>
+
+        <form
+          id="survey-form"
+          class="survey"
+          action={FORMSPREE_ACTION}
+          method="POST"
+        >
+          <input type="hidden" name="_next" value={RETURN_URL} />
+          <input type="hidden" name="_subject" value="markostankovic.org: call request" />
+          <!-- Formspree's honeypot. A human never sees it, a bot fills it, and the
+               submission is dropped. -->
+          <p class="gotcha" aria-hidden="true">
+            <label for="cf-gotcha">Leave this empty</label>
+            <input type="text" id="cf-gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
+          </p>
+
+          <div class="pair">
+            <div class="field">
+              <label for="cf-name">Your name</label>
+              <input type="text" id="cf-name" name="name" required autocomplete="name" />
+            </div>
+            <div class="field">
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="cf-purpose">Purpose</label>
+            <select id="cf-purpose" name="purpose">
+              {purposes.map((p) => <option value={p}>{p}</option>)}
+            </select>
+          </div>
+
+          <div class="pair">
+            <div class="field">
+              <label for="cf-role">Role</label>
+              <input type="text" id="cf-role" name="role" autocomplete="organization-title" />
+            </div>
+            <div class="field">
+              <label for="cf-company">Company</label>
+              <input type="text" id="cf-company" name="company" autocomplete="organization" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="cf-link">A link</label>
+            <input
+              type="url"
+              id="cf-link"
+              name="link"
+              inputmode="url"
+              placeholder="The posting, your site, anything relevant"
+            />
+          </div>
+
+          <div class="field">
+            <label for="cf-notes">Anything else</label>
+            <textarea id="cf-notes" name="notes" rows="4"></textarea>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="send">Send</button>
+            <a class="skip" href="#book">Skip to booking</a>
+          </div>
+        </form>
+      </section>
+
+      <!-- 2. THE SCHEDULER, last. -->
+      <section class="band" id="book">
+        <h2>Pick a slot</h2>
+        {
+          BOOKING_URL ? (
+            <>
+              <p class="band-intro">
+                This opens my calendar. You pick the time and get a confirmation with the
+                meeting link.
+              </p>
+              <a class="book" href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
+                Open the booking page
+              </a>
+            </>
+          ) : (
+            <p class="band-intro">
+              The booking page is not up yet. Email{" "}
+              <a class="inline-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>{" "}
+              and I will send you times.
+            </p>
+          )
+        }
+      </section>
+
+      <!-- 3. THE CV, unconditional. Marko's call 2026-08-15: no gate, no reveal. -->
+      <section class="band" id="cv">
+        <h2>Prefer to read first?</h2>
+        <p class="band-intro">
+          The CV is the same document I send with applications.
+        </p>
+        <a class="cv-link" href="/cv">
+          <span class="metric">PDF</span>
+          Marko-Stankovic-CV.pdf
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="frame foot">
+      <p>&copy; 2026 Marko Stankovic</p>
+      <a class="foot-link" href="/">back to home</a>
+    </div>
+  </footer>
+</BaseLayout>
+
+<style>
+  /* The light direction locked by ticket 02, in the register ticket 03 built:
+     sans headings, mono kept for small meta only. Tokens are global.css's;
+     nothing here is a hex literal. The frame matches SiteNav's grid exactly
+     (1000px, 56px inline) so the `> ms` mark lines up with the content. */
+  .frame {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-inline: 56px;
+  }
+
+  .head-band {
+    padding-block: 8rem 3rem;
+    background:
+      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
+  }
+  h1 {
+    font-family: var(--font-sans);
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem;
+  }
+  .lede {
+    color: var(--color-text-secondary);
+    font-size: 1.05rem;
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .body {
+    padding-block: 3.5rem 6rem;
+    max-width: 1000px;
+  }
+
+  /* global.css:82 puts a mono `// ` before every `section h2`. That is the dark
+     register's voice; scoped off here the same way index.astro does it. */
+  .band > h2::before {
+    content: none;
+  }
+  .band > h2 {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+  }
+  .band + .band {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .band-intro {
+    color: var(--color-text-secondary);
+    margin: 0 0 1.5rem;
+    max-width: 62ch;
+  }
+
+  /* ── Survey ───────────────────────────────────────────────────────────── */
+  .survey {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 42rem;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .field label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    width: 100%;
+    transition: border-color 0.15s ease;
+  }
+  .field textarea {
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--color-text-muted);
+  }
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /* Off-screen rather than display:none. A bot reading the DOM still finds it. */
+  .gotcha {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+  }
+  .send {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    border-radius: 6px;
+    padding: 0.62rem 1.4rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .send:hover {
+    opacity: 0.88;
+  }
+  .skip {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.94rem;
+    border-bottom: 1px solid transparent;
+  }
+  .skip:hover {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .sent-note {
+    margin: 0 0 1.5rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 6px;
+    background: var(--color-accent-dim);
+    color: var(--color-text-primary);
+    max-width: 42rem;
+  }
+
+  /* ── Booking ──────────────────────────────────────────────────────────── */
+  .book {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-bg);
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    border-radius: 6px;
+    padding: 0.62rem 1.4rem;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+  .book:hover {
+    opacity: 0.88;
+  }
+  .inline-link {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-accent);
+  }
+  .inline-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ── CV ───────────────────────────────────────────────────────────────── */
+  .cv-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--color-accent);
+  }
+  .cv-link:hover {
+    color: var(--color-accent);
+  }
+  /* The one thing that stays mono on this direction, as on the home page. */
+  .metric {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Footer ───────────────────────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--color-border);
+  }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 1.75rem;
+  }
+  .foot p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+  .foot-link {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+  .foot-link:hover {
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 720px) {
+    .frame {
+      padding-inline: 28px;
+    }
+    .head-band {
+      padding-block: 6.5rem 2.5rem;
+    }
+    .body {
+      padding-block: 2.5rem 4rem;
+    }
+    .pair {
+      grid-template-columns: 1fr;
+    }
+    .send,
+    .book {
+      min-height: 44px;
+    }
+  }
+</style>
+
+<script>
+  // Formspree redirects back to /call?sent=1#book. The fragment does the work
+  // with JS off; this only swaps the form for the confirmation.
+  if (new URLSearchParams(window.location.search).has("sent")) {
+    document.getElementById("sent-note")?.removeAttribute("hidden");
+    // The intro invites you to skip a form that is no longer on the page.
+    document.getElementById("survey-intro")?.setAttribute("hidden", "");
+    document.getElementById("survey-form")?.setAttribute("hidden", "");
+  }
+</script>
