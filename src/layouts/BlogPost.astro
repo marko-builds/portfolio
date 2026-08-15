@@ -78,15 +78,11 @@ const articleSchema = {
         will-change: width;
       }
 
-      /* ── Code blocks ── */
-      pre code.hljs {
-        background: var(--color-bg);
-        border: 1px solid var(--color-border);
-        border-radius: 0;
-        font-size: 0.8125rem;
-        line-height: 1.6;
-        padding: 1.25rem 1.5rem;
-      }
+      /* ── Code blocks ──
+         The surface lives in global.css, which beat this rule on specificity
+         (.prose pre code.hljs over pre code.hljs). This copy disagreed with it
+         on background and border-radius and had never applied, so it is gone
+         rather than left as a second source of truth. */
 
       /* ── Copy button ── */
       .pre-wrap {
@@ -164,7 +160,11 @@ const articleSchema = {
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.875em;
         color: var(--color-accent);
-        background: rgba(95, 206, 219, 0.08);
+        /* Was the retired dark-brand cyan at 8% alpha. Ticket 08's literal sweep
+           matched #hex only, so an rgba() literal never showed up. The old value
+           is deliberately not spelled out here, so a future colour sweep does not
+           trip on the comment that records the fix. */
+        background: var(--color-accent-dim);
         padding: 0.15em 0.4em;
       }
 
