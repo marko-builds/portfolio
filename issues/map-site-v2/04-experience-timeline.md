@@ -3,6 +3,10 @@
 **Type:** task
 **Status:** open — **cascade steps 1-4 done and gated 2026-08-15, bullets approved**; LinkedIn is
 the only step left, and its employer-field decision is **deferred by Marko to the close-out**
+**2026-08-15: this ticket no longer blocks [ticket 10](10-close-out.md).** Marko is doing the
+LinkedIn edit later and released 10's cold read and cascade from waiting on it. LinkedIn is an
+external surface with its own edit path; the site read and the repo-side surface updates do not
+depend on it. 04 stays open until the edit is made.
 **Blocked by:** None
 **Estimate:** 0.5 session
 
