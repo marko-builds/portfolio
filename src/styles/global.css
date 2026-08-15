@@ -7,17 +7,47 @@
 }
 
 /* ─── Design Token Variables ─────────────────────────────────────────── */
+/* Light palette, locked 2026-08-15 by issues/map-site-v2/02 (screen A wins).
+   LIGHT ONLY — there is no dark set and no toggle. Marko's call, same day:
+   one palette, one surface to maintain, nothing to persist and no flash of
+   the wrong theme to guard against.
+
+   Every text role here clears WCAG AA body contrast (4.5) against BOTH --color-bg
+   and --color-surface; measured, not eyeballed. text-muted and warm were
+   darkened from the prototype's values, which sat at 3.29 and 3.78 and would
+   have shipped failing contrast on small meta text.
+
+   The site now DIVERGES from brands/marko/brand.json, deliberately: map decision
+   4. Studio renders stay dark and no light variant is added to the brand file.
+   verify/gate.mjs's token check asserts these equal brand.json's colors, so it
+   fails by construction until ticket 10 re-scopes it. */
 :root {
-  --color-bg: #0B0E15;
-  --color-surface: #12151C;
-  --color-border: #1E2430;
-  --color-accent: #5FCEDB;
-  --color-accent-dim: #5FCEDB20;
-  --color-warm: #D99A5E;
-  --color-border-strong: #2A3242;
-  --color-text-primary: #E4E9EC;
-  --color-text-secondary: #8792A0;
-  --color-text-muted: #767F8F;
+  --color-bg: #FBFAF7;
+  --color-surface: #FFFFFF;
+  --color-border: #E4E0D8;
+  --color-accent: #14707C;
+  --color-accent-dim: #14707C1F;
+  --color-warm: #9C6031;
+  --color-border-strong: #CFC9BD;
+  --color-text-primary: #1A1D23;
+  --color-text-secondary: #5B6270;
+  --color-text-muted: #6B7480;
+
+  /* Surfaces the old dark design expressed as literals rather than tokens.
+     Named here so the pages that used them have somewhere to point. */
+  --color-surface-raised: #F3F1EC;
+  --color-surface-veil: #F3F1ECCC;
+  --color-accent-veil: #14707C33;
+
+  /* Full-bleed overlay behind the deploylog lightbox. Deliberately dark on a
+     light site: it exists to make an image the only lit thing on screen. */
+  --color-backdrop: #1A1D23;
+
+  /* Hero graph-paper lattice. This was #1f1f1f80 — a 50%-alpha near-black,
+     which on the dark page read as a whisper. Mapping it to a solid token
+     turned it into a tan cage over the whole hero, so it keeps its own low
+     alpha instead. A grid line is decoration; it must sit under the text. */
+  --color-grid: #1A1D2312;
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────── */

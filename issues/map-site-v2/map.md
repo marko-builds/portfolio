@@ -125,9 +125,10 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | open |
 | [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
-| [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | open |
+| [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
 | [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
+| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo, and the OG card | decision | None | ? | open — **needs a conversation** |
 
 ~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
 2026-08-08).~~ **Resolved 2026-08-15.** The tagline leak is closed; ticket 01's `portrait` defect
@@ -137,13 +138,16 @@ alone.
 **Resolved 2026-08-15: 01, 07, and 02 — which picked A, light.** The light/dark question is
 closed, so the conditional edge fired and **08 is now a hard blocker of 03**.
 
-**06 resolved 2026-08-15**, which clears the head of the critical path. The path is now
-**08 → 03**, 2.5 sessions of the 3.6 left, and **08 is unblocked**: it is the next thing to build,
-and it starts against 134 hex literals rather than 645 because 06 deleted 511 of them.
+**01, 02, 06, 07 and 08 all resolved 2026-08-15.** The whole 06 → 08 → 03 chain is cleared down to
+its last link: **03 is unblocked and is the next thing to build**, 1.5 sessions.
 
-**04** (0.5) and **05** (0.75) are unblocked and off the path, so they can go in any order.
-**09** is unblocked now that 02 is resolved. **10** closes out and must re-baseline
-`verify/gate.mjs` (tension 6).
+**04** (0.5) and **05** (0.75) are unblocked and off the path. **09** (0.75) is unblocked. **10**
+closes out and must re-baseline `verify/gate.mjs` (tension 6) — including its token check, which
+now contradicts decision 4 and cannot pass as written.
+
+**11 is new and is not a build ticket.** The favicon and OG card left 08 when Marko asked to
+discuss a new mark rather than recolour the old one. It needs a conversation before it can be
+scoped.
 
 ## Amendments made to `issues/map-public-proof/`
 

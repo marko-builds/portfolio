@@ -43,7 +43,7 @@ const pageDescription =
       <div class="relative max-w-5xl mx-auto px-6 py-20">
         <a
           href="/#work"
-          class="hero-enter inline-block text-[#666666] hover:text-[#5FCEDB] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
+          class="hero-enter inline-block text-[var(--color-text-muted)] hover:text-[var(--color-accent)] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
           style="--delay: 0.05s"
         >
           Projects
@@ -51,34 +51,34 @@ const pageDescription =
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.15s">
           <span
-            class="text-xs font-mono bg-[#5FCEDB]/[0.08] text-[#5FCEDB]/75 border border-[#5FCEDB]/20 px-3 py-1"
+            class="text-xs font-mono bg-[var(--color-accent)]/[0.08] text-[var(--color-accent)] border border-[var(--color-accent)]/20 px-3 py-1"
           >
             Launching · solo, full-stack
           </span>
           <span
-            class="text-xs font-mono bg-cyan-400/[0.08] text-cyan-300/75 border border-cyan-400/20 px-3 py-1"
+            class="text-xs font-mono bg-[var(--color-accent)]/[0.08] text-[var(--color-accent)] border border-[var(--color-accent)]/20 px-3 py-1"
           >
             Next.js · Supabase · Stripe
           </span>
         </div>
 
         <h1
-          class="hero-enter font-mono font-bold text-[#F0F0F0] mb-5"
+          class="hero-enter font-mono font-bold text-[var(--color-text-primary)] mb-5"
           style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; --delay: 0.3s"
         >
           DeployLog
         </h1>
 
         <p
-          class="hero-enter text-[#888888] text-lg max-w-2xl leading-relaxed mb-8"
+          class="hero-enter text-[var(--color-text-secondary)] text-lg max-w-2xl leading-relaxed mb-8"
           style="--delay: 0.5s"
         >
           Keeping a changelog current is the chore every dev team drops first.
           DeployLog makes it automatic: publish entries to a hosted page and an <code
-            class="font-mono text-[#5FCEDB] text-base bg-[#5FCEDB]/10 px-1.5"
+            class="font-mono text-[var(--color-accent)] text-base bg-[var(--color-accent)]/10 px-1.5"
             >embeddable widget</code
           >, or let a <code
-            class="font-mono text-[#5FCEDB] text-base bg-[#5FCEDB]/10 px-1.5"
+            class="font-mono text-[var(--color-accent)] text-base bg-[var(--color-accent)]/10 px-1.5"
             >published npm CLI</code
           > turn git commits into release notes with an LLM. Built solo, end to
           end.
@@ -89,7 +89,7 @@ const pageDescription =
             href="https://deploylog.dev"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[#5FCEDB]/[0.08] border border-[#5FCEDB]/15 hover:border-[#5FCEDB]/30 text-sm text-[#5FCEDB]/55 hover:text-[#5FCEDB]/75 transition-colors duration-150"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[var(--color-accent)]/[0.08] border border-[var(--color-accent)]/15 hover:border-[var(--color-accent)]/30 text-sm text-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors duration-150"
           >
             Visit deploylog.dev
             <svg
@@ -110,7 +110,7 @@ const pageDescription =
             href="https://www.npmjs.com/package/deploylog"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-cyan-400/[0.08] border border-cyan-400/15 hover:border-cyan-400/30 text-sm text-cyan-300/55 hover:text-cyan-300/75 transition-colors duration-150"
+            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[var(--color-accent)]/[0.08] border border-[var(--color-accent)]/15 hover:border-[var(--color-accent)]/30 text-sm text-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors duration-150"
           >
             The CLI on npm
             <svg
@@ -132,10 +132,10 @@ const pageDescription =
     </div>
 
     <!-- ─── OVERVIEW MEDIA ────────────────────────────────────────────────── -->
-    <div class="border-t border-[#1F1F1F]/50 py-12">
+    <div class="border-t border-[var(--color-border)]/50 py-12">
       <div class="max-w-4xl mx-auto px-6">
         <div
-          class="reveal overflow-hidden border border-[#1F1F1F] bg-[#141414]"
+          class="reveal overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface-raised)]"
         >
           <Image
             src={screenshot1}
@@ -146,7 +146,7 @@ const pageDescription =
           />
         </div>
         <p
-          class="reveal text-[#666666] text-xs font-mono mt-3 text-center"
+          class="reveal text-[var(--color-text-muted)] text-xs font-mono mt-3 text-center"
           style="--delay: 100ms"
         >
           deploylog.dev: the landing page also embeds DeployLog's own live widget
@@ -155,24 +155,24 @@ const pageDescription =
     </div>
 
     <!-- ─── ONE PLATFORM, FOUR SURFACES ──────────────────────────────────── -->
-    <section id="surfaces" class="py-20 border-t border-[#1F1F1F]/50">
+    <section id="surfaces" class="py-20 border-t border-[var(--color-border)]/50">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
           One Platform, Four Publishing Surfaces
         </h2>
         <div
-          class="reveal max-w-3xl space-y-5 text-[#888888] leading-relaxed"
+          class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
           style="--delay: 100ms"
         >
           <p>
             A changelog is only useful where your users already are, so a single
             entry written once in the dashboard fans out to four surfaces: a
             hosted, SSR changelog page with per-entry canonical URLs and RSS/JSON
-            feeds; an <strong class="text-[#F0F0F0] font-medium"
+            feeds; an <strong class="text-[var(--color-text-primary)] font-medium"
               >embeddable widget</strong
             > (vanilla TypeScript in a Shadow DOM, bundled with esbuild, no
             framework dependency) dropped in with one script tag; a <strong
-              class="text-[#F0F0F0] font-medium">published npm CLI</strong
+              class="text-[var(--color-text-primary)] font-medium">published npm CLI</strong
             >; and a GitHub Action that publishes straight from a Release.
           </p>
           <p>
@@ -192,32 +192,32 @@ const pageDescription =
     </section>
 
     <!-- ─── TWO AUTH MODELS ──────────────────────────────────────────────── -->
-    <section id="auth" class="py-20 border-t border-[#1F1F1F]/50">
+    <section id="auth" class="py-20 border-t border-[var(--color-border)]/50">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
           Two Auth Models That Never Mix
         </h2>
         <div
-          class="reveal max-w-3xl space-y-5 text-[#888888] leading-relaxed"
+          class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
           style="--delay: 100ms"
         >
           <p>
             The dashboard authenticates with a Supabase cookie session and runs
             every query through the anon key, so Postgres <strong
-              class="text-[#F0F0F0] font-medium">Row-Level Security</strong
+              class="text-[var(--color-text-primary)] font-medium">Row-Level Security</strong
             > does the access control. The CLI and integrations authenticate with
             a <code
-              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
               >dk_</code
             >-prefixed API key (stored only as a SHA-256 hash) and run through the
             service-role client, which bypasses RLS, so those endpoints must
             filter by <code
-              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
               >org_id</code
             > explicitly. The rule that keeps it safe: a given route handler uses
             exactly one of these, never both. CLI-only routes live under their own
             <code
-              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
               >/api/cli/*</code
             > namespace.
           </p>
@@ -226,29 +226,29 @@ const pageDescription =
     </section>
 
     <!-- ─── PLAN GATING + BILLING ────────────────────────────────────────── -->
-    <section id="billing" class="py-20 border-t border-[#1F1F1F]/50">
+    <section id="billing" class="py-20 border-t border-[var(--color-border)]/50">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
           Capability-Based Plan Gating + Stripe Billing
         </h2>
         <div
-          class="reveal max-w-3xl space-y-5 text-[#888888] leading-relaxed"
+          class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
           style="--delay: 100ms"
         >
           <p>
             Every paid feature reads through one primitive (<code
-              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
               >can(org, capability)</code
             >) backed by a truth table keyed on the org's plan. Adding a new
             gated feature is one row in the table plus one call at the gate site,
             rather than scattering <code
-              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
               >plan === "pro"</code
             > checks across the codebase. Stripe is the source of truth for plan
             state: Checkout and the Customer Portal drive everything, and a
             webhook reconciles the org's plan on every subscription change, with a
             <code
-              class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
               >stripe_events</code
             > table providing idempotency.
           </p>
@@ -271,13 +271,13 @@ if (!can(org, "unlimited_projects") && projectCount >= FREE_PROJECT_LIMIT) {
     </section>
 
     <!-- ─── AI RELEASE NOTES ─────────────────────────────────────────────── -->
-    <section id="ai-notes" class="py-20 border-t border-[#1F1F1F]/50">
+    <section id="ai-notes" class="py-20 border-t border-[var(--color-border)]/50">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
           AI Release Notes, Shared by CLI and Dashboard
         </h2>
         <div
-          class="reveal max-w-3xl space-y-5 text-[#888888] leading-relaxed"
+          class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
           style="--delay: 100ms"
         >
           <p>
@@ -297,21 +297,21 @@ deploylog push --from-git --ai-summarize`} /></pre>
     </section>
 
     <!-- ─── STACK ─────────────────────────────────────────────────────────── -->
-    <section id="stack" class="py-20 border-t border-[#1F1F1F]/50">
+    <section id="stack" class="py-20 border-t border-[var(--color-border)]/50">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">Stack</h2>
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">Stack</h2>
         <div
-          class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl text-[#888888]"
+          class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl text-[var(--color-text-secondary)]"
           style="--delay: 100ms"
         >
-          <p><span class="text-[#F0F0F0] font-medium">Frontend / API:</span> Next.js 16 (App Router, RSC), React 19, TypeScript (strict), Tailwind v4</p>
-          <p><span class="text-[#F0F0F0] font-medium">Database / auth:</span> Supabase (PostgreSQL + RLS, GitHub OAuth)</p>
-          <p><span class="text-[#F0F0F0] font-medium">Payments:</span> Stripe (Checkout, Portal, webhooks)</p>
-          <p><span class="text-[#F0F0F0] font-medium">Email:</span> Resend + React Email templates</p>
-          <p><span class="text-[#F0F0F0] font-medium">AI:</span> Anthropic Claude (Haiku) for release-note summarization</p>
-          <p><span class="text-[#F0F0F0] font-medium">Editor / widget:</span> CodeMirror 6 · vanilla-TS Shadow-DOM widget (esbuild)</p>
-          <p><span class="text-[#F0F0F0] font-medium">Infra:</span> Vercel · Cloudflare Pages (widget CDN) · Upstash · Sentry</p>
-          <p><span class="text-[#F0F0F0] font-medium">Distribution:</span> npm CLI · GitHub Action on the Marketplace</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Frontend / API:</span> Next.js 16 (App Router, RSC), React 19, TypeScript (strict), Tailwind v4</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Database / auth:</span> Supabase (PostgreSQL + RLS, GitHub OAuth)</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Payments:</span> Stripe (Checkout, Portal, webhooks)</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Email:</span> Resend + React Email templates</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">AI:</span> Anthropic Claude (Haiku) for release-note summarization</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Editor / widget:</span> CodeMirror 6 · vanilla-TS Shadow-DOM widget (esbuild)</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Infra:</span> Vercel · Cloudflare Pages (widget CDN) · Upstash · Sentry</p>
+          <p><span class="text-[var(--color-text-primary)] font-medium">Distribution:</span> npm CLI · GitHub Action on the Marketplace</p>
         </div>
       </div>
     </section>
@@ -319,11 +319,11 @@ deploylog push --from-git --ai-summarize`} /></pre>
     <!-- ─── SCREENSHOTS ───────────────────────────────────────────────────── -->
     <section
       id="screenshots"
-      class="py-20 border-t border-[#1F1F1F]/50"
+      class="py-20 border-t border-[var(--color-border)]/50"
       data-screenshots={poster1.src}
     >
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
           Screenshots
         </h2>
         <div class="grid grid-cols-1 gap-4 max-w-3xl">
@@ -343,7 +343,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
                 sizes="(max-width: 640px) 100vw, 100vw"
               />
             </div>
-            <p class="text-[#666666] text-xs font-mono mt-2">
+            <p class="text-[var(--color-text-muted)] text-xs font-mono mt-2">
               deploylog.dev: hero, CTAs, and the self-hosted live widget
             </p>
           </div>
@@ -352,29 +352,29 @@ deploylog push --from-git --ai-summarize`} /></pre>
     </section>
 
     <!-- ─── RETROSPECTIVE ─────────────────────────────────────────────────── -->
-    <section id="retrospective" class="py-20 border-t border-[#1F1F1F]/50">
+    <section id="retrospective" class="py-20 border-t border-[var(--color-border)]/50">
       <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[#F0F0F0] mb-10">
+        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
           Retrospective
         </h2>
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
-          <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
+          <li class="flex gap-3 text-[var(--color-text-secondary)] leading-relaxed">
+            <span class="text-[var(--color-accent)] font-mono mt-0.5 shrink-0">//</span>
             <span>
-              <strong class="text-[#F0F0F0] font-medium"
+              <strong class="text-[var(--color-text-primary)] font-medium"
                 >One capability table beats scattered plan checks.</strong
               >
               Routing every gate through <code
-                class="font-mono text-[#5FCEDB] text-sm bg-[#5FCEDB]/10 px-1"
+                class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
                 >can()</code
               > meant adding the Pro tier late in development touched one file, not
               twenty.
             </span>
           </li>
-          <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
+          <li class="flex gap-3 text-[var(--color-text-secondary)] leading-relaxed">
+            <span class="text-[var(--color-accent)] font-mono mt-0.5 shrink-0">//</span>
             <span>
-              <strong class="text-[#F0F0F0] font-medium"
+              <strong class="text-[var(--color-text-primary)] font-medium"
                 >Sharing one service across CLI and dashboard prevents drift.</strong
               >
               The AI-summarize logic lives once; the two surfaces are just auth +
@@ -382,10 +382,10 @@ deploylog push --from-git --ai-summarize`} /></pre>
               dual-surface endpoints from the start.
             </span>
           </li>
-          <li class="flex gap-3 text-[#888888] leading-relaxed">
-            <span class="text-[#5FCEDB] font-mono mt-0.5 shrink-0">//</span>
+          <li class="flex gap-3 text-[var(--color-text-secondary)] leading-relaxed">
+            <span class="text-[var(--color-accent)] font-mono mt-0.5 shrink-0">//</span>
             <span>
-              <strong class="text-[#F0F0F0] font-medium"
+              <strong class="text-[var(--color-text-primary)] font-medium"
                 >The widget being framework-free was the right call.</strong
               >
               A Shadow-DOM vanilla-TS bundle drops into any site without pulling in
@@ -399,14 +399,14 @@ deploylog push --from-git --ai-summarize`} /></pre>
   </main>
 
   <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-  <footer class="border-t border-[#1F1F1F]/50 py-8">
+  <footer class="border-t border-[var(--color-border)]/50 py-8">
     <div
       class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4"
     >
-      <p class="text-[#888888] text-sm">© 2026 Marko Stankovic</p>
+      <p class="text-[var(--color-text-secondary)] text-sm">© 2026 Marko Stankovic</p>
       <a
         href="/"
-        class="nav-link text-[#666666] text-xs font-mono hover:text-[#888888] transition-colors duration-150"
+        class="nav-link text-[var(--color-text-muted)] text-xs font-mono hover:text-[var(--color-text-secondary)] transition-colors duration-150"
       >
         back to home
       </a>
@@ -421,7 +421,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
     aria-label="Screenshot viewer"
     class="fixed inset-0 z-[200] items-center justify-center"
   >
-    <div id="lightbox-backdrop" class="absolute inset-0 bg-[#0D0D0D]/95"></div>
+    <div id="lightbox-backdrop" class="absolute inset-0 bg-[var(--color-backdrop)]/95"></div>
     <div id="lightbox-content" class="relative z-10 flex items-center gap-3 px-4">
       <button id="lightbox-prev" class="lb-btn" aria-label="Previous screenshot">
         <svg
