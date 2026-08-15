@@ -59,6 +59,42 @@ not a fact being copied out of the CV, and the direction of travel is outward:
 Getting this backwards — treating the CV as the source — is how a ticket stalls on a record that
 does not exist yet.
 
+## Amended 2026-08-15 — the gate, and a fourth cascade step nobody owned
+
+Marko's call: the regenerated CV goes **through the gate**, not just through the generator.
+
+**Step 2 above gains a gate.** `projects/job-search/templates/verify-cv.sh` runs ATS text-layer
+parseability, link annotations, the deliverable dash lint, page count and metadata hygiene, and
+exits non-zero on any FAIL. It is the check that catches what "the PDF changed" cannot: a contact
+detail carried only by an icon glyph is invisible to a resume parser, and the metadata can ship as
+`Документ без наслова` with no author, which is what the 2026-07-31 Bending Spoons cover letter
+did. So step 2 is now **regenerate, confirm the bytes changed, then `./verify-cv.sh`, and read its
+output** rather than its exit code alone.
+
+**Step 4, which no ticket owned until now: copy the PDF into this repo.** The site serves its own
+copy at `public/Marko-Stankovic-CV.pdf`, and `astro.config.mjs:15` redirects `/cv` at it. That file
+is not generated, not symlinked, and not checked by anything.
+
+**It has already drifted, verified 2026-08-15 by hash, not by date:**
+
+| File | Modified | md5 |
+|---|---|---|
+| `job-search/templates/cv-marko-stankovic.pdf` | Aug 9 | `78a36222…` |
+| `portfolio/public/Marko-Stankovic-CV.pdf` | Jul 29 | `bc32fc34…` |
+
+So the site has been serving an eleven-day-stale CV, and since
+[ticket 05](05-call-page.md) shipped, `/call` hands that file to anyone who asks for it. **The copy
+step is the whole risk in this cascade**: `cv-base.md`, the generator and the gate all live in the
+job-search lane, and the only artifact a recruiter reaches lives here. A cascade that ends at the
+generator ends one repo short of the reader.
+
+**Also amended: acceptance item 1 is already met.** [Ticket 03](03-home-page-rebuild.md) shipped
+all three records plus education to `index.astro:77-109`, rendered in the Experience band at
+`:251-288`, carrying this ticket's amended shape (the current role with an empty `org`, and a
+comment telling the next editor not to fill it). What is actually left of this ticket is the
+outward cascade: `cv-base.md`, the regenerated and gated PDF, the copy into this repo, and
+LinkedIn.
+
 ## The tension, accepted
 
 Read chronologically, this timeline is an internship in games, six months in games, then a period
@@ -68,7 +104,12 @@ the position. Marko accepted this on 2026-08-14 with the facts stated.
 
 ## Acceptance
 
-- Three records plus education render on the home page.
+- ~~Three records plus education render on the home page.~~ **Met by ticket 03, 2026-08-15.**
 - The same title appears in `cv-base.md`, in the regenerated PDF (verified by opening it, not by
   exit code), and on LinkedIn.
+- **New:** `verify-cv.sh` runs clean on the regenerated PDF, with its output read rather than its
+  exit code trusted.
+- **New:** `portfolio/public/Marko-Stankovic-CV.pdf` matches the regenerated file **by hash**, not
+  by "I copied it". The two are already out of sync by eleven days, which is how this condition
+  came to exist.
 - Bullets are **L2 Drafted**: drafted, Marko edits, Marko approves.
