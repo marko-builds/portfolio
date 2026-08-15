@@ -62,6 +62,25 @@ The tile guard asserts on `<rect`, **not** on the `id="tile"` its own `sed` matc
 sharing a pattern with the mutation it checks passes whenever a rename breaks both, which is the
 "a check that cannot fail" shape. Renaming the id is the arm that proves it.
 
+### The tile is `#EAE7DF`, not `--color-bg`
+
+Amended 2026-08-15 on Marko's look at the first build: paper on paper made the tile invisible
+against a light browser tab strip, so the icon read as a chevron floating loose in the chrome
+rather than as a mark. `#EAE7DF` is the darkest warm paper that still clears WCAG AA against the
+teal (**4.67**); one notch further, the border token `#E4E0D8`, measures **4.38**. `#F3F1EC`
+(`--color-surface-raised`) was rendered too and is barely distinguishable from the original at
+16px, which is the reason a non-token value earned its place here. Deliberately not added to the
+token set: an asset is not a surface and no stylesheet reads it.
+
+**This change also bought the script's fourth guard.** The comment carrying the rationale above
+contained a double hyphen, XML forbids that inside a comment, `rsvg-convert` refused the file — and
+every raster silently kept the old tile while `favicon.svg` carried the new one. Nothing downstream
+would have caught it: the six rasters stay perfectly consistent *with each other* and disagree only
+with their source, which is the exact failure a source-plus-generator setup is supposed to make
+impossible. The guard now reads the fill out of `favicon.svg` and asserts it against a rendered
+corner pixel, so the assertion cannot drift from the source the way a typed-in expected value
+would. Calibrated: pointing one render at an old-tile SVG exits 1 with `stale raster`.
+
 ### `site.webmanifest`
 
 `theme_color` and `background_color` moved `#0B0E15` → `#FBFAF7` (`--color-bg`). Swept the class,
