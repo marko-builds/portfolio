@@ -89,75 +89,108 @@ const articleSchema = {
          on background and border-radius and had never applied, so it is gone
          rather than left as a second source of truth. */
 
-      /* ── Copy button ── */
-      .pre-wrap {
-        position: relative;
-      }
-      .copy-btn {
-        position: absolute;
-        top: 0.6rem;
-        right: 0.6rem;
-        padding: 0.25rem 0.6rem;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.6875rem;
-        background: var(--color-surface-raised);
-        color: var(--color-text-secondary);
-        border: 1px solid var(--color-border-strong);
-        border-radius: 0;
-        cursor: pointer;
-        transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-        z-index: 10;
-      }
-      .copy-btn:hover {
-        background: var(--color-surface-raised);
-        color: var(--color-text-primary);
-        border-color: var(--color-text-secondary);
-      }
-      .copy-btn.copied {
-        color: var(--color-accent);
-        border-color: var(--color-accent-dim);
+      /* ── Copy button ──
+         Second source of truth, deleted 2026-08-15. This block disagreed with
+         global.css on background, radius and hover-reveal, and it WON: Astro
+         inlines a layout's is:global styles after the linked bundle, so the
+         post surface was running a dark-era copy of a rule ticket 03 had
+         already audited on the project page.
+
+         CORRECTED 2026-08-15 by measuring instead of reading. This comment
+         first claimed the block's one real contribution was that the button
+         had no `opacity: 0`, and that this was the only reason it was
+         reachable on a phone. It was not: the block declared no opacity at
+         all, so global.css's `opacity: 0` applied on main too, and the button
+         was hover-only on touch before this change exactly as it is after.
+         A `(hover: none)` rule was written on that false premise and has been
+         reverted, because it silently unhid the button on /projects/deploylog/
+         as well, where at 390px it sits on the first line of the code block.
+         The real defect (a hover-only control on a touch device, site-wide and
+         pre-existing) is recorded for ticket 10 with the focus-visible one. */
+
+      /* The body band's inner wrapper. It exists only so the breakout rules can
+         ask the container how wide it actually is instead of recomputing it
+         from `max-w-3xl` minus `px-6` twice, which is Tailwind arithmetic done
+         100 lines away in a different language. Nothing else changes: the box
+         keeps its width, its centring and its gutters. */
+      .reading-container {
+        container-type: inline-size;
       }
 
-      /* ── Long-form prose ── */
+      /* ── Long-form register, set 2026-08-15 (issues/map-site-v2/09) ──
+         Four numbers, each one derived rather than picked.
+
+         SIZE. The rest of the site is a scanning surface and sets body at
+         0.98-1.05rem. This is the one surface someone reads for eight minutes,
+         so it takes one step up to 1.125rem / 18px. It is now the largest body
+         text on the site, deliberately.
+
+         LEADING. 1.85 came from the dark page, where light-on-dark needs the
+         extra air. 1.7 at 18px is 30.6px of leading against the old 31.1px, so
+         the rhythm is unchanged and only the glyphs grew.
+
+         MEASURE. 680px was a round number inherited from the dark build, and it
+         rendered 86 characters per line — measured in a real post, not counted
+         off the CSS. 31em is 558px, which measures 70. The first attempt here
+         was 68ch, copied from the home page's reading column, and it did
+         nothing at all: Geist's `0` advance is 11.92px at 18px against an
+         average character advance of 7.95px, so 68ch resolves to 810px and
+         never reached the 720px container. The home page's own 68ch has the
+         same problem and is decoration there too — recorded in ticket 09, not
+         changed here, because that page's columns are bounded by its grid.
+
+         ALIGNMENT. There is deliberately no `margin-inline: auto` here. The
+         column sits flush left in the 720px container, so the page carries two
+         right edges: text ends at 558px, the hero and the media above and below
+         it run the full 720. That is load-bearing rather than incidental, and
+         it is what the breakout rule below depends on: a centred .prose would
+         leave `width: 100cqi` overflowing 81px to the right only, because a
+         block box wider than its parent overflows one way, not symmetrically.
+         Centre the column and the images have to be centred by hand.
+
+         COLOUR. Body was --color-text-secondary, a role meant for supporting
+         text, measuring 5.86 against the page. On a light page the body IS the
+         page: --color-text-primary measures 16.2. */
       .prose {
-        font-family: 'Geist', system-ui, sans-serif;
-        font-size: 1.05rem;
-        line-height: 1.85;
-        color: var(--color-text-secondary);
-        max-width: 680px;
+        font-family: var(--font-sans);
+        font-size: 1.125rem;
+        line-height: 1.7;
+        color: var(--color-text-primary);
+        max-width: 31em;
       }
 
       .prose p {
         margin-bottom: 1.4rem;
       }
 
+      /* Sans, and no `// ` prefix. Mono survives on this direction for small
+         metadata only (ticket 03; index.astro and call.astro both scope the
+         prefix off the same way). h2 is 1.4rem against a 1.125rem body — the
+         same 1.24 ratio the home page runs at its own smaller scale, so the
+         hierarchy holds after the body grew. */
       .prose h2,
       .prose h3 {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-sans);
         color: var(--color-text-primary);
-        margin-top: 2.5rem;
-        margin-bottom: 0.75rem;
-        line-height: 1.3;
+        letter-spacing: -0.01em;
+        margin-top: 3rem;
+        margin-bottom: 0.6rem;
+        line-height: 1.25;
       }
 
       .prose h2 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: 600;
       }
 
+      /* No published post contains an h3 — 0 of 16 across the whole collection,
+         counted not assumed. It is set anyway because the body bump would
+         otherwise leave h3 SMALLER than the paragraphs under it, and the first
+         post to use one would ship that. */
       .prose h3 {
-        font-size: 1.05rem;
+        font-size: 1.15rem;
         font-weight: 600;
-      }
-
-      .prose h2::before {
-        content: '// ';
-        color: var(--color-accent);
-      }
-
-      .prose h3::before {
-        content: '// ';
-        color: var(--color-accent-veil);
+        margin-top: 2rem;
       }
 
       /* Inline code */
@@ -171,11 +204,48 @@ const articleSchema = {
            trip on the comment that records the fix. */
         background: var(--color-accent-dim);
         padding: 0.15em 0.4em;
+        /* 27 of these across the four published posts, second only to the
+           paragraph itself. Square corners were the only ones left on a
+           direction whose controls are 6px and whose cards are 10px. */
+        border-radius: 3px;
+        /* Long flag names wrap: `--no-baseline-gate` breaks over two lines in
+           the published post. Without this the second fragment loses its
+           padding and radius and reads as a rendering fault. */
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
       }
 
       /* Code blocks: wrap in .pre-wrap via JS */
       .prose pre {
         margin-bottom: 1.5rem;
+      }
+
+      /* The measure is for sentences, and these are not sentences. Narrowing the
+         column to 558px clipped the code block's own lines against its border
+         — caught in a screenshot after the change, not predicted — and shrank a
+         chart below the size it was drawn at. All of them step back out to the
+         full width of the reading container they sit in. .prose pre is listed as
+         well as .pre-wrap because the wrapper is added by script and does not
+         exist until it runs; figcaption is listed because it centres itself, and
+         centring inside the 558px column would put a caption 81px left of the
+         image it labels (no post emits a figure yet, so this ships before the
+         first one rather than after it, same reasoning as h3 above).
+
+         100cqi rather than calc(100vw - 3rem): vw counts the scrollbar, so the
+         first version ran 6px wider than its own container on any desktop window
+         under ~774px, and wider still in Firefox, which ignores the 6px
+         ::-webkit-scrollbar. The container query measures the real layout box,
+         so it is exact at every width and hardcodes no width at all. The literal
+         pair is kept underneath as the fallback for a browser without container
+         queries, where it is dropped as invalid and the old behaviour stands. */
+      .prose .pre-wrap,
+      .prose pre,
+      .prose img,
+      .prose figcaption {
+        width: 720px;
+        max-width: calc(100vw - 3rem);
+        width: 100cqi;
+        max-width: 100cqi;
       }
 
       /* Blockquotes */
@@ -187,9 +257,12 @@ const articleSchema = {
         font-style: italic;
       }
 
-      /* Images */
+      /* Images. The breakout lives in the shared rule above; only the paint is
+         here. It was briefly duplicated instead, on the reasoning that this
+         block is later in the file and its width:100% won on source order —
+         true of the width:100% that the same change then deleted, so the
+         justification expired inside its own commit. */
       .prose img {
-        width: 100%;
         border: 1px solid var(--color-border);
         display: block;
         margin: 1.5rem 0 0.5rem;
@@ -206,21 +279,26 @@ const articleSchema = {
       /* HR */
       .prose hr {
         border: none;
-        border-top: 1px solid var(--color-accent-dim);
+        border-top: 1px solid var(--color-border);
         margin: 2rem 0;
       }
 
-      /* Links */
+      /* Links. The old rule hid the underline until hover and coloured the link
+         the same as the body, which on the dark page was survivable and on this
+         one leaves a link indistinguishable from a sentence. No published post
+         has an inline link yet (0 across the four), so this ships before it is
+         needed rather than after. */
       .prose a {
-        color: var(--color-text-secondary);
+        color: var(--color-text-primary);
         text-decoration: underline;
-        text-decoration-color: transparent;
-        transition: color 0.15s ease, text-decoration-color 0.15s ease;
+        text-decoration-color: var(--color-accent);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+        transition: color 0.15s ease;
       }
 
       .prose a:hover {
         color: var(--color-accent);
-        text-decoration-color: var(--color-accent-veil);
       }
 
       /* Lists */
@@ -255,7 +333,10 @@ const articleSchema = {
     <main>
     <!-- ─── POST HERO ──────────────────────────────────────────────────────── -->
     <div class="relative pt-14">
-      <div class="relative max-w-3xl mx-auto px-6 py-16">
+      <!-- pb was 4rem and the body band below opens with another 4rem, so the
+           byline and the first paragraph sat ~155px apart with a rule floating
+           in the middle of it. 2.5rem + 3rem reads as one divided block. -->
+      <div class="relative max-w-3xl mx-auto px-6 pt-16 pb-10">
         {showDraftBanner && (
           <div class="mb-5 px-4 py-3 font-mono text-xs" style="border: 1px solid var(--color-warm); color: var(--color-warm); background: rgba(217,154,94,0.06);">
             DRAFT. Visible because this is the dev server. It is excluded from every build, so it
@@ -264,10 +345,31 @@ const articleSchema = {
         )}
 
         <a href="/devlog" class="hero-enter inline-block text-[var(--color-text-muted)] hover:text-[var(--color-accent)] font-mono text-xs mb-5 tracking-wide transition-colors duration-150" style="--delay: 0.05s">
-          // devlog
+          devlog
         </a>
 
-        <h1 class="hero-enter font-mono font-bold text-[var(--color-text-primary)] mb-5" style="font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; letter-spacing: -0.02em; --delay: 0.15s">
+        <!-- Sans, 600, and the same clamp call.astro and index.astro run. The
+             mono h1 at 2.75rem was the loudest thing left of the dark register:
+             on this post it set three lines of JetBrains Mono and took the whole
+             fold before a reader reached a sentence.
+
+             The family is set inline, not with Tailwind's font-sans. Tailwind v4
+             puts its utilities in @layer utilities, and global.css's unlayered
+             `h1, h2, h3 { font-family: var(--font-mono) }` beats any layered
+             rule regardless of specificity, so the first attempt used the class
+             and rendered mono, unchanged. index.astro and call.astro dodge this
+             by writing the family in a scoped style block, which is also
+             unlayered. Verified in the built page, not assumed.
+
+             Two notes for whoever edits this comment next, both bought by
+             gate.mjs check 5. Its comment skip only matches a comment's FIRST
+             line, so an em dash on a wrapped line like this one is linted as
+             copy and fails the gate. And it flips its skip state on any line
+             matching a style, pre or script open tag, prose included, with no
+             close tag to flip it back: spelling that tag out here blinded the
+             lint for the remaining 140 lines of the file. Both defects are the
+             gate's, not this file's, and are recorded for ticket 10. -->
+        <h1 class="hero-enter font-semibold text-[var(--color-text-primary)] mb-5" style="font-family: var(--font-sans); font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.15; letter-spacing: -0.02em; --delay: 0.15s">
           {title}
         </h1>
 
@@ -279,13 +381,19 @@ const articleSchema = {
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.35s">
           {tags.map(tag => (
-            <span class="text-xs font-mono text-[var(--color-text-secondary)] border border-[var(--color-border-strong)] px-3 py-1">
+            <span class="text-xs font-mono text-[var(--color-text-secondary)] border border-[var(--color-border-strong)] rounded-md px-3 py-1">
               {tag}
             </span>
           ))}
         </div>
 
-        <p class="hero-enter text-[var(--color-text-secondary)] text-base leading-relaxed" style="--delay: 0.45s">
+        <!-- The lede is prose, so it takes a measure too. It was the last thing
+             on the reading surface still running the inherited 720px container:
+             87 characters across three lines, directly above a body column set
+             to 70. 31em against its own 16.8px is 521px, which lands at the same
+             70 the body measures, so the two blocks of prose agree. It stays
+             flush left with everything else in the hero. -->
+        <p class="hero-enter text-[var(--color-text-secondary)] leading-relaxed" style="font-size: 1.05rem; max-width: 31em; --delay: 0.45s">
           {excerpt}
         </p>
 
@@ -297,8 +405,8 @@ const articleSchema = {
     </div>
 
     <!-- ─── POST BODY ──────────────────────────────────────────────────────── -->
-    <div class="border-t border-[var(--color-border)]/50 py-16">
-      <div class="max-w-3xl mx-auto px-6">
+    <div class="border-t border-[var(--color-border)]/50 pt-12 pb-16">
+      <div class="reading-container max-w-3xl mx-auto px-6">
         <article class="prose">
           <slot />
         </article>

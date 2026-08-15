@@ -37,7 +37,6 @@
      Named here so the pages that used them have somewhere to point. */
   --color-surface-raised: #F3F1EC;
   --color-surface-veil: #F3F1ECCC;
-  --color-accent-veil: #14707C33;
 
   /* Full-bleed overlay behind the deploylog lightbox. Deliberately dark on a
      light site: it exists to make an image the only lit thing on screen. */
@@ -79,16 +78,14 @@ body::before {
 }
 
 /* ─── Section heading // prefix ──────────────────────────────────────── */
-section h2::before {
+/* :not(.sr-only) because generated content lands in the accessibility tree.
+   devlog/index.astro's list band labels itself with a visually-hidden h2, so
+   this rule was reading "slash slash Posts" to a screen reader: the last
+   surviving `// ` of the retired register, on the one surface where only a
+   screen-reader user would ever meet it. */
+section h2:not(.sr-only)::before {
   content: '// ';
   color: var(--color-accent);
-}
-
-/* ─── Hero name ──────────────────────────────────────────────────────── */
-.hero-name {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  letter-spacing: -0.02em;
-  line-height: 1;
 }
 
 /* ─── Focus Visible (keyboard navigation) ────────────────────────────── */
@@ -99,9 +96,14 @@ section h2::before {
 }
 
 /* ─── Selection ──────────────────────────────────────────────────────── */
+/* The colour was a near-black carried over from the dark page, where the accent
+   sat on a dark ground. On the light palette it measures 3.37 against the teal
+   fill, so a reader selecting a paragraph got text below AA. --color-bg is the
+   same relationship inverted and measures 5.56. Selecting text is a reading
+   action, which is why this belongs to the reading-surface pass. */
 ::selection {
   background-color: var(--color-accent);
-  color: #0D0D0D;
+  color: var(--color-bg);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────── */
@@ -138,22 +140,10 @@ section h2::before {
   }
 }
 
-@keyframes namePulse {
-  0%, 100% { text-shadow: 0 0 40px rgba(95, 206, 219, 0); }
-  50%       { text-shadow: 0 0 40px rgba(95, 206, 219, 0.18); }
-}
-
 /* Base hero entrance: fades up on load using CSS animation-delay */
 .hero-enter {
   animation: fadeUp 0.5s ease both;
   animation-delay: var(--delay, 0ms);
-}
-
-/* h1 combines entrance + ambient pulse after entrance completes */
-.hero-enter.hero-name {
-  animation:
-    fadeUp 0.5s ease var(--delay, 0ms) both,
-    namePulse 3s ease-in-out 1.5s infinite;
 }
 
 /* ─── Scroll Reveal ──────────────────────────────────────────────────── */
@@ -195,42 +185,6 @@ section h2::before {
   color: var(--color-accent);
 }
 
-/* ─── Skill Cards ────────────────────────────────────────────────────── */
-.skill-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.skill-card:hover {
-  transform: translateY(-4px);
-  /* Inset box-shadow fakes a 2px left accent border without layout shift */
-  box-shadow: inset 2px 0 0 var(--card-accent, var(--color-accent));
-}
-
-.badge {
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.skill-card:hover .badge {
-  background-color: var(--card-accent-dim, var(--color-accent-dim));
-  color: var(--color-text-primary);
-}
-
-/* ─── Project Cards ──────────────────────────────────────────────────── */
-.project-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-}
-
-.project-card.filtered-out {
-  opacity: 0.3;
-  pointer-events: none;
-  transform: scale(0.98);
-}
-
-.project-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 20px var(--card-glow, rgba(95, 206, 219, 0.08));
-}
-
 /* Arrow icon slides right on link hover */
 .arrow {
   transition: transform 0.2s ease;
@@ -240,113 +194,14 @@ section h2::before {
   transform: translateX(4px);
 }
 
-/* ─── Contact Links ──────────────────────────────────────────────────── */
-@keyframes iconPulse {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.contact-link:hover .contact-icon {
-  animation: iconPulse 0.3s ease;
-}
-
-/* Underline slides in on the displayed contact text */
-.contact-text {
-  position: relative;
-  display: inline-block;
-}
-
-.contact-text::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background-color: currentColor;
-  transition: width 0.2s ease;
-}
-
-.contact-link:hover .contact-text::after {
-  width: 100%;
-}
-
-/* ─── Filter Bar ─────────────────────────────────────────────────────── */
-#filter-bar {
-  scrollbar-width: none;
-}
-
-#filter-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.filter-btn {
-  flex-shrink: 0;
-  white-space: nowrap;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.375rem 0.875rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  background: transparent;
-  color: rgb(136 136 136 / 0.8);
-  border: 1px solid rgb(63 63 63 / 0.8);
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-}
-
-.filter-btn:hover {
-  border-color: rgb(95 206 219 / 0.4);
-  color: rgb(95 206 219 / 0.8);
-}
-
-.filter-btn.active {
-  background: rgb(95 206 219 / 0.08);
-  color: #5FCEDB;
-  border-color: rgb(95 206 219 / 0.40);
-  font-weight: 600;
-  cursor: default;
-}
-
-.filter-btn.active:hover {
-  background: rgb(95 206 219 / 0.08);
-  color: #5FCEDB;
-  border-color: rgb(95 206 219 / 0.40);
-}
-
-/* ─── Mobile Nav ─────────────────────────────────────────────────────── */
-#mobile-nav {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.25s ease;
-}
-
-#mobile-nav.open {
-  max-height: 240px;
-}
-
-/* ─── Contact Form Inputs ────────────────────────────────────────────── */
-.contact-input {
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-}
-
-.contact-input:focus {
-  border-color: rgb(95 206 219 / 0.45);
-}
-
-.contact-input:focus-visible {
-  outline: none;
-  border-color: rgb(95 206 219 / 0.45);
-  box-shadow: 0 0 0 2px var(--color-accent-dim);
-}
-
-.contact-input::placeholder {
-  color: var(--color-text-muted);
-}
+/* Eleven dead rule blocks from the dark design were deleted here 2026-08-15 by
+   issues/map-site-v2/09; the ticket lists them by name. They are not named here
+   on purpose: this comment would then be the only place in src/ those class
+   names appear, and the next "is this still used?" grep would find it and read
+   as a hit. The durable half is why deleting them mattered: Vite bundles this
+   file into the blog-post chunk, so dead rules ship on the reading surface and
+   nowhere else, and these carried 13 of the 14 retired dark-brand literals that
+   were still reaching a browser. */
 
 /* ─── Reduced Motion ─────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -358,35 +213,22 @@ section h2::before {
   }
 
   /* Cancel hero entrance animations — elements are visible at rest */
-  .hero-enter,
-  .hero-enter.hero-name {
+  .hero-enter {
     opacity: 1;
     transform: none;
     animation: none;
   }
 
-  /* Cancel all hover transitions */
-  .skill-card,
-  .project-card {
-    transition: none;
-  }
-
-  .badge,
-  .arrow,
-  .contact-text::after,
-  .filter-btn,
-  .contact-input,
-  #mobile-nav {
+  /* Cancel all hover transitions. .copy-btn is NOT in this list: its own rule
+     is declared later in this file at the same specificity, so a cancel here
+     loses on source order and reads as covered while doing nothing. Its cancel
+     sits directly under that rule instead. */
+  .arrow {
     transition: none;
   }
 
   .nav-link::after {
     transition: none;
-  }
-
-  /* Disable icon pulse on hover */
-  .contact-link:hover .contact-icon {
-    animation: none;
   }
 }
 
@@ -460,6 +302,47 @@ pre code.hljs .hljs-symbol {
 }
 
 .pre-wrap:hover .copy-btn {
+  opacity: 1;
+}
+
+/* Reduced-motion cancel lives here, not in the block at the top of the file:
+   .copy-btn is declared above at the same specificity, and a media query adds
+   none, so a cancel written up there loses on source order and silently does
+   nothing. Verified in a reduced-motion context before and after. */
+@media (prefers-reduced-motion: reduce) {
+  .copy-btn {
+    transition: none;
+  }
+}
+
+/* Touch reveal, with the padding that makes it safe. Marko's pick 2026-08-15,
+   variant C of four rendered at 390px under touch emulation (ticket 10; harness
+   scripts/copy-btn-variants.mjs).
+
+   A bare (hover: none) rule sat here once and was reverted: on /projects/deploylog/
+   it put the button over the first TWO lines of the code block, 48x16px, measured
+   rather than estimated. The padding is what makes revealing it safe, and it is
+   also the only option whose correctness does not depend on the code's content —
+   anchoring the button bottom-right instead measured clear only because both
+   blocks happen to end on a short line.
+
+   The padding goes on code.hljs, NOT on pre. Measured on both surfaces: pre is a
+   transparent 0-padding wrapper and code.hljs carries the white fill, the 1px
+   border and the 8px radius, so padding pre grows an invisible box and leaves the
+   button floating detached above the visible block. */
+@media (hover: none) {
+  .copy-btn {
+    opacity: 1;
+  }
+  .pre-wrap code.hljs {
+    padding-top: 3.25rem;
+  }
+}
+
+/* The button is a real <button> and takes tab focus, so without this its 2px
+   focus outline painted at opacity 0: focused, reachable, and invisible. Higher
+   specificity than the base rule, so source order is not load-bearing here. */
+.copy-btn:focus-visible {
   opacity: 1;
 }
 
