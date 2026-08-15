@@ -1,6 +1,8 @@
 # 02 — Verification gate scripts (parity, tokens, budget, copy lint)
 
-**Status:** ready-for-agent · **Type:** AFK · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** AFK · **Lane:** portfolio
+**Shipped:** `verify/gate.mjs` (route/body/token/budget/copy-lint/main-untouched), each checker
+proven red/green. Verified 2026-08-15 by `map-site-v2/01`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** issues/01-baseline-branch-and-wiring.md
 **Verification:** assertions 3, 4 (dash half), 5 (budget half), 6, 8 — each checker proven

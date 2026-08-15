@@ -1,6 +1,8 @@
 # 01 — Baseline capture, redesign branch, deploy-wiring probe
 
-**Status:** ready-for-agent · **Type:** AFK · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** AFK · **Lane:** portfolio
+**Shipped:** `verify/baseline/` holds `BASELINE.md`, `routes.txt`, `lighthouse-summary.json`,
+`main-sha.txt`, `devlog-bodies.json`. Verified 2026-08-15 by `map-site-v2/01`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** None — can start immediately
 **Verification:** assertions 3, 5, 8 (their baselines) — build green + baseline artifacts exist

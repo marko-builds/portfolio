@@ -1,6 +1,8 @@
 # 08 — Capability capture: extract the website-builder skill
 
-**Status:** ready-for-agent · **Type:** human-in-the-loop · **Lane:** portfolio (capability home: claude-video-studio)
+**Status:** resolved 2026-07-03 · **Type:** human-in-the-loop · **Lane:** portfolio (capability home: claude-video-studio)
+**Shipped:** the `website-builder` skill at `.claude/skills/website-builder/SKILL.md` in the
+monolith. Verified 2026-08-15 by `map-site-v2/01`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** issues/07-final-qa-preview-merge.md
 **Verification:** the job's repeatable path exists as a skill Marko approves (/skill-builder

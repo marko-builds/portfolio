@@ -1,6 +1,9 @@
 # 05 — Home page full build (winning direction + approved copy + motion port)
 
-**Status:** ready-for-agent · **Type:** human-in-the-loop · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** human-in-the-loop · **Lane:** portfolio
+**Shipped:** `src/pages/index.astro` on the picked direction; live on markostankovic.org since
+2026-07-03. Verified 2026-08-15 by `map-site-v2/01`. The page is rebuilt again by
+`map-site-v2/03`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** issues/02-verification-gates.md, issues/03-hero-direction-prototypes.md, issues/04-repositioning-copy-pack.md
 **Verification:** assertions 2, 3, 5, 6 machine halves — gate 02 green on every iteration;

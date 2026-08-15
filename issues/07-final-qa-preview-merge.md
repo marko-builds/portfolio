@@ -1,6 +1,8 @@
 # 07 — Final QA, preview verdict, Marko's merge
 
-**Status:** ready-for-agent · **Type:** human-in-the-loop · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** human-in-the-loop · **Lane:** portfolio
+**Shipped:** `/qa` browser pass (`.qa-reports/screenshots/`), Marko's device pass, and his merge
+of PR #2. Site live since 2026-07-03. Verified 2026-08-15 by `map-site-v2/01`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** issues/06-secondary-templates.md
 **Verification:** assertions 5, 7, 8 — /qa pass + design-critique + Lighthouse-vs-baseline +
