@@ -67,7 +67,12 @@ const articleSchema = {
         left: 0;
         width: 100%;
         height: 3px;
-        background: rgba(255,255,255,0.08);
+        /* Was a white veil at low alpha, built for the dark page: on the light
+           background it rendered as nothing, so the teal fill floated with no
+           track behind it. Same class as the inline-code fix below, and missed by
+           the same #hex-only sweep. The old value is deliberately not spelled out,
+           so a future colour sweep does not trip on the comment recording the fix. */
+        background: var(--color-border);
         z-index: 10000;
         pointer-events: none;
       }
