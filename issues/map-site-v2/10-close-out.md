@@ -1,12 +1,13 @@
 # Close-out: re-baseline the gate, cold read, then cascade the surfaces
 
 **Type:** task
-**Status:** open — **the gate half is done 2026-08-15** (see below); the cold read and the cascade
-are still blocked by [04](04-experience-timeline.md), whose LinkedIn step and deferred
-employer-field decision are Marko's
-**Blocked by:** [03](03-home-page-rebuild.md), [04](04-experience-timeline.md),
-[05](05-call-page.md), [06](06-delete-game-project-pages.md), [07](07-wordmark-blink.md),
-[08](08-light-dark-token-set.md), [09](09-devlog-reading-surface.md)
+**Status:** open — **the gate half is done 2026-08-15** (see below); the copy-button decision is
+measured and waiting on Marko's pick; the cold read and the cascade are **unblocked**
+**Blocked by:** ~~[04](04-experience-timeline.md)~~ **released 2026-08-15 by Marko**: 04's one
+remaining step is the LinkedIn edit, he is doing it later, and it does not gate a cold read of the
+site or the cascade of the other surfaces. 04 stays open on its own. All other blockers resolved:
+[03](03-home-page-rebuild.md), [05](05-call-page.md), [06](06-delete-game-project-pages.md),
+[07](07-wordmark-blink.md), [08](08-light-dark-token-set.md), [09](09-devlog-reading-surface.md)
 **Estimate:** 0.5 session
 
 ## Question
@@ -91,6 +92,69 @@ three game devlog posts to commit `370aeec` marking them drafts, `/call/` to
 re-baselining, it is the same false-pass class the session was sent to fix, and leaving it would
 have meant re-pinning a gate with a check that cannot fail. Say the word and it comes back out.
 
+## The copy button, measured 2026-08-15
+
+Ticket 09 handed this over as "wants a real decision and a screenshot, not a revert of a revert".
+Rendered at 390px with touch emulation on both surfaces that carry code blocks, with the overlap
+**measured** rather than judged by eye. Harness: `scripts/copy-btn-variants.mjs`, renders and
+`measurements.json` in `.qa-reports/copy-btn-390/` (gitignored; re-run the script to regenerate).
+
+**Both halves of the defect are confirmed, and neither was inherited on trust.**
+
+- **Touch.** `.copy-btn` is `opacity: 0` at `global.css:295` and revealed only by
+  `.pre-wrap:hover` at `:304`. In a `hasTouch` context `matchMedia('(hover: none)')` matches, so
+  the button never appears. Confirmed in every render.
+- **Keyboard.** The button is a real `<button>`, `tabIndex >= 0`, and `document.activeElement`
+  after `.focus()` — so it takes tab focus, then paints its 2px outline at **opacity 0**. Focused,
+  reachable, invisible. `keyboard__A_control.png` is a code block with a focused control in it and
+  nothing on screen to show it.
+
+| Variant | What it does | Measured at 390px on `/projects/deploylog/` |
+|---|---|---|
+| **A** control | today: touch never reveals it | button invisible; if revealed it would sit `48x16px` over text rects on lines 1 **and** 2 |
+| **B** reveal | the reverted one-liner, `@media (hover: none) { opacity: 1 }` | reveals it **over lines 1 and 2** — the documented defect, now measured |
+| **C** reveal + pad | B, plus `padding-top: 3.25rem` on `code.hljs` | **clear**, all 34 text rects checked |
+| **D** reveal + bottom | B, plus `top: auto; bottom: 0.6rem` | clear on both blocks, but see below |
+| **E** focus | `.copy-btn:focus-visible { opacity: 1 }` | focus ring visible; opacity 0 → 1 while focused |
+
+**Three things the measurement changed about the inherited description.**
+
+1. **The overlap is two lines, not one.** The button is taller than a code line, so it covers text
+   rects on lines 1 and 2. The first version of this harness tested line 1 only and would have
+   reported D "clear" without having looked at the line D can actually hit — a check scoped
+   narrower than its own claim, caught inside the pass that exists to fix exactly that.
+2. **The padding has to go on `code.hljs`, not on `pre`.** Measured: `pre` is a transparent
+   0-padding wrapper on both surfaces and `code.hljs` carries the white fill, the 1px border and
+   the 8px radius. The first C render padded `pre` and left the button floating above the visible
+   block, detached from it.
+3. **D's "clear" is content luck, not a property.** It clears because both blocks happen to end on
+   a short line (`></script>`, 11 chars). A long last line collides exactly the way B's first line
+   does. **C is the only variant whose correctness does not depend on what the code says**, because
+   the button gets dedicated space no line can enter.
+
+**Marko picked C, 2026-08-15, and it shipped with the keyboard fix.** `global.css` now carries
+`@media (hover: none) { .copy-btn { opacity: 1 } .pre-wrap code.hljs { padding-top: 3.25rem } }`
+and `.copy-btn:focus-visible { opacity: 1 }`.
+
+**Verified from a build, not from the diff.** With nothing injected, the harness's control arm now
+measures what variant C measured: `hover:none=true`, button `opacity 1`, **clear across all 34 text
+rects** on deploylog and all 21 on the post, where before the change the same arm read
+`48x16px OVER lines 1, 2`. Keyboard focus reports `opacity 1` with the 2px outline. And the change
+is scoped where it was meant to be: at 1280px `hover:none=false`, `code.hljs` padding stays `20px`
+and the button stays `opacity 0` at rest, so the desktop hover behaviour is untouched. At 390px the
+padding is `52px`.
+
+**The first verification run disagreed with itself and was not believed.** One arm reported
+`hover:none=false` while the other seven reported true, in the first browser context after launch;
+a re-run came back true on all eight. A first-context reading is a warm-up artifact, and one
+sample of an emulated media query is not a result.
+
+**One thing the harness itself nearly got wrong, recorded because it is the session's own lesson.**
+The first run produced four byte-identical blank PNGs on the deploylog surface: the code block sits
+at y≈1688 inside a `.reveal` wrapper an IntersectionObserver fades in, and it was screenshot before
+that fired. A blank render reads as "no overlap, looks fine". The harness now waits for every
+ancestor to reach full opacity and **throws** if it never does.
+
 ## Inherited rows, none of them started
 
 Carried from [ticket 09](09-devlog-reading-surface.md), which recorded them so they would not be
@@ -101,7 +165,7 @@ rediscovered. They are claims about artifacts — open the file before acting on
 | `max-width: 68ch` constrains nothing. Opened and confirmed: `.body` at `index.astro:430-432` | `index.astro:431` |
 | **Corrected on the way in.** The row said "the last hex literal in a shipping stylesheet: `.lb-btn`'s `#1f1f1f`". There is no `#1f1f1f` in `global.css` — the only occurrence is inside a comment at `:45` — and **zero hex literals remain outside the `:root` token block**. What is actually there is `rgba(31, 31, 31, 0.8)` at `:372` and a **second** literal the row never mentioned, `rgba(50, 50, 50, 0.9)` at `:386`. The defect is real and the description was ungreppable, which is ticket 08's own blind spot inherited one ticket down: its sweep pattern was `#hex` and could not match an `rgb()`/`rgba()` literal. Note before fixing that both are translucent, so pointing them at `--color-backdrop` repeats the `#1f1f1f80` mistake ticket 08 documented | `global.css:372,386` |
 | Six draft-post diagram SVGs still hold `#5FCEDB` and one `#0B0E15` | the November drain, unchanged by design |
-| The copy button is hover-only on touch and invisible to keyboard focus — site-wide and pre-existing. Wants a decision and a screenshot, not a revert of a revert: the one-line `(hover: none)` fix also changes `/projects/deploylog/` and puts the button over the first line of code at 390px | `global.css` |
+| ~~The copy button is hover-only on touch and invisible to keyboard focus~~ **Measured 2026-08-15, see the section above.** Both halves confirmed; variants rendered; awaiting Marko's pick | `global.css:295,304` |
 | Seven raw-px font sizes in `devlog/index.astro` (`.post-title` 17px, `.empty` 14px, five more) | one was converted by 09, the rest were not |
 | Two remote `<script src>` the weight budget deliberately does not gate: Google Tag Manager and the highlight.js CDN bundle. A policy call, not a re-baseline | reported as NOTE by check 4 |
 

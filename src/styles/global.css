@@ -315,15 +315,36 @@ pre code.hljs .hljs-symbol {
   }
 }
 
-/* A (hover: none) rule briefly sat here, on the reading that the duplicate
-   .copy-btn block in BlogPost.astro was the only thing keeping this button
-   reachable on a phone. Measured: that block declared no opacity at all, so the
-   `opacity: 0` above applied on main too and the button has always been
-   hover-only on touch. The rule was therefore not restoring anything, and it
-   also unhid the button on /projects/deploylog/, where at 390px it covers the
-   first line of the code block. Reverted. The real defect (a hover-only and
-   focus-invisible control on a touch device) is site-wide, pre-existing, and
-   recorded for ticket 10. */
+/* Touch reveal, with the padding that makes it safe. Marko's pick 2026-08-15,
+   variant C of four rendered at 390px under touch emulation (ticket 10; harness
+   scripts/copy-btn-variants.mjs).
+
+   A bare (hover: none) rule sat here once and was reverted: on /projects/deploylog/
+   it put the button over the first TWO lines of the code block, 48x16px, measured
+   rather than estimated. The padding is what makes revealing it safe, and it is
+   also the only option whose correctness does not depend on the code's content —
+   anchoring the button bottom-right instead measured clear only because both
+   blocks happen to end on a short line.
+
+   The padding goes on code.hljs, NOT on pre. Measured on both surfaces: pre is a
+   transparent 0-padding wrapper and code.hljs carries the white fill, the 1px
+   border and the 8px radius, so padding pre grows an invisible box and leaves the
+   button floating detached above the visible block. */
+@media (hover: none) {
+  .copy-btn {
+    opacity: 1;
+  }
+  .pre-wrap code.hljs {
+    padding-top: 3.25rem;
+  }
+}
+
+/* The button is a real <button> and takes tab focus, so without this its 2px
+   focus outline painted at opacity 0: focused, reachable, and invisible. Higher
+   specificity than the base rule, so source order is not load-bearing here. */
+.copy-btn:focus-visible {
+  opacity: 1;
+}
 
 .copy-btn:hover {
   background: var(--color-border-strong);

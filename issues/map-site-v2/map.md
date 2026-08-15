@@ -127,7 +127,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | **resolved 2026-08-15** |
-| [10](10-close-out.md) | Close-out: re-baseline the gate, cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open — **gate half done 2026-08-15**; cold read + cascade still blocked by 04 |
+| [10](10-close-out.md) | Close-out: re-baseline the gate, cold read, then cascade the surfaces | task | ~~04~~ released; rest resolved | 0.5 | open — **gate half done 2026-08-15**, copy-button decision measured; cold read + cascade **unblocked** |
 | [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
 | [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
 
