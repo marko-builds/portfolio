@@ -10,7 +10,7 @@ export async function GET(context) {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: 'Marko Stankovic — Devlog',
+    title: 'Marko Stankovic · Devlog',
     description:
       'Build notes on the systems, tooling, and measurements behind the work.',
     site: context.site,
