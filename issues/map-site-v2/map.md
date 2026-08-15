@@ -126,7 +126,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
-| [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
+| [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | **resolved 2026-08-15** |
 | [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
 | [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
 | [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
@@ -203,8 +203,44 @@ then 10.** 05 stays the highest priority: the identity rail still links a `/call
 404s.~~
 
 **05 resolved 2026-08-15, and the dead rail link is closed** — verified against a server, not
-assumed. **Nine of eleven are done; what is left is 04, 09, then 10.** Ticket 10's cascade is no
-longer blocked by a 404.
+assumed. ~~**Nine of eleven are done; what is left is 04, 09, then 10.**~~ Ticket 10's cascade is
+no longer blocked by a 404.
+
+**09 resolved 2026-08-15**: built, reviewed the same day (`/review-diff`, two axes plus a seam pass;
+three blocking findings and eleven smaller ones, all fixed, all re-verified from a build), and
+through the eyeball gate on the post-review screens. **Ten of eleven are done; what is left is 04,
+then 10.** Four things it produced that the rest of the map has to carry:
+
+- **The dead-CSS literals in `global.css` are gone, and they were never free.** Vite bundles that
+  stylesheet into the **blog-post** chunk, so the 12 dead rules shipped on the reading surface and
+  nowhere else: 26,886 → 24,782 bytes, and zero retired dark-brand literals left in any built CSS
+  or HTML. Two survivors are recorded in ticket 09 for **ticket 10**: `.lb-btn`'s `#1f1f1f`, and
+  `index.astro:431`'s `max-width: 68ch`, which **does not constrain anything** — Geist's `0`
+  advance is 11.92px against a 7.95px average character, so 68ch resolves to 810px. Harmless where
+  it sits; wrong the moment it is copied, which is exactly how it reached the reading surface.
+- **Tailwind v4's utilities are layered and `global.css` is not, so `h1, h2, h3 { font-family:
+  var(--font-mono) }` beats `font-sans` regardless of specificity.** The post title shipped mono
+  with the class in the markup and the page unchanged. Any future surface that reaches for a
+  Tailwind font utility on a heading will hit this; scoped `<style>` or an inline family is the
+  way, which is what `index.astro` and `call.astro` already do by accident of how they were built.
+- **A third sighting of the map's own recurring failure**, this time in ticket 09's own scope
+  line: it named blockquotes, figures and image captions as "the elements the posts actually use",
+  and counted from the built HTML, all three render **zero** times across every post including the
+  drafts, while the two that carry the surface — 82 paragraphs and 27 inline code chips — were not
+  named. Ticket 11a's OG card, ticket 05's Formspree field, and now this: **each was written
+  before anyone opened the thing it described, and each read as settled because of it.**
+- **A fourth sighting, and this one was in the correction rather than the claim.** The review found
+  four numbers wrong in ticket 09's own write-up, including two of the line numbers it was handing
+  forward to ticket 10 as breadcrumbs (`index.astro:113` for the `68ch`, which is at `:431`;
+  `index.astro:141` for the mono-for-metadata rule, which is at `call.astro:181`). The write-up was
+  the most carefully measured document in this map and it still shipped four wrong pointers, so the
+  lesson is not "count more" but **cite a line only after opening it** — the same move the ticket
+  had already made twice against other people's counts. Two related shapes the review names, both
+  now recorded in ticket 09 for **ticket 10**: `verify/gate.mjs`'s copy lint **has never examined
+  `index.astro` at all** (its skip state flips at `:139` on a prose mention of a tag and never flips
+  back), and a comment in a diff can assert a safeguard that measurement refutes — a `(hover: none)`
+  rule shipped on the claim that it was restoring behaviour the deletion would have taken, when the
+  button had been hover-only on touch all along.
 
 Two things ticket 05 produced that the rest of the map has to carry:
 

@@ -31,18 +31,15 @@ const dateFmt = (d: Date) =>
 <BaseLayout title={pageTitle} description={pageDescription}>
   <SiteNav active="devlog" />
 
-  <main class="pt-14">
+  <main>
     <div class="head-band">
       <div class="frame">
-        <h1 class="hero-enter">// Devlog</h1>
+        <h1 class="hero-enter">Devlog</h1>
         <p class="hero-enter sub">
           Build notes from the products, the studio, and the occasional game system.
         </p>
-        <p class="hero-enter sub">
-          <a
-            href="/rss.xml"
-            class="font-mono text-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors duration-150"
-          >RSS</a>
+        <p class="hero-enter rss">
+          <a href="/rss.xml">RSS</a>
         </p>
       </div>
     </div>
@@ -99,29 +96,68 @@ const dateFmt = (d: Date) =>
   }
   @media (max-width: 720px) {
     .frame { padding-inline: 28px; }
+    /* The other half of call.astro's head band, missed by the first copy. */
+    .head-band { padding-block: 6.5rem 2.5rem; }
   }
 
+  /* Head band copied from call.astro, which ticket 05 built in the direction
+     ticket 02 locked. The lattice stays — it is the register's head band on
+     every secondary page, not dark-era decoration; the mono h1 was the dark-era
+     part.
+
+     "Value-for-value" was the first version of this comment and it was wrong in
+     two ways, both of which showed up only in the rendered page. call.astro
+     wraps in <main class="page">, this page wrapped in <main class="pt-14">, so
+     the same 8rem cleared the 56px fixed nav twice and left 128px of air above
+     the h1 against call's 72px; the wrapper is now bare, like call's. And the
+     mobile override was never copied at all, so a phone kept the full desktop
+     8rem. Matching declarations is not matching output. */
   .head-band {
-    padding-block: 84px 64px;
+    padding-block: 8rem 3rem;
     background:
       linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
       linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
   }
   h1 {
-    font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: clamp(2rem, 5vw, 3.25rem);
-    line-height: 1.1;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.15;
     letter-spacing: -0.02em;
     color: var(--color-text-primary);
-    margin: 0 0 14px;
+    margin: 0 0 1rem;
   }
   .sub {
     color: var(--color-text-secondary);
-    font-size: 17px;
-    line-height: 1.7;
+    font-size: 1.05rem;
     max-width: 56ch;
     margin: 0;
+  }
+  /* Was a second .sub, so a feed link rendered at lede weight directly under
+     the lede. It is metadata, which is what mono is for on this direction. */
+  .rss {
+    margin: 0.25rem 0 0;
+  }
+  /* Padded and underlined because the first version was a 22x17px hit area with
+     no affordance: mono, muted, no underline, and the transition dropped when it
+     stopped being a Tailwind class. At 0.78rem it reads as a label rather than a
+     link unless it is given one. The block padding buys the tap target back
+     (~41px) and the margin above is reduced by the same amount, so the optical
+     gap under the lede is the 1rem it was. */
+  .rss a {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 0.25em;
+    padding-block: 0.75rem;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  .rss a:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
   }
 
   .list-band {
@@ -141,11 +177,23 @@ const dateFmt = (d: Date) =>
     color: var(--color-text-secondary);
     background: transparent;
     border: 1px solid var(--color-border-strong);
+    border-radius: 6px;
     padding: 6px 12px;
     cursor: pointer;
     transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
   }
   .tag-btn:hover { color: var(--color-text-primary); border-color: var(--color-text-muted); }
+  /* global.css's reduced-motion block used to cancel the dark-era tag control
+     this one replaced; that selector was deleted with the rest of the dead CSS
+     and its live successor was never added. It has to be cancelled here rather
+     than there: Astro compiles a scoped rule to an attribute selector, so a
+     global .tag-btn would lose to the rule above on specificity. (The old class
+     is deliberately not named: it would then be the only place in src/ that
+     string survives, and the next usage grep would read it as a hit.) */
+  @media (prefers-reduced-motion: reduce) {
+    .tag-btn,
+    .post-row { transition: none; }
+  }
   .tag-btn.active {
     color: var(--color-bg);
     background: var(--color-accent);
@@ -184,7 +232,11 @@ const dateFmt = (d: Date) =>
   }
   .post-row:hover .post-title { color: var(--color-accent); }
   .post-excerpt {
-    font-size: 14px;
+    /* 0.94rem is what the home page's own post rows run. The 62ch measure is
+       kept. This comment first read "14px is not a size this direction uses
+       anywhere", which .empty below and .post-title above both falsify: the
+       raw-px sizes in this file were never swept, only this one was changed. */
+    font-size: 0.94rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
     max-width: 62ch;
