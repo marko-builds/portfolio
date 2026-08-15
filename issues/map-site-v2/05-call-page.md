@@ -70,9 +70,52 @@ Its own page at `/call`, linked from the identity rail and the contact band. It 
 room without crowding the home page, and it is a URL Marko can paste into a recruiter email, which
 is probably how it will mostly be used.
 
+## Built 2026-08-15 — `src/pages/call.astro`, one thing outstanding
+
+**The CV question is settled: the link is unconditional on `/call`.** Marko's call, given the
+three options above plus a third (no CV on the page at all). It is not gated behind the survey and
+it appears nowhere else on the site, so decision 9's reversal holds: the *site* does not advertise
+a CV, the call page does. The rejected reveal-on-submit had a defect worth recording — it is
+JS-only over a soft gate, so it adds friction for honest readers and none at all for anyone who
+reads the page source. The same soft-gate logic this ticket already accepted for the appointment
+link now applies to the CV consistently.
+
+**Two premises in this ticket were wrong, verified against the code rather than the text.**
+
+1. **"Formspree (already wired for the contact form)" is stale.** The contact form was deleted in
+   `cfdd76c` (the 2026-07-03 rebuild); today `index.astro:169` is a `mailto:` link and the site has
+   no form at all. The endpoint `formspree.io/f/xlgpgwva` survives only in git history, at
+   `462d6e9`. Marko's call: reuse it. **Consequence: the "shared quota" tension above is moot** —
+   nothing shares that form's quota now. Whether the form is still live in the account is
+   unverifiable from the repo and is what the test submission actually proves.
+2. **The Google Calendar appointment link does not exist**, anywhere in the monolith. It is
+   Marko-only to create. The page ships with `BOOKING_URL = ""` and renders an email fallback in
+   that branch rather than a dead button, because the identity rail links this page and a dead
+   primary CTA is worse than a plain instruction. **Delete the fallback branch when the URL lands.**
+
+**Two additions beyond the ticket's field list, stated because they are additions.** `name` and
+`email` are required. The listed fields (purpose, role, company, link, free text) give Marko no way
+to answer a submission that is not followed by a booking, which is a dead end for anyone who fills
+the survey and then does not book.
+
+**The submit flow needs no JS to work.** A hidden `_next` sends Formspree back to
+`/call?sent=1#book`, so the fragment lands the reader on the booking section by itself; the inline
+script only swaps the form for a confirmation note.
+
+**Register:** the page follows `index.astro`'s locked direction (sans headings, mono kept for small
+meta), not `/devlog`'s older mono register, which ticket 09 still owns.
+
+**Also noted, not fixed here:** `public/Marko-Stankovic-CV.pdf` is dated **Jul 29**, before the
+"AI Engineer" title decision. The cascade belongs to [ticket 04](04-experience-timeline.md), but
+this page is now the surface that delivers it.
+
 ## Acceptance
 
-- `/call` renders in the winning direction's theme, both palettes if a toggle ships.
-- A test submission arrives in Marko's inbox with all fields.
-- The skip path reveals the appointment link.
-- The appointment link books a real slot and sends a confirmation.
+- ~~`/call` renders in the winning direction's theme, both palettes if a toggle ships.~~
+  **Met 2026-08-15.** Light only (no toggle shipped, map decision 4). Verified on a preview server
+  at 1280 and 390 wide, not assumed: the rail's `/call` link now resolves 200 instead of 404.
+- A test submission arrives in Marko's inbox with all fields. **Open — needs the live form.**
+- ~~The skip path reveals the appointment link.~~ **Met 2026-08-15, by removing the reveal.** The
+  booking section is always rendered. The ticket's own point 1 concedes the gate is soft, so a
+  hidden-then-shown link buys nothing and costs a JS dependency.
+- The appointment link books a real slot and sends a confirmation. **Blocked on `BOOKING_URL`.**
