@@ -45,6 +45,10 @@ and C++, plus full-stack TypeScript on Next.js. He works CLI-first on Arch Linux
 - [duskpaper](https://github.com/marko-builds/duskpaper): generative animated
   Wayland wallpapers rendered locally at your seed and resolution, from his own
   procedural synthesis engines. Open source.
+- Habitagram: habit tracking as a journey. A React Native app where habits move a
+  boat across illustrated landscapes that shift with the time of day, with the art
+  rendered from code rather than drawn. Private repo, near launch. No public link
+  yet.
 - [BlenderBridge](https://github.com/marko-builds/BlenderBridge): five manual
   cleanup steps on every Blender-to-Unreal import, cut to one click. A UE5 editor
   plugin that enforces asset naming, fixes normal maps, generates lightmap UVs,
@@ -56,9 +60,12 @@ and C++, plus full-stack TypeScript on Next.js. He works CLI-first on Arch Linux
   and measurements behind the work
 - [The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math](https://markostankovic.org/devlog/zero-dollar-media-stack)
 - [One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Art](https://markostankovic.org/devlog/swipeable-panorama-continuous-ridge)
+- [I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate.](https://markostankovic.org/devlog/skill-vibe-test-decay-probe)
+- [Golden Fingerprints: Regression Tests for Generative Art](https://markostankovic.org/devlog/golden-fingerprints-generative-art)
 
 ## Contact
 - Email: contact@markostankovic.org
+- Book a call: https://markostankovic.org/call
 - GitHub: https://github.com/marko-builds
 - LinkedIn: https://www.linkedin.com/in/marko-builds
 - Instagram: https://www.instagram.com/marko.builds/
