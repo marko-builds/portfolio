@@ -24,9 +24,16 @@ const canonicalURL = Astro.url.href;
 // source at all, which is why no text sweep could find the stale copy. New FILENAME on purpose:
 // LinkedIn, X and Slack cache an OG image against its URL, so replacing v1 in place would keep
 // serving the old card to everyone who already scraped it.
+//
+// og-default-v3.png, 2026-08-15, same day: v2's second headline line was a 2px outline on
+// transparent. LinkedIn's Post Inspector showed it effectively gone from the share preview —
+// they rehost at articleshare-shrink_160, a 7.5x downscale that resamples a 2px stroke to
+// ~0.27px — so the card read "I build AI systems" and lost the half carrying the positioning.
+// v3 fills the line solid. Verified by shrinking both to 160px and comparing. New filename
+// again, and for the same reason: v2 was already scraped into LinkedIn's cache.
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site).href
-  : new URL("/og-default-v2.png", Astro.site).href;
+  : new URL("/og-default-v3.png", Astro.site).href;
 ---
 
 <!doctype html>
@@ -37,6 +44,10 @@ const ogImageURL = ogImage
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {/* LinkedIn's Post Inspector reports "No author found" without this. The Person JSON-LD
+        on the home page does not satisfy it, because a Person schema IS the author rather
+        than declaring one. */}
+    <meta name="author" content="Marko Stankovic" />
     <link rel="canonical" href={canonicalURL} />
     <link
       rel="alternate"
