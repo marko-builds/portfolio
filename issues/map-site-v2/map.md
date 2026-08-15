@@ -259,13 +259,19 @@ here so nothing is relitigated in two places:
 
 1. **Five streams, no displacement, no cut line.** See Budget.
 2. **A full timeline under an AI-engineering face shows roughly one year of employed game-dev
-   work**, read chronologically games-first. The "AI Engineer, Independent" entry carries the
-   position. Accepted 2026-08-14 with the facts stated.
+   work**, read chronologically games-first. ~~The "AI Engineer, Independent" entry carries the
+   position.~~ **Corrected 2026-08-15:** "Independent" was cut (decision 8 above), so the entry has
+   no employer and no longer explains itself — **the bullets carry the position**, which is why
+   [ticket 04](04-experience-timeline.md) makes them the load-bearing part. Accepted 2026-08-14
+   with the facts stated; the tension got sharper, not softer, when the word came out.
 3. **Deleting the game project pages while `RelicRush` is a live lane** and November game posts are
    planned on an AI angle (`publishing-schedule.md:74`). The pages return in a different form or
    the call is revisited then, not silently.
-4. **No availability statement, but a booking page and a CV link.** Judged not contradictory: a
-   booking link serves anyone.
+4. ~~**No availability statement, but a booking page and a CV link.** Judged not contradictory: a
+   booking link serves anyone.~~ **Corrected 2026-08-15:** decision 9 above reversed the CV link,
+   so there is no CV link anywhere on the site and half this tension no longer exists. What remains
+   is the booking page with no availability statement, and that judgement stands unchanged: a
+   booking link serves anyone. CV delivery moved to [ticket 05](05-call-page.md).
 5. **Six internal links in two withheld drafts point at `/blog/<slug>` when the route is
    `/devlog/<slug>`** (`relic-rush-pivot.mdx`, `relic-rush-obstacle-system.mdx`). Both are
    `draft: true` and out of the drain, so this is a November problem for whoever ships them, not
