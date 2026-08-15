@@ -127,7 +127,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | **resolved 2026-08-15** |
-| [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
+| [10](10-close-out.md) | Close-out: re-baseline the gate, cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open — **gate half done 2026-08-15**; cold read + cascade still blocked by 04 |
 | [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
 | [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
 
@@ -142,9 +142,11 @@ closed, so the conditional edge fired and **08 is now a hard blocker of 03**.
 **01, 02, 06, 07 and 08 all resolved 2026-08-15.** The whole 06 → 08 → 03 chain is cleared down to
 its last link: **03 is unblocked and is the next thing to build**, 1.5 sessions.
 
-**04** (0.5) and **05** (0.75) are unblocked and off the path. **09** (0.75) is unblocked. **10**
+**04** (0.5) and **05** (0.75) are unblocked and off the path. **09** (0.75) is unblocked. ~~**10**
 closes out and must re-baseline `verify/gate.mjs` (tension 6) — including its token check, which
-now contradicts decision 4 and cannot pass as written.
+now contradicts decision 4 and cannot pass as written.~~ **Gate re-baselined 2026-08-15**; the scope
+line now lives in [ticket 10](10-close-out.md) itself rather than only here, which is why it was
+missing from the ticket for the whole stream. See "Tension 6 closed" below.
 
 **03 built 2026-08-15**, so six of eleven tickets are done. Two things it produced that the rest of
 the map has to carry:
