@@ -1,6 +1,9 @@
 # 06 — Secondary templates (projects, devlog, post, 404)
 
-**Status:** ready-for-agent · **Type:** human-in-the-loop · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** human-in-the-loop · **Lane:** portfolio
+**Shipped:** `404.astro`, `devlog/index.astro`, `devlog/[slug].astro`, and the project pages
+(`projects/deploylog.astro`, `hide-and-seek.astro`, `tictactoe.astro`). Verified 2026-08-15 by
+`map-site-v2/01`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** issues/05-home-page-build.md
 **Verification:** assertions 3, 5, 6 machine halves — gate 02 green; template consistency is

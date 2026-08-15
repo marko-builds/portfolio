@@ -76,12 +76,20 @@ no map as an hours consumer.
 
 7. **Full timeline records on the page**, in the reference site's shape (role, company, location,
    dates, bullets). Three records plus education. See [ticket 04](04-experience-timeline.md).
-8. **The current period is titled "AI Engineer, Independent"**, Belgrade, Sep 2025 to present, with
-   Monolithiq LLC named as the invoicing entity rather than the employer. **This is a new decision
-   originating here**, not a fact read out of the CV, and it **cascades outward** to
-   `cv-base.md` and LinkedIn.
-9. **The identity rail carries a CV link.** `public/Marko-Stankovic-CV.pdf` exists and is
-   referenced nowhere in `src/` (verified 2026-08-14).
+8. ~~**The current period is titled "AI Engineer, Independent"**, Belgrade, Sep 2025 to present,
+   with Monolithiq LLC named as the invoicing entity rather than the employer.~~
+   **Amended 2026-08-15 by Marko, reviewing the prototype:** the current period is titled
+   **"AI Engineer"**, Belgrade, Sep 2025 to present, with **no organization line at all**. Both
+   "Independent" and the Monolithiq invoicing-entity line are cut. Still **a new decision
+   originating here**, not a fact read out of the CV, and it still **cascades outward** to
+   `cv-base.md` and LinkedIn — the cascade now carries a record with no employer field, so whoever
+   executes it must not reintroduce one to fill the gap.
+9. ~~**The identity rail carries a CV link.**~~ **Reversed 2026-08-15 by Marko, reviewing the
+   prototype: no CV link anywhere on the site.** The CV goes out through the call instead, so the
+   rail carries "Book a call" in that slot and
+   [ticket 05](05-call-page.md) now owns CV delivery — including the gap this opens, which is
+   recorded there. **The `/cv` redirect route stays** (`astro.config.mjs:15`): sent applications
+   already carry that URL, and removing the link is not removing the route.
 10. **No availability statement on the site.** No "open to work" pill, no status line.
 11. **The two live game project pages are deleted** with their screenshots. See
     [ticket 06](06-delete-game-project-pages.md).
@@ -108,21 +116,128 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 
 ## Tickets
 
-| # | Title | Type | Blocked by | Est |
-|---|---|---|---|---|
-| [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 |
-| [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 |
-| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | 02, 08 (if light wins) | 1.5 |
-| [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 |
-| [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 |
-| [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 |
-| [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 |
-| [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 |
-| [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 |
-| [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 |
+| # | Title | Type | Blocked by | Est | Status |
+|---|---|---|---|---|---|
+| [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 | **resolved 2026-08-15** |
+| [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 | **resolved 2026-08-15 — A (light) wins** |
+| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | ~~06 → 08 → 03~~ cleared | 1.5 | **resolved 2026-08-15** |
+| [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
+| [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | **resolved 2026-08-15** |
+| [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
+| [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
+| [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
+| [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
+| [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
+| [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
+| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
 
-Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
-2026-08-08). Cheapest is **07**.
+~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
+2026-08-08).~~ **Resolved 2026-08-15.** The tagline leak is closed; ticket 01's `portrait` defect
+was refuted (a repo-root `ls` against a Remotion `staticFile()` path) and the field was left
+alone.
+
+**Resolved 2026-08-15: 01, 07, and 02 — which picked A, light.** The light/dark question is
+closed, so the conditional edge fired and **08 is now a hard blocker of 03**.
+
+**01, 02, 06, 07 and 08 all resolved 2026-08-15.** The whole 06 → 08 → 03 chain is cleared down to
+its last link: **03 is unblocked and is the next thing to build**, 1.5 sessions.
+
+**04** (0.5) and **05** (0.75) are unblocked and off the path. **09** (0.75) is unblocked. **10**
+closes out and must re-baseline `verify/gate.mjs` (tension 6) — including its token check, which
+now contradicts decision 4 and cannot pass as written.
+
+**03 built 2026-08-15**, so six of eleven tickets are done. Two things it produced that the rest of
+the map has to carry:
+
+- **`/call` is linked from the identity rail and 404s** until [ticket 05](05-call-page.md) ships.
+  Verified against a preview server, not assumed. **Ticket 10 must not cascade the surfaces while
+  this stands** — a live home page whose most prominent rail link is dead is worse than no link.
+  This makes **05 the highest-priority remaining ticket**, ahead of 04 and 09.
+- **`global.css` holds 12 dark-brand literals that ticket 08 never saw, and all of them are dead
+  CSS.** Verified 2026-08-15: `filter-btn`, `filter-bar`, `project-card`, `contact-input`,
+  `hero-name`, `card-glow` and `card-accent` are referenced by **zero source files**, so this is
+  rules to delete, not a repaint. Belongs to **09 or 10**. Ticket 08's sweep missed them twice: the
+  scope was `--include='*.astro'` so it never read the stylesheet, and the pattern was `#hex` so it
+  could not match an `rgb()`/`rgba()` literal anywhere, including inside `.astro` files. A scope
+  narrower than the claim *and* a pattern narrower than the class, which is the shape the root
+  `CLAUDE.md` names twice over.
+
+**03 signed off 2026-08-15** after one review fix: devlog code blocks were rendering
+highlight.js's **github-dark** palette on a white block, measured at **1.54** contrast. Swapped to
+the light theme, separation moved from the fill to the border (tinting the block drops 9 of 20
+token classes below AA, versus 2 on white — the third-party palette pins the background), and the
+2 remaining classes remapped to `--color-warm`. Now 21 classes measured, zero below AA, min 4.57.
+Detail in [ticket 03](03-home-page-rebuild.md).
+
+~~**11 is new and is not a build ticket.** The favicon and OG card left 08 when Marko asked to
+discuss a new mark rather than recolour the old one. It needs a conversation before it can be
+scoped.~~
+
+**Conversation held 2026-08-15. Two outcomes.**
+
+**The mark is the `>` chevron alone**, teal on paper, aurora and sun cut. The current tile does
+three jobs at a size that fits one, the one-shape mark already exists as `SiteNav.astro`'s `> ms`
+wordmark, and making the tab icon that same glyph is the first thing to connect the wordmark, the
+favicon and the social card. duskpaper's lineage survives where it renders: its own repo and every
+studio render, all still dark. Ticket 11 is now scopeable at 0.5.
+
+**The OG card split out as [11a](11a-og-card-copy-fix.md) and jumped the queue.**
+`public/og-default.png` reads "> MarkoStankovic(Developer);\_" and "I build software products and
+ship them." — the retired identity, the drawered tagline, and the cursor ticket 07 removed. It is
+the `og:image` fallback for every page without its own, so it is what a recruiter sees whenever
+the site link is pasted anywhere.
+
+**[Ticket 01](01-stale-sweep-and-tagline.md) could not have caught it and was not wrong.** It
+fixed `brand.json` and grepped for the old string. The card was rendered months ago and the words
+are pixels. **This is one step past the root `CLAUDE.md` sweep rule: a rendered asset carries text
+no text search can see.** When an identity changes, the sweep needs an inventory of *rendered*
+artifacts — OG cards, banners, thumbnails, favicons, README heroes — each one opened rather than
+grepped. 11a's acceptance carries that inventory pass.
+
+**Revised order for what is left: 11a → 05 → 04 → 09 → 11 → 10.** 11a because it is live and
+wrong on the priority-#1 lane; 05 because ticket 03 shipped a rail link to a route that 404s.
+
+**11a and 11 both built 2026-08-15**, out of that order — 11 was taken early because its direction
+was already named and it is 0.5. ~~**Eight of eleven tickets are done; what is left is 05, 04, 09,
+then 10.** 05 stays the highest priority: the identity rail still links a `/call` route that
+404s.~~
+
+**05 resolved 2026-08-15, and the dead rail link is closed** — verified against a server, not
+assumed. **Nine of eleven are done; what is left is 04, 09, then 10.** Ticket 10's cascade is no
+longer blocked by a 404.
+
+Two things ticket 05 produced that the rest of the map has to carry:
+
+- **The site now depends on two external accounts that no check in this repo can see**: a Formspree
+  form (`portfolio-website`, notifying smankovic@gmail.com) and a Google Calendar appointment
+  schedule. Both were verified live and calibrated against a known-bad control, and **both can
+  break silently at any time without a single file in this repo changing**. Ticket 10's close-out
+  should probe them rather than assume them: a `POST` to the form endpoint that returns `400 EMPTY`
+  rather than `404 FORM_NOT_FOUND`, and a `HEAD` on the short link that 302s rather than 404s.
+- **A documented field name is not a supported field name.** The page was first built on Formspree's
+  `_next` redirect, taken from this ticket's own text. `_next` has left their special-fields list
+  and the redirect that replaced it is paid-plan only, so a free-plan submission would have stranded
+  the reader on formspree.io with no way back — and the page would have looked entirely correct
+  until the first real submission. This is the map's second sighting in two days of a claim that
+  reads as settled because it was written before anyone checked (the first was ticket 11a's OG
+  card). **Checking a third-party contract costs one fetch; inheriting it from a ticket costs a
+  silent break in production.**
+
+Two things ticket 11 produced that the rest of the map has to carry:
+
+- **`public/favicon.svg` is now a source file with a generator behind it**
+  (`scripts/render-icons.sh`, the repo's first `scripts/` entry). Any later change to the mark is a
+  one-line edit plus a re-run, never a hand-edited PNG. This is the structural answer to 11a's
+  finding that a rendered asset carries words and shapes no grep can see: **OG card v1 had no
+  source at all, and neither did the old favicon set** — which is exactly why both went stale
+  invisibly. Every rendered artifact this lane ships should leave a source and a regenerator behind
+  it, and ticket 10's cascade should check for one.
+- **`site.webmanifest`'s two colours were the last `#0B0E15` in a shipping surface.** The only one
+  left under `src/` or `public/` is a text fill in
+  `public/images/blog/relic-rush-obstacle-system/difficulty-ramp-chart.svg:6`. It belongs to
+  [ticket 09](09-devlog-reading-surface.md), together with the dark-brand literals in the other
+  blog diagram SVGs and in `Avatar.astro` — a larger set than 09 currently describes, and a
+  different one from the 12 dead-CSS literals already recorded above.
 
 ## Amendments made to `issues/map-public-proof/`
 
@@ -144,17 +259,43 @@ here so nothing is relitigated in two places:
 
 1. **Five streams, no displacement, no cut line.** See Budget.
 2. **A full timeline under an AI-engineering face shows roughly one year of employed game-dev
-   work**, read chronologically games-first. The "AI Engineer, Independent" entry carries the
-   position. Accepted 2026-08-14 with the facts stated.
+   work**, read chronologically games-first. ~~The "AI Engineer, Independent" entry carries the
+   position.~~ **Corrected 2026-08-15:** "Independent" was cut (decision 8 above), so the entry has
+   no employer and no longer explains itself — **the bullets carry the position**, which is why
+   [ticket 04](04-experience-timeline.md) makes them the load-bearing part. Accepted 2026-08-14
+   with the facts stated; the tension got sharper, not softer, when the word came out.
 3. **Deleting the game project pages while `RelicRush` is a live lane** and November game posts are
    planned on an AI angle (`publishing-schedule.md:74`). The pages return in a different form or
    the call is revisited then, not silently.
-4. **No availability statement, but a booking page and a CV link.** Judged not contradictory: a
-   booking link serves anyone.
+4. ~~**No availability statement, but a booking page and a CV link.** Judged not contradictory: a
+   booking link serves anyone.~~ **Corrected 2026-08-15:** decision 9 above reversed the CV link,
+   so there is no CV link anywhere on the site and half this tension no longer exists. What remains
+   is the booking page with no availability statement, and that judgement stands unchanged: a
+   booking link serves anyone. CV delivery moved to [ticket 05](05-call-page.md).
 5. **Six internal links in two withheld drafts point at `/blog/<slug>` when the route is
    `/devlog/<slug>`** (`relic-rush-pivot.mdx`, `relic-rush-obstacle-system.mdx`). Both are
    `draft: true` and out of the drain, so this is a November problem for whoever ships them, not
    this stream's. Recorded so it is not rediscovered.
+
+   **Corrected 2026-08-15.** `astro.config.mjs:10-16` declares `'/blog': '/devlog'` and
+   `'/blog/[slug]': '/devlog/[slug]'`, and the build emits the redirect stubs, so the **prefix**
+   is not the problem it was recorded as. The same block declares `'/cv':
+   '/Marko-Stankovic-CV.pdf'`, which is what let decision 9 be reversed without losing the route.
+
+   **Amended again during [ticket 06](06-delete-game-project-pages.md), because the first
+   correction was too strong.** The redirects fix the prefix but not the target: the posts those
+   links point at (`object-pooling-endless-runner`, `relic-rush-pivot`) are themselves
+   `draft: true` and are not built at all, so a redirect lands on a 404. Verified 2026-08-15 —
+   all five posts in that cluster are drafts. **Nothing broken ships, because neither end is
+   published**, and that is the real reason this is safe, not the redirects. Whoever drains these
+   in November has to publish them as a set or fix the links, and a redirect will not save them.
+
+6. **`verify/gate.mjs` cannot pass, so it cannot gate this map.** It fails 7 checks against a
+   baseline captured 2026-07-03 at main `2bc6308` — route parity and three devlog bodies (the
+   Unity posts went `draft: true` on 2026-08-09, four new posts and `/cv` shipped since), copy
+   lint on two files this map does not touch, and a "main untouched" assertion 40+ commits stale.
+   Calibrated by stash-and-rerun: identical red with and without ticket 07's change. Re-baselining
+   belongs to [ticket 10](10-close-out.md); until then no ticket may cite it as a green signal.
 
 ## Out of scope
 

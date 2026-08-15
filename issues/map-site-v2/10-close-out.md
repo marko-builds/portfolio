@@ -38,7 +38,7 @@ Then update the surfaces that make claims about this site, in the same pass:
 |---|---|
 | `projects/job-search/proof-portfolio.md` | site rows, and the CV/site link set |
 | `public/llms.txt` | flagged stale by `map-public-proof/11`; verify it matches the new page |
-| LinkedIn | the "AI Engineer, Independent" title from [ticket 04](04-experience-timeline.md) |
+| LinkedIn | the `AI Engineer` title from [ticket 04](04-experience-timeline.md). **NOT "Independent"** — that word was cut 2026-08-15 and this row said otherwise until 08-15. **One decision is deferred here on purpose: what goes in LinkedIn's required Company field.** See ticket 04's cascade-run section for the narrowed option set |
 | GitHub profile README | the through-line sentence, plus the `/call` link if wanted |
 | `projects/job-search/presence-baseline.md` | a June snapshot with no staleness banner that has already produced one wrong claim — date-stamp it or re-capture it |
 

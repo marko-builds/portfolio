@@ -1,6 +1,8 @@
 # 03 — Three hero direction prototypes (Marko picks)
 
-**Status:** ready-for-agent · **Type:** human-in-the-loop · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** human-in-the-loop · **Lane:** portfolio
+**Shipped:** Marko picked the Vercel-monochrome direction; the pick is recorded in the code at
+`src/pages/index.astro:179`. Verified 2026-08-15 by `map-site-v2/01`.
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** issues/01-baseline-branch-and-wiring.md
 **Verification:** assertion 1 — Marko names a winning direction from delivered screenshots +

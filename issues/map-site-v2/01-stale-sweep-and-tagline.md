@@ -1,9 +1,46 @@
 # Stale-status sweep, handover, and the dropped tagline cascade
 
 **Type:** task
-**Status:** open
+**Status:** resolved 2026-08-15
 **Blocked by:** None
 **Estimate:** 0.25 session
+
+## Resolution 2026-08-15
+
+Three of the four acceptance items are closed. The fourth was a **false finding** and the correct
+action was to change nothing.
+
+**1. Tagline — done.** `brands/marko/brand.json:3` now reads *"I build AI systems and prove they
+work."*, matching `src/pages/index.astro:17` and `:55-56`. Family grep over the studio for the old
+string returns only this ticket and `plans/capability-backlog.md:29`, which describes the
+deviation historically and is correct as written. `verify/proposals/brand-tagline.md` is marked
+resolved — note it proposed *"Builds and ships his own products"*, a third string that was itself
+pre-repositioning, so it was applied against neither of its own options.
+
+**2. `portrait` — REFUTED, field left alone.** The path is correct. `brand.logo.mark` and
+`brand.portrait` are **Remotion `staticFile()` arguments**, which resolve against
+`studio/public/`, and `studio/public/brands/marko/portrait.webp` exists (1.2 MB, staged
+2026-06-17). `logo-mark.svg` sits beside it and is consumed at five call sites in
+`studio/src/lib/components.tsx`. Emptying the field, as this ticket instructed, would have broken
+a working reference.
+
+The 2026-08-08 red-team and the 2026-08-14 re-verification both `ls`-ed the **repo-root**
+`brands/marko/`, which holds only `brand.json` by design. The proxy could not distinguish "the
+asset is missing" from "you are reading the wrong root", and it was cited twice as verified. The
+check that settles it is the consumer, not the directory: `grep staticFile` before calling a
+brand-file path broken.
+
+Two docs do describe the file as repo-root-relative — `plans/instagram-content-strategy.md:225`
+(a ticked checkbox) and `plans/channel-setup.md:40,74`. Left as-is; they are unambiguous about
+which file they mean, and rewording them is not this stream's work.
+
+**3. Stale rows — done.** All eight `projects/portfolio/issues/0*.md` carry
+`Status: resolved 2026-07-03` plus a one-line **Shipped:** naming the artifact, each checked on
+disk this pass rather than inherited from the map's evidence list. Nothing deleted.
+
+**4. Handover — already done 2026-08-14.** Tickets 14, 15 and 16 and the fog/scope-out entries in
+`issues/map-public-proof/map.md:208,228` were amended in the same batch that charted this map,
+each naming what it settled. This ticket's own row was stale about its own acceptance.
 
 ## Question
 

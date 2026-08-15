@@ -7,17 +7,47 @@
 }
 
 /* ─── Design Token Variables ─────────────────────────────────────────── */
+/* Light palette, locked 2026-08-15 by issues/map-site-v2/02 (screen A wins).
+   LIGHT ONLY — there is no dark set and no toggle. Marko's call, same day:
+   one palette, one surface to maintain, nothing to persist and no flash of
+   the wrong theme to guard against.
+
+   Every text role here clears WCAG AA body contrast (4.5) against BOTH --color-bg
+   and --color-surface; measured, not eyeballed. text-muted and warm were
+   darkened from the prototype's values, which sat at 3.29 and 3.78 and would
+   have shipped failing contrast on small meta text.
+
+   The site now DIVERGES from brands/marko/brand.json, deliberately: map decision
+   4. Studio renders stay dark and no light variant is added to the brand file.
+   verify/gate.mjs's token check asserts these equal brand.json's colors, so it
+   fails by construction until ticket 10 re-scopes it. */
 :root {
-  --color-bg: #0B0E15;
-  --color-surface: #12151C;
-  --color-border: #1E2430;
-  --color-accent: #5FCEDB;
-  --color-accent-dim: #5FCEDB20;
-  --color-warm: #D99A5E;
-  --color-border-strong: #2A3242;
-  --color-text-primary: #E4E9EC;
-  --color-text-secondary: #8792A0;
-  --color-text-muted: #767F8F;
+  --color-bg: #FBFAF7;
+  --color-surface: #FFFFFF;
+  --color-border: #E4E0D8;
+  --color-accent: #14707C;
+  --color-accent-dim: #14707C1F;
+  --color-warm: #9C6031;
+  --color-border-strong: #CFC9BD;
+  --color-text-primary: #1A1D23;
+  --color-text-secondary: #5B6270;
+  --color-text-muted: #6B7480;
+
+  /* Surfaces the old dark design expressed as literals rather than tokens.
+     Named here so the pages that used them have somewhere to point. */
+  --color-surface-raised: #F3F1EC;
+  --color-surface-veil: #F3F1ECCC;
+  --color-accent-veil: #14707C33;
+
+  /* Full-bleed overlay behind the deploylog lightbox. Deliberately dark on a
+     light site: it exists to make an image the only lit thing on screen. */
+  --color-backdrop: #1A1D23;
+
+  /* Hero graph-paper lattice. This was #1f1f1f80 — a 50%-alpha near-black,
+     which on the dark page read as a whisper. Mapping it to a solid token
+     turned it into a tan cage over the whole hero, so it keeps its own low
+     alpha instead. A grid line is decoration; it must sit under the text. */
+  --color-grid: #1A1D2312;
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
@@ -59,19 +89,6 @@ section h2::before {
   font-size: clamp(2.5rem, 6vw, 5rem);
   letter-spacing: -0.02em;
   line-height: 1;
-}
-
-/* ─── Blinking cursor ────────────────────────────────────────────────── */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.cursor-blink::after {
-  content: '_';
-  color: var(--color-accent);
-  animation: blink 1s infinite;
-  margin-left: 2px;
 }
 
 /* ─── Focus Visible (keyboard navigation) ────────────────────────────── */
@@ -348,12 +365,6 @@ section h2::before {
     animation: none;
   }
 
-  /* Cancel ambient pulses and blink */
-  .cursor-blink::after {
-    animation: none;
-    opacity: 1;
-  }
-
   /* Cancel all hover transitions */
   .skill-card,
   .project-card {
@@ -390,16 +401,36 @@ pre {
   white-space: pre;
 }
 
+/* The one place a code block's surface is defined. BlogPost.astro used to carry
+   a second, disagreeing copy of this rule; it lost on specificity and was dead.
+
+   The background stays white and the SEPARATION comes from the strong border,
+   which looks backwards until you measure it. highlight.js's github theme is
+   tuned against white, so tinting the block to --color-surface-raised (#F3F1EC)
+   pushes its token colours down: 9 of the 20 token classes drop below WCAG AA
+   on the tint versus 2 on white. The block's background is effectively pinned
+   by a third-party palette, so the edge has to be the border, not a fill. */
 .prose pre code.hljs,
 pre code.hljs {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: 0.5rem;
   display: block;
   font-size: 0.8125rem;
   line-height: 1.6;
   overflow-x: auto;
   padding: 1.25rem 1.5rem;
+}
+
+/* The two token classes that still miss AA on white after the theme swap.
+   github's #e36209 measures 3.49; --color-warm is the same hue family and was
+   already measured at 5.08 on white by the ticket 08 palette pass, so the fix
+   reuses an audited token instead of inventing a third orange. */
+.prose pre code.hljs .hljs-built_in,
+.prose pre code.hljs .hljs-symbol,
+pre code.hljs .hljs-built_in,
+pre code.hljs .hljs-symbol {
+  color: var(--color-warm);
 }
 
 /* ─── Copy button ────────────────────────────────────────────────────── */

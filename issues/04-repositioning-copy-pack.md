@@ -1,6 +1,9 @@
 # 04 — Repositioning copy pack (drafts for approval)
 
-**Status:** ready-for-agent · **Type:** human-in-the-loop · **Lane:** portfolio
+**Status:** resolved 2026-07-03 · **Type:** human-in-the-loop · **Lane:** portfolio
+**Shipped:** `issues/copy-pack-v1.md` and `copy-pack-v2.md`, Marko-approved and built into the
+live site. Verified 2026-08-15 by `map-site-v2/01`. Note: the headline this pack approved was
+superseded 2026-08-08 by "I build AI systems and prove they work."
 **Parent:** issues/prd-website-builder-portfolio-redesign.md
 **Blocked by:** None — can start immediately
 **Verification:** assertions 2 (copy half), 4 — Marko approves every line as a draft

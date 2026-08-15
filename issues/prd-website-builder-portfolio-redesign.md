@@ -1,6 +1,12 @@
 # PRD: Website-builder capability, proven via portfolio redesign
 
-**Status:** ready-for-agent · **Lane:** portfolio (capability home: claude-video-studio) · **Date:** 2026-07-03
+**Status:** resolved 2026-07-03 · **Lane:** portfolio (capability home: claude-video-studio) · **Date:** 2026-07-03
+**Shipped:** all eight child issues (`01-08`) resolved; site live since 2026-07-03; the
+`website-builder` skill extracted. Status corrected 2026-08-15 by
+[`map-site-v2/01`](map-site-v2/01-stale-sweep-and-tagline.md) — the parent row was stale for the
+same reason its children were. The site is rebuilt again by
+[`map-site-v2`](map-site-v2/map.md); this PRD stays as the record of how the current site got its
+shape.
 
 ## Problem Statement
 

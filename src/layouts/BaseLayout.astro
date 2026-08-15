@@ -11,16 +11,22 @@ interface Props {
 
 const {
   title = "Marko Stankovic | I build AI systems and prove they work",
-  description = "AI engineer in Serbia. Most teams ship AI features they cannot check. I build the tools that measure whether they worked, and I publish the numbers.",
+  description = "AI engineer in Serbia. A demo shows an AI feature running, not whether it worked. I build the tools that measure the difference, and I publish the numbers.",
   ogImage,
   ogType = "website",
   codeHighlighting = false,
 } = Astro.props;
 
 const canonicalURL = Astro.url.href;
+// og-default-v2.png, 2026-08-15: v1 still read "Developer / I build software products and ship
+// them" in baked pixels, so every link preview shipped the retired positioning. Source and
+// renderer live in the monolith at play/og_card_portfolio.html + render_og_card.sh — v1 had no
+// source at all, which is why no text sweep could find the stale copy. New FILENAME on purpose:
+// LinkedIn, X and Slack cache an OG image against its URL, so replacing v1 in place would keep
+// serving the old card to everyone who already scraped it.
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site).href
-  : new URL("/og-default.png", Astro.site).href;
+  : new URL("/og-default-v2.png", Astro.site).href;
 ---
 
 <!doctype html>
@@ -35,7 +41,7 @@ const ogImageURL = ogImage
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Marko Stankovic — Devlog"
+      title="Marko Stankovic · Devlog"
       href={new URL("/rss.xml", Astro.site).href}
     />
 
@@ -83,7 +89,7 @@ const ogImageURL = ogImage
       <>
         <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github-dark.min.css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github.min.css"
         />
         <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
       </>
