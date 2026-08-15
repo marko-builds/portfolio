@@ -1,7 +1,8 @@
 # The OG card is emitting the retired positioning
 
 **Type:** task
-**Status:** open — **Marko's call 2026-08-15: do this now, ahead of the mark**
+**Status:** resolved 2026-08-15 — shipped as `og-default-v2.png`; **one Marko-only step left**
+(force the LinkedIn / X re-scrape, which needs his login)
 **Blocked by:** None
 **Estimate:** 0.25 session
 
@@ -95,3 +96,50 @@ validator both accept a URL and refresh their cache on demand.
 - An inventory pass over the other rendered assets that could carry the same stale identity:
   `public/logo.svg`, the favicon set, and any banner or thumbnail in `public/images/`. **Open each
   one.** A grep cannot answer this question.
+
+## What shipped, 2026-08-15
+
+The card now has a **source**, which it did not before — that absence is the whole reason the stale
+copy survived. `play/og_card_portfolio.html` + `play/render_og_card.sh` in the monolith; the next
+repositioning is a one-line edit and a re-render.
+
+The art was **reproduced, not re-designed**. Every value in the source (the #0B0E15 ground, the
+150px grid, the four crosses, the 4px cyan hairline falling to 38%, the type sizes and the
+#46505F outline) was measured off the July card's pixels. Rendering the July *copy* through the
+new source and diffing against the original PNG gives a mean per-pixel difference of **0.86 of
+765** (0.1%), with every text band inside 1px. That diff is the evidence that only the words moved.
+
+Two layout variants were rendered because the headline lost a line (3 rows -> 2). **B is pinned**:
+the block is optically centred between the wordmark and the URL. A (July's top anchor, kept for
+comparison at `?v=a`) leaves the card bottom-heavy with ~90px of dead space.
+
+### The verification trap this ticket hit
+
+The sibling `render_banner_ai.sh` guards a lost webfont with a **file-size floor**, and copying
+that would have shipped a broken card. Measured: a render with `fonts.googleapis.com` blackholed
+comes out at **61KB, larger than the correct 57KB render**, because the fallback face inks more
+pixels. The floor passes the failure.
+
+So the guard is geometric — `play/verify_og_card.py` asserts each ink band's bbox against a
+golden. It was calibrated against a known negative before being trusted: it PASSES the good
+render (all 5 bands, delta 0) and FAILS the fontless one (the ghost line's right edge moves 18px).
+Note what could *not* carry the check: JetBrains Mono is installed system-wide, so both mono rows
+are metrically identical with or without the network. Only the Geist rows can see the failure.
+
+### Inventory pass — every rendered asset in `public/`, opened
+
+| Asset | Verdict |
+|---|---|
+| `og-default.png` (v1) | the defect; **left in place on purpose** so already-scraped previews keep resolving |
+| `og-default-v2.png` | fixed, opened, correct |
+| `logo.svg` | vector aurora + chevron, **zero `<text>` elements** — carries no identity |
+| `favicon.ico` / `favicon-96x96` / `apple-touch-icon` / `web-app-manifest-192` + `-512` | one wordless mark. The 512 was opened; the other four were proved to be the *same image* (mean diff <= 3.8, downscale noise) rather than assumed |
+| `favicon.svg` | no `<text>` elements |
+| 6 PNGs in `images/blog/` | all opened. Post-specific technical copy only (charts, panoramas, engine grids) — no identity, no tagline, no wordmark |
+| 4 SVGs in `images/blog/` | text greppable and read: diagram labels only |
+| `portrait.webp` | photo, no text |
+| `site.webmanifest` | `"Marko Stankovic"` / `"MS"` — no role string |
+| `Marko-Stankovic-CV.pdf` | already reads **AI Engineer** |
+
+One `developer` hit remains repo-wide, in `llms.txt:25` — "Automation and developer tooling",
+which is a skill description and not the retired identity. Left alone.
