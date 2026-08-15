@@ -2,9 +2,29 @@
 
 **Type:** task
 **Status:** open
-**Blocked by:** [02](02-register-ia-prototype.md), and [08](08-light-dark-token-set.md) **if light
-wins the prototype**
+**Blocked by:** ~~[02](02-register-ia-prototype.md)~~ resolved 2026-08-15, and
+[08](08-light-dark-token-set.md) — **the conditional fired: light won**, so 08 is a hard blocker,
+and 08 is itself blocked by [06](06-delete-game-project-pages.md).
 **Estimate:** 1.5 sessions
+
+## The direction is locked: A, light — 2026-08-15
+
+Marko picked **A (light, new IA)** over the dark control in
+[ticket 02](02-register-ia-prototype.md). Consequences for this ticket:
+
+- **The build chain to here is now 06 → 08 → 03.** Nothing on this ticket starts until the token
+  set exists, because building the page against today's dark tokens and repainting after is the
+  rework the prototype was run to avoid.
+- **The site diverges from `brands/marko/brand.json`**, per the map's decision 4. Renders stay
+  dark; no light variant is added to the brand file.
+- **The IA is settled by the prototype**, not re-opened here: identity rail, proof band leading,
+  products demoted, timeline, devlog rows.
+- **Two amendments made during the prototype review land in this page.** The current-role record
+  is "AI Engineer" with no organization line ([ticket 04](04-experience-timeline.md)), and there
+  is **no CV link** — the rail slot is "Book a call" ([ticket 05](05-call-page.md)).
+- **The mobile stacking order is unresolved.** The prototype puts the rail above the headline on
+  narrow screens, so a phone reader meets the photo and links before the positioning line. Decide
+  it here.
 
 ## Question
 

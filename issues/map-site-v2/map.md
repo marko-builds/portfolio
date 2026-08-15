@@ -76,12 +76,20 @@ no map as an hours consumer.
 
 7. **Full timeline records on the page**, in the reference site's shape (role, company, location,
    dates, bullets). Three records plus education. See [ticket 04](04-experience-timeline.md).
-8. **The current period is titled "AI Engineer, Independent"**, Belgrade, Sep 2025 to present, with
-   Monolithiq LLC named as the invoicing entity rather than the employer. **This is a new decision
-   originating here**, not a fact read out of the CV, and it **cascades outward** to
-   `cv-base.md` and LinkedIn.
-9. **The identity rail carries a CV link.** `public/Marko-Stankovic-CV.pdf` exists and is
-   referenced nowhere in `src/` (verified 2026-08-14).
+8. ~~**The current period is titled "AI Engineer, Independent"**, Belgrade, Sep 2025 to present,
+   with Monolithiq LLC named as the invoicing entity rather than the employer.~~
+   **Amended 2026-08-15 by Marko, reviewing the prototype:** the current period is titled
+   **"AI Engineer"**, Belgrade, Sep 2025 to present, with **no organization line at all**. Both
+   "Independent" and the Monolithiq invoicing-entity line are cut. Still **a new decision
+   originating here**, not a fact read out of the CV, and it still **cascades outward** to
+   `cv-base.md` and LinkedIn — the cascade now carries a record with no employer field, so whoever
+   executes it must not reintroduce one to fill the gap.
+9. ~~**The identity rail carries a CV link.**~~ **Reversed 2026-08-15 by Marko, reviewing the
+   prototype: no CV link anywhere on the site.** The CV goes out through the call instead, so the
+   rail carries "Book a call" in that slot and
+   [ticket 05](05-call-page.md) now owns CV delivery — including the gap this opens, which is
+   recorded there. **The `/cv` redirect route stays** (`astro.config.mjs:15`): sent applications
+   already carry that URL, and removing the link is not removing the route.
 10. **No availability statement on the site.** No "open to work" pill, no status line.
 11. **The two live game project pages are deleted** with their screenshots. See
     [ticket 06](06-delete-game-project-pages.md).
@@ -108,21 +116,31 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 
 ## Tickets
 
-| # | Title | Type | Blocked by | Est |
-|---|---|---|---|---|
-| [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 |
-| [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 |
-| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | 02, 08 (if light wins) | 1.5 |
-| [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 |
-| [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 |
-| [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 |
-| [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 |
-| [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 |
-| [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 |
-| [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 |
+| # | Title | Type | Blocked by | Est | Status |
+|---|---|---|---|---|---|
+| [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 | **resolved 2026-08-15** |
+| [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 | **resolved 2026-08-15 — A (light) wins** |
+| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | **06 → 08 → 03** | 1.5 | open |
+| [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
+| [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | open |
+| [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | open |
+| [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
+| [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | open |
+| [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
+| [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
 
-Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
-2026-08-08). Cheapest is **07**.
+~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
+2026-08-08).~~ **Resolved 2026-08-15.** The tagline leak is closed; ticket 01's `portrait` defect
+was refuted (a repo-root `ls` against a Remotion `staticFile()` path) and the field was left
+alone.
+
+**Resolved 2026-08-15: 01, 07, and 02 — which picked A, light.** The light/dark question is
+closed, so the conditional edge fired and **08 is now a hard blocker of 03**.
+
+The remaining critical path is **06 → 08 → 03**, 2.75 sessions of the 3.85 left. Ticket 06 is the
+head of it and is unblocked, which makes it the next thing to build. **04** (0.5) and **05** (0.75)
+are unblocked and off the path, so they can go in any order; **09** is unblocked now that 02 is
+resolved; **10** closes out and must re-baseline `verify/gate.mjs` (see tension 6).
 
 ## Amendments made to `issues/map-public-proof/`
 
@@ -155,6 +173,19 @@ here so nothing is relitigated in two places:
    `/devlog/<slug>`** (`relic-rush-pivot.mdx`, `relic-rush-obstacle-system.mdx`). Both are
    `draft: true` and out of the drain, so this is a November problem for whoever ships them, not
    this stream's. Recorded so it is not rediscovered.
+
+   **Corrected 2026-08-15, and it is not a problem at all.** `astro.config.mjs:10-16` declares
+   `'/blog': '/devlog'` and `'/blog/[slug]': '/devlog/[slug]'`, and the build emits the redirect
+   stubs. Those six links resolve today. The same block also declares `'/cv':
+   '/Marko-Stankovic-CV.pdf'`, which qualifies decision 9 above: the CV has a permanent route
+   already: what it lacks is a link from the page.
+
+6. **`verify/gate.mjs` cannot pass, so it cannot gate this map.** It fails 7 checks against a
+   baseline captured 2026-07-03 at main `2bc6308` — route parity and three devlog bodies (the
+   Unity posts went `draft: true` on 2026-08-09, four new posts and `/cv` shipped since), copy
+   lint on two files this map does not touch, and a "main untouched" assertion 40+ commits stale.
+   Calibrated by stash-and-rerun: identical red with and without ticket 07's change. Re-baselining
+   belongs to [ticket 10](10-close-out.md); until then no ticket may cite it as a green signal.
 
 ## Out of scope
 

@@ -5,6 +5,29 @@
 **Blocked by:** None
 **Estimate:** 0.75 session
 
+## Amended 2026-08-15 — this page now owns CV delivery
+
+Marko, reviewing the [ticket 02](02-register-ia-prototype.md) prototype: **remove the CV link from
+the site; the CV should come through the call.** That reverses the map's decision 9, and the rail
+now carries a "Book a call" link where the CV link was.
+
+**The gap that opens, stated because nothing else in the map closes it.** With no CV link and no
+availability statement (decision 10 stands), a recruiter who wants to skim a CV has no path to one
+except booking a call. That is friction on the primary audience, and it lands on the same page
+this ticket already argues must not gate a recruiter behind a form. **So this page has to deliver
+the CV, not just a slot** — the design question is how, and it is not settled:
+
+- reveal the PDF link alongside the appointment link on submit, or
+- offer it on the page unconditionally and keep only the *scheduling* behind the survey.
+
+The second keeps the skippable-survey principle intact and is the likelier answer, but it is close
+to putting the link back on the site, which is what was just removed. **Bring the choice back to
+Marko when this ticket is built; do not settle it here.**
+
+**The `/cv` route stays either way.** `astro.config.mjs:15` redirects `/cv` to the PDF, and sent
+job applications already carry that URL. Removing the *link* is not removing the *route* —
+deleting the route would break links already in recruiters' inboxes.
+
 ## Question
 
 A recruiter or a peer who wants to talk should get a slot instead of composing an email, and Marko

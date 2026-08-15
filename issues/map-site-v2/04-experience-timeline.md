@@ -16,7 +16,7 @@ to keep current.
 
 | Role | Company | Location | Dates |
 |---|---|---|---|
-| **AI Engineer, Independent** | Monolithiq LLC as invoicing entity, not employer | Belgrade | Sep 2025 to present |
+| **AI Engineer** | none — see the amendment below | Belgrade | Sep 2025 to present |
 | Unity Game Developer | Replai | Belgrade (Remote) | Mar 2025 to Sep 2025 |
 | Unity Developer Intern | Inlustris Studio | Belgrade | Jun 2024 to Nov 2024 |
 
@@ -24,6 +24,23 @@ Education: **BSc, Computer Games & Programming**, Univerzitet Metropolitan, Belg
 
 Dates for the lower three verified against `projects/job-search/templates/cv-base.md:160`, `:172-173`,
 `:232` on 2026-08-14.
+
+## Amended 2026-08-15 — "Independent" and the invoicing entity are cut
+
+Marko, reviewing the [ticket 02](02-register-ia-prototype.md) prototype: **cut "Independent" and
+cut the "Monolithiq LLC (invoicing entity)" line.** The record is now the role, the location and
+the dates, with **no organization field**.
+
+Everything below about the cascade still holds, and one thing about it changes: the entry that
+travels to `cv-base.md` and LinkedIn now has no employer at all. A CV template with a required
+company field, or a LinkedIn position form that will not save without one, is the place this
+decision will get quietly reversed. **Leave the field empty; do not fill it with Monolithiq to
+satisfy a form.** If a surface genuinely cannot render an empty employer, bring it back here
+rather than deciding it there.
+
+The tension in the section below gets sharper, not softer: with "Independent" gone the entry no
+longer explains itself, so the bullets carry the whole load. Verified in the prototype 2026-08-15
+— it reads as a role, not as a gap.
 
 ## The current-role entry is new, and it cascades
 
