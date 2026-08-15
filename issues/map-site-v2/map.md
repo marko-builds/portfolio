@@ -123,7 +123,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | **06 → 08 → 03** | 1.5 | open |
 | [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
 | [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | open |
-| [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | open |
+| [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | open |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
@@ -137,10 +137,13 @@ alone.
 **Resolved 2026-08-15: 01, 07, and 02 — which picked A, light.** The light/dark question is
 closed, so the conditional edge fired and **08 is now a hard blocker of 03**.
 
-The remaining critical path is **06 → 08 → 03**, 2.75 sessions of the 3.85 left. Ticket 06 is the
-head of it and is unblocked, which makes it the next thing to build. **04** (0.5) and **05** (0.75)
-are unblocked and off the path, so they can go in any order; **09** is unblocked now that 02 is
-resolved; **10** closes out and must re-baseline `verify/gate.mjs` (see tension 6).
+**06 resolved 2026-08-15**, which clears the head of the critical path. The path is now
+**08 → 03**, 2.5 sessions of the 3.6 left, and **08 is unblocked**: it is the next thing to build,
+and it starts against 134 hex literals rather than 645 because 06 deleted 511 of them.
+
+**04** (0.5) and **05** (0.75) are unblocked and off the path, so they can go in any order.
+**09** is unblocked now that 02 is resolved. **10** closes out and must re-baseline
+`verify/gate.mjs` (tension 6).
 
 ## Amendments made to `issues/map-public-proof/`
 
@@ -174,11 +177,18 @@ here so nothing is relitigated in two places:
    `draft: true` and out of the drain, so this is a November problem for whoever ships them, not
    this stream's. Recorded so it is not rediscovered.
 
-   **Corrected 2026-08-15, and it is not a problem at all.** `astro.config.mjs:10-16` declares
-   `'/blog': '/devlog'` and `'/blog/[slug]': '/devlog/[slug]'`, and the build emits the redirect
-   stubs. Those six links resolve today. The same block also declares `'/cv':
-   '/Marko-Stankovic-CV.pdf'`, which qualifies decision 9 above: the CV has a permanent route
-   already: what it lacks is a link from the page.
+   **Corrected 2026-08-15.** `astro.config.mjs:10-16` declares `'/blog': '/devlog'` and
+   `'/blog/[slug]': '/devlog/[slug]'`, and the build emits the redirect stubs, so the **prefix**
+   is not the problem it was recorded as. The same block declares `'/cv':
+   '/Marko-Stankovic-CV.pdf'`, which is what let decision 9 be reversed without losing the route.
+
+   **Amended again during [ticket 06](06-delete-game-project-pages.md), because the first
+   correction was too strong.** The redirects fix the prefix but not the target: the posts those
+   links point at (`object-pooling-endless-runner`, `relic-rush-pivot`) are themselves
+   `draft: true` and are not built at all, so a redirect lands on a 404. Verified 2026-08-15 —
+   all five posts in that cluster are drafts. **Nothing broken ships, because neither end is
+   published**, and that is the real reason this is safe, not the redirects. Whoever drains these
+   in November has to publish them as a set or fix the links, and a redirect will not save them.
 
 6. **`verify/gate.mjs` cannot pass, so it cannot gate this map.** It fails 7 checks against a
    baseline captured 2026-07-03 at main `2bc6308` — route parity and three devlog bodies (the

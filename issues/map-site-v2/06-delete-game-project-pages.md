@@ -1,9 +1,38 @@
 # Delete the two live game project pages and their screenshots
 
 **Type:** task
-**Status:** open
+**Status:** resolved 2026-08-15
 **Blocked by:** None
 **Estimate:** 0.25 session
+
+## Resolution 2026-08-15
+
+Every claim in this ticket was re-verified before anything was deleted, and all of them held
+exactly: 214 / 77 / 220 hex literals (511 total), 12 screenshots, 2 thumbnail videos, and every
+reference to the deleted assets contained inside the three deleted files.
+
+Deleted: the three `.astro` files, the 11 game screenshots (`deploylog-1.png` stays), and
+`public/assets/thumbnails/`, which held only the two videos and is now gone.
+
+**Acceptance, verified after the fact rather than predicted.** Build green, 8 pages. Astro's image
+pipeline dropped from 39 optimized entries to 6, all `deploylog-1` variants, which is independent
+confirmation that nothing else consumed those assets. `dist/` no longer emits
+`/projects/hide-and-seek/` or `/projects/tictactoe/`, and the sitemap does not list them.
+
+**The repo-wide sweep found seven hits and none of them is a reference to a deleted page.** Five
+are links between devlog posts (`/blog/object-pooling-endless-runner`, `/blog/relic-rush-pivot`),
+one is an external itch.io URL, one is a tag string. Recorded because a future sweep will surface
+them again and they look alarming until classified.
+
+**All five of those link targets are `draft: true`** — verified, not assumed. So the withheld
+drafts link to other withheld drafts, which is internally consistent and ships nothing broken.
+See the correction in the map's tension 5: the `/blog` redirects fix the *prefix*, but the deeper
+reason those links are harmless is that neither end of them is published.
+
+**Gate delta:** `verify/gate.mjs` went from 7 failures to 6. The `_endless-runner.astro`
+copy-lint failure disappeared with the file, and route parity gained the two deleted routes under
+`missing=[]` against its July baseline. No new failure class. The gate was already structurally
+red; see [ticket 07](07-wordmark-blink.md) and the map's tension 6.
 
 ## Question
 
