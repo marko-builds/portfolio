@@ -61,19 +61,6 @@ section h2::before {
   line-height: 1;
 }
 
-/* ─── Blinking cursor ────────────────────────────────────────────────── */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.cursor-blink::after {
-  content: '_';
-  color: var(--color-accent);
-  animation: blink 1s infinite;
-  margin-left: 2px;
-}
-
 /* ─── Focus Visible (keyboard navigation) ────────────────────────────── */
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--color-accent);
@@ -346,12 +333,6 @@ section h2::before {
     opacity: 1;
     transform: none;
     animation: none;
-  }
-
-  /* Cancel ambient pulses and blink */
-  .cursor-blink::after {
-    animation: none;
-    opacity: 1;
   }
 
   /* Cancel all hover transitions */

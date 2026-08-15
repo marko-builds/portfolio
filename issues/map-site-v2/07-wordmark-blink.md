@@ -1,9 +1,47 @@
 # Wordmark: drop the blink across every surface
 
 **Type:** task
-**Status:** open
+**Status:** resolved 2026-08-15
 **Blocked by:** None
 **Estimate:** 0.1 session
+
+## Resolution 2026-08-15
+
+Four deletions, no replacements:
+
+- `src/components/SiteNav.astro:19` — the `<span class="cursor-blink">` element.
+- `src/styles/global.css:64-75` — the `.cursor-blink::after` rule **and** `@keyframes blink`,
+  which had no other consumer.
+- `src/styles/global.css:351-355` — the reduced-motion override, now dead.
+- `src/pages/index.astro:431` — the `:global(.cursor-blink::after)` reduced-motion override, the
+  orphan this ticket predicted.
+
+**Acceptance, verified against the built artifact rather than the source.** `grep -rn cursor-blink
+src/` and `grep -rn "animation: blink\|@keyframes blink" src/` both return zero; `dist/` contains
+neither `cursor-blink` nor `@keyframes blink`; the mark renders as
+`<span class="chev">&gt;</span> ms` with nothing after it.
+
+**The mark ships on 10 pages, not six.** The ticket's count predates the four current devlog
+posts, each of which renders the nav. The other six `dist/` HTML files are the `/blog/*` and
+`/cv` redirect stubs, which carry no nav by design.
+
+## `verify/gate.mjs` is structurally red, and it is not this change
+
+The gate fails 7 checks. **Calibrated 2026-08-15 by stashing this ticket's `src/` changes,
+rebuilding, and re-running: the failure set is byte-identical with and without them.** It was
+already red at `349da1e`.
+
+Every failure is expected drift against a baseline captured 2026-07-03 at main `2bc6308`:
+
+- **route parity / 3 missing bodies** — the three Unity posts went `draft: true` on 2026-08-09,
+  and four new posts plus the `/cv` redirect have shipped since.
+- **copy lint** — `BaseLayout.astro:38` and `_endless-runner.astro` (11 lines). Neither file is
+  touched by this ticket; `_endless-runner.astro` is underscore-prefixed and never built.
+- **main untouched** — asserts main still sits at the July anchor. It has moved 40+ commits.
+
+So the gate cannot pass, which means it cannot gate anything in this map. A check that always
+fires is worth what a check that cannot fire is worth. **Re-baselining it belongs to
+[ticket 10](10-close-out.md)** before it is cited as a green signal for 03, 08 or 09.
 
 ## Question
 
