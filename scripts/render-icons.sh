@@ -66,6 +66,18 @@ render "$TMP/square.svg" 512 "$PUB/web-app-manifest-512x512.png"
 for s in 16 32 48; do render "$SRC" $s "$TMP/ico-$s.png"; done
 magick "$TMP/ico-16.png" "$TMP/ico-32.png" "$TMP/ico-48.png" "$PUB/favicon.ico"
 
-echo "rendered from $SRC:"
+# The failure this catches: favicon.svg is edited, a render step fails or is skipped, and the SVG
+# ships a new mark while every raster still carries the old one. Nothing downstream would notice —
+# the set stays internally consistent with itself and disagrees only with its source. So assert a
+# rendered pixel against the source's own fill, not against a value typed here.
+fill=$(sed -n 's/.*<rect id="tile"[^>]*fill="\(#[0-9A-Fa-f]\{6\}\)".*/\1/p' "$SRC")
+[ -n "$fill" ] || { echo "could not read the tile fill out of $SRC" >&2; exit 1; }
+want=$(magick "xc:$fill" -format '%[pixel:p{0,0}]' info:)
+for f in apple-touch-icon.png web-app-manifest-192x192.png web-app-manifest-512x512.png; do
+  got=$(magick "$PUB/$f" -format '%[pixel:p{0,0}]' info:)
+  [ "$got" = "$want" ] || { echo "$f corner is $got, source says $fill ($want) — stale raster" >&2; exit 1; }
+done
+
+echo "rendered from $SRC (tile $fill):"
 ls -l "$PUB"/favicon.ico "$PUB"/favicon-96x96.png "$PUB"/apple-touch-icon.png \
       "$PUB"/web-app-manifest-192x192.png "$PUB"/web-app-manifest-512x512.png "$PUB"/logo.svg
