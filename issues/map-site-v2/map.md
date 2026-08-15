@@ -127,7 +127,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | **resolved 2026-08-15** |
-| [10](10-close-out.md) | Close-out: re-baseline the gate, cold read, then cascade the surfaces | task | ~~04~~ released; rest resolved | 0.5 | open — **gate half done 2026-08-15**, copy-button decision measured; cold read + cascade **unblocked** |
+| [10](10-close-out.md) | Close-out: re-baseline the gate, cold read, then cascade the surfaces | task | ~~04~~ released; rest resolved | 0.5 | **resolved 2026-08-15** |
 | [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
 | [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
 
@@ -207,6 +207,33 @@ then 10.** 05 stays the highest priority: the identity rail still links a `/call
 **05 resolved 2026-08-15, and the dead rail link is closed** — verified against a server, not
 assumed. ~~**Nine of eleven are done; what is left is 04, 09, then 10.**~~ Ticket 10's cascade is
 no longer blocked by a 404.
+
+**10 resolved 2026-08-15, and the stream is closed on evidence.** The destination's done-condition
+is met: a `/cold-read` of the **live** home page returns **no findings in classes (a), (b) or (c)**,
+3 of 3 samples on each, free-form and mechanically. PR #10 merged mid-session and deployed green, so
+the read was of the real site rather than of a page one PR behind.
+
+**One blocking finding, fixed inside the ticket.** `/call` read standalone could not tell a reader
+what Marko does for work (0 of 3). It is a **landing surface** — the URL pasted into a reply, reached
+without passing the home page — so it now carries the home page's through-line verbatim, and the same
+probe answers 3 of 3. **The timeline's standalone NOs on (b) and (c) were judged scope artifacts and
+not defects**: an experience section is not asked to carry repo links and a contact form, and scoring
+it as though it were is the narrower-scope-than-claim shape this map has hit repeatedly.
+
+**Every read stopped in the same place, and it is a decision rather than a defect.** The current role
+has no employer line, so all three reads flagged it and one said a hiring manager would "pause or lose
+trust in the rest of the document". That is decision 8 working as specified and **tension 2 confirmed
+by an independent instrument three times** — now measured rather than predicted. Not reopened here.
+
+**Two things the cascade found that no row could have told it**, both recorded in
+[ticket 10](10-close-out.md): `proof-portfolio.md` listed `habitagram.app` as a live link and it
+serves a **Namecheap domain-parking page** (apex HTTPS times out; the Cloudflare Pages wiring is
+Marko's step and never completed), and ticket 05's Formspree probe **could not fail as specified** —
+its spec named the right status codes and omitted the request shape, and a bare POST returns the same
+`400` for a real form and a nonsense one.
+
+**Eleven of eleven tickets are now resolved except [04](04-experience-timeline.md)**, whose one
+remaining step is the LinkedIn edit Marko is doing himself.
 
 **09 resolved 2026-08-15**: built, reviewed the same day (`/review-diff`, two axes plus a seam pass;
 three blocking findings and eleven smaller ones, all fixed, all re-verified from a build), and
