@@ -129,7 +129,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
 | [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
 | [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
-| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **built 2026-08-15** — awaiting Marko's real-tab look |
+| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
 
 ~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
 2026-08-08).~~ **Resolved 2026-08-15.** The tagline leak is closed; ticket 01's `portrait` defect

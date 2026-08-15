@@ -1,8 +1,8 @@
 # The mark: a new favicon and logo
 
 **Type:** ~~decision, then~~ task — **the decision is made**
-**Status:** built 2026-08-15 — **one Marko-only step left**: look at a real browser tab
-(`npm run preview`, http://localhost:4321) and sign off acceptance 1
+**Status:** **resolved 2026-08-15** — built, and Marko signed off acceptance 1 (the real-tab look)
+the same day, after one amendment: the tile darkened from `--color-bg` to `#EAE7DF`
 **Blocked by:** None
 **Estimate:** 0.5 session (was unscoped; the direction is what made it scopeable)
 
