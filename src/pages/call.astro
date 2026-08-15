@@ -49,6 +49,12 @@ const pageDescription =
     <div class="head-band">
       <div class="frame">
         <h1>Book a call</h1>
+        <!-- The through-line, verbatim from the home page. A cold read of this
+             page on 2026-08-15 could not tell what the author does for work (0 of
+             3 samples), because /call is a landing surface in its own right: it is
+             the link pasted into a reply, so a reader can arrive here without ever
+             passing the home page. See issues/map-site-v2/10-close-out.md. -->
+        <p class="tagline">I build AI systems and prove they work.</p>
         <p class="lede">
           Pick a slot that works for you. If you tell me what it is about first, I show
           up already knowing the context.
@@ -201,6 +207,16 @@ const pageDescription =
     letter-spacing: -0.02em;
     color: var(--color-text-primary);
     margin: 0 0 1rem;
+  }
+  /* The identity line. Sits between the h1 and the lede at full text weight,
+     because its job is to be readable by someone who landed here from a pasted
+     link and does not yet know whose calendar this is. */
+  .tagline {
+    color: var(--color-text-primary);
+    font-size: 1.15rem;
+    font-weight: 500;
+    max-width: 56ch;
+    margin: 0 0 0.6rem;
   }
   .lede {
     color: var(--color-text-secondary);
