@@ -120,7 +120,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 |---|---|---|---|---|---|
 | [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 | **resolved 2026-08-15** |
 | [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 | **resolved 2026-08-15 — A (light) wins** |
-| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | ~~06 → 08 → 03~~ cleared | 1.5 | **built 2026-08-15 — awaiting Marko's review** |
+| [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | ~~06 → 08 → 03~~ cleared | 1.5 | **resolved 2026-08-15** |
 | [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
 | [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | open |
 | [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
@@ -153,11 +153,21 @@ the map has to carry:
   Verified against a preview server, not assumed. **Ticket 10 must not cascade the surfaces while
   this stands** — a live home page whose most prominent rail link is dead is worse than no link.
   This makes **05 the highest-priority remaining ticket**, ahead of 04 and 09.
-- **`global.css` holds 13 dark-brand literals that ticket 08 never saw**, because its "zero
-  literals" grep was scoped `--include='*.astro'`. Old cyan in the filter bar and the
-  contact-input focus ring, `#0D0D0D` on `::selection`, `rgba(31,31,31)` on the lightbox buttons.
-  A scope narrower than the claim, which is the shape the root `CLAUDE.md` names. Belongs to
-  **09 or 10**.
+- **`global.css` holds 12 dark-brand literals that ticket 08 never saw, and all of them are dead
+  CSS.** Verified 2026-08-15: `filter-btn`, `filter-bar`, `project-card`, `contact-input`,
+  `hero-name`, `card-glow` and `card-accent` are referenced by **zero source files**, so this is
+  rules to delete, not a repaint. Belongs to **09 or 10**. Ticket 08's sweep missed them twice: the
+  scope was `--include='*.astro'` so it never read the stylesheet, and the pattern was `#hex` so it
+  could not match an `rgb()`/`rgba()` literal anywhere, including inside `.astro` files. A scope
+  narrower than the claim *and* a pattern narrower than the class, which is the shape the root
+  `CLAUDE.md` names twice over.
+
+**03 signed off 2026-08-15** after one review fix: devlog code blocks were rendering
+highlight.js's **github-dark** palette on a white block, measured at **1.54** contrast. Swapped to
+the light theme, separation moved from the fill to the border (tinting the block drops 9 of 20
+token classes below AA, versus 2 on white — the third-party palette pins the background), and the
+2 remaining classes remapped to `--color-warm`. Now 21 classes measured, zero below AA, min 4.57.
+Detail in [ticket 03](03-home-page-rebuild.md).
 
 ~~**11 is new and is not a build ticket.** The favicon and OG card left 08 when Marko asked to
 discuss a new mark rather than recolour the old one. It needs a conversation before it can be

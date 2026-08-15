@@ -1,7 +1,8 @@
 # Home page rebuild on the winning direction
 
 **Type:** task
-**Status:** **built 2026-08-15 — awaiting Marko's review of the copy and the screens**
+**Status:** **resolved 2026-08-15 — Marko reviewed the screens and signed off**, with one fix
+taken during review (devlog code blocks, below)
 **Blocked by:** ~~[02](02-register-ia-prototype.md)~~ resolved 2026-08-15, and
 ~~[08](08-light-dark-token-set.md)~~ resolved 2026-08-15
 **Estimate:** 1.5 sessions
@@ -64,11 +65,52 @@ Ads, Google App campaigns), `6 scene engines`.
 - **The fourth-card slot ships build vocabulary to a public reader**: "Fourth card. Reserved. Sized
   so the band does not reflow when it lands." That is written to the developer. Either give it
   reader-facing text or hold the grid open in CSS alone. Marko's call.
-- **`global.css` still holds 13 dark-brand literals** — the old cyan `rgb(95 206 219)` in the
-  filter bar and the contact-input focus ring, `#0D0D0D` on `::selection`, `rgba(31,31,31)` on the
-  lightbox buttons. [Ticket 08](08-light-dark-token-set.md)'s "zero literals" grep was
-  `--include='*.astro'`, so it never looked at the stylesheet. Belongs to
-  [ticket 09](09-devlog-reading-surface.md) or [10](10-close-out.md), not to this diff.
+- **`global.css` still holds 12 dark-brand literals, and every one of them is dead CSS.** The old
+  cyan in `.filter-btn` / `#filter-bar`, `.contact-input`'s focus ring, `.project-card`'s hover
+  glow and `namePulse`'s text-shadow, plus `#0D0D0D` on `::selection` and `rgba(31,31,31)` on
+  `.lb-btn`. Verified 2026-08-15: **`filter-btn`, `filter-bar`, `project-card`, `contact-input`,
+  `hero-name`, `card-glow` and `card-accent` are referenced by zero source files.** So this is not
+  a paint bug to repaint, it is dead rules to delete — a cheaper and more certain job than the
+  earlier note implied. Left in place here per the lane's rule on unrelated dead code; belongs to
+  [ticket 09](09-devlog-reading-surface.md) or [10](10-close-out.md).
+  [Ticket 08](08-light-dark-token-set.md)'s "zero literals" grep missed them twice over: it was
+  scoped `--include='*.astro'`, so it never read the stylesheet, and its pattern was `#hex`, so it
+  could not have matched an `rgb()` or `rgba()` literal even inside an `.astro` file. That second
+  miss is the same shape as the Tailwind-palette-class miss ticket 08 documented itself.
+
+## Fix taken during review, 2026-08-15 — devlog code blocks
+
+Marko signed off on the screens with one item: code blocks on the devlog pages were not visible
+enough. Committed `6c88b75`.
+
+**Root cause, measured rather than inferred.** `BaseLayout.astro:86` loaded highlight.js's
+**github-dark** theme, while `global.css`'s `.prose pre code.hljs` forced the block background to
+white on higher specificity. Computed style on the live page: `rgb(201,209,217)` text on
+`rgb(255,255,255)`, a contrast ratio of **1.54**. The dark theme's token palette was rendering on a
+white block.
+
+**The counterintuitive part, and why it is not a preference.** The obvious fix is to tint the block
+so it separates from the paper. Measuring the whole palette says otherwise: highlight.js's github
+theme is tuned against white, so on `--color-surface-raised` (#F3F1EC) **9 of 20 token classes drop
+below WCAG AA**, versus **2 on white**. The block's background is effectively pinned by a
+third-party palette, so the separation has to come from the border. It now uses
+`--color-border-strong` instead of `--color-border`.
+
+The 2 that still missed on white were `hljs-built_in` and `hljs-symbol` at 3.49 (`#e36209`). Both
+remap to `--color-warm`, the same hue family, already measured at 5.08 on white by ticket 08's
+palette pass. Reusing an audited token rather than inventing a third orange.
+
+**Verified after:** 21 token classes measured against the shipped background, **zero below AA,
+minimum 4.57**. The check discriminates — it reported 9 failures and then 2 on the variants that
+were rejected, so it can both fire and go quiet.
+
+Two things cleaned up in the same pass because the change ran through them:
+
+- **Inline code's background was still the retired dark-brand cyan**, written as an `rgba()`
+  literal. See the note above on why ticket 08's `#hex` pattern could not see it.
+- **`BlogPost.astro` carried a second copy of the code-block rule** that disagreed with
+  `global.css` on background and `border-radius` and lost on specificity, so it had never applied.
+  Deleted rather than left as a second source of truth.
 - **The timeline renders here; [ticket 04](04-experience-timeline.md) stays open** for the half
   this page cannot do: the cascade of the "AI Engineer" title with no employer field into
   `cv-base.md`, the regenerated PDF, and LinkedIn.
