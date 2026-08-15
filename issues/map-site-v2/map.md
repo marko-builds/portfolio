@@ -128,7 +128,8 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
 | [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
-| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo, and the OG card | decision | None | ? | open — **needs a conversation** |
+| [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
+| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | open — **direction named 2026-08-15: the chevron alone** |
 
 ~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
 2026-08-08).~~ **Resolved 2026-08-15.** The tagline leak is closed; ticket 01's `portrait` defect
@@ -158,9 +159,33 @@ the map has to carry:
   A scope narrower than the claim, which is the shape the root `CLAUDE.md` names. Belongs to
   **09 or 10**.
 
-**11 is new and is not a build ticket.** The favicon and OG card left 08 when Marko asked to
+~~**11 is new and is not a build ticket.** The favicon and OG card left 08 when Marko asked to
 discuss a new mark rather than recolour the old one. It needs a conversation before it can be
-scoped.
+scoped.~~
+
+**Conversation held 2026-08-15. Two outcomes.**
+
+**The mark is the `>` chevron alone**, teal on paper, aurora and sun cut. The current tile does
+three jobs at a size that fits one, the one-shape mark already exists as `SiteNav.astro`'s `> ms`
+wordmark, and making the tab icon that same glyph is the first thing to connect the wordmark, the
+favicon and the social card. duskpaper's lineage survives where it renders: its own repo and every
+studio render, all still dark. Ticket 11 is now scopeable at 0.5.
+
+**The OG card split out as [11a](11a-og-card-copy-fix.md) and jumped the queue.**
+`public/og-default.png` reads "> MarkoStankovic(Developer);\_" and "I build software products and
+ship them." — the retired identity, the drawered tagline, and the cursor ticket 07 removed. It is
+the `og:image` fallback for every page without its own, so it is what a recruiter sees whenever
+the site link is pasted anywhere.
+
+**[Ticket 01](01-stale-sweep-and-tagline.md) could not have caught it and was not wrong.** It
+fixed `brand.json` and grepped for the old string. The card was rendered months ago and the words
+are pixels. **This is one step past the root `CLAUDE.md` sweep rule: a rendered asset carries text
+no text search can see.** When an identity changes, the sweep needs an inventory of *rendered*
+artifacts — OG cards, banners, thumbnails, favicons, README heroes — each one opened rather than
+grepped. 11a's acceptance carries that inventory pass.
+
+**Revised order for what is left: 11a → 05 → 04 → 09 → 11 → 10.** 11a because it is live and
+wrong on the priority-#1 lane; 05 because ticket 03 shipped a rail link to a route that 404s.
 
 ## Amendments made to `issues/map-public-proof/`
 
