@@ -401,16 +401,36 @@ pre {
   white-space: pre;
 }
 
+/* The one place a code block's surface is defined. BlogPost.astro used to carry
+   a second, disagreeing copy of this rule; it lost on specificity and was dead.
+
+   The background stays white and the SEPARATION comes from the strong border,
+   which looks backwards until you measure it. highlight.js's github theme is
+   tuned against white, so tinting the block to --color-surface-raised (#F3F1EC)
+   pushes its token colours down: 9 of the 20 token classes drop below WCAG AA
+   on the tint versus 2 on white. The block's background is effectively pinned
+   by a third-party palette, so the edge has to be the border, not a fill. */
 .prose pre code.hljs,
 pre code.hljs {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: 0.5rem;
   display: block;
   font-size: 0.8125rem;
   line-height: 1.6;
   overflow-x: auto;
   padding: 1.25rem 1.5rem;
+}
+
+/* The two token classes that still miss AA on white after the theme swap.
+   github's #e36209 measures 3.49; --color-warm is the same hue family and was
+   already measured at 5.08 on white by the ticket 08 palette pass, so the fix
+   reuses an audited token instead of inventing a third orange. */
+.prose pre code.hljs .hljs-built_in,
+.prose pre code.hljs .hljs-symbol,
+pre code.hljs .hljs-built_in,
+pre code.hljs .hljs-symbol {
+  color: var(--color-warm);
 }
 
 /* ─── Copy button ────────────────────────────────────────────────────── */
