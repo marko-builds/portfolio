@@ -129,7 +129,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | open |
 | [10](10-close-out.md) | Close-out: cold read, then cascade the surfaces | task | 03, 04, 05, 06, 07, 08, 09 | 0.5 | open |
 | [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
-| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | open — **direction named 2026-08-15: the chevron alone** |
+| [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **built 2026-08-15** — awaiting Marko's real-tab look |
 
 ~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
 2026-08-08).~~ **Resolved 2026-08-15.** The tagline leak is closed; ticket 01's `portrait` defect
@@ -196,6 +196,26 @@ grepped. 11a's acceptance carries that inventory pass.
 
 **Revised order for what is left: 11a → 05 → 04 → 09 → 11 → 10.** 11a because it is live and
 wrong on the priority-#1 lane; 05 because ticket 03 shipped a rail link to a route that 404s.
+
+**11a and 11 both built 2026-08-15**, out of that order — 11 was taken early because its direction
+was already named and it is 0.5. **Eight of eleven tickets are done; what is left is 05, 04, 09,
+then 10.** 05 stays the highest priority: the identity rail still links a `/call` route that 404s.
+
+Two things ticket 11 produced that the rest of the map has to carry:
+
+- **`public/favicon.svg` is now a source file with a generator behind it**
+  (`scripts/render-icons.sh`, the repo's first `scripts/` entry). Any later change to the mark is a
+  one-line edit plus a re-run, never a hand-edited PNG. This is the structural answer to 11a's
+  finding that a rendered asset carries words and shapes no grep can see: **OG card v1 had no
+  source at all, and neither did the old favicon set** — which is exactly why both went stale
+  invisibly. Every rendered artifact this lane ships should leave a source and a regenerator behind
+  it, and ticket 10's cascade should check for one.
+- **`site.webmanifest`'s two colours were the last `#0B0E15` in a shipping surface.** The only one
+  left under `src/` or `public/` is a text fill in
+  `public/images/blog/relic-rush-obstacle-system/difficulty-ramp-chart.svg:6`. It belongs to
+  [ticket 09](09-devlog-reading-surface.md), together with the dark-brand literals in the other
+  blog diagram SVGs and in `Avatar.astro` — a larger set than 09 currently describes, and a
+  different one from the 12 dead-CSS literals already recorded above.
 
 ## Amendments made to `issues/map-public-proof/`
 

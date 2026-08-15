@@ -1,9 +1,82 @@
 # The mark: a new favicon and logo
 
 **Type:** ~~decision, then~~ task — **the decision is made**
-**Status:** open — **direction named 2026-08-15, ready to build**
+**Status:** built 2026-08-15 — **one Marko-only step left**: look at a real browser tab
+(`npm run preview`, http://localhost:4321) and sign off acceptance 1
 **Blocked by:** None
 **Estimate:** 0.5 session (was unscoped; the direction is what made it scopeable)
+
+## What shipped, 2026-08-15
+
+`public/favicon.svg` is now the single source and `scripts/render-icons.sh` regenerates every
+raster from it. Six files changed plus the manifest; the chevron path exists in exactly one place.
+
+**The geometry was measured, not eyeballed.** The first draft was traced off JetBrainsMono Nerd
+Font **Bold**, which is not what the site loads, and side by side at 32px it read as a heavier
+cousin of the wordmark rather than the same mark — acceptance 4 failing. Real JetBrains Mono 600
+(what `SiteNav.astro` renders) draws `>` with an ink box of 178x218: aspect 0.8165, stroke/height
+0.156. The shipped drawing is 268x328 = 0.817, stroke 52/328 = 0.159.
+
+**The stroke weight was a bake-off, not a guess.** The assumption was that a wordmark-weight stroke
+would be too thin to survive 16px, which is why the first draft inflated it to 68. Rendering 52 /
+60 / 68 at 16px side by side refuted that — they are near-indistinguishable at tab size. So the
+weight could be matched to the wordmark instead of traded against it, and both acceptance 1 and
+acceptance 4 are satisfied rather than one bought with the other.
+
+**What actually caps the size:** the Android maskable safe circle (radius 204.8). The far arm-end
+cap sits at radius 201.2. The chevron cannot grow further without being cropped on Android, and
+that bound — not the tile — is why it fills 64% of the viewBox rather than more. Verified by
+compositing the safe circle over the 512 render, not computed and trusted.
+
+### Corner radius is the one per-platform divergence, and it is a requirement not a second drawing
+
+- **rounded** (`rx=112`, as authored) → `favicon.svg`, `favicon.ico`, `favicon-96x96.png`
+- **square, opaque** (`rx=0`) → `apple-touch-icon.png`, both manifest PNGs. iOS composites the
+  Apple icon on black, so transparent corners ship as black corners; Android maskable crops the
+  tile and requires full bleed. Verified opaque: corner pixel is `srgb(251,250,247)` on all three.
+
+### `logo.svg`: decided
+
+It was byte-identical to `favicon.svg` and referenced nowhere in `src/`. It is now **the chevron
+with no tile behind it** — the mark for surfaces that bring their own background. A wordmark
+lockup was rejected: `> ms` renders as live text in `SiteNav.astro` and has no consumer that needs
+it as a vector, so drawing one would be speculative. Deleting it was rejected too — the file is
+free, and a mark-on-transparent is the one variant a set like this actually gets asked for.
+
+The script rewrites `logo.svg`'s comment header rather than inheriting `favicon.svg`'s, which
+claims "THIS FILE IS THE SOURCE". A copied claim outlives its truth.
+
+### The script's three guards are calibrated
+
+Both derivations are `sed` replacements, and a `sed` that matches nothing is a silent no-op that
+still exits 0. Each is asserted by counting. Run against three deliberately-broken sources:
+
+| Arm | Result |
+|---|---|
+| real source | exit 0 |
+| `rx="112"` renamed | exit 1 — `rx override matched 0 times, expected 1` |
+| `id="tile"` renamed | exit 1 — `tile strip left 1 rect(s) behind` |
+| `<path>` deleted | exit 1 — `logo.svg has 0 chevron path(s), expected 1` |
+
+The tile guard asserts on `<rect`, **not** on the `id="tile"` its own `sed` matches: a guard
+sharing a pattern with the mutation it checks passes whenever a rename breaks both, which is the
+"a check that cannot fail" shape. Renaming the id is the arm that proves it.
+
+### `site.webmanifest`
+
+`theme_color` and `background_color` moved `#0B0E15` → `#FBFAF7` (`--color-bg`). Swept the class,
+not the file: `#0B0E15` now appears nowhere in `src/` or `public/` except one blog diagram SVG's
+text fill (`difficulty-ramp-chart.svg:6`), which belongs to the devlog surface pass. There is no
+`<meta name="theme-color">` in `BaseLayout.astro` to keep in sync.
+
+### Verified
+
+- `npm run build` — 8 pages, clean. `dist/` carries all six icons byte-identical to `public/`,
+  and the five `<link rel="...icon">` / `rel="manifest"` tags in `dist/index.html` are unchanged.
+- 16px renders inspected against both a Chrome-light (`#DEE1E6`) and Chrome-dark (`#202124`) tab
+  strip. The chevron reads at 16, 20, 24, 32 and 48.
+- **Not verified by me: acceptance 1 as written.** It says a real browser tab, and a headless
+  screenshot has no tab strip in it. That is Marko's look.
 
 ## The direction, named 2026-08-15 by Marko: the chevron alone
 
@@ -50,6 +123,7 @@ The set `BaseLayout.astro:59-63` already wires, redrawn on the chevron:
 - `web-app-manifest-192x192.png`, `-512x512.png`
 - `logo.svg` — currently byte-identical to `favicon.svg`. Decide whether it stays a copy or becomes
   a wordmark lockup (`> ms`); it is referenced nowhere in `src/`, so it is free to change.
+  **Decided: neither — the chevron on transparent. See "What shipped" above.**
 
 `site.webmanifest` carries theme colours that were written for the dark tile. Check them against
 the light palette in the same pass.
