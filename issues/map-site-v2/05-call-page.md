@@ -1,7 +1,7 @@
 # The `/call` page: intake survey, Formspree, appointment link
 
 **Type:** task
-**Status:** open
+**Status:** resolved 2026-08-15
 **Blocked by:** None
 **Estimate:** 0.75 session
 
@@ -127,8 +127,23 @@ this page is now the surface that delivers it.
 - ~~`/call` renders in the winning direction's theme, both palettes if a toggle ships.~~
   **Met 2026-08-15.** Light only (no toggle shipped, map decision 4). Verified on a preview server
   at 1280 and 390 wide, not assumed: the rail's `/call` link now resolves 200 instead of 404.
-- A test submission arrives in Marko's inbox with all fields. **Open — needs the live form.**
+- ~~A test submission arrives in Marko's inbox with all fields.~~ **Met 2026-08-15.** Marko
+  submitted the form and confirmed it end to end. The form is named `portfolio-website` and
+  notifies **smankovic@gmail.com**. Left there deliberately: it is an internal notification target
+  no recruiter sees, and routing it to `contact@markostankovic.org` would add a Zoho hop that
+  forwards back to the same inbox. There is no domain-restriction setting on the plan, which is
+  what made a `localhost` test valid.
 - ~~The skip path reveals the appointment link.~~ **Met 2026-08-15, by removing the reveal.** The
   booking section is always rendered. The ticket's own point 1 concedes the gate is soft, so a
   hidden-then-shown link buys nothing and costs a JS dependency.
-- The appointment link books a real slot and sends a confirmation. **Blocked on `BOOKING_URL`.**
+- ~~The appointment link books a real slot and sends a confirmation.~~ **Met 2026-08-15.** Marko
+  created the schedule and booked a slot through it end to end. `BOOKING_URL` is
+  `https://calendar.app.google/ZHVuzrAWxYp4YvhW9`, verified live and calibrated: it 302s to
+  `calendar.google.com/appointments/schedules/`, where a nonsense short-link id 404s. The empty
+  branch and its email fallback are deleted.
+
+**One thing accepted rather than fixed: invites come from smankovic@gmail.com**, not from
+`contact@markostankovic.org`. Calendar invites are sent by the account itself and a Gmail send-as
+alias does not apply to them, so the only real fix is a paid Workspace subscription on the domain.
+Judged not worth it for a page that already carries his name, his site and his professional
+address. Revisit only if a recruiter ever remarks on it.

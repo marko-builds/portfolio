@@ -14,11 +14,13 @@ import SiteNav from "../components/SiteNav.astro";
 //     Nothing shares its quota now.
 const FORMSPREE_ACTION = "https://formspree.io/f/xlgpgwva";
 
-// Google Calendar appointment schedule. Marko-only to create; paste the
-// calendar.app.google link here. While it is empty the booking section renders
-// an email fallback instead of a dead button, because the identity rail links
-// this page and a dead primary CTA is worse than a plain instruction.
-const BOOKING_URL = "";
+// Google Calendar appointment schedule, created and booked end to end by Marko
+// on 2026-08-15. A short link: it 302s to the real schedule under
+// calendar.google.com/appointments/schedules/. Invites come from the account
+// itself, smankovic@gmail.com, and not from contact@markostankovic.org; a Gmail
+// send-as alias does not apply to calendar invites, so changing that would mean
+// a paid Workspace subscription on the domain. Accepted, decided the same day.
+const BOOKING_URL = "https://calendar.app.google/ZHVuzrAWxYp4YvhW9";
 
 // The submit is AJAX (fetch + Accept: application/json), which Formspree lists as
 // available on every plan. The hidden `_next` redirect this page was first built
@@ -143,25 +145,13 @@ const pageDescription =
       <!-- 2. THE SCHEDULER, last. -->
       <section class="band" id="book">
         <h2>Pick a slot</h2>
-        {
-          BOOKING_URL ? (
-            <>
-              <p class="band-intro">
-                This opens my calendar. You pick the time and get a confirmation with the
-                meeting link.
-              </p>
-              <a class="book" href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
-                Open the booking page
-              </a>
-            </>
-          ) : (
-            <p class="band-intro">
-              The booking page is not up yet. Email{" "}
-              <a class="inline-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>{" "}
-              and I will send you times.
-            </p>
-          )
-        }
+        <p class="band-intro">
+          This opens my calendar. You pick the time and get a confirmation with the
+          meeting link.
+        </p>
+        <a class="book" href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
+          Open the booking page
+        </a>
       </section>
 
       <!-- 3. THE CV, unconditional. Marko's call 2026-08-15: no gate, no reveal. -->

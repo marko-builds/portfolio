@@ -122,7 +122,7 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 | **resolved 2026-08-15 — A (light) wins** |
 | [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | ~~06 → 08 → 03~~ cleared | 1.5 | **resolved 2026-08-15** |
 | [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
-| [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | open |
+| [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | **resolved 2026-08-15** |
 | [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
@@ -198,8 +198,30 @@ grepped. 11a's acceptance carries that inventory pass.
 wrong on the priority-#1 lane; 05 because ticket 03 shipped a rail link to a route that 404s.
 
 **11a and 11 both built 2026-08-15**, out of that order — 11 was taken early because its direction
-was already named and it is 0.5. **Eight of eleven tickets are done; what is left is 05, 04, 09,
-then 10.** 05 stays the highest priority: the identity rail still links a `/call` route that 404s.
+was already named and it is 0.5. ~~**Eight of eleven tickets are done; what is left is 05, 04, 09,
+then 10.** 05 stays the highest priority: the identity rail still links a `/call` route that
+404s.~~
+
+**05 resolved 2026-08-15, and the dead rail link is closed** — verified against a server, not
+assumed. **Nine of eleven are done; what is left is 04, 09, then 10.** Ticket 10's cascade is no
+longer blocked by a 404.
+
+Two things ticket 05 produced that the rest of the map has to carry:
+
+- **The site now depends on two external accounts that no check in this repo can see**: a Formspree
+  form (`portfolio-website`, notifying smankovic@gmail.com) and a Google Calendar appointment
+  schedule. Both were verified live and calibrated against a known-bad control, and **both can
+  break silently at any time without a single file in this repo changing**. Ticket 10's close-out
+  should probe them rather than assume them: a `POST` to the form endpoint that returns `400 EMPTY`
+  rather than `404 FORM_NOT_FOUND`, and a `HEAD` on the short link that 302s rather than 404s.
+- **A documented field name is not a supported field name.** The page was first built on Formspree's
+  `_next` redirect, taken from this ticket's own text. `_next` has left their special-fields list
+  and the redirect that replaced it is paid-plan only, so a free-plan submission would have stranded
+  the reader on formspree.io with no way back — and the page would have looked entirely correct
+  until the first real submission. This is the map's second sighting in two days of a claim that
+  reads as settled because it was written before anyone checked (the first was ticket 11a's OG
+  card). **Checking a third-party contract costs one fetch; inheriting it from a ticket costs a
+  silent break in production.**
 
 Two things ticket 11 produced that the rest of the map has to carry:
 
