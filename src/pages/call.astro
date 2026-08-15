@@ -20,11 +20,12 @@ const FORMSPREE_ACTION = "https://formspree.io/f/xlgpgwva";
 // this page and a dead primary CTA is worse than a plain instruction.
 const BOOKING_URL = "";
 
-// Formspree posts, then redirects here with ?sent=1 and the #book fragment, so a
-// reader with JS off still lands on the booking section. The inline script only
-// adds the confirmation note.
-const RETURN_URL = new URL("/call?sent=1#book", Astro.site).href;
-
+// The submit is AJAX (fetch + Accept: application/json), which Formspree lists as
+// available on every plan. The hidden `_next` redirect this page was first built
+// on is NOT: it has left their special-fields list, and the custom thank-you
+// redirect that replaced it is documented "Available on: Personal, Professional,
+// Business plans". With JS off the form still posts normally and lands on
+// Formspree's own thank-you page, which is the free plan's default behaviour.
 const CONTACT_EMAIL = "contact@markostankovic.org";
 
 const purposes = [
@@ -66,16 +67,22 @@ const pageDescription =
           Got it, thanks. Pick a slot below and I will see you there.
         </p>
 
+        <p class="err-note" id="err-note" hidden>
+          That did not send. Email <a class="inline-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>,
+          or skip it and pick a slot below.
+        </p>
+
         <form
           id="survey-form"
           class="survey"
           action={FORMSPREE_ACTION}
           method="POST"
         >
-          <input type="hidden" name="_next" value={RETURN_URL} />
-          <input type="hidden" name="_subject" value="markostankovic.org: call request" />
-          <!-- Formspree's honeypot. A human never sees it, a bot fills it, and the
-               submission is dropped. -->
+          <!-- `subject` without the underscore: that is the spelling Formspree's
+               current special-fields list documents. -->
+          <input type="hidden" name="subject" value="markostankovic.org: call request" />
+          <!-- Formspree's honeypot, still documented on all plans. A human never
+               sees it, a bot fills it, and the submission is dropped. -->
           <p class="gotcha" aria-hidden="true">
             <label for="cf-gotcha">Leave this empty</label>
             <input type="text" id="cf-gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
@@ -335,7 +342,8 @@ const pageDescription =
     border-bottom-color: var(--color-accent);
   }
 
-  .sent-note {
+  .sent-note,
+  .err-note {
     margin: 0 0 1.5rem;
     padding: 0.85rem 1rem;
     border: 1px solid var(--color-accent);
@@ -343,6 +351,10 @@ const pageDescription =
     background: var(--color-accent-dim);
     color: var(--color-text-primary);
     max-width: 42rem;
+  }
+  .err-note {
+    border-color: var(--color-warm);
+    background: transparent;
   }
 
   /* ── Booking ──────────────────────────────────────────────────────────── */
@@ -439,12 +451,38 @@ const pageDescription =
 </style>
 
 <script>
-  // Formspree redirects back to /call?sent=1#book. The fragment does the work
-  // with JS off; this only swaps the form for the confirmation.
-  if (new URLSearchParams(window.location.search).has("sent")) {
-    document.getElementById("sent-note")?.removeAttribute("hidden");
-    // The intro invites you to skip a form that is no longer on the page.
-    document.getElementById("survey-intro")?.setAttribute("hidden", "");
-    document.getElementById("survey-form")?.setAttribute("hidden", "");
-  }
+  // Submit without leaving the page, so the reader lands on the booking section
+  // instead of Formspree's thank-you page. With JS off this listener never
+  // attaches and the form posts normally, which still delivers the submission.
+  const form = document.getElementById("survey-form") as HTMLFormElement | null;
+  const intro = document.getElementById("survey-intro");
+  const sent = document.getElementById("sent-note");
+  const err = document.getElementById("err-note");
+  const btn = form?.querySelector<HTMLButtonElement>('button[type="submit"]') ?? null;
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (btn) btn.disabled = true;
+    err?.setAttribute("hidden", "");
+
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) throw new Error(String(res.status));
+
+      // The intro invites you to skip a form that is no longer on the page.
+      intro?.setAttribute("hidden", "");
+      form.setAttribute("hidden", "");
+      sent?.removeAttribute("hidden");
+      document.getElementById("book")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch {
+      // The booking link is the thing that matters and it is already on the
+      // page, so a failed post must not read as a dead end.
+      err?.removeAttribute("hidden");
+      if (btn) btn.disabled = false;
+    }
+  });
 </script>

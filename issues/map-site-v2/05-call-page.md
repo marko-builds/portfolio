@@ -98,9 +98,22 @@ link now applies to the CV consistently.
 to answer a submission that is not followed by a booking, which is a dead end for anyone who fills
 the survey and then does not book.
 
-**The submit flow needs no JS to work.** A hidden `_next` sends Formspree back to
-`/call?sent=1#book`, so the fragment lands the reader on the booking section by itself; the inline
-script only swaps the form for a confirmation note.
+**Corrected the same day, before it shipped: `_next` does not work on a free plan.** The page was
+first built on a hidden `_next` field redirecting to `/call?sent=1#book`, which would have needed
+no JS. Checking Formspree's live docs rather than trusting the field name found that **`_next` has
+left their special-fields list entirely**, and the custom thank-you redirect that replaced it is
+documented *"Available on: Personal, Professional, Business plans"*. A free-plan submission would
+have dumped the reader on Formspree's own thank-you page with no way back to the booking section,
+and it would have looked like a working page right up to the first real submission. Rebuilt on
+**fetch + `Accept: application/json`**, which the same docs list as available on all plans; with JS
+off the form posts normally and still delivers. `_subject` was renamed to `subject` for the same
+reason: the underscore spelling is no longer in the documented list. `_gotcha` was re-checked and
+is still supported on all plans.
+
+**The form still exists**, probed 2026-08-15 and calibrated against a nonsense id:
+`POST /f/xlgpgwva` returns **400 `EMPTY`** while `POST /f/zzzznope` returns **404
+`FORM_NOT_FOUND`**, so the probe can tell the two cases apart. What it does not establish is which
+inbox the form delivers to, which is what the acceptance test is actually for.
 
 **Register:** the page follows `index.astro`'s locked direction (sans headings, mono kept for small
 meta), not `/devlog`'s older mono register, which ticket 09 still owns.
