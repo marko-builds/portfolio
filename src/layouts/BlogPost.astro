@@ -67,7 +67,12 @@ const articleSchema = {
         left: 0;
         width: 100%;
         height: 3px;
-        background: rgba(255,255,255,0.08);
+        /* Was a white veil at low alpha, built for the dark page: on the light
+           background it rendered as nothing, so the teal fill floated with no
+           track behind it. Same class as the inline-code fix below, and missed by
+           the same #hex-only sweep. The old value is deliberately not spelled out,
+           so a future colour sweep does not trip on the comment recording the fix. */
+        background: var(--color-border);
         z-index: 10000;
         pointer-events: none;
       }
@@ -78,15 +83,11 @@ const articleSchema = {
         will-change: width;
       }
 
-      /* ── Code blocks ── */
-      pre code.hljs {
-        background: #141414;
-        border: 1px solid #1F1F1F;
-        border-radius: 0;
-        font-size: 0.8125rem;
-        line-height: 1.6;
-        padding: 1.25rem 1.5rem;
-      }
+      /* ── Code blocks ──
+         The surface lives in global.css, which beat this rule on specificity
+         (.prose pre code.hljs over pre code.hljs). This copy disagreed with it
+         on background and border-radius and had never applied, so it is gone
+         rather than left as a second source of truth. */
 
       /* ── Copy button ── */
       .pre-wrap {
@@ -99,22 +100,22 @@ const articleSchema = {
         padding: 0.25rem 0.6rem;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.6875rem;
-        background: #1F1F1F;
-        color: #888888;
-        border: 1px solid #2a2a2a;
+        background: var(--color-surface-raised);
+        color: var(--color-text-secondary);
+        border: 1px solid var(--color-border-strong);
         border-radius: 0;
         cursor: pointer;
         transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
         z-index: 10;
       }
       .copy-btn:hover {
-        background: #2a2a2a;
-        color: #F0F0F0;
-        border-color: #888;
+        background: var(--color-surface-raised);
+        color: var(--color-text-primary);
+        border-color: var(--color-text-secondary);
       }
       .copy-btn.copied {
-        color: #5FCEDB;
-        border-color: #5FCEDB20;
+        color: var(--color-accent);
+        border-color: var(--color-accent-dim);
       }
 
       /* ── Long-form prose ── */
@@ -122,7 +123,7 @@ const articleSchema = {
         font-family: 'Geist', system-ui, sans-serif;
         font-size: 1.05rem;
         line-height: 1.85;
-        color: #888888;
+        color: var(--color-text-secondary);
         max-width: 680px;
       }
 
@@ -133,7 +134,7 @@ const articleSchema = {
       .prose h2,
       .prose h3 {
         font-family: 'JetBrains Mono', monospace;
-        color: #F0F0F0;
+        color: var(--color-text-primary);
         margin-top: 2.5rem;
         margin-bottom: 0.75rem;
         line-height: 1.3;
@@ -151,20 +152,24 @@ const articleSchema = {
 
       .prose h2::before {
         content: '// ';
-        color: #5FCEDB;
+        color: var(--color-accent);
       }
 
       .prose h3::before {
         content: '// ';
-        color: #5FCEDB40;
+        color: var(--color-accent-veil);
       }
 
       /* Inline code */
       .prose :not(pre) > code {
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.875em;
-        color: #5FCEDB;
-        background: rgba(95, 206, 219, 0.08);
+        color: var(--color-accent);
+        /* Was the retired dark-brand cyan at 8% alpha. Ticket 08's literal sweep
+           matched #hex only, so an rgba() literal never showed up. The old value
+           is deliberately not spelled out here, so a future colour sweep does not
+           trip on the comment that records the fix. */
+        background: var(--color-accent-dim);
         padding: 0.15em 0.4em;
       }
 
@@ -175,17 +180,17 @@ const articleSchema = {
 
       /* Blockquotes */
       .prose blockquote {
-        border-left: 2px solid #5FCEDB;
+        border-left: 2px solid var(--color-accent);
         padding-left: 1.25rem;
         margin-left: 0;
-        color: #888888;
+        color: var(--color-text-secondary);
         font-style: italic;
       }
 
       /* Images */
       .prose img {
         width: 100%;
-        border: 1px solid #1F1F1F;
+        border: 1px solid var(--color-border);
         display: block;
         margin: 1.5rem 0 0.5rem;
       }
@@ -194,28 +199,28 @@ const articleSchema = {
         text-align: center;
         font-size: 0.8rem;
         font-family: 'JetBrains Mono', monospace;
-        color: #444444;
+        color: var(--color-text-muted);
         margin-bottom: 1.5rem;
       }
 
       /* HR */
       .prose hr {
         border: none;
-        border-top: 1px solid #5FCEDB20;
+        border-top: 1px solid var(--color-accent-dim);
         margin: 2rem 0;
       }
 
       /* Links */
       .prose a {
-        color: #888888;
+        color: var(--color-text-secondary);
         text-decoration: underline;
         text-decoration-color: transparent;
         transition: color 0.15s ease, text-decoration-color 0.15s ease;
       }
 
       .prose a:hover {
-        color: #5FCEDB;
-        text-decoration-color: #5FCEDB40;
+        color: var(--color-accent);
+        text-decoration-color: var(--color-accent-veil);
       }
 
       /* Lists */
@@ -230,11 +235,11 @@ const articleSchema = {
       }
 
       .prose ul li::marker {
-        color: #5FCEDB;
+        color: var(--color-accent);
       }
 
       .prose ol li::marker {
-        color: #444444;
+        color: var(--color-text-muted);
         font-family: 'JetBrains Mono', monospace;
       }
     </style>
@@ -252,47 +257,47 @@ const articleSchema = {
     <div class="relative pt-14">
       <div class="relative max-w-3xl mx-auto px-6 py-16">
         {showDraftBanner && (
-          <div class="mb-5 px-4 py-3 font-mono text-xs" style="border: 1px solid #D99A5E; color: #D99A5E; background: rgba(217,154,94,0.06);">
+          <div class="mb-5 px-4 py-3 font-mono text-xs" style="border: 1px solid var(--color-warm); color: var(--color-warm); background: rgba(217,154,94,0.06);">
             DRAFT. Visible because this is the dev server. It is excluded from every build, so it
             is not on the live site.
           </div>
         )}
 
-        <a href="/devlog" class="hero-enter inline-block text-[#666666] hover:text-[#5FCEDB] font-mono text-xs mb-5 tracking-wide transition-colors duration-150" style="--delay: 0.05s">
+        <a href="/devlog" class="hero-enter inline-block text-[var(--color-text-muted)] hover:text-[var(--color-accent)] font-mono text-xs mb-5 tracking-wide transition-colors duration-150" style="--delay: 0.05s">
           // devlog
         </a>
 
-        <h1 class="hero-enter font-mono font-bold text-[#F0F0F0] mb-5" style="font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; letter-spacing: -0.02em; --delay: 0.15s">
+        <h1 class="hero-enter font-mono font-bold text-[var(--color-text-primary)] mb-5" style="font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; letter-spacing: -0.02em; --delay: 0.15s">
           {title}
         </h1>
 
         <div class="hero-enter flex flex-wrap items-center gap-4 mb-5" style="--delay: 0.25s">
-          <time datetime={date.toISOString().slice(0, 10)} class="font-mono text-sm text-[#666666]">{formattedDate}</time>
-          <span class="text-[#1F1F1F]">·</span>
-          <span class="font-mono text-sm text-[#666666]">{readingTime} min read</span>
+          <time datetime={date.toISOString().slice(0, 10)} class="font-mono text-sm text-[var(--color-text-muted)]">{formattedDate}</time>
+          <span class="text-[var(--color-border-strong)]">·</span>
+          <span class="font-mono text-sm text-[var(--color-text-muted)]">{readingTime} min read</span>
         </div>
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.35s">
           {tags.map(tag => (
-            <span class="text-xs font-mono text-[#888888] border border-[#2A2A2A] px-3 py-1">
+            <span class="text-xs font-mono text-[var(--color-text-secondary)] border border-[var(--color-border-strong)] px-3 py-1">
               {tag}
             </span>
           ))}
         </div>
 
-        <p class="hero-enter text-[#888888] text-base leading-relaxed" style="--delay: 0.45s">
+        <p class="hero-enter text-[var(--color-text-secondary)] text-base leading-relaxed" style="--delay: 0.45s">
           {excerpt}
         </p>
 
-        <div class="hero-enter mt-6 pt-6 border-t border-[#1F1F1F] flex items-center gap-2 text-sm" style="--delay: 0.5s">
-          <span class="text-[#666666]">By</span>
-          <a href="/" class="font-mono text-[#888888] hover:text-[#5FCEDB] transition-colors duration-150">Marko Stankovic</a>
+        <div class="hero-enter mt-6 pt-6 border-t border-[var(--color-border)] flex items-center gap-2 text-sm" style="--delay: 0.5s">
+          <span class="text-[var(--color-text-muted)]">By</span>
+          <a href="/" class="font-mono text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors duration-150">Marko Stankovic</a>
         </div>
       </div>
     </div>
 
     <!-- ─── POST BODY ──────────────────────────────────────────────────────── -->
-    <div class="border-t border-[#1F1F1F]/50 py-16">
+    <div class="border-t border-[var(--color-border)]/50 py-16">
       <div class="max-w-3xl mx-auto px-6">
         <article class="prose">
           <slot />
@@ -303,15 +308,15 @@ const articleSchema = {
     </main>
 
     <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-    <footer class="border-t border-[#1F1F1F]/50 py-10">
+    <footer class="border-t border-[var(--color-border)]/50 py-10">
       <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <a
           href="/devlog"
-          class="nav-link inline-flex items-center text-sm font-mono text-[#888888] hover:text-[#5FCEDB] transition-colors duration-150"
+          class="nav-link inline-flex items-center text-sm font-mono text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors duration-150"
         >
           more posts
         </a>
-        <p class="text-[#666666] text-xs font-mono">© 2026 Marko Stankovic</p>
+        <p class="text-[var(--color-text-muted)] text-xs font-mono">© 2026 Marko Stankovic</p>
       </div>
     </footer>
 
