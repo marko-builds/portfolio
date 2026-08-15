@@ -19,7 +19,13 @@
 
        THIS FILE IS THE SOURCE. Every raster in the set comes from it via
        scripts/render-icons.sh — do not hand-edit a PNG. -->
-  <rect id="tile" width="512" height="512" rx="112" fill="#FBFAF7"/>
+  <!-- Tile is #EAE7DF, deliberately NOT the page background token #FBFAF7. Paper on paper made
+       the tile invisible against a light browser tab strip, so the icon read as a chevron
+       floating loose in the chrome. #EAE7DF is the darkest warm paper that still clears WCAG AA
+       (4.67) against the teal; one notch further, the border token #E4E0D8, measures 4.38.
+       Not a CSS token on purpose: this is an asset, not a surface, and no stylesheet reads it.
+       (No double hyphens in here. XML forbids them inside a comment and rsvg refuses the file.) -->
+  <rect id="tile" width="512" height="512" rx="112" fill="#EAE7DF"/>
   <path d="M148 118 L345 256 L148 394"
         fill="none"
         stroke="#14707C"
