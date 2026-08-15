@@ -1,0 +1,615 @@
+---
+// PROTOTYPE — throwaway. Ticket: issues/map-site-v2/02-register-ia-prototype.md
+// Two screens of the NEW information architecture, switchable via ?variant=:
+//   A — the new IA in light  (the proposal)
+//   B — the same IA in today's dark tokens (the control)
+// Answers: does the page read as approachable to a non-terminal person, and
+// does light beat dark for this site. Ends at a locked direction, not a page.
+//
+// This route must never reach main. It lives on proto/site-v2-register.
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteNav from "../../components/SiteNav.astro";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 4);
+
+// Identity rail. Facts only, all verifiable.
+const identity = {
+  name: "Marko Stankovic",
+  role: "AI Engineer",
+  location: "Belgrade, Serbia",
+  languages: "Serbian (native), English",
+  email: "contact@markostankovic.org",
+  github: "https://github.com/marko-builds",
+  linkedin: "https://www.linkedin.com/in/marko-builds/",
+  // Marko 2026-08-15: no CV link on the site. It goes out through /call
+  // instead. Reverses the map's decision 9. The /cv redirect route stays —
+  // sent applications already carry that URL.
+  call: "/call",
+};
+
+// The proof band leads the page. Every card carries a link, a number and a date.
+// claimcheck is absent from GitHub as of 2026-08-15, so the band is built to
+// take a fourth card rather than waiting for it (inherited from map-public-proof/14).
+const proof = [
+  {
+    name: "skill-vibe-test",
+    what: "Measures whether an agent skill still steers the model after 10 turns, scored by an LLM judge.",
+    metric: "10-turn decay probe",
+    date: "2026-07",
+    href: "https://github.com/marko-builds/skill-vibe-test",
+  },
+  {
+    name: "adpreflight",
+    what: "Checks hand-coded HTML5 playable ads against network rule packs before submission.",
+    metric: "13/13 calibrated checks",
+    date: "2026-08",
+    href: "https://github.com/marko-builds/adpreflight",
+  },
+  {
+    name: "duskpaper",
+    what: "Generative animated wallpapers rendered on your machine, at your resolution, from your seed.",
+    metric: "seed-locked",
+    date: "2026-07",
+    href: "https://github.com/marko-builds/duskpaper",
+  },
+];
+
+// Products, demoted beneath the proof band.
+const products = [
+  { name: "DeployLog", what: "Release notes from real git history.", href: "https://deploylog.dev" },
+  { name: "Habitagram", what: "Habit tracking, offline-first.", href: "https://habitagram.app" },
+  { name: "changelogue", what: "Open-source git-to-changelog CLI.", href: "https://github.com/marko-builds/changelogue" },
+];
+
+// Timeline records, from issues/map-site-v2/04-experience-timeline.md.
+const timeline = [
+  {
+    // Marko 2026-08-15: cut "Independent" and the Monolithiq invoicing-entity
+    // line. Reverses the second half of the map's decision 8.
+    role: "AI Engineer",
+    org: "",
+    where: "Belgrade",
+    when: "Sep 2025 — present",
+    bullets: [
+      "Built an agent harness that implements whole feature branches overnight behind tests and an automated review gate.",
+      "Shipped four open-source measurement tools, each with a calibrated check suite.",
+    ],
+  },
+  {
+    role: "Unity Game Developer",
+    org: "Replai",
+    where: "Belgrade (Remote)",
+    when: "Mar 2025 — Sep 2025",
+    bullets: ["Gameplay and tooling work in Unity/C# on a live product."],
+  },
+  {
+    role: "Unity Developer Intern",
+    org: "Inlustris Studio",
+    where: "Belgrade",
+    when: "Jun 2024 — Nov 2024",
+    bullets: ["Gameplay systems and editor tooling."],
+  },
+];
+
+const education = {
+  degree: "BSc, Computer Games & Programming",
+  org: "Univerzitet Metropolitan",
+  where: "Belgrade",
+  when: "2021 — 2025",
+};
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-GB", { year: "numeric", month: "short" });
+---
+
+<BaseLayout title="PROTOTYPE — site v2 register + IA">
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <div id="proto-root" data-variant="a">
+    <SiteNav active="home" />
+
+    <div class="shell">
+      <!-- The persistent identity rail -->
+      <aside class="rail">
+        <img class="portrait" src="/proto/portrait.webp" alt="Marko Stankovic" width="480" height="480" />
+        <h1 class="ident-name">{identity.name}</h1>
+        <p class="ident-role">{identity.role}</p>
+        <dl class="ident-facts">
+          <div><dt>Based</dt><dd>{identity.location}</dd></div>
+          <div><dt>Languages</dt><dd>{identity.languages}</dd></div>
+        </dl>
+        <ul class="ident-links">
+          <li><a href={`mailto:${identity.email}`}>Email</a></li>
+          <li><a href={identity.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href={identity.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+          <li><a href={identity.call} class="call-link">Book a call</a></li>
+        </ul>
+      </aside>
+
+      <main class="body">
+        <section class="lede">
+          <p class="lede-line">I build AI systems and prove they work.</p>
+          <p class="lede-sub">
+            Most teams ship AI features they cannot check. I build the tools that measure
+            whether they worked, and I publish the numbers.
+          </p>
+        </section>
+
+        <!-- Proof leads -->
+        <section class="band" id="proof">
+          <h2>Proof</h2>
+          <p class="band-intro">Open source. Every one has a repo you can read and a check you can run.</p>
+          <ul class="proof-grid">
+            {proof.map((p) => (
+              <li class="proof-card">
+                <a class="proof-title" href={p.href} target="_blank" rel="noopener noreferrer">{p.name}</a>
+                <p class="proof-what">{p.what}</p>
+                <p class="proof-meta"><span class="metric">{p.metric}</span><span class="sep">·</span><span>{p.date}</span></p>
+              </li>
+            ))}
+            <li class="proof-card is-slot">
+              <p class="slot-label">Fourth card</p>
+              <p class="proof-what">Reserved. Sized so the band does not reflow when it lands.</p>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Products, demoted -->
+        <section class="band" id="products">
+          <h2>Products</h2>
+          <ul class="product-rows">
+            {products.map((p) => (
+              <li class="product-row">
+                <a href={p.href} target="_blank" rel="noopener noreferrer">{p.name}</a>
+                <span class="product-what">{p.what}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <!-- Experience -->
+        <section class="band" id="experience">
+          <h2>Experience</h2>
+          <ol class="timeline">
+            {timeline.map((t) => (
+              <li class="record">
+                <div class="record-head">
+                  <h3 class="record-role">{t.role}</h3>
+                  <span class="record-when">{t.when}</span>
+                </div>
+                <p class="record-org">{t.org && <>{t.org}<span class="sep">·</span></>}{t.where}</p>
+                <ul class="record-bullets">
+                  {t.bullets.map((b) => <li>{b}</li>)}
+                </ul>
+              </li>
+            ))}
+            <li class="record">
+              <div class="record-head">
+                <h3 class="record-role">{education.degree}</h3>
+                <span class="record-when">{education.when}</span>
+              </div>
+              <p class="record-org">{education.org}<span class="sep">·</span>{education.where}</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- Devlog -->
+        <section class="band" id="devlog">
+          <h2>Devlog</h2>
+          <ul class="post-rows">
+            {posts.map((p) => (
+              <li class="post-row">
+                <a class="post-title" href={`/devlog/${p.slug}`}>{p.data.title}</a>
+                <p class="post-excerpt">{p.data.excerpt}</p>
+                <span class="post-date">{fmt(p.data.date)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </main>
+    </div>
+
+    <!-- PROTOTYPE SWITCHER — not part of the design under evaluation -->
+    <div class="proto-switch" role="group" aria-label="Prototype variant switcher">
+      <button type="button" data-step="-1" aria-label="Previous variant">&#8592;</button>
+      <span class="proto-label" id="proto-label"></span>
+      <button type="button" data-step="1" aria-label="Next variant">&#8594;</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────
+     PROTOTYPE TOKENS. Both palettes live here, in one block, because this
+     route is throwaway and ticket 08 owns the real token set. Nothing below
+     should be copied into src/styles/global.css by hand.
+     ───────────────────────────────────────────────────────────────────── */
+
+  /* A — light (the proposal) */
+  #proto-root[data-variant="a"] {
+    --p-bg: #FBFAF7;
+    --p-surface: #FFFFFF;
+    --p-border: #E4E0D8;
+    --p-border-strong: #CFC9BD;
+    --p-text: #1A1D23;
+    --p-text-dim: #5B6270;
+    --p-text-muted: #838B98;
+    --p-accent: #14707C;
+    --p-accent-soft: #E4F1F2;
+    --p-warm: #B4703A;
+
+    --p-body-size: 17px;
+    --p-measure: 68ch;
+    --p-rhythm: 4.5rem;
+    --p-radius: 10px;
+
+    /* The shared chrome (SiteNav) reads the global dark tokens, so the light
+       screen has to redefine them or it ships a dark bar on a light page.
+       Redefining the custom properties repaints every token-driven rule at
+       once; the one rule it cannot reach is the nav's hardcoded background,
+       overridden below. That literal is one of the 645 ticket 08 measured. */
+    --color-bg: #FBFAF7;
+    --color-surface: #FFFFFF;
+    --color-border: #E4E0D8;
+    --color-border-strong: #CFC9BD;
+    --color-accent: #14707C;
+    --color-accent-dim: #14707C1F;
+    --color-warm: #B4703A;
+    --color-text-primary: #1A1D23;
+    --color-text-secondary: #5B6270;
+    --color-text-muted: #838B98;
+  }
+
+  /* B — today's dark tokens (the control) */
+  #proto-root[data-variant="b"] {
+    --p-bg: #0B0E15;
+    --p-surface: #12151C;
+    --p-border: #1E2430;
+    --p-border-strong: #2A3242;
+    --p-text: #E4E9EC;
+    --p-text-dim: #8792A0;
+    --p-text-muted: #767F8F;
+    --p-accent: #5FCEDB;
+    --p-accent-soft: #5FCEDB20;
+    --p-warm: #D99A5E;
+
+    --p-body-size: 16px;
+    --p-measure: 78ch;
+    --p-rhythm: 3.5rem;
+    --p-radius: 4px;
+  }
+
+  #proto-root {
+    background: var(--p-bg);
+    color: var(--p-text);
+    font-size: var(--p-body-size);
+    min-height: 100vh;
+  }
+
+  /* The page background is set on body by global.css, so the variant has to
+     repaint it or the light screen sits on a dark page. */
+  :global(body:has(#proto-root[data-variant="a"])) { background-color: #FBFAF7; }
+  :global(body:has(#proto-root[data-variant="b"])) { background-color: #0B0E15; }
+
+  /* body::before is the 1px top accent, painted outside #proto-root. */
+  :global(body:has(#proto-root[data-variant="a"])::before) { background: #14707C; }
+
+  /* The nav's background is a hex literal, not a token, so it needs its own line. */
+  #proto-root[data-variant="a"] :global(.site-nav) {
+    background: #FBFAF7E6;
+  }
+
+  /* ── How much mono survives. The single clearest register lever. ──────
+     B keeps today's voice: mono headings and the `// ` section prefix.
+     A keeps mono for exactly one thing, the metric, and nothing else. */
+  #proto-root[data-variant="b"] h1,
+  #proto-root[data-variant="b"] h2,
+  #proto-root[data-variant="b"] h3 {
+    font-family: var(--font-mono);
+    letter-spacing: -0.01em;
+  }
+  #proto-root[data-variant="b"] .band > h2::before {
+    content: "// ";
+    color: var(--p-accent);
+  }
+  #proto-root[data-variant="a"] h1,
+  #proto-root[data-variant="a"] h2,
+  #proto-root[data-variant="a"] h3 {
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+  #proto-root[data-variant="a"] .band > h2::before { content: none; }
+  .metric { font-family: var(--font-mono); font-size: 0.85em; }
+
+  /* ── Shell: the persistent rail plus the reading column ─────────────── */
+  /* The shell shares SiteNav's grid exactly — max-width 1000px, 56px inline
+     padding — so the `> ms` mark lines up with the rail's left edge and the
+     nav links line up with the content column's right edge. The live site
+     already does this: index.astro's `.frame` carries the same two values.
+     Changing these without changing SiteNav.astro is what knocked the header
+     out of alignment on the first render. */
+  .shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 3.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    /* SiteNav is position:fixed and 56px tall, so a 3.5rem top padding clears
+       it by exactly zero and the portrait sits flush against the bar. The nav
+       height plus a full gap is the floor here. */
+    padding: 7rem 56px 8rem;
+    align-items: start;
+  }
+
+  .rail {
+    position: sticky;
+    top: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .portrait {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--p-border-strong);
+  }
+
+  .ident-name { font-size: 1.35rem; font-weight: 600; margin: 0.4rem 0 0; }
+  .ident-role { color: var(--p-accent); margin: 0; font-weight: 500; }
+
+  .ident-facts { margin: 0.75rem 0 0; display: grid; gap: 0.45rem; }
+  .ident-facts dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--p-text-muted);
+  }
+  .ident-facts dd { margin: 0; color: var(--p-text-dim); font-size: 0.92rem; }
+
+  .ident-links {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .ident-links a {
+    color: var(--p-text-dim);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .ident-links a:hover { color: var(--p-accent); border-bottom-color: var(--p-accent); }
+  .call-link { font-weight: 600; color: var(--p-text) !important; }
+
+  /* ── Reading column ─────────────────────────────────────────────────── */
+  .body { max-width: var(--p-measure); }
+
+  .lede-line {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.15;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+  #proto-root[data-variant="b"] .lede-line { font-family: var(--font-mono); }
+  .lede-sub { color: var(--p-text-dim); margin: 0; font-size: 1.05rem; }
+
+  .band { margin-top: var(--p-rhythm); }
+  .band > h2 {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--p-text-muted);
+    margin: 0 0 0.5rem;
+  }
+  #proto-root[data-variant="a"] .band > h2 {
+    color: var(--p-text);
+    text-transform: none;
+    letter-spacing: -0.01em;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .band-intro { color: var(--p-text-dim); margin: 0 0 1.5rem; }
+
+  /* ── Proof cards. Their weight against the product rows is the thing
+        being judged, so A gives them a surface and B keeps them flat. ─── */
+  .proof-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .proof-card {
+    border: 1px solid var(--p-border);
+    border-radius: var(--p-radius);
+    padding: 1.25rem;
+    background: var(--p-surface);
+  }
+  #proto-root[data-variant="a"] .proof-card {
+    box-shadow: 0 1px 2px rgb(26 29 35 / 0.05), 0 8px 24px -16px rgb(26 29 35 / 0.25);
+  }
+  .proof-title {
+    font-weight: 600;
+    color: var(--p-text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--p-accent);
+  }
+  #proto-root[data-variant="a"] .proof-title { font-size: 1.1rem; }
+  .proof-what { color: var(--p-text-dim); margin: 0.5rem 0 0.9rem; font-size: 0.94rem; }
+  .proof-meta {
+    margin: 0;
+    color: var(--p-text-muted);
+    font-size: 0.85rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .metric { white-space: nowrap; }
+  .proof-card.is-slot {
+    border-style: dashed;
+    background: transparent;
+    box-shadow: none;
+  }
+  .slot-label {
+    margin: 0;
+    font-weight: 600;
+    color: var(--p-text-muted);
+  }
+  .sep { color: var(--p-text-muted); }
+
+  /* ── Products, deliberately lighter than the proof band ─────────────── */
+  .product-rows, .post-rows, .timeline, .record-bullets { list-style: none; padding: 0; margin: 0; }
+  .product-rows { display: grid; gap: 0.6rem; }
+  .product-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--p-border);
+  }
+  .product-row a { color: var(--p-text); text-decoration: none; font-weight: 600; }
+  .product-row a:hover { color: var(--p-accent); }
+  .product-what { color: var(--p-text-dim); font-size: 0.94rem; }
+
+  /* ── Timeline ───────────────────────────────────────────────────────── */
+  .timeline { display: grid; gap: 2rem; }
+  .record-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .record-role { font-size: 1.05rem; margin: 0; font-weight: 600; }
+  .record-when { color: var(--p-text-muted); font-size: 0.88rem; white-space: nowrap; }
+  #proto-root[data-variant="b"] .record-when { font-family: var(--font-mono); }
+  .record-org { color: var(--p-text-dim); margin: 0.15rem 0 0.6rem; font-size: 0.94rem; }
+  .record-org .sep { margin: 0 0.5rem; }
+  .record-bullets { display: grid; gap: 0.35rem; }
+  .record-bullets li {
+    color: var(--p-text-dim);
+    padding-left: 1rem;
+    position: relative;
+    font-size: 0.95rem;
+  }
+  .record-bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 1px;
+    background: var(--p-accent);
+  }
+
+  /* ── Devlog rows ────────────────────────────────────────────────────── */
+  .post-rows { display: grid; gap: 1.5rem; }
+  .post-row {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--p-border);
+  }
+  .post-title {
+    color: var(--p-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    display: inline-block;
+  }
+  .post-title:hover { color: var(--p-accent); }
+  .post-excerpt { color: var(--p-text-dim); margin: 0.4rem 0 0.5rem; font-size: 0.94rem; }
+  .post-date { color: var(--p-text-muted); font-size: 0.82rem; }
+  #proto-root[data-variant="b"] .post-date { font-family: var(--font-mono); }
+
+  /* ── Switcher. Deliberately ugly so it reads as not-the-design. ─────── */
+  .proto-switch {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    background: #FF3D71;
+    color: #FFFFFF;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.35);
+  }
+  .proto-switch button {
+    background: rgb(255 255 255 / 0.2);
+    border: 0;
+    color: #FFFFFF;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .proto-switch button:hover { background: rgb(255 255 255 / 0.35); }
+
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: 1fr; gap: 2.5rem; padding: 5.5rem 28px 7rem; }
+    .rail { position: static; }
+    .body { max-width: none; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const VARIANTS = [
+      ["a", "Light — new IA (proposal)"],
+      ["b", "Dark — new IA (today's tokens, the control)"],
+    ];
+    const root = document.getElementById("proto-root");
+    const label = document.getElementById("proto-label");
+
+    function keyFromUrl() {
+      const v = (new URLSearchParams(location.search).get("variant") || "a").toLowerCase();
+      return VARIANTS.some((x) => x[0] === v) ? v : "a";
+    }
+
+    function apply(key, push) {
+      root.setAttribute("data-variant", key);
+      const found = VARIANTS.find((x) => x[0] === key);
+      label.textContent = key.toUpperCase() + " — " + found[1];
+      if (push) {
+        const url = new URL(location.href);
+        url.searchParams.set("variant", key);
+        history.replaceState({}, "", url);
+      }
+    }
+
+    function step(delta) {
+      const i = VARIANTS.findIndex((x) => x[0] === root.getAttribute("data-variant"));
+      apply(VARIANTS[(i + delta + VARIANTS.length) % VARIANTS.length][0], true);
+    }
+
+    document.querySelectorAll(".proto-switch button").forEach((b) => {
+      b.addEventListener("click", () => step(Number(b.dataset.step)));
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const t = e.target;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (e.key === "ArrowLeft") step(-1);
+      if (e.key === "ArrowRight") step(1);
+    });
+
+    apply(keyFromUrl(), false);
+  })();
+</script>
