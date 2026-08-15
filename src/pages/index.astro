@@ -212,8 +212,8 @@ const dateFmt = (d: Date) =>
   .hero {
     padding-block: 148px 104px;
     background:
-      linear-gradient(#1f1f1f80 1px, transparent 1px) 0 0 / 100% 96px,
-      linear-gradient(90deg, #1f1f1f80 1px, transparent 1px) 0 0 / 96px 100%;
+      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
   }
   .headline {
     font-family: var(--font-sans);
@@ -227,7 +227,7 @@ const dateFmt = (d: Date) =>
   .headline span { display: block; }
   .outline {
     color: transparent;
-    -webkit-text-stroke: 1.5px var(--color-text-secondary);
+    -webkit-text-stroke: 1.5px var(--color-text-primary);
   }
 
   .sub {
@@ -251,7 +251,7 @@ const dateFmt = (d: Date) =>
     transition: background-color 0.15s ease, border-color 0.15s ease;
   }
   .btn-fill { background: var(--color-text-primary); color: var(--color-bg); }
-  .btn-fill:hover { background: #cfcfcf; }
+  .btn-fill:hover { background: var(--color-surface-raised); }
   .btn-ghost {
     color: var(--color-text-primary);
     border: 1px solid var(--color-border-strong);
