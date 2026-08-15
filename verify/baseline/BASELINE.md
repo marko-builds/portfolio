@@ -44,34 +44,58 @@ The July summary pointed at `/devlog/tictactoe-theme-system/`, which is now a dr
 had been measuring a 404 against a July score. Pages re-pointed: the post page is now
 `/devlog/zero-dollar-media-stack/`, and `/call/` was added.
 
-Measured twice, back to back, same session, same machine, `astro preview` on :4399, Lighthouse via
-`npx --yes lighthouse` with `CHROME_PATH=/usr/bin/chromium --headless --no-sandbox`:
+Measured on this machine, `astro preview` on :4399, Lighthouse via `npx --yes lighthouse` with
+`CHROME_PATH=/usr/bin/chromium --headless --no-sandbox`.
 
-| page | perf run 1 | run 2 | run 3 | spread | pinned floor | a11y | seo |
+Final pin, from every perf measurement taken on 2026-08-15 (`_perfRuns` in the summary carries them):
+
+| page | n | perf runs | min | spread | pinned floor | a11y | seo |
 |---|---|---|---|---|---|---|---|
-| home | 1.00 | 1.00 | 1.00 | 0.00 | 0.98 | 1.00 | 1.00 |
-| call | 1.00 | 1.00 | 1.00 | 0.00 | 0.98 | 1.00 | 1.00 |
-| devlog | 1.00 | 1.00 | 1.00 | 0.00 | 0.98 | 1.00 | 1.00 |
-| projects/deploylog | 0.80 | 0.71 | 0.78 | **0.09** | 0.62 | 1.00 | 1.00 |
-| devlog post | 0.77 | 0.90 | 0.74 | **0.16** | 0.58 | 1.00 | 1.00 |
+| home | 9 | 1.00 x7, 0.98, 0.96 | 0.96 | 0.04 | 0.92 | 1.00 | 1.00 |
+| call | 5 | 1.00 x5 | 1.00 | 0.02 | 0.98 | 1.00 | 1.00 |
+| devlog | 6 | 1.00 x5, 0.99 | 0.99 | 0.02 | 0.97 | 1.00 | 1.00 |
+| projects/deploylog | 5 | 0.80, 0.71, 0.78, 0.94, 0.92 | 0.71 | **0.23** | 0.48 | 1.00 | 1.00 |
+| devlog post | 5 | 0.77, 0.90, 0.74, 0.69, 0.75 | 0.69 | **0.21** | 0.48 | 1.00 | 1.00 |
 
-**The two heavy pages are noisier than the gate's tolerance, so the tolerance moved.** A first pass
-pinned `performance` at the lower of two runs and called it a floor; the very next run scored 0.74
-against that 0.77 floor and failed. Three runs put the post at 0.77 / 0.90 / 0.74 — a 0.16 spread
-against a ±0.02 band. **A check that fires at random carries exactly as much information as one
-that cannot fire**, so `perfTolerance` is now per-page and set to the measured spread: the three
-stable pages keep 0.02, the two heavy ones get 0.09 and 0.16. A band that wide still catches what a
-perf gate is for, which is a collapse rather than a wobble. `_perfRuns` carries all three numbers so
-the pinned value is never read as "the score", and a failure there still wants the same-session
-pristine-main comparison the July caveat below prescribes.
+**Every page is noisier than the gate's original ±0.02 band, so the band became per-page.** The
+July arm compared against `baseline - 0.02` for everything. Measured: the devlog post spans 0.69 to
+0.90 and `projects/deploylog` spans 0.71 to 0.94, both an order of magnitude wider than 0.02. **A
+check that fires at random carries exactly as much information as one that cannot fire**, so
+`perfTolerance` is per-page and set to that page's measured spread, floored at 0.02. `_perfRuns`
+carries every number so the pinned value is never read as "the score".
+
+**This took three attempts, and each wrong one is worth more than the final number.** First pin:
+the lower of two runs, called a floor — the very next run came in below it. Second pin: spreads
+from three runs, which put home at 0.00 because three runs had all landed on a flat 1.00; the run
+after that put home at 0.96 and failed. Third and current pin: every measurement of the day, n=5 to
+n=9. **A spread of zero from a small sample is an under-sample that looks like precision**, and it
+is the most convincing wrong number of the three.
 
 **Re-pinning after a real perf change means re-measuring the spread, not editing one number.** Run
-the page three times and take min and max; a single measurement cannot tell a regression from the
-noise it sits in.
+the page at least five times and take min and max; a single measurement cannot tell a regression
+from the noise it sits in.
 
-**a11y and seo are absolute and did not drift**: both pages measure 1.00 on both runs, up from
-July's 0.95-0.96 on the dark site. The light palette's contrast pass (ticket 08) is the reason, and
-it makes the a11y arm strictly stronger than it was — it now fails on any regression at all.
+**A whole-run load excursion has a signature, and it is not a regression: every page moves at once,
+including pages the change cannot touch.** Seen the same day, on the run right after the copy-button
+fix. `home` failed at 0.96 against its 0.98 floor — and in that same run `projects/deploylog`
+measured 0.94, *above* its previous maximum of 0.80, while the devlog post measured 0.69, *below* its
+previous minimum of 0.74. A change cannot make one page faster and another slower at once, and the
+copy-button change touches `.copy-btn` and `.pre-wrap code.hljs`, neither of which appears on the
+home page at all (`grep -c 'copy-btn\|pre-wrap\|<pre' dist/index.html` returns 0). **When a perf arm
+fails, read the other pages in the same run first: if they all moved, the machine moved.**
+
+**The ratchet hazard, named so nobody keeps feeding it.** A floor set to "observed minimum minus
+observed spread" can only ever move down: every unlucky run lowers the minimum and widens the spread,
+so re-pinning after each failure walks the gate toward useless. Do not re-pin on a failure. Re-pin
+only after a change that is *supposed* to move performance, and re-measure the whole set when you do.
+
+**What this arm honestly is.** Local Lighthouse perf on this box cannot support a tight regression
+gate — that is what the July caveat below already said, and three separate re-measurements have now
+confirmed it. Treat the perf arm as a **collapse detector**: `projects/deploylog` and the devlog post
+sit at floor 0.48, which still catches a page that has fallen to 0.3 and will never catch a 5-point
+slip. **`a11y` and `seo` are the real gates here** — every page, every run, all day, 1.00 with zero
+drift, up from July's 0.95-0.96 on the dark site. Ticket 08's contrast pass is the reason. They are
+compared absolutely, with no tolerance, so they fail on any regression at all.
 
 ## Anchor (July 2026 capture — superseded)
 
