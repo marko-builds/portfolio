@@ -121,14 +121,14 @@ Stale rows, not a backlog. [Ticket 01](01-stale-sweep-and-tagline.md) closes the
 | [01](01-stale-sweep-and-tagline.md) | Stale-status sweep, handover, and the dropped tagline cascade | task | None | 0.25 | **resolved 2026-08-15** |
 | [02](02-register-ia-prototype.md) | Register + IA prototype: two screens, light vs the dark control | prototype | None | 1.0 | **resolved 2026-08-15 — A (light) wins** |
 | [03](03-home-page-rebuild.md) | Home page rebuild on the winning direction | task | ~~06 → 08 → 03~~ cleared | 1.5 | **resolved 2026-08-15** |
-| [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | open |
+| [04](04-experience-timeline.md) | Experience timeline records + the current-role title cascade | task | None | 0.5 | **resolved 2026-08-18 — LinkedIn step declined** |
 | [05](05-call-page.md) | The `/call` page: intake survey, Formspree, appointment link | task | None | 0.75 | **resolved 2026-08-15** |
 | [06](06-delete-game-project-pages.md) | Delete the two live game project pages and their screenshots | task | None | 0.25 | **resolved 2026-08-15** |
 | [07](07-wordmark-blink.md) | Wordmark: drop the blink across every surface | task | None | 0.1 | **resolved 2026-08-15** |
 | [08](08-light-dark-token-set.md) | Light/dark token set, toggle, favicon and OG card | task | 02, 06 | 1.0 | **resolved 2026-08-15 — light only** |
 | [09](09-devlog-reading-surface.md) | Devlog reading surface pass | task | 02 | 0.75 | **resolved 2026-08-15** |
 | [10](10-close-out.md) | Close-out: re-baseline the gate, cold read, then cascade the surfaces | task | ~~04~~ released; rest resolved | 0.5 | **resolved 2026-08-15** |
-| [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | open — **do this first** |
+| [11a](11a-og-card-copy-fix.md) | OG card: it is emitting the retired positioning | task | None | 0.25 | **resolved 2026-08-15** — shipped as `og-default-v2.png`; the platform re-scrape is a Marko-only cache refresh, not an open ticket |
 | [11](11-mark-favicon-og.md) | The mark: a new favicon and logo | task | None | 0.5 | **resolved 2026-08-15 — the chevron alone, tile `#EAE7DF`** |
 
 ~~Fastest unblocked win is **01** (the tagline has been emitting the drawered identity since
@@ -232,8 +232,11 @@ Marko's step and never completed), and ticket 05's Formspree probe **could not f
 its spec named the right status codes and omitted the request shape, and a bare POST returns the same
 `400` for a real form and a nonsense one.
 
-**Eleven of eleven tickets are now resolved except [04](04-experience-timeline.md)**, whose one
-remaining step is the LinkedIn edit Marko is doing himself.
+~~**Eleven of eleven tickets are now resolved except [04](04-experience-timeline.md)**, whose one
+remaining step is the LinkedIn edit Marko is doing himself.~~ **Closed 2026-08-18: Marko declined the
+LinkedIn entry, 04 resolved with it, and this map is 12 of 12.** The only Marko-only leftover in the
+whole stream is forcing the LinkedIn/X re-scrape of the new OG card
+([11a](11a-og-card-copy-fix.md)), which is a platform cache refresh rather than work.
 
 **09 resolved 2026-08-15**: built, reviewed the same day (`/review-diff`, two axes plus a seam pass;
 three blocking findings and eleven smaller ones, all fixed, all re-verified from a build), and

@@ -1,12 +1,15 @@
 # Experience timeline records, and the current-role title cascade
 
 **Type:** task
-**Status:** open — **cascade steps 1-4 done and gated 2026-08-15, bullets approved**; LinkedIn is
-the only step left, and its employer-field decision is **deferred by Marko to the close-out**
+**Status:** **resolved 2026-08-18.** Cascade steps 1-4 done and gated 2026-08-15, bullets approved;
+**step 5 (LinkedIn) declined by Marko 2026-08-18** — he is not adding a self-employed / current-role
+entry to the profile, so the deferred employer-field decision closes with it. See
+"Step 5 declined" below.
 **2026-08-15: this ticket no longer blocks [ticket 10](10-close-out.md).** Marko is doing the
 LinkedIn edit later and released 10's cold read and cascade from waiting on it. LinkedIn is an
 external surface with its own edit path; the site read and the repo-side surface updates do not
-depend on it. 04 stays open until the edit is made.
+depend on it. ~~04 stays open until the edit is made.~~ **Superseded 2026-08-18: the edit was
+declined, so the ticket closed without it.**
 **Blocked by:** None
 **Estimate:** 0.5 session
 
@@ -100,6 +103,24 @@ comment telling the next editor not to fill it). What is actually left of this t
 outward cascade: `cv-base.md`, the regenerated and gated PDF, the copy into this repo, and
 LinkedIn.
 
+## Step 5 declined — 2026-08-18
+
+**Marko is not adding the current role to LinkedIn.** No self-employed entry, no organization field
+to fill, so the decision this ticket deferred to the close-out (what goes in LinkedIn's required
+Company field) is moot and closes unanswered rather than unresolved.
+
+Three things this leaves standing, recorded rather than argued:
+
+- **The site and the CV carry the entry; the profile does not.** Anyone reading both sees a LinkedIn
+  whose last position ends Sep 2025 against a home page and a CV showing a current AI Engineering
+  role. That gap is now a choice, not an oversight, and it is Marko's to make.
+- **Nothing waits on it.** [Ticket 10](10-close-out.md) was released from this step 2026-08-15 and
+  the cascade ran without it. `cv-marko-stankovic.html`, the generated PDF and
+  `portfolio/public/Marko-Stankovic-CV.pdf` are consistent by hash; only the profile diverges.
+- **Reopening is cheap and does not need re-deriving.** The record, the approved bullets and the
+  leave-the-employer-empty rule are written above. If the profile is ever updated, copy them from
+  here.
+
 ## The tension, accepted
 
 Read chronologically, this timeline is an internship in games, six months in games, then a period
@@ -111,7 +132,8 @@ the position. Marko accepted this on 2026-08-14 with the facts stated.
 
 - ~~Three records plus education render on the home page.~~ **Met by ticket 03, 2026-08-15.**
 - ~~The same title appears in `cv-base.md`, in the regenerated PDF (verified by opening it, not by
-  exit code)~~ **done 2026-08-15**, and on LinkedIn (**Marko-only, outstanding**).
+  exit code)~~ **done 2026-08-15**. ~~and on LinkedIn~~ **declined 2026-08-18** — see "Step 5
+  declined" below.
 - ~~**New:** `verify-cv.sh` runs clean on the regenerated PDF, with its output read rather than its
   exit code trusted.~~ **Done 2026-08-15: all 19 checks PASS**, and the gate earned its place by
   catching a real regression (page count 2) on the first build.

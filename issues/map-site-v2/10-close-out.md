@@ -4,11 +4,13 @@
 **Status:** **resolved 2026-08-15.** All three halves done: the gate re-baselined and calibrated,
 the copy button measured and shipped on Marko's pick (variant C), and the cold read run against the
 live site with the cascade executed. One blocking finding (`/call` could not say what Marko does for
-work) was fixed and re-measured. The LinkedIn row is deferred to [ticket 04](04-experience-timeline.md),
-which stays open on its own
+work) was fixed and re-measured. The LinkedIn row was deferred to
+[ticket 04](04-experience-timeline.md); **Marko declined that edit 2026-08-18 and 04 closed with
+it**
 **Blocked by:** ~~[04](04-experience-timeline.md)~~ **released 2026-08-15 by Marko**: 04's one
 remaining step is the LinkedIn edit, he is doing it later, and it does not gate a cold read of the
-site or the cascade of the other surfaces. 04 stays open on its own. All other blockers resolved:
+site or the cascade of the other surfaces. ~~04 stays open on its own.~~ **04 closed 2026-08-18:
+the LinkedIn edit was declined outright.** All other blockers resolved:
 [03](03-home-page-rebuild.md), [05](05-call-page.md), [06](06-delete-game-project-pages.md),
 [07](07-wordmark-blink.md), [08](08-light-dark-token-set.md), [09](09-devlog-reading-surface.md)
 **Estimate:** 0.5 session
@@ -284,7 +286,7 @@ Then update the surfaces that make claims about this site, in the same pass:
 |---|---|
 | `projects/job-search/proof-portfolio.md` | site rows, and the CV/site link set |
 | `public/llms.txt` | flagged stale by `map-public-proof/11`; verify it matches the new page |
-| LinkedIn | the `AI Engineer` title from [ticket 04](04-experience-timeline.md). **NOT "Independent"** — that word was cut 2026-08-15 and this row said otherwise until 08-15. **One decision is deferred here on purpose: what goes in LinkedIn's required Company field.** See ticket 04's cascade-run section for the narrowed option set |
+| LinkedIn | ~~the `AI Engineer` title from [ticket 04](04-experience-timeline.md)~~ **Declined 2026-08-18.** Marko is not adding a current-role entry, so the deferred Company-field decision closes with it. The site and the CV carry the entry; the profile deliberately does not |
 | GitHub profile README | the through-line sentence, plus the `/call` link if wanted |
 | `projects/job-search/presence-baseline.md` | a June snapshot with no staleness banner that has already produced one wrong claim — date-stamp it or re-capture it |
 
