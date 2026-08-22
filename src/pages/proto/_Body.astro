@@ -5,7 +5,7 @@
 // Copy: v2 wording where a section survives (proof, products, contact); anything
 // new carries [PLACEHOLDER] and is ticket 11's to write. Section labels are
 // numbered (01.) as a stand-in for the retired `//` prefix; ticket 04/05 own the
-// real treatment. Headings are Geist on purpose: the display face is ticket 04's.
+// real treatment. h2 reads --font-display (ticket 04's token), falling back to Geist.
 import { getCollection } from "astro:content";
 
 const recentPosts = (await getCollection("blog"))
@@ -221,7 +221,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     letter-spacing: 0.04em;
   }
   .sec-head h2 {
-    font-family: var(--font-sans);
+    font-family: var(--font-display, var(--font-sans));
     font-size: 1.3rem;
     font-weight: 600;
     letter-spacing: -0.01em;

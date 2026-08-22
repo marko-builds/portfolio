@@ -1,0 +1,41 @@
+---
+// PROTOTYPE chrome for ticket 04, not part of the design under review.
+import { faces } from "./_faces";
+interface Props { current: string }
+const { current } = Astro.props;
+---
+
+<nav class="sw" aria-label="Display face variants">
+  <span class="tag">04</span>
+  {faces.map((f) => (
+    <a href={`/proto/04/${f.slug}/`} class:list={[{ on: f.slug === current }]} aria-current={f.slug === current ? "page" : undefined} title={`${f.label}, ${f.bytes} B`}>
+      {f.slug}
+    </a>
+  ))}
+</nav>
+
+<style>
+  .sw {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--color-text-primary);
+    color: var(--color-bg);
+    box-shadow: 0 8px 24px -8px var(--color-backdrop);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    white-space: nowrap;
+    max-width: calc(100vw - 16px);
+    overflow-x: auto;
+  }
+  .tag { padding: 4px 8px; color: var(--color-aurora-amber); letter-spacing: 0.08em; }
+  .sw a { color: var(--color-bg); text-decoration: none; padding: 6px 9px; border-radius: 999px; opacity: 0.7; }
+  .sw a.on { background: var(--color-accent); opacity: 1; }
+</style>
