@@ -1,0 +1,440 @@
+---
+// PROTOTYPE C, throwaway: hybrid, a night-window hero band running the live Borealis
+// aurora (ticket 02's WebGL port) on the light body. issues/map-site-v3/03-register-prototype.md.
+// Delete after the pick.
+//
+// Shader: spike/aurora-hero's port with ONE change, the cover mapping ticket 02's phone
+// pass asked for. uv.y is still canvas height; uv.x is now measured in units of
+// (height * REF_ASPECT) about the centre, so portrait crops the sides instead of squashing
+// the curtains, and the moon and ridge keep their on-screen size at every aspect. The two
+// places that read the canvas aspect (moon circle, meteors) read REF_ASPECT instead, and
+// the reflection no longer clamps x, so a wide screen extends the scene rather than
+// smearing the edge column.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Body from "./_Body.astro";
+import Switcher from "./_Switcher.astro";
+import { hero, receipts } from "./_hero";
+import { getCollection } from "astro:content";
+
+const postCount = (await getCollection("blog")).filter((p) => import.meta.env.DEV || !p.data.draft).length;
+const rows = receipts(postCount);
+---
+
+<BaseLayout title="Proto C: night window hybrid" description="Prototype, not indexed.">
+  <Fragment slot="head"><meta name="robots" content="noindex" /></Fragment>
+
+  <section class="night" id="hero">
+    <picture>
+      <source media="(orientation: portrait)" srcset="/proto/aurora-poster-portrait.jpg" />
+      <img data-aurora="poster" class="poster" src="/proto/aurora-poster.jpg" alt="" width="1920" height="1080" />
+    </picture>
+    <canvas data-aurora="canvas" id="c"></canvas>
+
+    <header class="nav">
+      <nav aria-label="Site">
+        <a class="mark" href="/">MS</a>
+        <ul>
+          <li><a href="#work">Proof</a></li>
+          <li><a href="#lab-notes">Lab notes</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="hero-in">
+      <img class="photo" src={hero.photo} alt={hero.name} width="480" height="480" />
+      <div class="hero-text">
+        <p class="kicker">{hero.name}</p>
+        <h1>{hero.line}</h1>
+        <p class="sub">{hero.sub}</p>
+        <div class="ctas">
+          {hero.ctas.map((c) => (
+            <a href={c.href} class:list={["cta", { primary: c.primary }]}>{c.label}</a>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <ul class="receipts">
+      {rows.map((r) => (
+        <li>
+          <a href={r.href}>
+            <span class="n">{r.n}</span>
+            <span class="l">{r.label}</span>
+            <span class="note">{r.note}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <Body />
+  <Switcher current="C" />
+
+  <script id="frag" type="x-shader/x-fragment" data-budget="aurora">#version 300 es
+precision highp float;
+uniform float time;
+uniform vec2 resolution;
+uniform vec4 stop0, stop1, stop2, stop3, stop4, stop5;
+uniform vec3 skyBase, skyAmp;
+out vec4 fragColor;
+const float WATERLINE = 0.82;
+const float REF_ASPECT = 1.6;
+vec3 ramp(float p) {
+  vec3 c = stop0.rgb;
+  c = mix(c, stop1.rgb, clamp((p - stop0.w) / (stop1.w - stop0.w), 0.0, 1.0));
+  c = mix(c, stop2.rgb, clamp((p - stop1.w) / (stop2.w - stop1.w), 0.0, 1.0));
+  c = mix(c, stop3.rgb, clamp((p - stop2.w) / (stop3.w - stop2.w), 0.0, 1.0));
+  c = mix(c, stop4.rgb, clamp((p - stop3.w) / (stop4.w - stop3.w), 0.0, 1.0));
+  c = mix(c, stop5.rgb, clamp((p - stop4.w) / (stop5.w - stop4.w), 0.0, 1.0));
+  return c;
+}
+float hash21(vec2 p) {
+  p = fract(p * vec2(234.34, 435.345));
+  p += dot(p, p + 34.23);
+  return fract(p.x * p.y);
+}
+vec3 dither(vec2 uv) { return vec3(hash21(uv * resolution) - 0.5) / 255.0; }
+float vnoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x),
+             mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+vec3 curtain(vec2 uv, float t, float baseY, float len, float alpha,
+             vec3 f, vec3 a, vec3 s, float rayF, float rayS) {
+  float fx = uv.x;
+  float top = baseY
+    + a.x * sin(fx * f.x * 6.28318 + t * s.x)
+    + a.y * sin(fx * f.y * 6.28318 + t * s.y)
+    + a.z * sin(fx * f.z * 6.28318 + t * s.z);
+  float rel = (uv.y - top) / len;
+  float inside = step(0.0, rel) * step(rel, 1.0);
+  float b = clamp(1.0 - rel, 0.0, 1.0) * clamp(rel / 0.04, 0.0, 1.0) * inside;
+  float rays = 0.55 + 0.30 * sin(fx * rayF + t * rayS) + 0.15 * sin(fx * rayF * 2.3 - t * rayS * 1.7);
+  b *= pow(clamp(rays, 0.0, 1.0), 1.6);
+  b *= 0.75 + 0.25 * sin(t * 0.6 + baseY * 9.0);
+  return ramp(rel) * b * alpha;
+}
+vec3 meteors(vec2 uv, float t, float aspect) {
+  vec3 acc = vec3(0.0);
+  vec3 warm = vec3(1.0, 0.969, 0.894);
+  for (int i = 0; i < 2; i++) {
+    float P = (i == 0) ? 19.0 : 31.0;
+    float cyc = floor(t / P) + float(i) * 7.0;
+    float h1 = fract(sin(cyc * 12.9898) * 43758.5453);
+    float h2 = fract(sin(cyc * 78.2330) * 12543.1230);
+    float h3 = fract(sin(cyc * 39.4250) * 65231.7700);
+    float t0 = (0.15 + 0.50 * h1) * P;
+    float dur = 0.9 + 0.5 * h2;
+    float p = (t - floor(t / P) * P - t0) / dur;
+    if (p < 0.0 || p > 1.0) continue;
+    float env = sqrt(sin(3.14159 * p));
+    float theta = (0.20 + 0.25 * h3) * 3.14159;
+    float sx = (h2 > 0.5) ? 1.0 : -1.0;
+    vec2 start = vec2((0.05 + 0.90 * fract(h1 * 7.31)) * aspect, 0.02 + 0.40 * fract(h3 * 5.17));
+    float dist = (0.25 + 0.25 * h2) * aspect;
+    vec2 dir = normalize(vec2(cos(theta) * sx, sin(theta)));
+    vec2 head = start + dir * dist * p;
+    float tail = (0.07 + 0.05 * h1) * aspect;
+    vec2 q = vec2(uv.x * aspect, uv.y) - head;
+    float along = dot(q, -dir);
+    float perp = length(q + dir * along);
+    float ta = clamp(along / tail, 0.0, 1.0);
+    float streak = (along > 0.0) ? pow(1.0 - ta, 2.0) : 0.0;
+    streak *= exp(-perp * perp / (2.0 * 0.0000022));
+    float bloom = exp(-dot(q, q) / (2.0 * 0.0000045));
+    acc += warm * (streak * 1.3 + bloom * 1.5) * env * (0.8 + 0.5 * h3);
+  }
+  return acc;
+}
+vec3 upperScene(vec2 uv, float t) {
+  float aspect = REF_ASPECT;
+  vec3 col = skyBase + skyAmp * (1.0 - uv.y);
+  if (uv.y < 0.7) {
+    vec2 g = uv * resolution / 14.0;
+    vec2 cell = floor(g);
+    float h = hash21(cell);
+    if (h > 0.55) {
+      vec2 pos = vec2(hash21(cell + 7.3), hash21(cell + 3.1));
+      float d = length((fract(g) - pos) * 14.0);
+      float mag = 0.3 + 0.7 * hash21(cell + 11.7);
+      float twk = 0.55 + 0.45 * sin(t * (1.5 + 2.5 * hash21(cell + 5.2)) + 6.28318 * hash21(cell + 9.4));
+      col += smoothstep(1.2, 0.0, d) * mag * twk * 0.78 * vec3(0.85, 0.9, 1.0);
+    }
+  }
+  {
+    vec2 mp = (uv - vec2(0.78, 0.16)) * vec2(aspect, 1.0);
+    float r = 0.055;
+    float d1 = length(mp);
+    float d2 = length(mp - vec2(0.020, -0.009));
+    float crescent = clamp(smoothstep(r, r - 0.004, d1) - smoothstep(r * 1.04, r * 1.04 - 0.004, d2), 0.0, 1.0);
+    vec3 moonCol = vec3(0.95, 0.93, 0.85);
+    col = mix(col, moonCol, crescent);
+    col += moonCol * exp(-d1 * 34.0) * 0.10;
+  }
+  col += curtain(uv, t, 0.18, 0.55, 1.00, vec3(1.3, 2.7, 5.1), vec3(0.05, 0.03, 0.015), vec3(0.21, -0.13, 0.31), 23.0, 0.7);
+  col += curtain(uv, t, 0.30, 0.42, 0.75, vec3(0.9, 2.1, 4.3), vec3(0.06, 0.035, 0.02), vec3(-0.15, 0.19, -0.27), 17.0, -0.5);
+  col += curtain(uv, t, 0.42, 0.32, 0.55, vec3(1.7, 3.3, 6.5), vec3(0.04, 0.025, 0.012), vec3(0.11, -0.23, 0.17), 31.0, 0.9);
+  col += meteors(uv, t, aspect);
+  float fx = uv.x;
+  float ridge = 0.5 + 0.30 * sin(fx * 3.1 + 0.6) + 0.12 * sin(fx * 7.7 + 2.0) + 0.06 * sin(fx * 15.3 + 4.1);
+  ridge /= 0.98;
+  float ridgeTop = WATERLINE - ridge * 0.20;
+  float tw = 170.0;
+  float cell = floor(fx * tw);
+  float hcell = hash21(vec2(cell, 3.7));
+  float th = (hcell < 0.12) ? 0.0 : 0.005 + 0.011 * hcell;
+  float spike = 1.0 - abs(fract(fx * tw) * 2.0 - 1.0);
+  float silTop = ridgeTop - th * spike;
+  float px = 1.5 / resolution.y;
+  float m = smoothstep(silTop - px, silTop + px, uv.y);
+  if (m > 0.0) {
+    float into = clamp((uv.y - ridgeTop) / max(1.0 - ridgeTop, 0.001), 0.0, 1.0);
+    vec3 mtn = mix(vec3(11.0, 14.0, 24.0), vec3(4.0, 5.0, 9.0), clamp(into * 1.7, 0.0, 1.0)) / 255.0;
+    mtn += vec3(0.030, 0.045, 0.060) * exp(-into * 50.0);
+    col = mix(col, mtn, m);
+  }
+  return col;
+}
+void main() {
+  vec2 uv = vec2(0.5 + (gl_FragCoord.x - 0.5 * resolution.x) / (resolution.y * REF_ASPECT), 1.0 - gl_FragCoord.y / resolution.y);
+  float t = time;
+  vec3 col;
+  if (uv.y >= WATERLINE) {
+    float depth = (uv.y - WATERLINE) / (1.0 - WATERLINE);
+    float K = 3.2;
+    vec2 ruv = vec2(uv.x, WATERLINE - (uv.y - WATERLINE) * K);
+    ruv.x += (0.0015 + 0.004 * depth) * sin(uv.y * 34.0 + t * 1.4) * sin(uv.y * 11.0 - t * 0.9);
+    ruv.y += 0.004 * depth * sin(uv.x * 18.0 + uv.y * 26.0 + t * 0.8);
+    ruv.y = clamp(ruv.y, 0.0, 1.0);
+    float gust = vnoise(vec2(uv.x * 6.0 - t * 0.18, uv.y * 3.0 + t * 0.06));
+    float s = (0.003 + 0.005 * depth) * (0.7 + 0.6 * gust);
+    vec3 refl = upperScene(ruv, t) * 0.30
+              + upperScene(vec2(ruv.x, clamp(ruv.y - s, 0.0, 1.0)), t) * 0.22
+              + upperScene(vec2(ruv.x, clamp(ruv.y + s, 0.0, 1.0)), t) * 0.22
+              + upperScene(vec2(ruv.x, clamp(ruv.y - 2.0 * s, 0.0, 1.0)), t) * 0.13
+              + upperScene(vec2(ruv.x, clamp(ruv.y + 2.0 * s, 0.0, 1.0)), t) * 0.13;
+    float cx = uv.x * 48.0;
+    float ci = floor(cx);
+    float cf = fract(cx); cf = cf * cf * (3.0 - 2.0 * cf);
+    float colPhase = 3.5 * mix(hash21(vec2(ci, 0.0)), hash21(vec2(ci + 1.0, 0.0)), cf);
+    float shimmer = 0.86 + 0.14 * sin(uv.y * 38.0 + colPhase + t * 1.8);
+    shimmer *= 0.94 + 0.06 * sin(uv.y * 9.0 - t * 1.1 + colPhase * 0.7);
+    col = refl * shimmer * (0.62 - 0.34 * depth) + vec3(0.010, 0.018, 0.038);
+    col += vec3(0.05, 0.08, 0.10) * smoothstep(0.015, 0.0, uv.y - WATERLINE);
+  } else {
+    col = upperScene(uv, t);
+  }
+  fragColor = vec4(clamp(col + dither(uv), 0.0, 1.0), 1.0);
+}
+</script>
+
+  <script is:inline data-budget="aurora">
+(function () {
+  var hero = document.getElementById("hero"), c = document.getElementById("c");
+  var rm = matchMedia("(prefers-reduced-motion: reduce)");
+  var gl = c.getContext("webgl2", { antialias: false, alpha: false, powerPreference: "low-power" });
+  if (!gl || rm.matches) return;
+  var P = [0, .12, .3, .55, .8, 1], C = [[150,45,180],[90,110,205],[35,200,200],[30,235,130],[25,180,80],[8,70,35]];
+  function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+  var pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, "#version 300 es\nvoid main(){vec2 v=vec2((gl_VertexID<<1)&2,gl_VertexID&2);gl_Position=vec4(v*2.-1.,0.,1.);}"));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, document.getElementById("frag").textContent));
+  gl.linkProgram(pr); gl.useProgram(pr);
+  var U = function (n) { return gl.getUniformLocation(pr, n); };
+  for (var i = 0; i < 6; i++) gl.uniform4f(U("stop" + i), C[i][0] / 255, C[i][1] / 255, C[i][2] / 255, P[i]);
+  gl.uniform3f(U("skyBase"), 6 / 255, 8 / 255, 18 / 255);
+  gl.uniform3f(U("skyAmp"), 8 / 255, 10 / 255, 22 / 255);
+  var uT = U("time"), uR = U("resolution");
+  function size() {
+    var d = Math.min(devicePixelRatio || 1, 2) * 0.5;
+    c.width = Math.max(1, Math.round(c.clientWidth * d)); c.height = Math.max(1, Math.round(c.clientHeight * d));
+    gl.viewport(0, 0, c.width, c.height); gl.uniform2f(uR, c.width, c.height);
+  }
+  hero.classList.add("live"); size(); addEventListener("resize", size);
+  var t0 = performance.now(), last = 0, raf = 0, run = true, STEP = 1000 / 30;
+  function frame(now) {
+    if (!run) return;
+    raf = requestAnimationFrame(frame);
+    if (now - last < STEP - 1) return;
+    last = now;
+    gl.uniform1f(uT, (now - t0) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+  function start() { run = true; last = 0; raf = requestAnimationFrame(frame); }
+  function stop() { run = false; cancelAnimationFrame(raf); }
+  document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+  rm.addEventListener("change", function () { if (rm.matches) { stop(); hero.classList.remove("live"); } else { hero.classList.add("live"); start(); } });
+  start();
+})();
+  </script>
+</BaseLayout>
+
+<style>
+  /* The night window: a band, not a full screen. Nav sits inside it. */
+  .night {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-night-bg);
+    color: var(--color-night-text);
+    min-height: min(88svh, 760px);
+    display: flex;
+    flex-direction: column;
+  }
+  .night > picture, .night > canvas, .poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .poster { object-fit: cover; display: block; }
+  .night > canvas { display: none; }
+  .night.live > canvas { display: block; }
+  .night.live .poster { display: none; }
+  /* Legibility veil: darkens the band bottom where the text sits; the sky stays clear. */
+  .night::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 30%, var(--color-night-bg) 100%);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .nav, .hero-in, .receipts { position: relative; z-index: 1; }
+
+  .nav { border-bottom: 1px solid var(--color-night-border); }
+  nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-inline: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mark {
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-night-text);
+    text-decoration: none;
+  }
+  nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; }
+  nav ul a { font-size: 0.9rem; color: var(--color-night-text-secondary); text-decoration: none; }
+  nav ul a:hover { color: var(--color-night-text); }
+
+  .hero-in {
+    max-width: 1000px;
+    width: 100%;
+    margin: auto;
+    padding: 4rem 56px 2rem;
+    display: grid;
+    grid-template-columns: 168px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .photo {
+    width: 168px;
+    height: 168px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-aurora-cyan);
+    box-shadow: 0 0 40px -8px var(--color-aurora-cyan);
+  }
+  .kicker {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--color-aurora-cyan);
+  }
+  h1 {
+    font-family: var(--font-sans);
+    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+    line-height: 1.12;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin: 0;
+    color: var(--color-night-text);
+    max-width: 22em;
+    text-shadow: 0 2px 24px var(--color-night-bg);
+  }
+  .sub {
+    margin: 1rem 0 0;
+    color: var(--color-night-text-secondary);
+    font-size: 1.05rem;
+    max-width: 36em;
+  }
+  .ctas { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .cta {
+    display: inline-block;
+    padding: 0.65rem 1.15rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: 1px solid var(--color-night-border);
+    color: var(--color-night-text);
+    background: var(--color-night-surface);
+    backdrop-filter: blur(6px);
+  }
+  .cta.primary {
+    background: var(--color-aurora-cyan);
+    color: var(--color-night-bg);
+    border-color: var(--color-aurora-cyan);
+  }
+  .cta:hover { border-color: var(--color-aurora-amber); }
+
+  /* Receipts sit on the waterline: the strip that bridges night to day. */
+  .receipts {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 1000px;
+    width: 100%;
+    padding-inline: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .receipts li {
+    background: var(--color-night-surface);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--color-night-border);
+    border-bottom: 0;
+  }
+  .receipts li + li { border-left: 0; }
+  .receipts li:first-child { border-radius: 10px 0 0 0; }
+  .receipts li:last-child { border-radius: 0 10px 0 0; }
+  .receipts a {
+    display: grid;
+    gap: 0.15rem;
+    padding: 1.1rem 1.25rem;
+    text-decoration: none;
+    color: var(--color-night-text);
+  }
+  .receipts .n {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-aurora-amber);
+  }
+  .receipts .l { font-size: 0.95rem; color: var(--color-night-text); }
+  .receipts .note { font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-night-text-secondary); }
+
+  @media (max-width: 720px) {
+    nav { padding-inline: 24px; }
+    .night { min-height: 100svh; }
+    .hero-in { padding: 2.5rem 24px 1.5rem; grid-template-columns: 1fr; gap: 1.25rem; }
+    .photo { width: 112px; height: 112px; }
+    .receipts { padding-inline: 24px; grid-template-columns: 1fr; }
+    .receipts li { border-left: 1px solid var(--color-night-border); border-bottom: 0; }
+    .receipts li:first-child { border-radius: 10px 10px 0 0; }
+    .receipts li:last-child { border-radius: 0; }
+    .receipts li + li { border-top: 0; }
+    .receipts a { padding: 0.8rem 1rem; grid-template-columns: 4rem 1fr; grid-template-rows: auto auto; }
+    .receipts .n { grid-row: 1 / span 2; font-size: 1.6rem; align-self: center; }
+  }
+</style>
