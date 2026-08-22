@@ -1,0 +1,73 @@
+---
+// PROTOTYPE, throwaway. issues/map-site-v3/12-about-page.md.
+// The night nav for inner routes: _HeroC.astro's header (markup and the nav rules,
+// copied rather than extracted so _HeroC keeps rendering byte for byte on
+// /proto/c-hybrid/) on a plain night band, no shader, no poster. The mark is ticket
+// 05's pick (fold + Space Grotesk wordmark) read from the 05 geometry.
+import { marks, inlineSvg } from "../05/_marks";
+const fold = marks.find((m) => m.slug === "fold")!;
+const links = [
+  { label: "Products", href: "/proto/c-hybrid/#products" },
+  { label: "Lab notes", href: "/proto/c-hybrid/#lab-notes" },
+  { label: "Tools", href: "/proto/c-hybrid/#work" },
+  { label: "About", href: "/proto/about/", current: true },
+  { label: "Contact", href: "/proto/c-hybrid/#contact" },
+];
+---
+
+<header class="nav night">
+  <nav aria-label="Site">
+    <a class="mark" href="/proto/c-hybrid/">
+      <Fragment set:html={inlineSvg(fold, 22)} />
+      <span class="word">Marko Stankovic</span>
+    </a>
+    <ul>
+      {links.map((l) => (
+        <li><a href={l.href} aria-current={l.current ? "page" : undefined} class:list={{ on: l.current }}>{l.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .night { background: var(--color-night-bg); color: var(--color-night-text); }
+  .nav { border-bottom: 1px solid var(--color-night-border); }
+  nav {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-inline: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--color-night-text);
+  }
+  :global(.mark .mk) { color: var(--color-aurora-cyan); flex: none; }
+  .word {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; }
+  nav ul a { font-size: 0.9rem; color: var(--color-night-text-secondary); text-decoration: none; }
+  nav ul a:hover, nav ul a.on { color: var(--color-night-text); }
+  @media (max-width: 720px) {
+    nav { padding-inline: 24px; }
+    nav ul { gap: 18px; }
+  }
+  /* Five links now (About is new): at 390px they only fit with the wordmark hidden AND
+     a tighter gap and size, measured here. The 05 rule assumed four. */
+  @media (max-width: 480px) {
+    .word { display: none; }
+    nav ul { gap: 14px; white-space: nowrap; }
+    nav ul a { font-size: 0.82rem; }
+  }
+</style>
