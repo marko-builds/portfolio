@@ -69,6 +69,16 @@
   --aurora-4: #19B450;
   --aurora-5: #084623;
   --aurora-ramp: linear-gradient(90deg, var(--aurora-0), var(--aurora-1), var(--aurora-2), var(--aurora-3), var(--aurora-4));
+  /* Display face, ticket 04 (2026-08-23): Space Grotesk 600, self-hosted latin woff2, 13,284 B.
+     A NEW token; --font-sans (Geist body) and --font-mono are unchanged. */
+  --font-display: "Space Grotesk", var(--font-sans);
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/space-grotesk-600.woff2) format("woff2");
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
