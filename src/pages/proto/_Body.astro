@@ -163,7 +163,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
      paper (global.css --color-grid) in the ramp, magenta left to cyan right, fixed
      72px cells so nothing scales with band height, with a glow along the bottom.
      Stand-in for ticket 06's scroll-following graphics. */
-  .night::before {
+  .tail::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -183,7 +183,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     mask-composite: intersect, add, add;
     opacity: 0.55;
   }
-  .night::after {
+  .tail::after {
     content: "";
     position: absolute;
     left: 0; right: 0;
@@ -365,12 +365,12 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   .links a:hover { color: var(--color-accent); border-bottom-color: var(--color-accent); }
   .call-link { font-weight: 600; color: var(--color-text-primary); }
 
-  .foot-wrap { border-top: 1px solid var(--color-night-border); }
+  .foot-wrap { padding-inline: 56px; }
   .tail .foot p { color: var(--color-night-text-secondary); }
   .foot {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 1.75rem 56px;
+    padding: 0 0 1.75rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -379,6 +379,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   }
   .foot p { margin: 0; font-size: 0.85rem; color: var(--color-text-secondary); }
   @media (max-width: 720px) {
-    .foot { padding: 1.5rem 24px; }
+    .foot-wrap { padding-inline: 24px; }
+    .foot { padding: 0 0 1.5rem; }
   }
 </style>
