@@ -57,11 +57,46 @@ const identity = {
 const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month: "short" });
 ---
 
-<main class="body" id="main">
-  <section class="sec" id="work">
+<main id="main">
+  <section class="sec light" id="products">
     <div class="sec-head">
       <span class="num">01.</span>
-      <h2>Proof</h2>
+      <h2>Products</h2>
+    </div>
+    <ul class="product-rows">
+      {products.map((p) => (
+        <li class="product-row">
+          {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
+          <span class="product-what">{p.what}</span>
+          <span class="product-status">{p.status}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {recentPosts.length > 0 && (
+    <section class="sec night" id="lab-notes">
+      <div class="sec-head">
+        <span class="num">02.</span>
+        <h2>Lab notes</h2>
+        <a class="all-link" href="/devlog">All notes</a>
+      </div>
+      <ul class="post-rows">
+        {recentPosts.map((p) => (
+          <li class="post-row">
+            <a class="post-title" href={`/devlog/${p.slug}/`}>{p.data.title}</a>
+            <p class="post-excerpt">{p.data.excerpt}</p>
+            <span class="post-date">{fmt(p.data.date)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="sec light" id="work">
+    <div class="sec-head">
+      <span class="num">03.</span>
+      <h2>Tools</h2>
     </div>
     <p class="sec-intro">Open source. Every one has a repo you can read and a check you can run.</p>
     <ul class="proof-grid">
@@ -79,42 +114,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     </ul>
   </section>
 
-  <section class="sec" id="products">
-    <div class="sec-head">
-      <span class="num">02.</span>
-      <h2>Products</h2>
-    </div>
-    <ul class="product-rows">
-      {products.map((p) => (
-        <li class="product-row">
-          {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
-          <span class="product-what">{p.what}</span>
-          <span class="product-status">{p.status}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  {recentPosts.length > 0 && (
-    <section class="sec" id="lab-notes">
-      <div class="sec-head">
-        <span class="num">03.</span>
-        <h2>Lab notes</h2>
-        <a class="all-link" href="/devlog">All notes</a>
-      </div>
-      <ul class="post-rows">
-        {recentPosts.map((p) => (
-          <li class="post-row">
-            <a class="post-title" href={`/devlog/${p.slug}/`}>{p.data.title}</a>
-            <p class="post-excerpt">{p.data.excerpt}</p>
-            <span class="post-date">{fmt(p.data.date)}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  <section class="sec" id="contact">
+  <section class="sec night" id="contact">
     <div class="sec-head">
       <span class="num">04.</span>
       <h2>Contact</h2>
@@ -135,7 +135,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   </section>
 </main>
 
-<footer class="foot-wrap">
+<footer class="foot-wrap night">
   <div class="foot">
     <p>&copy; 2026 Marko Stankovic</p>
     <p class="foot-meta">AI engineer · Belgrade</p>
@@ -143,17 +143,50 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
 </footer>
 
 <style>
-  .body {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 4rem 56px 5rem;
+  /* Alternating bands, Marko 2026-08-22: each section is full-bleed and carries its
+     own register; the inner grid is the 1000px column. */
+  .sec {
+    padding: 4.5rem 56px;
+    margin: 0;
   }
+  .sec > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+  .light { background: var(--color-bg); color: var(--color-text-primary); }
+  .night {
+    background-color: var(--color-night-bg);
+    color: var(--color-night-text);
+    position: relative;
+    isolation: isolate;
+  }
+  /* Static aurora graphics for the dark bands: two ramp glows and a star field,
+     CSS only. A cheap stand-in for the scroll-following graphics ticket 06 owns. */
+  .night::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 45% at 15% 10%, color-mix(in srgb, var(--aurora-0) 28%, transparent), transparent 70%),
+      radial-gradient(55% 40% at 85% 25%, color-mix(in srgb, var(--aurora-2) 22%, transparent), transparent 70%),
+      radial-gradient(70% 35% at 50% 100%, color-mix(in srgb, var(--aurora-3) 12%, transparent), transparent 70%),
+      radial-gradient(1px 1px at 12% 30%, var(--color-night-text) 50%, transparent 51%),
+      radial-gradient(1px 1px at 38% 70%, var(--color-night-text) 50%, transparent 51%),
+      radial-gradient(1px 1px at 64% 18%, var(--color-night-text) 50%, transparent 51%),
+      radial-gradient(1px 1px at 81% 62%, var(--color-night-text) 50%, transparent 51%),
+      radial-gradient(1px 1px at 93% 85%, var(--color-night-text) 50%, transparent 51%),
+      radial-gradient(1px 1px at 27% 88%, var(--color-night-text) 50%, transparent 51%);
+    opacity: 0.9;
+  }
+  .night .sec-head h2, .night .post-title, .night .call-link, .night .facts dd { color: var(--color-night-text); }
+  .night .num { color: var(--color-aurora-cyan); }
+  .night .sec-intro, .night .post-excerpt, .night .all-link, .night .links a { color: var(--color-night-text-secondary); }
+  .night .post-date, .night .facts dt { color: var(--color-night-text-secondary); }
+  .night .post-row { border-bottom-color: var(--color-night-border); }
+  .night .post-title:hover, .night .all-link:hover, .night .links a:hover { color: var(--color-aurora-cyan); }
+  .night .links a:hover { border-bottom-color: var(--color-aurora-cyan); }
   @media (max-width: 720px) {
-    .body { padding: 3rem 24px 4rem; }
+    .sec { padding: 3rem 24px; }
   }
-
-  .sec { margin-top: 4rem; }
-  .sec:first-child { margin-top: 0; }
 
   .sec-head {
     display: flex;
@@ -313,6 +346,8 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   .call-link { font-weight: 600; color: var(--color-text-primary); }
 
   .foot-wrap { border-top: 1px solid var(--color-border); }
+  .foot-wrap.night { border-top-color: var(--color-night-border); }
+  .foot-wrap.night p { color: var(--color-night-text-secondary); }
   .foot {
     max-width: 1000px;
     margin: 0 auto;

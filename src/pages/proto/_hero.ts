@@ -7,7 +7,7 @@ export const hero = {
   photo: "/portrait.webp",
   ctas: [
     { label: "Read the lab notes", href: "/devlog", primary: true },
-    { label: "See the proof", href: "#work", primary: false },
+    { label: "See the tools", href: "#work", primary: false },
   ],
 };
 
