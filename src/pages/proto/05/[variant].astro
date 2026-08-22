@@ -1,0 +1,39 @@
+---
+// PROTOTYPE, throwaway: ticket 05, one route per (mark, wordmark) pair on the locked register
+// C. The nav slot in _HeroC.astro is the only thing that changes between routes; the hero,
+// body and tokens are the ticket 03/04 bytes. issues/map-site-v3/05-mark-and-wordmark.md.
+// Each route also points the tab icon at its own candidate favicon so Marko can see the mark
+// in a real tab by opening the route. Delete after the pick.
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import HeroC from "../_HeroC.astro";
+import Body from "../_Body.astro";
+import MarkSwitcher from "../_MarkSwitcher.astro";
+import { marks, words, inlineSvg } from "./_marks";
+
+export function getStaticPaths() {
+  return marks.flatMap((m) => words.map((w) => ({ params: { variant: `${m.slug}-${w.slug}` }, props: { m, w } })));
+}
+const { m, w } = Astro.props;
+const head = `<meta name="robots" content="noindex"><link rel="icon" type="image/svg+xml" href="/proto/05/${m.slug}.svg">`;
+---
+
+<BaseLayout title={`Proto 05: ${m.label} + ${w.label}`} description="Prototype, not indexed.">
+  <Fragment slot="head" set:html={head} />
+  <HeroC stripPlaceholder>
+    <Fragment slot="mark">
+      <Fragment set:html={inlineSvg(m, 22)} />
+      <span class="word" style={w.css}>{w.text}</span>
+    </Fragment>
+  </HeroC>
+  <Body />
+  <MarkSwitcher mark={m.slug} word={w.slug} />
+</BaseLayout>
+
+<style>
+  /* set:html output carries no scope attribute, so the svg is addressed globally under .mark */
+  :global(.mark .mk) { color: var(--color-aurora-cyan); flex: none; }
+  .word { color: var(--color-night-text); white-space: nowrap; }
+  /* Phone rule under test: the name plus four links does not fit 390px (measured: ~459px of
+     content in a 342px row), so the mark stands alone below 480px. Ticket 05 records this. */
+  @media (max-width: 480px) { .word { display: none; } }
+</style>

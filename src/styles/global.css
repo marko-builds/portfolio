@@ -25,9 +25,14 @@
   --color-bg: #FBFAF7;
   --color-surface: #FFFFFF;
   --color-border: #E4E0D8;
-  --color-accent: #14707C;
-  --color-accent-dim: #14707C1F;
-  --color-warm: #9C6031;
+  /* PROPOSED 2026-08-23 (accent sync, map-site-v3 ticket 03 addendum): the light accents are
+     now the aurora hues darkened until they clear AA on both light surfaces. accent was #14707C
+     (same hue, more saturated), warm was #9C6031 (hue 26, a step off the amber). Measured:
+     accent 5.02 on bg / 5.24 on surface, warm 5.00 / 5.22. Escape hatch for the gate:
+     verify/proposals/accent-sync-aurora.md names the three tokens. */
+  --color-accent: #1D7781;
+  --color-accent-dim: #1D77811F;
+  --color-warm: #9B5E25;
   --color-border-strong: #CFC9BD;
   --color-text-primary: #1A1D23;
   --color-text-secondary: #5B6270;

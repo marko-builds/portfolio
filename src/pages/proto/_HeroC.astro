@@ -32,7 +32,7 @@ const rows = receipts(postCount);
 
   <header class="nav">
     <nav aria-label="Site">
-      <a class="mark" href="/">MS</a>
+      <a class="mark" href="/"><slot name="mark">MS</slot></a>
       <ul>
         <li><a href="#products">Products</a></li>
         <li><a href="#lab-notes">Lab notes</a></li>
@@ -314,6 +314,9 @@ start();
     justify-content: space-between;
   }
   .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     color: var(--color-night-text);
