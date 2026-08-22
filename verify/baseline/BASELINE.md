@@ -7,6 +7,29 @@ Captured 2026-07-03 (issue 01). Every later gate compares against this.
 > site was before the site-v2 redesign. The values the gate reads today are in that section. Read
 > it first.
 
+## Re-pin, 2026-08-22 (map-site-v3 ticket 07)
+
+Two arms were red on main before any v3 code existed, so ticket 07 re-pinned them before adding
+its own checks. Nothing else moved; no threshold widened; Lighthouse untouched (no re-measure, so
+the 2026-08-15 floors and `_perfRuns` stand as they are).
+
+- **Routes: 17** (was 15). `606e6cb` flipped `draft: false` on
+  `src/content/blog/building-pipeline-tooling-with-claude-code.mdx` (dated 2026-08-19), which
+  emits `/devlog/building-pipeline-tooling-with-claude-code/` and its `/blog/` redirect stub from
+  `astro.config.mjs`. Published on purpose by the devlog timer, baseline never followed.
+- **Devlog bodies: 5.** The same post's body hash, taken by `rebaseline.mjs` from the build.
+- **main HEAD: `6a5b8c5b7e6e66e10a8cc2fba78cd4b569576d3d`** (was `b42f9bf`). Nine commits
+  since the pin, all docs, issues and the devlog publish; `git log --oneline b42f9bf..main`
+  lists them. This is the local main the `gate/aurora-carveout` branch was cut from.
+  `git ls-remote origin main` at the moment of the re-pin read `87f038f`, one commit behind: the
+  map-charting commit `6a5b8c5` is not pushed yet, so check 6's `origin/main` arm reads red until
+  `git push origin main` and goes green on its own after it. Pinned to the local ref on purpose so
+  the push needs no second re-pin.
+- **Weight.** General budget unchanged at 10240 B over unmarked inline blocks (5129 B on main).
+  New: the aurora allowance, 11264 B over blocks marked `data-budget="aurora"`, one script plus
+  one shader at most. Measured aurora block on the spike page: 10646 B. See
+  `issues/map-site-v3/07-gate-rescope.md` for the planted negatives.
+
 ## Re-baseline, 2026-08-15 (map-site-v2 ticket 10)
 
 The July baseline had stopped describing the site: the gate reported **15 failures, every one of

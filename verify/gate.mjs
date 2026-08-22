@@ -8,7 +8,9 @@
 //   node verify/gate.mjs --full     also run Lighthouse vs the 01 baseline (slow)
 //
 // Checks: route parity, devlog body equivalence, token parity (light palette +
-// brand type), weight budget, copy lint (every authored template), main-untouched.
+// brand type), weight budget (general + the aurora allowance), reduced-motion
+// render (only on a page carrying the aurora block), copy lint (every authored
+// template), main-untouched.
 //
 // Re-baselined 2026-08-15 by issues/map-site-v2/10-close-out.md. Before that the
 // baseline still described the pre-redesign site, so 15 of the gate's assertions
@@ -16,13 +18,23 @@
 
 import { execSync, spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { tmpdir } from 'node:os';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const BASE = join(ROOT, 'verify/baseline');
 const BRAND_JSON = join(ROOT, '../claude-video-studio/brands/marko/brand.json');
 const JS_BUDGET_BYTES = 10240;
+// The one named allowance (issues/map-site-v3/07-gate-rescope.md, 2026-08-22). Ticket 02
+// measured the live WebGL aurora hero at 10646 B raw (3571 B JS + 7075 B shader; the gate
+// counts raw, not gzip), which is over the general budget on its own. Blocks carrying
+// data-budget="aurora" share this allowance instead of the general one: at most ONE
+// marked script plus at most ONE marked shader block (type="x-shader/..."), so the mark
+// cannot be reused to walk a second module past the general budget. Any other
+// data-budget value fails outright. Both budget lines print on every run.
+const AURORA_MARK = 'aurora';
+const AURORA_BUDGET_BYTES = 11264;
 
 // The light palette locked by issues/map-site-v2/08, frozen here as the contract.
 //
@@ -63,6 +75,8 @@ const failures = [];
 const ok = (name, msg) => console.log(`  PASS ${name}${msg ? ` (${msg})` : ''}`);
 const fail = (name, msg) => { failures.push(`${name}: ${msg}`); console.log(`  FAIL ${name}: ${msg}`); };
 const sh = (cmd) => execSync(cmd, { cwd: ROOT, encoding: 'utf8' });
+// data-budget="<name>" on an inline <script>, or undefined when unmarked.
+const budgetOf = (attrs) => (attrs.match(/\bdata-budget=["']([^"']*)["']/) ?? [])[1];
 
 const args = process.argv.slice(2);
 const doBuild = !args.includes('--no-build');
@@ -218,29 +232,123 @@ console.log('tokens:');
 // Remote <script src> is reported and NOT budgeted. Google Tag Manager and the
 // highlight.js CDN bundle are pre-existing deliberate choices; failing the gate
 // on them is a policy decision, not a re-baseline. Recorded in ticket 10.
+//
+// Carve-out, 2026-08-22 (map-site-v3 ticket 07): a block marked data-budget="aurora"
+// leaves the general budget and lands in the aurora allowance above. Everything unmarked
+// still has to fit under JS_BUDGET_BYTES. Known negatives, each planted and watched fail
+// before this shipped (outputs in the ticket's answer): an unmarked block over 10240 B, a
+// marked block over 11264 B, and a second marked script block.
 console.log('weight:');
+const auroraPages = [];
 {
-  const blocks = new Map(); // content hash -> body, so a repeated block counts once
+  const blocks = new Map(); // content hash to { body, attrs }, so a repeated block counts once
   const remote = new Set();
   for (const f of walk(join(ROOT, 'dist')).filter((f) => f.endsWith('.html'))) {
     const html = readFileSync(f, 'utf8');
     for (const m of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)) {
       if (/\bsrc=/.test(m[1]) || /application\/ld\+json/.test(m[1])) continue;
-      blocks.set(createHash('sha256').update(m[2]).digest('hex'), m[2]);
+      blocks.set(createHash('sha256').update(m[2]).digest('hex'), { body: m[2], attrs: m[1] });
+      if (budgetOf(m[1]) === AURORA_MARK && !auroraPages.includes(f)) auroraPages.push(f);
     }
     for (const m of html.matchAll(/<script[^>]*\bsrc=["']([^"']+)["']/g)) remote.add(m[1]);
   }
-  const bodies = [...blocks.values()];
-  const total = bodies.reduce((s, b) => s + Buffer.byteLength(b), 0);
+  const all = [...blocks.values()];
+  const bytes = (bs) => bs.reduce((s, b) => s + Buffer.byteLength(b.body), 0);
+  const general = all.filter((b) => budgetOf(b.attrs) === undefined);
+  const marked = all.filter((b) => budgetOf(b.attrs) === AURORA_MARK);
+  const unknown = all.filter((b) => budgetOf(b.attrs) !== undefined && budgetOf(b.attrs) !== AURORA_MARK);
+  const total = bytes(general);
   total <= JS_BUDGET_BYTES
-    ? ok('js budget', `${total} B <= ${JS_BUDGET_BYTES} B across ${blocks.size} inline blocks`)
-    : fail('js budget', `${total} B > ${JS_BUDGET_BYTES} B across ${blocks.size} inline blocks`);
+    ? ok('js budget', `${total} B <= ${JS_BUDGET_BYTES} B across ${general.length} unmarked inline blocks`)
+    : fail('js budget', `${total} B > ${JS_BUDGET_BYTES} B across ${general.length} unmarked inline blocks`);
+  for (const b of unknown) fail('js budget', `unknown data-budget="${budgetOf(b.attrs)}", the only allowance is "${AURORA_MARK}"`);
+  const isShader = (b) => /\btype=["']x-shader\//.test(b.attrs);
+  const mScripts = marked.filter((b) => !isShader(b)), mShaders = marked.filter(isShader);
+  const aTotal = bytes(marked);
+  if (mScripts.length > 1) fail('aurora budget', `${mScripts.length} marked script blocks, the allowance covers one`);
+  else if (mShaders.length > 1) fail('aurora budget', `${mShaders.length} marked shader blocks, the allowance covers one`);
+  else if (aTotal > AURORA_BUDGET_BYTES) fail('aurora budget', `${aTotal} B > ${AURORA_BUDGET_BYTES} B across ${marked.length} marked block(s)`);
+  else ok('aurora budget', marked.length
+    ? `${aTotal} B <= ${AURORA_BUDGET_BYTES} B across ${marked.length} marked block(s): ${mScripts.length} script, ${mShaders.length} shader`
+    : `0 B of ${AURORA_BUDGET_BYTES} B, no block marked data-budget="${AURORA_MARK}"`);
+  const bodies = all.map((b) => b.body);
   for (const r of remote) console.log(`  NOTE remote script, not budgeted: ${r}`);
   const sig = /from\s*["']react["']|preact\/|@vue\/|svelte\/internal/;
   const hits = bodies.filter((b) => sig.test(b));
   hits.length
     ? fail('framework runtime', `${hits.length} inline block(s) match a framework signature`)
     : ok('no framework runtime', `${blocks.size} inline blocks scanned`);
+}
+
+// ── 4b. reduced motion ─────────────────────────────────────────────────────
+// Added 2026-08-22 (map-site-v3 ticket 07). Runs on every built page that carries the
+// marked aurora block, so today it prints NOTE and asserts nothing: a page with no
+// aurora has no canvas to hide, and a PASS there would be decoration. The page's
+// contract: the live canvas is [data-aurora="canvas"], the still is [data-aurora="poster"];
+// a page that carries the block without both fails rather than skipping.
+//
+// Two chromium launches per page, because the check has to be able to fail in both
+// directions. Motion allowed: the canvas must be displayed and the poster hidden, which
+// also proves WebGL ran in this headless chromium, so the reduced arm's "canvas hidden"
+// is the page honouring the media query and not a missing GL context. Reduced
+// (--force-prefers-reduced-motion): matchMedia must report the flag took, the canvas
+// must be display:none, the poster displayed. Known negative: a copy of the spike page
+// with the rm.matches branch removed fails the reduced arm (output in the ticket).
+console.log('motion:');
+if (!auroraPages.length) console.log(`  NOTE no page carries data-budget="${AURORA_MARK}", reduced-motion check not run`);
+else {
+  const PORT = 4398;
+  const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1', '-d', join(ROOT, 'dist')], { stdio: 'ignore' });
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const PROBE = `(() => { const c = document.querySelector('[data-aurora="canvas"]'), p = document.querySelector('[data-aurora="poster"]');
+    return { rm: matchMedia('(prefers-reduced-motion: reduce)').matches, webgl: !!document.createElement('canvas').getContext('webgl2'),
+      canvas: c ? getComputedStyle(c).display : null, poster: p ? getComputedStyle(p).display : null }; })()`;
+  async function render(url, reduced) {
+    const profile = mkdtempSync(join(tmpdir(), 'gate-rm-'));
+    const chrome = spawn('/usr/bin/chromium', ['--headless=new', '--remote-debugging-port=0', '--enable-unsafe-swiftshader',
+      '--no-first-run', '--no-default-browser-check', '--window-size=1280,800', `--user-data-dir=${profile}`,
+      ...(reduced ? ['--force-prefers-reduced-motion'] : []), 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
+    try {
+      const wsUrl = await new Promise((res, rej) => {
+        let err = ''; const t = setTimeout(() => rej(new Error('chromium did not open a CDP port: ' + err.slice(-200))), 15000);
+        chrome.stderr.on('data', (d) => { err += d; const m = err.match(/DevTools listening on (ws:\/\/\S+)/); if (m) { clearTimeout(t); res(m[1]); } });
+      });
+      const ws = new WebSocket(wsUrl);
+      await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; });
+      let id = 0; const waiting = new Map();
+      ws.onmessage = (e) => { const m = JSON.parse(e.data); const w = waiting.get(m.id); if (!w) return; waiting.delete(m.id); m.error ? w.rej(new Error(m.error.message)) : w.res(m.result); };
+      const send = (method, params = {}, sessionId) => new Promise((res, rej) => { const n = ++id; waiting.set(n, { res, rej }); ws.send(JSON.stringify({ id: n, method, params, sessionId })); });
+      const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
+      const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
+      await send('Runtime.enable', {}, sessionId);
+      await send('Page.navigate', { url }, sessionId);
+      const evaluate = async (expression) => (await send('Runtime.evaluate', { expression, returnByValue: true }, sessionId)).result.value;
+      for (let i = 0; i < 50 && (await evaluate('document.readyState')) !== 'complete'; i++) await sleep(100);
+      await sleep(800); // the page's first rAF flips the live class; the spike measured first paint at 33 ms on SwiftShader
+      const r = await evaluate(PROBE);
+      ws.close();
+      return r;
+    } finally { chrome.kill(); rmSync(profile, { recursive: true, force: true }); }
+  }
+  try {
+    await sleep(500);
+    for (const f of auroraPages) {
+      const route = '/' + relative(join(ROOT, 'dist'), f).replace(/index\.html$/, '');
+      const url = `http://127.0.0.1:${PORT}${route}`;
+      const shown = (d) => d !== null && d !== 'none';
+      try {
+        const m = await render(url, false);
+        if (m.canvas === null || m.poster === null) { fail(`reduced motion ${route}`, `page carries the aurora block but lacks [data-aurora="canvas"] and/or [data-aurora="poster"]`); continue; }
+        if (!m.webgl) { fail(`reduced motion ${route}`, 'no WebGL2 in headless chromium, the check cannot tell reduced motion from no-GL'); continue; }
+        if (m.rm || !shown(m.canvas) || shown(m.poster)) { fail(`reduced motion ${route}`, `motion allowed: rm=${m.rm} canvas=${m.canvas} poster=${m.poster} (expected canvas shown, poster hidden)`); continue; }
+        const r = await render(url, true);
+        if (!r.rm) { fail(`reduced motion ${route}`, '--force-prefers-reduced-motion did not take, matchMedia reports false'); continue; }
+        shown(r.canvas) || !shown(r.poster)
+          ? fail(`reduced motion ${route}`, `reduced: canvas=${r.canvas} poster=${r.poster} (expected canvas none, poster shown)`)
+          : ok(`reduced motion ${route}`, `motion: canvas=${m.canvas} poster=${m.poster}; reduced: canvas=${r.canvas} poster=${r.poster}`);
+      } catch (e) { fail(`reduced motion ${route}`, e.message.split('\n')[0]); }
+    }
+  } finally { server.kill(); }
 }
 
 // ── 5. copy lint (every authored template) ─────────────────────────────────

@@ -1,6 +1,7 @@
 /
 /404.html
 /blog/
+/blog/building-pipeline-tooling-with-claude-code/
 /blog/golden-fingerprints-generative-art/
 /blog/skill-vibe-test-decay-probe/
 /blog/swipeable-panorama-continuous-ridge/
@@ -8,6 +9,7 @@
 /call/
 /cv/
 /devlog/
+/devlog/building-pipeline-tooling-with-claude-code/
 /devlog/golden-fingerprints-generative-art/
 /devlog/skill-vibe-test-decay-probe/
 /devlog/swipeable-panorama-continuous-ridge/
