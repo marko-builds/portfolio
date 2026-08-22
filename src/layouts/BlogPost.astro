@@ -79,7 +79,7 @@ const articleSchema = {
       #reading-progress-fill {
         height: 100%;
         width: 0%;
-        background: var(--color-accent);
+        background: var(--aurora-ramp);
         will-change: width;
       }
 
@@ -239,9 +239,7 @@ const articleSchema = {
          pair is kept underneath as the fallback for a browser without container
          queries, where it is dropped as invalid and the old behaviour stands. */
       .prose .pre-wrap,
-      .prose pre,
-      .prose img,
-      .prose figcaption {
+      .prose pre {
         width: 720px;
         max-width: calc(100vw - 3rem);
         width: 100cqi;
@@ -249,6 +247,15 @@ const articleSchema = {
       }
 
       /* Blockquotes */
+      /* Ticket 03 (2026-08-22): Marko read the 558px text column against 720px
+         figures as "not synced". Images and captions come back to the measure;
+         code blocks keep the breakout above because narrowing them clipped lines. */
+      .prose img,
+      .prose figcaption {
+        width: 100%;
+        max-width: 100%;
+      }
+
       .prose blockquote {
         border-left: 2px solid var(--color-accent);
         padding-left: 1.25rem;

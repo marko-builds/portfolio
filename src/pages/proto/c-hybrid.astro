@@ -26,7 +26,7 @@ const rows = receipts(postCount);
   <section class="night" id="hero">
     <picture>
       <source media="(orientation: portrait)" srcset="/proto/aurora-poster-portrait.jpg" />
-      <img data-aurora="poster" class="poster" src="/proto/aurora-poster.jpg" alt="" width="1920" height="1080" />
+      <img data-aurora="poster" class="poster" fetchpriority="high" src="/proto/aurora-poster.jpg" alt="" width="1920" height="1080" />
     </picture>
     <canvas data-aurora="canvas" id="c"></canvas>
 
@@ -279,7 +279,8 @@ void main() {
     overflow: hidden;
     background: var(--color-night-bg);
     color: var(--color-night-text);
-    min-height: min(88svh, 760px);
+    min-height: min(84svh, 720px);
+    padding-bottom: 2.5rem;
     display: flex;
     flex-direction: column;
   }
@@ -299,8 +300,8 @@ void main() {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 30%, var(--color-night-bg) 100%);
-    opacity: 0.55;
+    background: linear-gradient(180deg, transparent 50%, var(--color-night-bg) 100%);
+    opacity: 0.45;
     pointer-events: none;
   }
   .nav, .hero-in, .receipts { position: relative; z-index: 1; }
@@ -397,16 +398,14 @@ void main() {
     padding-inline: 56px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
   }
   .receipts li {
     background: var(--color-night-surface);
     backdrop-filter: blur(8px);
     border: 1px solid var(--color-night-border);
-    border-bottom: 0;
+    border-radius: 10px;
   }
-  .receipts li + li { border-left: 0; }
-  .receipts li:first-child { border-radius: 10px 0 0 0; }
-  .receipts li:last-child { border-radius: 0 10px 0 0; }
   .receipts a {
     display: grid;
     gap: 0.15rem;
@@ -426,14 +425,11 @@ void main() {
 
   @media (max-width: 720px) {
     nav { padding-inline: 24px; }
-    .night { min-height: 100svh; }
+    .night { min-height: 0; padding-bottom: 1.5rem; }
     .hero-in { padding: 2.5rem 24px 1.5rem; grid-template-columns: 1fr; gap: 1.25rem; }
     .photo { width: 112px; height: 112px; }
     .receipts { padding-inline: 24px; grid-template-columns: 1fr; }
-    .receipts li { border-left: 1px solid var(--color-night-border); border-bottom: 0; }
-    .receipts li:first-child { border-radius: 10px 10px 0 0; }
-    .receipts li:last-child { border-radius: 0; }
-    .receipts li + li { border-top: 0; }
+    .receipts { gap: 0.5rem; }
     .receipts a { padding: 0.8rem 1rem; grid-template-columns: 4rem 1fr; grid-template-rows: auto auto; }
     .receipts .n { grid-row: 1 / span 2; font-size: 1.6rem; align-self: center; }
   }

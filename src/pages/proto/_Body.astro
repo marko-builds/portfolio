@@ -142,29 +142,6 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   </div>
 </footer>
 
-<style is:global>
-  /* PROPOSED night + aurora tokens (ticket 03 locks them; they join TOKEN_FROZEN
-     in verify/gate.mjs when it does). Values: Lodestar navy, brand cyan + amber,
-     and the "aurora" row of Borealis.qml paletteTable. Night text roles were
-     checked against --color-night-bg: text 15.2, secondary 8.1, cyan 9.6. */
-  :root {
-    --color-night-bg: #0B0E15;
-    --color-night-surface: #121726CC;
-    --color-night-border: #5FCEDB4D;
-    --color-night-text: #E6E9EF;
-    --color-night-text-secondary: #A7B0C0;
-    --color-aurora-cyan: #5FCEDB;
-    --color-aurora-amber: #D99A5E;
-    --aurora-0: #962DB4;
-    --aurora-1: #5A6ECD;
-    --aurora-2: #23C8C8;
-    --aurora-3: #1EEB82;
-    --aurora-4: #19B450;
-    --aurora-5: #084623;
-    --aurora-ramp: linear-gradient(90deg, var(--aurora-0), var(--aurora-1), var(--aurora-2), var(--aurora-3), var(--aurora-4));
-  }
-</style>
-
 <style>
   .body {
     max-width: 1000px;
