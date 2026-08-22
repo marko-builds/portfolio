@@ -1,6 +1,6 @@
 # Copy pack v2 (issue 04) — Marko's edits folded in, English pass applied
 
-**Status:** Marko's adjustments + language corrections, awaiting his final OK · **Parent:** issues/04-repositioning-copy-pack.md · **Date:** 2026-07-03
+**Status:** CONSUMED — shipped in the redesign (PR #3 `feat/redesign` merged 2026-07-03; verified 2026-08-22). Was: awaiting his final OK · **Parent:** issues/04-repositioning-copy-pack.md · **Date:** 2026-07-03
 
 Every changed visitor-facing string for the redesign, in the voice.md register: warm but
 economical, short direct sentences, no hype, no em/en dashes or arrows, no banned marketing
