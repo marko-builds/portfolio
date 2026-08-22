@@ -146,7 +146,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   /* Alternating bands, Marko 2026-08-22: each section is full-bleed and carries its
      own register; the inner grid is the 1000px column. */
   .sec {
-    padding: 4.5rem 56px;
+    padding: 3rem 56px 4rem;
     margin: 0;
   }
   .sec > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
@@ -157,26 +157,50 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     position: relative;
     isolation: isolate;
   }
-  /* Static aurora graphics for the dark bands: two ramp glows and a star field,
-     CSS only. A cheap stand-in for the scroll-following graphics ticket 06 owns. */
+  /* Neon grid floor for the dark bands, Marko 2026-08-22 (reference: the TicTacToe
+     Neon theme). CSS only: a perspective plane whose lines are the ramp (magenta
+     left, cyan right), masked to a fixed 360px so every band reads the same
+     regardless of its height; a horizon glow above it. Stand-in for ticket 06. */
+  .night { overflow: hidden; }
   .night::before {
     content: "";
     position: absolute;
-    inset: 0;
+    left: -30%;
+    right: -30%;
+    bottom: -30px;
+    height: 560px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--aurora-0), var(--aurora-1) 45%, var(--aurora-2));
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent 5%, #000 60%),
+      repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 120px),
+      repeating-linear-gradient(0deg, #000 0 2px, transparent 2px 120px);
+    mask-image:
+      linear-gradient(180deg, transparent 5%, #000 60%),
+      repeating-linear-gradient(90deg, #000 0 2px, transparent 2px 120px),
+      repeating-linear-gradient(0deg, #000 0 2px, transparent 2px 120px);
+    /* Top layer composites onto the union below it: fade INTERSECT (v lines ADD h lines). */
+    -webkit-mask-composite: source-in, source-over, source-over;
+    mask-composite: intersect, add, add;
+    transform: perspective(600px) rotateX(58deg);
+    transform-origin: 50% 100%;
+    opacity: 0.7;
+  }
+  .night::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 0;
+    height: 360px;
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(60% 45% at 15% 10%, color-mix(in srgb, var(--aurora-0) 28%, transparent), transparent 70%),
-      radial-gradient(55% 40% at 85% 25%, color-mix(in srgb, var(--aurora-2) 22%, transparent), transparent 70%),
-      radial-gradient(70% 35% at 50% 100%, color-mix(in srgb, var(--aurora-3) 12%, transparent), transparent 70%),
-      radial-gradient(1px 1px at 12% 30%, var(--color-night-text) 50%, transparent 51%),
-      radial-gradient(1px 1px at 38% 70%, var(--color-night-text) 50%, transparent 51%),
-      radial-gradient(1px 1px at 64% 18%, var(--color-night-text) 50%, transparent 51%),
-      radial-gradient(1px 1px at 81% 62%, var(--color-night-text) 50%, transparent 51%),
-      radial-gradient(1px 1px at 93% 85%, var(--color-night-text) 50%, transparent 51%),
-      radial-gradient(1px 1px at 27% 88%, var(--color-night-text) 50%, transparent 51%);
-    opacity: 0.9;
+      radial-gradient(600px 140px at 20% 100%, color-mix(in srgb, var(--aurora-0) 35%, transparent), transparent 70%),
+      radial-gradient(600px 140px at 80% 100%, color-mix(in srgb, var(--aurora-2) 30%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--color-night-bg) 0%, transparent 40%);
   }
+  .night > * { position: relative; z-index: 1; }
   .night .sec-head h2, .night .post-title, .night .call-link, .night .facts dd { color: var(--color-night-text); }
   .night .num { color: var(--color-aurora-cyan); }
   .night .sec-intro, .night .post-excerpt, .night .all-link, .night .links a { color: var(--color-night-text-secondary); }
@@ -185,14 +209,14 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   .night .post-title:hover, .night .all-link:hover, .night .links a:hover { color: var(--color-aurora-cyan); }
   .night .links a:hover { border-bottom-color: var(--color-aurora-cyan); }
   @media (max-width: 720px) {
-    .sec { padding: 3rem 24px; }
+    .sec { padding: 2.25rem 24px 3rem; }
   }
 
   .sec-head {
     display: flex;
     align-items: baseline;
     gap: 0.75rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
   .num {
     font-family: var(--font-mono);
