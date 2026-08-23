@@ -7,6 +7,10 @@ Captured 2026-07-03 (issue 01). Every later gate compares against this.
 > site was before the site-v2 redesign. The values the gate reads today are in that section. Read
 > it first.
 
+## Re-pin, 2026-08-23 (issues/16-captures-qa-cold-read-merge.md, site-v3 merged to main)
+
+`main-sha.txt` re-pinned to the site-v3 merge commit; `routes.txt` and `devlog-bodies.json` re-pinned from the dist built at that commit (25 routes, 5 posts; the bodies are unchanged by the merge). Expected gate after this: green on every arm including both `main untouched` arms.
+
 ## Re-pin, 2026-08-23 (issues/13-legend-page.md, branch wt/slice-13)
 
 Routes re-pinned by `node verify/rebaseline.mjs 6a5b8c5b7e6e66e10a8cc2fba78cd4b569576d3d` against
