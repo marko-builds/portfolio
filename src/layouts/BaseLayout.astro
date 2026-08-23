@@ -114,6 +114,15 @@ const ogImageURL = ogImage
       </>
     )}
 
+    <!-- The one reveal observer (map-site-v3 ticket 06; tuned by slice 17). Marks html.js so
+         the hidden start state only applies once this ran, then reveals each .reveal once
+         (threshold .2, bottom rootMargin -18%, unobserve). Elements already in the first
+         viewport come through the first callback. Counts against the unmarked budget. -->
+    <script is:inline>document.documentElement.classList.add("js");var rvO=new IntersectionObserver(function(e){e.forEach(function(t){t.isIntersecting&&(t.target.classList.add("in"),rvO.unobserve(t.target))})},{threshold:.2,rootMargin:"0px 0px -18% 0px"});addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".reveal").forEach(function(e){rvO.observe(e)})})</script>
+    <!-- EYEBALL HARNESS, remove after the slice-17 pick -->
+    <script is:inline data-variant>(function(){var q=new URLSearchParams(location.search),h=document.documentElement,S=sessionStorage,k=["motion","route"];k.forEach(function(n){var v=q.get(n);if(v)S.setItem("eb-"+n,v);v=S.getItem("eb-"+n);if(v)h.setAttribute("data-"+n,v)});addEventListener("DOMContentLoaded",function(){var m=h.dataset.motion||"set",r=h.dataset.route||"off",v=document.getElementById("eb-v"),t=document.getElementById("eb-r");if(!v)return;v.textContent="motion "+m+" / route "+r;document.querySelectorAll(".eyeball-pill a[data-m]").forEach(function(a){a.classList.toggle("on",a.dataset.m===m)});t.href="?route="+(r==="on"?"off":"on");t.classList.toggle("on",r==="on")})})()</script>
+    <!-- END EYEBALL HARNESS -->
+
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-70DNV713QD"></script>
     <script is:inline>
@@ -126,5 +135,14 @@ const ogImageURL = ogImage
 
   <body class="font-sans antialiased">
     <slot />
+    <!-- EYEBALL HARNESS, remove after the slice-17 pick -->
+    <div class="eyeball-pill" data-variant aria-hidden="true">
+      <b id="eb-v" data-variant></b>
+      <a data-variant data-m="tight" href="?motion=tight">tight</a>
+      <a data-variant data-m="set" href="?motion=set">set</a>
+      <a data-variant data-m="loose" href="?motion=loose">loose</a>
+      <a data-variant id="eb-r" href="?route=on">route</a>
+    </div>
+    <!-- END EYEBALL HARNESS -->
   </body>
 </html>

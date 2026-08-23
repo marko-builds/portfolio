@@ -285,7 +285,7 @@ const pageDescription =
         </div>
         <p
           class="reveal text-[var(--color-text-muted)] text-xs font-mono mt-3 text-center"
-          style="--delay: 100ms"
+          style="--i:1"
         >
           deploylog.dev: the landing page also embeds DeployLog's own live widget
         </p>
@@ -300,7 +300,7 @@ const pageDescription =
         </h2>
         <div
           class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
-          style="--delay: 100ms"
+          style="--i:1"
         >
           <p>
             A changelog is only useful where your users already are, so a single
@@ -318,7 +318,7 @@ const pageDescription =
             never share an auth method. See below.
           </p>
         </div>
-        <div class="reveal mt-8 max-w-3xl" style="--delay: 150ms">
+        <div class="reveal mt-8 max-w-3xl" style="--i:2">
           <pre><code class="language-html" set:text={`<!-- One script tag embeds the live changelog widget -->
 <script
   src="https://cdn.deploylog.dev/widget.js"
@@ -337,7 +337,7 @@ const pageDescription =
         </h2>
         <div
           class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
-          style="--delay: 100ms"
+          style="--i:1"
         >
           <p>
             The dashboard authenticates with a Supabase cookie session and runs
@@ -371,7 +371,7 @@ const pageDescription =
         </h2>
         <div
           class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
-          style="--delay: 100ms"
+          style="--i:1"
         >
           <p>
             Every paid feature reads through one primitive (<code
@@ -391,7 +391,7 @@ const pageDescription =
             > table providing idempotency.
           </p>
         </div>
-        <div class="reveal mt-8 max-w-3xl" style="--delay: 150ms">
+        <div class="reveal mt-8 max-w-3xl" style="--i:2">
           <pre><code class="language-typescript" set:text={`// src/lib/plan.ts: one source of truth for every feature gate
 export function can(
   org: { plan: Plan } | null,
@@ -416,7 +416,7 @@ if (!can(org, "unlimited_projects") && projectCount >= FREE_PROJECT_LIMIT) {
         </h2>
         <div
           class="reveal max-w-3xl space-y-5 text-[var(--color-text-secondary)] leading-relaxed"
-          style="--delay: 100ms"
+          style="--i:1"
         >
           <p>
             Both the dashboard editor and the CLI can turn raw commit messages
@@ -427,7 +427,7 @@ if (!can(org, "unlimited_projects") && projectCount >= FREE_PROJECT_LIMIT) {
             entry points can't drift apart. From the terminal it's one flag:
           </p>
         </div>
-        <div class="reveal mt-8 max-w-3xl" style="--delay: 150ms">
+        <div class="reveal mt-8 max-w-3xl" style="--i:2">
           <pre><code class="language-bash" set:text={`# Generate release notes from git, rewritten by an LLM, and publish
 deploylog push --from-git --ai-summarize`} /></pre>
         </div>
@@ -440,7 +440,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
         <h2 class="reveal sec-h2 mb-10">Stack</h2>
         <div
           class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl text-[var(--color-text-secondary)]"
-          style="--delay: 100ms"
+          style="--i:1"
         >
           <p><span class="text-[var(--color-text-primary)] font-medium">Frontend / API:</span> Next.js 16 (App Router, RSC), React 19, TypeScript (strict), Tailwind v4</p>
           <p><span class="text-[var(--color-text-primary)] font-medium">Database / auth:</span> Supabase (PostgreSQL + RLS, GitHub OAuth)</p>
@@ -465,7 +465,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
           Screenshots
         </h2>
         <div class="grid grid-cols-1 gap-4 max-w-3xl">
-          <div class="reveal" style="--delay: 0ms">
+          <div class="reveal" style="--i:0">
             <div
               class="screenshot-wrap"
               role="button"
@@ -495,7 +495,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
         <h2 class="reveal sec-h2 mb-10">
           Retrospective
         </h2>
-        <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
+        <ul class="reveal space-y-4 max-w-3xl" style="--i:1">
           <li class="flex gap-3 text-[var(--color-text-secondary)] leading-relaxed">
             <span class="text-[var(--color-accent)] font-mono mt-0.5 shrink-0">//</span>
             <span>
@@ -637,27 +637,6 @@ deploylog push --from-git --ai-summarize`} /></pre>
         });
       });
     });
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const revealEls = document.querySelectorAll(".reveal");
-    if (!prefersReduced) {
-      const obs = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("visible");
-              obs.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.1 },
-      );
-      revealEls.forEach((el) => obs.observe(el));
-    } else {
-      revealEls.forEach((el) => el.classList.add("visible"));
-    }
 
     const lightbox = document.getElementById("lightbox");
     const lbImg = document.getElementById("lightbox-img");

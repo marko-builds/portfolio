@@ -4,6 +4,23 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
+// Post reveals (map-site-v3 ticket 06: "reveals on figures and headings"). Marks the
+// top-level h2, h3, figure and pre nodes of every post body, plus a paragraph that is only
+// an image (MDX emits figures that way), with class="reveal" at build time, so the one
+// observer in BaseLayout picks them up and no script runs per post. Paragraphs are not
+// marked on purpose.
+const REVEAL_TAGS = new Set(['h2', 'h3', 'figure', 'pre']);
+const isImgOnly = (n) =>
+  n.tagName === 'p' &&
+  n.children.filter((c) => c.type !== 'text' || c.value.trim()).every((c) => c.type === 'element' && c.tagName === 'img');
+const rehypePostReveal = () => (tree) => {
+  for (const n of tree.children) {
+    if (n.type !== 'element' || !(REVEAL_TAGS.has(n.tagName) || isImgOnly(n))) continue;
+    const cls = n.properties.className;
+    n.properties.className = [...(Array.isArray(cls) ? cls : cls ? [cls] : []), 'reveal'];
+  }
+};
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://markostankovic.org',
@@ -22,7 +39,7 @@ export default defineConfig({
     // so the downloaded filename stays Marko-Stankovic-CV.pdf.
     '/cv': '/Marko-Stankovic-CV.pdf',
   },
-  markdown: { syntaxHighlight: false },
+  markdown: { syntaxHighlight: false, rehypePlugins: [rehypePostReveal] },
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

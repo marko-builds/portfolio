@@ -82,8 +82,8 @@ const pageDescription =
       <!-- 1. THE SURVEY. Optional by design: a form in front of a recruiter is
            friction on the primary audience. -->
       <section class="sec" id="survey">
-        <h2>What is the call about?</h2>
-        <p class="sec-intro" id="survey-intro">
+        <h2 class="reveal">What is the call about?</h2>
+        <p class="reveal sec-intro" style="--i:1" id="survey-intro">
           Optional. Skip it and book a slot if you would rather just talk.
         </p>
 
@@ -98,7 +98,8 @@ const pageDescription =
 
         <form
           id="survey-form"
-          class="survey"
+          class="reveal survey"
+          style="--i:2"
           action={FORMSPREE_ACTION}
           method="POST"
         >
@@ -166,8 +167,8 @@ const pageDescription =
 
       <!-- 2. THE SCHEDULER, last. -->
       <section class="sec" id="book">
-        <h2>Pick a slot</h2>
-        <p class="sec-intro">
+        <h2 class="reveal">Pick a slot</h2>
+        <p class="reveal sec-intro" style="--i:1">
           This opens my calendar. You pick the time and get a confirmation with the
           meeting link.
         </p>

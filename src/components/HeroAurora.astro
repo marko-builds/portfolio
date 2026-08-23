@@ -33,6 +33,9 @@ const rows = receipts(postCount);
     <img data-aurora="poster" class="poster" fetchpriority="high" src="/aurora-poster.jpg" alt="" width="1920" height="1080" />
   </picture>
   <canvas data-aurora="canvas" id="c"></canvas>
+  <!-- Route draw (ticket 06 optional, slice 17 review): one dashed path, CSS draws it
+       on load; hidden unless html[data-route="on"]. No script. -->
+  <svg class="route-draw" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M-10 470C180 420 330 540 560 450S900 300 1100 380 1380 470 1450 410" fill="none" stroke-width="1.5" stroke-opacity=".38"/></svg>
 
   <SiteNav register="night" />
 

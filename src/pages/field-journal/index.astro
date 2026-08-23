@@ -86,8 +86,8 @@ const dateFmt = (d: Date) =>
 
         <div class="post-rows">
           {
-            posts.map((post) => (
-              <a class="post-row" href={`/field-journal/${post.slug}/`} data-beat={post.data.beat}>
+            posts.map((post, i) => (
+              <a class="reveal hov post-row" style={`--i:${i}`} href={`/field-journal/${post.slug}/`} data-beat={post.data.beat}>
                 <div class="row-meta">
                   <span class="post-date">{dateFmt(post.data.date)}</span>
                   <span class="post-time">{post.readingTime} min</span>

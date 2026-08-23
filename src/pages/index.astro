@@ -101,14 +101,14 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
 
 <main id="main">
   <section class="sec light" id="artifacts">
-    <div class="sec-head">
+    <div class="reveal sec-head">
       <span class="num">01.</span>
       <h2>Artifacts</h2>
     </div>
-    <p class="sec-intro" set:html={linkify(intros.artifacts)} />
+    <p class="reveal sec-intro" style="--i:1" set:html={linkify(intros.artifacts)} />
     <ul class="product-rows">
-      {products.map((p) => (
-        <li class="product-row">
+      {products.map((p, i) => (
+        <li class="reveal hov product-row" style={`--i:${i}`}>
           {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
           <span class="product-what">{p.what}</span>
           <span class="product-status">{p.status}</span>
@@ -217,15 +217,15 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
       <circle cx="1147.7" cy="241.0" r="5" fill="var(--color-aurora-amber)"/>
       <circle cx="644.3" cy="194.0" r="3" fill="var(--color-aurora-cyan)"/>
       </g></svg>
-      <div class="sec-head">
+      <div class="reveal sec-head">
         <span class="num">02.</span>
         <h2>Field journal</h2>
         <a class="all-link" href="/field-journal">All entries</a>
       </div>
-      <p class="sec-intro" set:html={linkify(intros.journal)} />
+      <p class="reveal sec-intro" style="--i:1" set:html={linkify(intros.journal)} />
       <ul class="post-rows">
-        {recentPosts.map((p) => (
-          <li class="post-row">
+        {recentPosts.map((p, i) => (
+          <li class="reveal hov post-row" style={`--i:${i}`}>
             <a class="post-title" href={`/field-journal/${p.slug}/`}>{p.data.title}</a>
             <p class="post-excerpt">{p.data.excerpt}</p>
             <span class="post-date">{fmt(p.data.date)}</span>
@@ -236,14 +236,14 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   )}
 
   <section class="sec light" id="gadgets">
-    <div class="sec-head">
+    <div class="reveal sec-head">
       <span class="num">03.</span>
       <h2>Gadgets</h2>
     </div>
-    <p class="sec-intro" set:html={linkify(intros.gadgets)} />
+    <p class="reveal sec-intro" style="--i:1" set:html={linkify(intros.gadgets)} />
     <ul class="proof-grid">
-      {proof.map((p) => (
-        <li class="proof-card">
+      {proof.map((p, i) => (
+        <li class="reveal hov proof-card" style={`--i:${i}`}>
           <a class="proof-title" href={p.href} target="_blank" rel="noopener noreferrer">{p.name}</a>
           <p class="proof-what">{p.what}</p>
           <p class="proof-meta">
@@ -260,12 +260,12 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
 
 <div class="night tail">
   <section class="sec" id="contact">
-    <div class="sec-head">
+    <div class="reveal sec-head">
       <span class="num">04.</span>
       <h2>Send word</h2>
     </div>
-    <p class="sec-intro" set:html={linkify(intros.contact)} />
-    <div class="contact">
+    <p class="reveal sec-intro" style="--i:1" set:html={linkify(intros.contact)} />
+    <div class="reveal contact" style="--i:2">
       <dl class="facts">
         <div><dt>Based</dt><dd>{identity.location}</dd></div>
         <div><dt>Languages</dt><dd>{identity.languages}</dd></div>

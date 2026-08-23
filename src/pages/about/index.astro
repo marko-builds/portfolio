@@ -63,32 +63,32 @@ const products = [
         </dl>
       </aside>
       <div class="col">
-        <p class="kicker"><span class="num">01.</span> Map legend</p>
-        <h1>Code archaeologist, based in Belgrade.</h1>
-        <p class="story"><b class="lead">Name’s Marko.</b><br />I'm a code archaeologist out of Serbia. I forge digital artifacts and AI companions, charting the course in my <a class="inline-link" href="/field-journal">field journal</a>. Join the expedition if you like code, making things, or finding out why something broke.</p>
-        <p class="story">The first dig was Unity and C#: a BSc in Computer Games &amp; Programming at Univerzitet Metropolitan, an internship at Inlustris Studio, then Replai, a live product, until September 2025.</p>
-        <p class="story">Since then the companions do the night shift. An agent harness implements whole feature branches overnight behind tests and a review gate. Python and TypeScript underneath, Claude Code driving, Astro for this site. A media studio paints the launch art, and small gadgets check whether an AI feature actually worked. skill-vibe-test, adpreflight and duskpaper came out of that, each with a check you can run. Off duty I'm a beginner at photography, guitar and short stories.</p>
+        <p class="reveal kicker"><span class="num">01.</span> Map legend</p>
+        <h1 class="reveal" style="--i:1">Code archaeologist, based in Belgrade.</h1>
+        <p class="reveal story" style="--i:2"><b class="lead">Name’s Marko.</b><br />I'm a code archaeologist out of Serbia. I forge digital artifacts and AI companions, charting the course in my <a class="inline-link" href="/field-journal">field journal</a>. Join the expedition if you like code, making things, or finding out why something broke.</p>
+        <p class="reveal story" style="--i:3">The first dig was Unity and C#: a BSc in Computer Games &amp; Programming at Univerzitet Metropolitan, an internship at Inlustris Studio, then Replai, a live product, until September 2025.</p>
+        <p class="reveal story" style="--i:4">Since then the companions do the night shift. An agent harness implements whole feature branches overnight behind tests and a review gate. Python and TypeScript underneath, Claude Code driving, Astro for this site. A media studio paints the launch art, and small gadgets check whether an AI feature actually worked. skill-vibe-test, adpreflight and duskpaper came out of that, each with a check you can run. Off duty I'm a beginner at photography, guitar and short stories.</p>
       </div>
     </section>
 
     <section class="sec night" id="expedition-log">
-      <div class="sec-head">
+      <div class="reveal sec-head">
         <span class="num">02.</span>
         <h2 id="expedition-log-h">Expedition log</h2>
       </div>
-      <p class="sec-intro">Who and when, left to right. Drag, scroll or use the arrow keys.</p>
+      <p class="reveal sec-intro" style="--i:1">Who and when, left to right. Drag, scroll or use the arrow keys.</p>
       <LegendStrip labelledby="expedition-log-h" />
     </section>
 
     <section class="sec light" id="current-dig">
-      <div class="sec-head">
+      <div class="reveal sec-head">
         <span class="num">03.</span>
         <h2>Current dig</h2>
       </div>
-      <p class="sec-intro">DeployLog’s expedition begins soon. Habitagram is on the threshold. The <a class="inline-link" href="/field-journal">field journal</a> records how both get there.</p>
+      <p class="reveal sec-intro" style="--i:1">DeployLog’s expedition begins soon. Habitagram is on the threshold. The <a class="inline-link" href="/field-journal">field journal</a> records how both get there.</p>
       <ul class="product-rows">
-        {products.map((p) => (
-          <li class="product-row">
+        {products.map((p, i) => (
+          <li class="reveal hov product-row" style={`--i:${i}`}>
             {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
             <span class="product-what">{p.what}</span>
             <span class="product-status">{p.status}</span>
@@ -100,16 +100,16 @@ const products = [
 
   <div class="night tail">
     <section class="sec" id="join">
-      <div class="sec-head">
+      <div class="reveal sec-head">
         <span class="num">04.</span>
         <h2>Join the expedition</h2>
       </div>
-      <p class="sec-intro">No newsletter. The <a class="inline-link" href="/field-journal">field journal</a> has a feed and the <a class="inline-link" href="/#gadgets">gadgets</a> live on GitHub. Neither asks for an address.</p>
-      <ul class="follow">
-        <li><a href={identity.rss}><b>RSS</b><span>every journal entry, in your reader</span></a></li>
-        <li><a href={identity.github} target="_blank" rel="noopener noreferrer"><b>GitHub</b><span>the gadgets, the artifacts, the commits</span></a></li>
+      <p class="reveal sec-intro" style="--i:1">No newsletter. The <a class="inline-link" href="/field-journal">field journal</a> has a feed and the <a class="inline-link" href="/#gadgets">gadgets</a> live on GitHub. Neither asks for an address.</p>
+      <ul class="reveal follow" style="--i:2">
+        <li><a class="hov" href={identity.rss}><b>RSS</b><span>every journal entry, in your reader</span></a></li>
+        <li><a class="hov" href={identity.github} target="_blank" rel="noopener noreferrer"><b>GitHub</b><span>the gadgets, the artifacts, the commits</span></a></li>
       </ul>
-      <p class="aside-links">Or <a href="/#contact">send word</a> and <a href={identity.call}>book a call</a>.</p>
+      <p class="reveal aside-links" style="--i:3">Or <a href="/#contact">send word</a> and <a href={identity.call}>book a call</a>.</p>
     </section>
     <footer class="foot-wrap">
       <div class="foot">

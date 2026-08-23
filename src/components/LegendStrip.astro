@@ -33,7 +33,7 @@ const { labelledby } = Astro.props;
         const ext = d.href?.startsWith("http");
         return (
           <li class="card">
-            <Tag class="card-in" href={d.href} target={ext ? "_blank" : undefined} rel={ext ? "noopener noreferrer" : undefined}>
+            <Tag class="card-in hov" href={d.href} target={ext ? "_blank" : undefined} rel={ext ? "noopener noreferrer" : undefined}>
               {d.photo ? (
                 <img class="tile photo" src={d.photo} alt="" width="480" height="480" loading="lazy" draggable="false" />
               ) : (

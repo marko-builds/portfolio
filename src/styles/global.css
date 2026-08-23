@@ -206,19 +206,97 @@ section h2:not(.sr-only)::before {
   animation-delay: var(--delay, 0ms);
 }
 
-/* ─── Scroll Reveal ──────────────────────────────────────────────────── */
-.reveal {
+/* ─── Motion vocabulary (map-site-v3 ticket 06; numbers tuned by slice 17) ── */
+/* One set, site-wide. Section reveal: fade + small rise, played once by the single
+   IntersectionObserver in BaseLayout.astro (threshold .2, rootMargin 0 0 -18%, then
+   unobserve). Siblings stagger by --i, set inline per group (0,1,2...). Card hover:
+   a 2px lift and the border to cyan (accent on light bands). The hero keeps its own
+   entrance (.hero-enter); nav, lattice and plexus do not move. */
+:root {
+  --reveal-y: 12px;
+  --reveal-ms: 420ms;
+  --reveal-ease: cubic-bezier(.16,1,.3,1);
+  --reveal-stagger: 60ms;
+  --hover-ms: 160ms;
+  --hover-lift: 2px;
+}
+/* Hidden only once the observer script has registered (html.js), so a page without
+   script still shows everything. transform carries the reveal and translate carries
+   the hover lift: two properties, so a card that does both never fights itself. */
+.js .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(var(--reveal-y));
   transition:
-    opacity 0.5s ease var(--delay, 0ms),
-    transform 0.5s ease var(--delay, 0ms);
+    opacity var(--reveal-ms) var(--reveal-ease),
+    transform var(--reveal-ms) var(--reveal-ease);
+  transition-delay: calc(var(--i, 0) * var(--reveal-stagger));
+}
+.js .reveal.in {
+  opacity: 1;
+  transform: none;
+}
+.hov {
+  transition: translate var(--hover-ms) ease, border-color var(--hover-ms) ease, background-color var(--hover-ms) ease;
+}
+.js .reveal.hov {
+  transition:
+    opacity var(--reveal-ms) var(--reveal-ease),
+    transform var(--reveal-ms) var(--reveal-ease),
+    translate var(--hover-ms) ease,
+    border-color var(--hover-ms) ease,
+    background-color var(--hover-ms) ease;
+  transition-delay: calc(var(--i, 0) * var(--reveal-stagger)), calc(var(--i, 0) * var(--reveal-stagger)), 0s, 0s, 0s;
+}
+.hov:hover {
+  translate: 0 calc(-1 * var(--hover-lift));
+  border-color: var(--color-accent);
+}
+.night .hov:hover { border-color: var(--color-aurora-cyan); }
+
+/* ─── Hero route draw (ticket 06, the one optional motion addition) ──────── */
+/* A dashed route across the hero, drawn on load in 600 ms ease-out. Plain markup
+   and CSS, no script, no budget. Off unless html[data-route="on"]; reduced
+   motion shows it drawn. */
+.route-draw { display: none; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+[data-route="on"] .route-draw { display: block; }
+/* pathLength="100" on the path, so the dasharray is in path percent: 50 dash/gap
+   pairs summing to 100, then a 100-unit gap. With the offset at 100 the gap covers
+   the whole route; as it runs to 0 the dashes come through left to right. */
+.route-draw path {
+  stroke: var(--color-aurora-cyan);
+  stroke-dasharray: 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 0 100;
+  stroke-dashoffset: 0;
+}
+[data-route="on"] .route-draw path { animation: route-draw 600ms ease-out both; }
+@keyframes route-draw {
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
 }
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* EYEBALL HARNESS, remove after the slice-17 pick */
+html[data-motion="tight"] { --reveal-y: 8px; --reveal-ms: 320ms; --reveal-stagger: 40ms; }
+html[data-motion="loose"] { --reveal-y: 16px; --reveal-ms: 520ms; --reveal-stagger: 80ms; }
+.eyeball-pill { display: none; }
+html[data-motion] .eyeball-pill, html[data-route] .eyeball-pill {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 9999;
+  padding: 0.45rem 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-night-text);
+  background: var(--color-night-bg);
+  border: 1px solid var(--color-night-border);
+  border-radius: 8px;
 }
+.eyeball-pill a { color: var(--color-night-text-secondary); text-decoration: none; }
+.eyeball-pill a:hover, .eyeball-pill a.on { color: var(--color-aurora-cyan); }
+.eyeball-pill b { color: var(--color-aurora-cyan); font-weight: 500; }
+/* END EYEBALL HARNESS */
 
 /* ─── Nav Links ──────────────────────────────────────────────────────── */
 .nav-link {
@@ -265,12 +343,15 @@ section h2:not(.sr-only)::before {
 
 /* ─── Reduced Motion ─────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  /* Immediately show all scroll-reveal elements */
-  .reveal {
+  /* Every reveal at end state, no transition; the route is shown drawn; no lift. */
+  .js .reveal, .js .reveal.hov {
     opacity: 1;
     transform: none;
     transition: none;
   }
+  .hov { transition: none; }
+  .hov:hover { translate: none; }
+  [data-route="on"] .route-draw path { animation: none; }
 
   /* Cancel hero entrance animations — elements are visible at rest */
   .hero-enter {
