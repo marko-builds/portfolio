@@ -43,9 +43,11 @@ const { labelledby } = Astro.props;
                 </span>
               )}
               <span class="dot" aria-hidden="true"></span>
-              <span class="when">{d.when}</span>
-              <span class="what">{d.label}</span>
-              <span class="org">{d.org}</span>
+              <span class="txt">
+                <span class="when">{d.when}</span>
+                <span class="what">{d.label}</span>
+                <span class="org">{d.org}</span>
+              </span>
             </Tag>
           </li>
         );
@@ -116,14 +118,23 @@ const { labelledby } = Astro.props;
     position: relative;
   }
   .card { flex: none; width: var(--card); scroll-snap-align: start; }
+  /* Zig-zag (Marko, 2026-08-23): three fixed rows, tile zone / dot / tile zone, so every
+     dot sits on the one route line; odd cards hang the tile above the route and the text
+     below, even cards invert. Text zones are bottom-aligned above the line and top-aligned
+     below it so both read from the dot outward. */
   .card-in {
     display: grid;
-    grid-template-rows: var(--tile) 1rem auto auto auto;
-    align-content: start;
+    grid-template-rows: var(--tile) 1rem var(--tile);
     gap: 0.15rem;
     text-decoration: none;
     color: var(--color-night-text);
   }
+  .tile { grid-row: 1; }
+  .dot { grid-row: 2; }
+  .txt { grid-row: 3; display: flex; flex-direction: column; }
+  .card:nth-child(even) .tile { grid-row: 3; border-radius: 0 0 10px 10px; border-bottom: 1px solid var(--color-night-border); border-top: 0; }
+  .card:nth-child(even) .txt { grid-row: 1; justify-content: flex-end; padding-bottom: 0.4rem; }
+  .card:nth-child(even) .type::before { top: auto; bottom: 0; }
   .tile {
     width: var(--tile);
     height: var(--tile);
