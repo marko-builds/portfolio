@@ -125,6 +125,21 @@ section h2:not(.sr-only)::before {
   color: var(--color-accent);
 }
 
+/* ─── Inline links (PRD, Marko 2026-08-23; slice 11) ──────────────────── */
+/* Body copy that names a page or band links to it (src/data/home.ts linkify). One rule
+   for every band: accent on light, aurora cyan under a .night ancestor, underline on
+   hover only. */
+.inline-link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.night .inline-link {
+  color: var(--color-aurora-cyan);
+}
+.inline-link:hover {
+  text-decoration: underline;
+}
+
 /* ─── Focus Visible (keyboard navigation) ────────────────────────────── */
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--color-accent);

@@ -42,7 +42,7 @@ export const receipts = (postCount: number) => [
 // Inline links (PRD, Marko 2026-08-23): wherever body copy names a page or band, the
 // words link to it. Whole-word, case-insensitive, first occurrence per phrase; the copy
 // itself stays a plain string so it can be diffed against the copy pack character for
-// character. Longest phrase first so "field journal" is not split by "journal".
+// character.
 export const inlineLinks: [string, string][] = [
   ["field journal", "/field-journal"],
   ["dig site", "#receipts"],
@@ -52,12 +52,22 @@ export const inlineLinks: [string, string][] = [
 ];
 
 const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+// ONE pass over the text. The hazard (review of c19e6a5): a per-phrase loop re-scans its
+// own output, so a later phrase that is a substring of an earlier href or of the class
+// name ("journal" after "field journal", or a phrase matching "inline") lands an anchor
+// inside an attribute. A single alternation regex, longest phrase first, sees the text
+// once and never re-reads inserted markup; a phrase already linked is skipped.
 export const linkify = (text: string, links: [string, string][] = inlineLinks): string => {
-  let html = escapeHtml(text);
-  for (const [phrase, href] of links) {
-    const re = new RegExp(`\\b(${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})\\b`, "i");
-    html = html.replace(re, (m) => `<a class="inline-link" href="${href}">${m}</a>`);
-  }
-  return html;
+  const table = [...links].sort((a, b) => b[0].length - a[0].length);
+  const hrefOf = new Map(table.map(([p, h]) => [p.toLowerCase(), h]));
+  const re = new RegExp(`\\b(${table.map(([p]) => escapeRe(p)).join("|")})\\b`, "gi");
+  const used = new Set<string>();
+  return escapeHtml(text).replace(re, (m) => {
+    const key = m.toLowerCase();
+    if (used.has(key)) return m;
+    used.add(key);
+    return `<a class="inline-link" href="${hrefOf.get(key)}">${m}</a>`;
+  });
 };

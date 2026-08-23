@@ -10,7 +10,8 @@
 // Checks: route parity, journal body equivalence (posts at /field-journal/<slug>),
 // token parity (light palette + night register + aurora ramp + brand type), weight budget (general + the aurora allowance), reduced-motion
 // render (only on a page carrying the aurora block), copy lint (every authored
-// template), receipts (number + href + date per card, entry count = non-draft posts),
+// template plus src/data/*.ts), placeholders (none in dist outside /proto/), receipts
+// (number + href + date per card, entry count = non-draft posts),
 // main-untouched.
 //
 // Re-baselined 2026-08-15 by issues/map-site-v2/10-close-out.md. Before that the
@@ -419,17 +420,41 @@ else {
 // region (a CSS `content:` declaration) is invisible to this. Zero today.
 console.log('copy:');
 {
-  const authored = ['src/pages', 'src/components', 'src/layouts']
+  // src/data/*.ts added 2026-08-23 (review of c19e6a5): every approved home string
+  // lives in src/data/home.ts, so a scan of .astro alone could never see it.
+  const authored = ['src/pages', 'src/components', 'src/layouts', 'src/data']
     .flatMap((d) => walk(join(ROOT, d)))
-    .filter((f) => f.endsWith('.astro'))
+    .filter((f) => f.endsWith('.astro') || (f.includes('/src/data/') && f.endsWith('.ts')))
     .map((f) => relative(ROOT, f))
     .sort();
   for (const f of authored) {
-    const hits = copyHits(readFileSync(join(ROOT, f), 'utf8'));
+    // A .ts module is all "frontmatter": prefix an opening fence so its // and /* */
+    // comments are stripped the way an .astro frontmatter's are; string literals are linted.
+    const src = readFileSync(join(ROOT, f), 'utf8');
+    const hits = copyHits(f.endsWith('.ts') ? '---\n' + src : src).map((n) => (f.endsWith('.ts') ? n - 1 : n));
     hits.length
       ? fail(`copy ${f}`, `dash/arrow on line(s) ${hits.join(',')}`)
       : ok(`copy ${f}`);
   }
+}
+
+// ── 5a. placeholders (built site) ──────────────────────────────────────────
+// "[PLACEHOLDER] " prefixes marked unapproved copy through slices 10 and 11; none may
+// ship. /proto/ keeps its old copy until slice 14 deletes it, so it is excluded by the
+// one constant below (slice 14: set it to [] and the exclusion is gone).
+// Known negative (2026-08-23): dist/404.html with "[PLACEHOLDER]" planted fails.
+const PLACEHOLDER_EXCLUDE = ['dist/proto/'];
+console.log('placeholders:');
+{
+  const pages = walk(join(ROOT, 'dist'))
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => relative(ROOT, f))
+    .filter((f) => !PLACEHOLDER_EXCLUDE.some((x) => f.startsWith(x)))
+    .sort();
+  const hits = pages.filter((f) => readFileSync(join(ROOT, f), 'utf8').includes('PLACEHOLDER'));
+  hits.length
+    ? fail('placeholders', `PLACEHOLDER in ${hits.join(', ')}`)
+    : ok('placeholders', `${pages.length} pages clean, excluding ${PLACEHOLDER_EXCLUDE.join(' ')}`);
 }
 
 // ── 5b. receipts (built home) ──────────────────────────────────────────────
@@ -447,15 +472,19 @@ console.log('receipts:');
   const cards = row ? [...row[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]) : [];
   const DATE = /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 20\d\d\b/;
   const text = (s) => s.replace(/<[^>]+>/g, ' ');
-  cards.length === 3 ? ok('receipts count', '3 cards') : fail('receipts count', `${cards.length} cards, want 3`);
+  if (!row) fail('receipts row', 'receipts row not found in dist/index.html');
+  else cards.length === 3 ? ok('receipts count', '3 cards') : fail('receipts count', `${cards.length} cards, want 3`);
   cards.forEach((c, i) => {
     const missing = [];
     if (!/<span class="n"[^>]*>\d+<\/span>/.test(c)) missing.push('number');
-    if (!/<a href="[^"]+"/.test(c)) missing.push('href');
+    // An href that proves something: a site path or an https URL. A bare "#" passes a
+    // presence test and proves nothing, so the shape is checked, not the attribute.
+    const href = (c.match(/<a[^>]*\bhref="([^"]+)"/) ?? [])[1] ?? '';
+    if (!/^(\/|https:\/\/)/.test(href)) missing.push('href');
     if (!DATE.test(text(c))) missing.push('date');
     missing.length ? fail(`receipt ${i + 1}`, `missing ${missing.join('+')}`) : ok(`receipt ${i + 1}`);
   });
-  const journal = cards.find((c) => /href="\/field-journal"/.test(c));
+  const journal = cards.find((c) => /<a[^>]*\bhref="\/field-journal"/.test(c));
   const shown = journal ? Number((journal.match(/<span class="n"[^>]*>(\d+)<\/span>/) ?? [])[1]) : NaN;
   const posts = walk(join(ROOT, 'src/content/blog')).filter((f) => f.endsWith('.mdx'));
   const live = posts.filter((f) => !/^draft:\s*true\s*$/m.test(readFileSync(f, 'utf8'))).length;
