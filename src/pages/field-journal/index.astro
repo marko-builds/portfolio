@@ -38,6 +38,32 @@ const dateFmt = (d: Date) =>
 
   <main>
     <div class="head-band">
+      <!-- Survey sheet (Marko, 2026-08-23): the index's own motif, a site plan rather than a
+           third plexus. Trench grid with excavation-square references, one dashed contour,
+           survey crosses and a north arrow, all in the cyan token at low opacity. Static,
+           no script, no budget; aria-hidden because it is decoration. The viewBox is 1440
+           wide and the svg is pinned to the band's right half so the text column stays clear. -->
+      <svg class="survey" viewBox="0 0 720 360" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+        <defs>
+          <pattern id="trench" width="96" height="96" patternUnits="userSpaceOnUse">
+            <path d="M96 0H0V96" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" />
+          </pattern>
+        </defs>
+        <rect width="720" height="360" fill="url(#trench)" opacity="0.55" />
+        <g class="refs" font-family="var(--font-mono)" font-size="11" fill="currentColor" opacity="0.8">
+          <text x="104" y="14">A1</text><text x="200" y="14">B1</text><text x="296" y="14">C1</text><text x="392" y="14">D1</text><text x="488" y="14">E1</text><text x="584" y="14">F1</text>
+          <text x="104" y="110">A2</text><text x="104" y="206">A3</text><text x="104" y="302">A4</text>
+        </g>
+        <path class="contour" d="M0 232 C 90 210, 140 280, 230 250 S 380 170, 470 200 S 640 290, 720 236" fill="none" stroke="currentColor" stroke-width="1.25" stroke-dasharray="9 6" opacity="0.7" />
+        <path class="contour" d="M60 300 C 160 270, 260 330, 360 296 S 560 250, 720 290" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="5 7" opacity="0.45" />
+        <g class="crosses" stroke="currentColor" stroke-width="1.25" opacity="0.9">
+          <path d="M234 150h12M240 144v12" /><path d="M426 246h12M432 240v12" /><path d="M618 126h12M624 120v12" /><path d="M330 318h12M336 312v12" />
+        </g>
+        <g class="north" transform="translate(664 46)" stroke="currentColor" fill="none" stroke-width="1.25" opacity="0.9">
+          <path d="M0 -22V22" /><path d="M-7 -10L0 -22L7 -10" /><circle r="3" />
+          <text x="12" y="-14" font-family="var(--font-mono)" font-size="11" fill="currentColor" stroke="none">N</text>
+        </g>
+      </svg>
       <div class="frame">
         <h1 class="hero-enter">Field journal</h1>
         <p class="hero-enter sub">
@@ -144,6 +170,28 @@ const dateFmt = (d: Date) =>
      8rem. Matching declarations is not matching output. */
   .head-band {
     padding-block: 8rem 3rem;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .head-band > .frame { position: relative; z-index: 1; }
+  /* Right half of the band, the column's right edge inward: at 1440 the frame's right edge
+     is 1220, the sheet starts around 760 and fades in from its left so the subline's tail
+     sits over empty ground. Below 720 the sheet drops to the bottom third of the band. */
+  .survey {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(720px, 50%);
+    height: 100%;
+    color: var(--color-aurora-cyan);
+    opacity: 0.32;
+    z-index: 0;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+  }
+  @media (max-width: 720px) {
+    .survey { width: 100%; height: 45%; top: auto; bottom: 0; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 40%); mask-image: linear-gradient(180deg, transparent 0, #000 40%); }
   }
   h1 {
     font-family: var(--font-sans);
