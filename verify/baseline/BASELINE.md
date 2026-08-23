@@ -7,6 +7,23 @@ Captured 2026-07-03 (issue 01). Every later gate compares against this.
 > site was before the site-v2 redesign. The values the gate reads today are in that section. Read
 > it first.
 
+## Re-pin, 2026-08-23 (issues/13-legend-page.md, branch wt/slice-13)
+
+Routes re-pinned by `node verify/rebaseline.mjs 6a5b8c5b7e6e66e10a8cc2fba78cd4b569576d3d` against
+the real build. Same main sha passed back in unchanged (`git diff -- verify/baseline/main-sha.txt`
+empty; re-pinning it is still slice 16's job), `devlog-bodies.json` byte-identical.
+
+- **Routes: 25** (was 24). Added: `/about/`, the Legend page (`src/pages/about/index.astro`,
+  `src/components/LegendStrip.astro`, `LegendDates.ts`). Removed: none.
+- **Weight: unchanged at 6127 B across 6 unmarked blocks.** The page's drag script is 742 B and
+  byte-identical to `/proto/about/`'s, so the content-hash dedupe counts it once; the number holds
+  when slice 14 deletes the prototype, because `/about/` carries the same bytes. Aurora budget
+  untouched (9135 B, no aurora on inner routes).
+- **Motion, tokens, bodies, Lighthouse floors: untouched.** `/about/` carries no aurora block, so
+  the reduced-motion arm does not run on it; its own reduced-motion contract (the strip's
+  `scroll-behavior: smooth` only under `prefers-reduced-motion: no-preference`) was read off the
+  built page by CDP: `auto` under `--force-prefers-reduced-motion`, `smooth` without.
+
 ## Re-pin, 2026-08-23 (issues/09-gate-config-reconcile.md, branch build/site-v3)
 
 Routes and bodies re-pinned by `node verify/rebaseline.mjs 6a5b8c5b7e6e66e10a8cc2fba78cd4b569576d3d`

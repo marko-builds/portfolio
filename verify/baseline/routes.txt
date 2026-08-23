@@ -1,5 +1,6 @@
 /
 /404.html
+/about/
 /blog/
 /blog/building-pipeline-tooling-with-claude-code/
 /blog/golden-fingerprints-generative-art/

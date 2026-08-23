@@ -1,0 +1,290 @@
+---
+// Legend, the /about page (issues/13-legend-page.md; issues/prd-site-v3-audience.md;
+// map-site-v3 ticket 12 Answer: "A with C's column"). Promoted from
+// src/pages/proto/about/[...variant].astro, which slice 14 deletes.
+//
+// Bands, top to bottom, on slice 10's .sec / .light / .night system (the rules are the
+// home page's, scoped per page by Astro, so they are restated here rather than shared):
+//   01  Map legend (light): variant C's two-column story, the sticky portrait and the
+//       Based / Languages / Since facts on the left, the h1 and three paragraphs right;
+//   02  Expedition log (night): variant A's line strip, LegendStrip.astro, on scroll-snap
+//       with the mouse drag script below;
+//   03  Current dig (light): the three product rows;
+//   04  Join the expedition + footer: one .night.tail carrying the neon lattice.
+// No hero, no aurora: inner routes get none. Every string is copy-pack-v3 section 11
+// (with the section 12 items Marko approved already folded in there), character for
+// character; the product rows are section 5 with section 11's studio line. Inline links
+// per the PRD: where the copy names a page or band, the words link to it, underline on
+// hover only.
+//
+// The only script is the drag helper, ~742 B unmarked inside the general budget: mouse
+// pointers only so touch keeps native momentum, snap off while dragging and back on
+// release, the click after a drag over a linked tile suppressed. It also reads ?scroll=N
+// for captures. Byte-identical to the prototype's, so the gate's content-hash dedupe
+// counts it once while /proto/about/ still builds.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteNav from "../../components/SiteNav.astro";
+import LegendStrip from "../../components/LegendStrip.astro";
+
+const pageTitle = "Legend | Marko Stankovic";
+const pageDescription =
+  "The chronicle so far, 2021 to now. Three years of Unity, then AI companions: two artifacts, open source gadgets and a media engine.";
+
+const identity = {
+  name: "Marko Stankovic",
+  location: "Belgrade, Serbia",
+  languages: "Serbian (native), English",
+  github: "https://github.com/marko-builds",
+  rss: "/rss.xml",
+  call: "/call",
+};
+
+const products = [
+  { name: "deploylog", what: "Release notes from real git history.", href: "/projects/deploylog/", status: "launching" },
+  { name: "habitagram", what: "Habit tracking as a journey.", href: null, status: "near launch" },
+  { name: "studio", what: "Renders the launch art for both.", href: "/field-journal", status: "internal" },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <SiteNav active="legend" />
+
+  <main id="main">
+    <section class="sec light twocol" id="story">
+      <aside class="side">
+        <img class="portrait" src="/portrait.webp" alt={identity.name} width="480" height="480" />
+        <dl class="facts">
+          <div><dt>Based</dt><dd>{identity.location}</dd></div>
+          <div><dt>Languages</dt><dd>{identity.languages}</dd></div>
+          <div><dt>Since</dt><dd>2021, Unity and C#</dd></div>
+        </dl>
+      </aside>
+      <div class="col">
+        <p class="kicker"><span class="num">01.</span> Map legend</p>
+        <h1>Code archaeologist, based in Belgrade.</h1>
+        <p class="story"><b class="lead">Name’s Marko.</b><br />I'm a code archaeologist out of Serbia. I forge digital artifacts and AI companions, charting the course in my <a class="inl" href="/field-journal">field journal</a>. Join the expedition if you like code, making things, or finding out why something broke.</p>
+        <p class="story">The first dig was Unity and C#: a BSc in Computer Games &amp; Programming at Univerzitet Metropolitan, an internship at Inlustris Studio, then Replai, a live product, until September 2025.</p>
+        <p class="story">Since then the companions do the night shift. An agent harness implements whole feature branches overnight behind tests and a review gate. Python and TypeScript underneath, Claude Code driving, Astro for this site. A media studio paints the launch art, and small gadgets check whether an AI feature actually worked. skill-vibe-test, adpreflight and duskpaper came out of that, each with a check you can run. Off duty I'm a beginner at photography, guitar and short stories.</p>
+      </div>
+    </section>
+
+    <section class="sec night" id="expedition-log">
+      <div class="sec-head">
+        <span class="num">02.</span>
+        <h2 id="expedition-log-h">Expedition log</h2>
+      </div>
+      <p class="sec-intro">Who and when, left to right. Drag, scroll or use the arrow keys.</p>
+      <LegendStrip labelledby="expedition-log-h" />
+    </section>
+
+    <section class="sec light" id="current-dig">
+      <div class="sec-head">
+        <span class="num">03.</span>
+        <h2>Current dig</h2>
+      </div>
+      <p class="sec-intro">DeployLog’s expedition begins soon. Habitagram is on the threshold. The <a class="inl" href="/field-journal">field journal</a> records how both get there.</p>
+      <ul class="product-rows">
+        {products.map((p) => (
+          <li class="product-row">
+            {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
+            <span class="product-what">{p.what}</span>
+            <span class="product-status">{p.status}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+
+  <div class="night tail">
+    <section class="sec" id="join">
+      <div class="sec-head">
+        <span class="num">04.</span>
+        <h2>Join the expedition</h2>
+      </div>
+      <p class="sec-intro">No newsletter. The <a class="inl" href="/field-journal">field journal</a> has a feed and the <a class="inl" href="/#gadgets">gadgets</a> live on GitHub. Neither asks for an address.</p>
+      <ul class="follow">
+        <li><a href={identity.rss}><b>RSS</b><span>every journal entry, in your reader</span></a></li>
+        <li><a href={identity.github} target="_blank" rel="noopener noreferrer"><b>GitHub</b><span>the gadgets, the artifacts, the commits</span></a></li>
+      </ul>
+      <p class="aside-links">Or <a href="/#contact">send word</a> and <a href={identity.call}>book a call</a>.</p>
+    </section>
+    <footer class="foot-wrap">
+      <div class="foot">
+        <p>&copy; 2026 Marko Stankovic</p>
+        <p class="foot-meta">Code archaeologist · Belgrade</p>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+(function(){var q=new URLSearchParams(location.search).get("scroll");document.querySelectorAll("[data-rail]").forEach(function(r){if(q)r.scrollLeft=+q;var on=false,mv=false,x=0,s=0;r.addEventListener("pointerdown",function(e){if(e.pointerType!=="mouse"||e.button)return;on=true;mv=false;x=e.clientX;s=r.scrollLeft;r.setPointerCapture(e.pointerId)});r.addEventListener("pointermove",function(e){if(!on)return;var d=e.clientX-x;if(!mv&&Math.abs(d)<4)return;if(!mv){mv=true;r.classList.add("drag")}r.scrollLeft=s-d});function up(){if(!on)return;on=false;r.classList.remove("drag")}r.addEventListener("pointerup",up);r.addEventListener("pointercancel",up);r.addEventListener("click",function(e){if(mv){e.preventDefault();mv=false}},true)})})();
+</script>
+
+<style>
+  /* Alternating bands, the home page's system (src/pages/index.astro, slice 10): each
+     section is full-bleed and carries its own register; the inner grid is the 1000px
+     column. */
+  .sec { padding: 3rem 56px 4rem; margin: 0; }
+  .sec > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+  .light { background: var(--color-bg); color: var(--color-text-primary); }
+  .night {
+    background-color: var(--color-night-bg);
+    color: var(--color-night-text);
+    position: relative;
+    isolation: isolate;
+  }
+  .night > * { position: relative; z-index: 1; }
+  /* The neon lattice on the tail, as on home: the ramp masked to a fixed 72px grid that
+     fades in toward the foot, plus a glow along the bottom. Fixed geometry, so the band's
+     height never changes the picture. */
+  .tail { position: relative; isolation: isolate; }
+  .tail::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--aurora-0), var(--aurora-1) 45%, var(--aurora-2));
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent 0%, #000 70%),
+      repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, #000 0 1px, transparent 1px 72px);
+    mask-image:
+      linear-gradient(180deg, transparent 0%, #000 70%),
+      repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, #000 0 1px, transparent 1px 72px);
+    -webkit-mask-composite: source-in, source-over, source-over;
+    mask-composite: intersect, add, add;
+    opacity: 0.55;
+  }
+  .tail::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 260px;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(700px 160px at 18% 100%, color-mix(in srgb, var(--aurora-0) 40%, transparent), transparent 70%),
+      radial-gradient(700px 160px at 82% 100%, color-mix(in srgb, var(--aurora-2) 35%, transparent), transparent 70%);
+    filter: blur(2px);
+  }
+  .tail > * { position: relative; z-index: 1; }
+  .night .sec-head h2 { color: var(--color-night-text); }
+  .night .num { color: var(--color-aurora-cyan); }
+  .night .sec-intro, .night .aside-links, .night .follow span { color: var(--color-night-text-secondary); }
+  .night .inl { color: var(--color-aurora-cyan); }
+  .night .aside-links a { color: var(--color-night-text); }
+  .night .aside-links a:hover { color: var(--color-aurora-cyan); }
+  .night .follow a { border-color: var(--color-night-border); background: var(--color-night-surface); color: var(--color-night-text); }
+  .night .follow a:hover { border-color: var(--color-aurora-cyan); }
+  .night .follow b { color: var(--color-aurora-cyan); }
+
+  .sec-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.25rem; }
+  .num { font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-accent); letter-spacing: 0.04em; }
+  .sec-head h2 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+  .sec-head h2::before { content: none; }
+  .sec-intro { color: var(--color-text-secondary); margin: 0 0 1.5rem; max-width: 36em; }
+  .inl { color: var(--color-accent); text-decoration: none; }
+  .inl:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* 01: the two-column story. The first band clears the fixed nav (56px) the way the
+     journal's head band does; the portrait and facts stick while the story scrolls. */
+  .twocol {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 3.5rem;
+    padding-top: 8rem;
+    padding-inline: max(56px, calc((100% - 1000px) / 2));
+  }
+  .twocol > * { max-width: none; margin: 0; }
+  .side { position: sticky; top: 5rem; align-self: start; display: grid; gap: 1.25rem; }
+  .portrait {
+    width: 240px; height: 240px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid var(--color-border-strong);
+  }
+  .facts { margin: 0; display: grid; gap: 0.5rem; }
+  .facts dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); }
+  .facts dd { margin: 0; color: var(--color-text-secondary); font-size: 0.92rem; }
+  .kicker {
+    margin: 0 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--color-text-secondary);
+  }
+  h1 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: clamp(1.9rem, 4.2vw, 2.9rem);
+    line-height: 1.12;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin: 0 0 1.5rem;
+    max-width: 18em;
+    color: var(--color-text-primary);
+  }
+  .story {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    max-width: 36em;
+    margin: 0 0 1.1rem;
+    color: var(--color-text-primary);
+  }
+  .story:last-child { margin-bottom: 0; }
+  .lead {
+    font-family: var(--font-display, var(--font-sans));
+    font-weight: 600;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* 03: the product rows, as on home. */
+  .product-rows { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.6rem; }
+  .product-row { display: flex; gap: 0.75rem; align-items: baseline; flex-wrap: wrap; padding-bottom: 0.6rem; border-bottom: 1px solid var(--color-border); }
+  .product-row a, .product-name { color: var(--color-text-primary); text-decoration: none; font-weight: 600; }
+  .product-row a:hover { color: var(--color-accent); }
+  .product-what { color: var(--color-text-secondary); font-size: 0.94rem; }
+  .product-status { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-muted); margin-left: auto; white-space: nowrap; }
+
+  /* 04: the two follow cards and the aside. */
+  .follow { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; max-width: 640px; }
+  .follow a {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface);
+    text-decoration: none;
+    color: var(--color-text-primary);
+  }
+  .follow b { font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-accent); }
+  .follow span { font-size: 0.9rem; color: var(--color-text-secondary); }
+  .aside-links { margin: 1.5rem 0 0; font-size: 0.9rem; }
+  .aside-links a { color: inherit; }
+
+  .foot-wrap { padding-inline: 56px; }
+  .tail .foot p { color: var(--color-night-text-secondary); }
+  .foot { max-width: 1000px; margin: 0 auto; padding: 0 0 1.75rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; }
+  .foot p { margin: 0; font-size: 0.85rem; }
+
+  @media (max-width: 720px) {
+    .sec { padding: 2.25rem 24px 3rem; }
+    .twocol { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 6.5rem; padding-inline: 24px; }
+    .side { position: static; grid-template-columns: 112px 1fr; align-items: center; }
+    .portrait { width: 112px; height: 112px; }
+    .foot-wrap { padding-inline: 24px; }
+    .foot { padding: 0 0 1.5rem; }
+  }
+</style>
