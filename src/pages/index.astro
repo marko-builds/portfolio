@@ -1,34 +1,27 @@
 ---
+// Home, rebuilt 2026-08-23 on the site-v3 register (issues/10-promote-register-home.md;
+// issues/prd-site-v3-audience.md; map-site-v3 ticket 03 Answer). Promoted from the
+// prototype (src/pages/proto/c-hybrid.astro = _HeroC + _Body), which stays until slice 14.
+//
+// Band order and register, top to bottom: hero (night, the live aurora, HeroAurora),
+// 01 Artifacts (light), 02 Field journal (night, static star-chart plexus padded under
+// the content), 03 Gadgets (light), 04 Send word + footer (one .night.tail carrying the
+// flat neon lattice, drawn once on the page). Section ids are the nav's anchors
+// (SiteNav.astro). Words are the prototype's; slice 11 owns them.
+//
+// The v2 timeline is cut from home (PRD: Legend carries the dates, slice 13).
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SiteNav from "../components/SiteNav.astro";
+import HeroAurora from "../components/HeroAurora.astro";
 import { getCollection } from "astro:content";
 
-// Same rule as the devlog pages: in dev the site shows drafts, in a build it never does.
-// Kept identical in all three places on purpose, so "is this visible?" has one answer.
+// Same rule as the journal pages: in dev the site shows drafts, in a build it never does.
 const recentPosts = (await getCollection("blog"))
   .filter((p) => import.meta.env.DEV || !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 4);
 
-// Identity rail. Facts only, all verifiable.
-// No availability statement (map decision 10) and no CV link (ticket 05 owns CV
-// delivery through the call). The /cv redirect route stays either way.
-const identity = {
-  name: "Marko Stankovic",
-  role: "AI Engineer",
-  location: "Belgrade, Serbia",
-  languages: "Serbian (native), English",
-  email: "contact@markostankovic.org",
-  github: "https://github.com/marko-builds",
-  linkedin: "https://www.linkedin.com/in/marko-builds/",
-  call: "/call",
-};
-
-// The proof band leads the page. Every card carries a link, a number and a date.
-// Repo visibility and every metric below were read off the repos themselves on
-// 2026-08-15 (gh repo list + each README), not copied from the prototype, whose
-// numbers were placeholders. claimcheck does not exist on GitHub at all yet, so
-// the band ships a sized slot rather than waiting for it (map-public-proof/14).
+// Gadgets: the v2 proof cards, verbatim. Every card carries a link, a number and a date,
+// each read off the repos themselves on 2026-08-15 (gh repo list + each README).
 const proof = [
   {
     name: "skill-vibe-test",
@@ -53,59 +46,22 @@ const proof = [
   },
 ];
 
-// Products, demoted beneath the proof band. habitagram has no public URL yet, so
-// it renders as a card without a link rather than pointing at a dead domain.
 const products = [
-  {
-    name: "deploylog",
-    what: "Release notes from real git history.",
-    href: "/projects/deploylog/",
-    status: "launching",
-  },
+  { name: "deploylog", what: "Release notes from real git history.", href: "/projects/deploylog/", status: "launching" },
   { name: "habitagram", what: "Habit tracking as a journey.", href: null, status: "near launch" },
-  {
-    name: "studio",
-    what: "The generative media engine behind both.",
-    href: "/devlog",
-    status: "internal",
-  },
+  { name: "studio", what: "The generative media engine behind both.", href: "/field-journal", status: "internal" },
 ];
 
-// Records from issues/map-site-v2/04-experience-timeline.md. The current role
-// deliberately carries NO organization line: Marko cut both "Independent" and
-// the Monolithiq invoicing-entity line on 2026-08-15. Do not fill this gap.
-const timeline = [
-  {
-    role: "AI Engineer",
-    org: "",
-    where: "Belgrade",
-    when: "Sep 2025 to present",
-    bullets: [
-      "Built an agent harness that implements whole feature branches overnight behind tests and an automated review gate.",
-      "Shipped skill-vibe-test and adpreflight as open source, each with a check suite calibrated against a known-bad input.",
-    ],
-  },
-  {
-    role: "Unity Game Developer",
-    org: "Replai",
-    where: "Belgrade (Remote)",
-    when: "Mar 2025 to Sep 2025",
-    bullets: ["Gameplay and tooling work in Unity and C# on a live product."],
-  },
-  {
-    role: "Unity Developer Intern",
-    org: "Inlustris Studio",
-    where: "Belgrade",
-    when: "Jun 2024 to Nov 2024",
-    bullets: ["Gameplay systems and editor tooling."],
-  },
-];
-
-const education = {
-  degree: "BSc, Computer Games & Programming",
-  org: "Univerzitet Metropolitan",
-  where: "Belgrade",
-  when: "2021 to 2025",
+// Identity facts only, all verifiable. No availability statement and no CV link
+// (v2 decisions; the /cv redirect route stays either way).
+const identity = {
+  location: "Belgrade, Serbia",
+  languages: "Serbian (native), English",
+  email: "contact@markostankovic.org",
+  github: "https://github.com/marko-builds",
+  linkedin: "https://www.linkedin.com/in/marko-builds/",
+  rss: "/rss.xml",
+  call: "/call",
 };
 
 const pageTitle = "Marko Stankovic | I build AI systems and prove they work";
@@ -139,370 +95,314 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
   </Fragment>
 
-  <SiteNav />
+  <HeroAurora />
 
-  <div class="shell">
-    <!-- The persistent identity rail. On mobile it splits: the chip stays on top,
-         the facts and links drop to the end of the page as the contact band. -->
-    <aside class="rail">
-      <div class="rail-id">
-        <img
-          class="portrait"
-          src="/portrait.webp"
-          alt="Marko Stankovic"
-          width="480"
-          height="480"
-        />
-        <div class="rail-id-text">
-          <p class="ident-name">{identity.name}</p>
-          <p class="ident-role">{identity.role}</p>
-        </div>
-      </div>
-
-      <div class="rail-meta" id="contact">
-        <h2 class="rail-meta-head">Contact</h2>
-        <dl class="ident-facts">
-          <div><dt>Based</dt><dd>{identity.location}</dd></div>
-          <div><dt>Languages</dt><dd>{identity.languages}</dd></div>
-        </dl>
-        <ul class="ident-links">
-          <li><a href={`mailto:${identity.email}`}>Email</a></li>
-          <li>
-            <a href={identity.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-          </li>
-          <li>
-            <a href={identity.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          </li>
-          <li><a href={identity.call} class="call-link">Book a call</a></li>
-        </ul>
-      </div>
-    </aside>
-
-    <main class="body" id="main">
-      <!-- 1. HERO -->
-      <section class="lede">
-        <h1 class="lede-line">I build AI systems and prove they work.</h1>
-        <p class="lede-sub">
-          A demo shows an AI feature running, not whether it worked. I build the
-          tools that measure the difference, and I publish the numbers.
-        </p>
-        <p class="lede-about">
-          I build agent systems and the tools that measure whether they actually worked:
-          an overnight loop that ships reviewed code while I sleep, a probe that checks
-          whether a skill still steers a model after ten turns, and eval gates that fail
-          loudly instead of passing quietly. Three years of Unity and Unreal systems work
-          sits underneath. I write about all of it on the devlog.
-        </p>
-      </section>
-
-      <!-- 2. PROOF, leading. #work is SiteNav's anchor. -->
-      <section class="band" id="work">
-        <h2>Proof</h2>
-        <p class="band-intro">
-          Open source. Every one has a repo you can read and a check you can run.
-        </p>
-        <ul class="proof-grid">
-          {
-            proof.map((p) => (
-              <li class="proof-card">
-                <a
-                  class="proof-title"
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {p.name}
-                </a>
-                <p class="proof-what">{p.what}</p>
-                <p class="proof-meta">
-                  <span class="metric">{p.metric}</span>
-                  <span class="sep">·</span>
-                  <span>{p.date}</span>
-                </p>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
-
-      <!-- 3. PRODUCTS, demoted -->
-      <section class="band" id="products">
-        <h2>Products</h2>
-        <ul class="product-rows">
-          {
-            products.map((p) => (
-              <li class="product-row">
-                {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
-                <span class="product-what">{p.what}</span>
-                <span class="product-status">{p.status}</span>
-              </li>
-            ))
-          }
-        </ul>
-      </section>
-
-      <!-- 4. EXPERIENCE -->
-      <section class="band" id="experience">
-        <h2>Experience</h2>
-        <ol class="timeline">
-          {
-            timeline.map((t) => (
-              <li class="record">
-                <div class="record-head">
-                  <h3 class="record-role">{t.role}</h3>
-                  <span class="record-when">{t.when}</span>
-                </div>
-                <p class="record-org">
-                  {t.org && (
-                    <>
-                      {t.org}
-                      <span class="sep">·</span>
-                    </>
-                  )}
-                  {t.where}
-                </p>
-                <ul class="record-bullets">
-                  {t.bullets.map((b) => (
-                    <li>{b}</li>
-                  ))}
-                </ul>
-              </li>
-            ))
-          }
-          <li class="record">
-            <div class="record-head">
-              <h3 class="record-role">{education.degree}</h3>
-              <span class="record-when">{education.when}</span>
-            </div>
-            <p class="record-org">
-              {education.org}<span class="sep">·</span>{education.where}
-            </p>
-          </li>
-        </ol>
-      </section>
-
-      <!-- 5. DEVLOG -->
-      {
-        recentPosts.length > 0 && (
-          <section class="band" id="devlog">
-            <div class="band-head">
-              <h2>Devlog</h2>
-              <a class="all-link" href="/devlog">
-                All posts
-              </a>
-            </div>
-            <ul class="post-rows">
-              {recentPosts.map((p) => (
-                <li class="post-row">
-                  <a class="post-title" href={`/devlog/${p.slug}/`}>
-                    {p.data.title}
-                  </a>
-                  <p class="post-excerpt">{p.data.excerpt}</p>
-                  <span class="post-date">{fmt(p.data.date)}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-    </main>
-  </div>
-
-  <footer>
-    <div class="foot">
-      <p>&copy; 2026 Marko Stankovic</p>
-      <p class="foot-meta">AI engineer · Belgrade</p>
+<main id="main">
+  <section class="sec light" id="artifacts">
+    <div class="sec-head">
+      <span class="num">01.</span>
+      <h2>Artifacts</h2>
     </div>
-  </footer>
+    <ul class="product-rows">
+      {products.map((p) => (
+        <li class="product-row">
+          {p.href ? <a href={p.href}>{p.name}</a> : <span class="product-name">{p.name}</span>}
+          <span class="product-what">{p.what}</span>
+          <span class="product-status">{p.status}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {recentPosts.length > 0 && (
+    <section class="sec night" id="field-journal">
+      <svg class="plexus" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs><filter id="pb"><feGaussianBlur stdDeviation="7"/></filter><filter id="pg" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <g filter="url(#pb)" opacity=".35">
+      <circle cx="274.6" cy="213.7" r="12" fill="var(--aurora-0)"/>
+      <circle cx="603.7" cy="140.6" r="16" fill="var(--aurora-1)"/>
+      <circle cx="605.9" cy="104.7" r="16" fill="var(--aurora-2)"/>
+      <circle cx="1244.6" cy="264.7" r="20" fill="var(--aurora-3)"/>
+      <circle cx="438.0" cy="245.8" r="12" fill="var(--aurora-0)"/>
+      <circle cx="269.7" cy="269.1" r="20" fill="var(--aurora-1)"/>
+      <circle cx="924.2" cy="81.1" r="12" fill="var(--aurora-2)"/>
+      </g><g stroke="var(--color-aurora-cyan)" stroke-opacity=".3" stroke-width="1">
+      <line x1="651.4" y1="116.9" x2="644.3" y2="194.0"/>
+      <line x1="651.4" y1="116.9" x2="670.5" y2="219.3"/>
+      <line x1="670.5" y1="219.3" x2="644.3" y2="194.0"/>
+      <line x1="670.5" y1="219.3" x2="634.4" y2="232.9"/>
+      <line x1="731.3" y1="242.4" x2="719.7" y2="239.8"/>
+      <line x1="731.3" y1="242.4" x2="737.1" y2="259.3"/>
+      <line x1="737.1" y1="259.3" x2="719.7" y2="239.8"/>
+      <line x1="907.0" y1="276.5" x2="886.4" y2="260.4"/>
+      <line x1="907.0" y1="276.5" x2="922.0" y2="205.1"/>
+      <line x1="436.9" y1="251.7" x2="454.0" y2="277.6"/>
+      <line x1="436.9" y1="251.7" x2="400.6" y2="210.6"/>
+      <line x1="130.6" y1="241.0" x2="101.1" y2="220.5"/>
+      <line x1="130.6" y1="241.0" x2="86.2" y2="249.1"/>
+      <line x1="60.3" y1="171.5" x2="105.2" y2="190.6"/>
+      <line x1="60.3" y1="171.5" x2="101.1" y2="220.5"/>
+      <line x1="1414.4" y1="172.3" x2="1436.6" y2="132.8"/>
+      <line x1="1414.4" y1="172.3" x2="1379.6" y2="284.5"/>
+      <line x1="886.4" y1="260.4" x2="922.0" y2="205.1"/>
+      <line x1="226.8" y1="188.4" x2="125.5" y2="183.7"/>
+      <line x1="226.8" y1="188.4" x2="273.9" y2="285.0"/>
+      <line x1="85.8" y1="276.8" x2="86.2" y2="249.1"/>
+      <line x1="85.8" y1="276.8" x2="130.6" y2="241.0"/>
+      <line x1="273.9" y1="285.0" x2="302.0" y2="283.8"/>
+      <line x1="273.9" y1="285.0" x2="169.9" y2="285.2"/>
+      <line x1="668.1" y1="266.3" x2="670.5" y2="219.3"/>
+      <line x1="668.1" y1="266.3" x2="634.4" y2="232.9"/>
+      <line x1="634.4" y1="232.9" x2="644.3" y2="194.0"/>
+      <line x1="400.6" y1="210.6" x2="388.5" y2="185.1"/>
+      <line x1="1436.6" y1="132.8" x2="1310.8" y2="65.7"/>
+      <line x1="1019.2" y1="281.9" x2="907.0" y2="276.5"/>
+      <line x1="1019.2" y1="281.9" x2="922.0" y2="205.1"/>
+      <line x1="454.0" y1="277.6" x2="400.6" y2="210.6"/>
+      <line x1="101.1" y1="220.5" x2="105.2" y2="190.6"/>
+      <line x1="101.1" y1="220.5" x2="86.2" y2="249.1"/>
+      <line x1="1103.5" y1="160.5" x2="1091.6" y2="106.8"/>
+      <line x1="1103.5" y1="160.5" x2="1147.7" y2="241.0"/>
+      <line x1="556.6" y1="195.3" x2="572.3" y2="244.0"/>
+      <line x1="556.6" y1="195.3" x2="634.4" y2="232.9"/>
+      <line x1="1379.6" y1="284.5" x2="1436.6" y2="132.8"/>
+      <line x1="302.0" y1="283.8" x2="226.8" y2="188.4"/>
+      <line x1="1310.8" y1="65.7" x2="1414.4" y2="172.3"/>
+      <line x1="572.3" y1="244.0" x2="634.4" y2="232.9"/>
+      <line x1="105.2" y1="190.6" x2="125.5" y2="183.7"/>
+      <line x1="388.5" y1="185.1" x2="436.9" y2="251.7"/>
+      <line x1="125.5" y1="183.7" x2="101.1" y2="220.5"/>
+      <line x1="1091.6" y1="106.8" x2="1147.7" y2="241.0"/>
+      <line x1="169.9" y1="285.2" x2="130.6" y2="241.0"/>
+      <line x1="169.9" y1="285.2" x2="85.8" y2="276.8"/>
+      <line x1="1147.7" y1="241.0" x2="1019.2" y2="281.9"/>
+      </g><g filter="url(#pg)">
+      <circle cx="651.4" cy="116.9" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="670.5" cy="219.3" r="4" fill="var(--color-aurora-cyan)"/>
+      <circle cx="731.3" cy="242.4" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="737.1" cy="259.3" r="2.5" fill="var(--aurora-2)"/>
+      <circle cx="907.0" cy="276.5" r="5" fill="var(--aurora-3)"/>
+      <circle cx="436.9" cy="251.7" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="130.6" cy="241.0" r="3" fill="var(--color-aurora-amber)"/>
+      <circle cx="60.3" cy="171.5" r="4" fill="var(--color-aurora-cyan)"/>
+      <circle cx="1414.4" cy="172.3" r="2.5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="886.4" cy="260.4" r="2.5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="226.8" cy="188.4" r="2.5" fill="var(--aurora-2)"/>
+      <circle cx="85.8" cy="276.8" r="3" fill="var(--aurora-3)"/>
+      <circle cx="273.9" cy="285.0" r="5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="668.1" cy="266.3" r="3" fill="var(--color-aurora-amber)"/>
+      <circle cx="634.4" cy="232.9" r="2.5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="922.0" cy="205.1" r="5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="719.7" cy="239.8" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="400.6" cy="210.6" r="3" fill="var(--aurora-2)"/>
+      <circle cx="1436.6" cy="132.8" r="5" fill="var(--aurora-3)"/>
+      <circle cx="1019.2" cy="281.9" r="4" fill="var(--color-aurora-cyan)"/>
+      <circle cx="454.0" cy="277.6" r="3" fill="var(--color-aurora-amber)"/>
+      <circle cx="101.1" cy="220.5" r="5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="1103.5" cy="160.5" r="4" fill="var(--color-aurora-cyan)"/>
+      <circle cx="556.6" cy="195.3" r="5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="1379.6" cy="284.5" r="3" fill="var(--aurora-2)"/>
+      <circle cx="302.0" cy="283.8" r="4" fill="var(--aurora-3)"/>
+      <circle cx="1310.8" cy="65.7" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="572.3" cy="244.0" r="3" fill="var(--color-aurora-amber)"/>
+      <circle cx="105.2" cy="190.6" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="388.5" cy="185.1" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="125.5" cy="183.7" r="5" fill="var(--color-aurora-cyan)"/>
+      <circle cx="1091.6" cy="106.8" r="3" fill="var(--aurora-2)"/>
+      <circle cx="169.9" cy="285.2" r="3" fill="var(--aurora-3)"/>
+      <circle cx="86.2" cy="249.1" r="3" fill="var(--color-aurora-cyan)"/>
+      <circle cx="1147.7" cy="241.0" r="5" fill="var(--color-aurora-amber)"/>
+      <circle cx="644.3" cy="194.0" r="3" fill="var(--color-aurora-cyan)"/>
+      </g></svg>
+      <div class="sec-head">
+        <span class="num">02.</span>
+        <h2>Field journal</h2>
+        <a class="all-link" href="/field-journal">All entries</a>
+      </div>
+      <ul class="post-rows">
+        {recentPosts.map((p) => (
+          <li class="post-row">
+            <a class="post-title" href={`/field-journal/${p.slug}/`}>{p.data.title}</a>
+            <p class="post-excerpt">{p.data.excerpt}</p>
+            <span class="post-date">{fmt(p.data.date)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="sec light" id="gadgets">
+    <div class="sec-head">
+      <span class="num">03.</span>
+      <h2>Gadgets</h2>
+    </div>
+    <p class="sec-intro">Open source. Every one has a repo you can read and a check you can run.</p>
+    <ul class="proof-grid">
+      {proof.map((p) => (
+        <li class="proof-card">
+          <a class="proof-title" href={p.href} target="_blank" rel="noopener noreferrer">{p.name}</a>
+          <p class="proof-what">{p.what}</p>
+          <p class="proof-meta">
+            <span class="metric">{p.metric}</span>
+            <span class="sep">·</span>
+            <span>{p.date}</span>
+          </p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+</main>
+
+<div class="night tail">
+  <section class="sec" id="contact">
+    <div class="sec-head">
+      <span class="num">04.</span>
+      <h2>Send word</h2>
+    </div>
+    <div class="contact">
+      <dl class="facts">
+        <div><dt>Based</dt><dd>{identity.location}</dd></div>
+        <div><dt>Languages</dt><dd>{identity.languages}</dd></div>
+      </dl>
+      <ul class="links">
+        <li><a href={`mailto:${identity.email}`}>Email</a></li>
+        <li><a href={identity.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href={identity.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href={identity.rss}>RSS</a></li>
+        <li><a href={identity.call} class="call-link">Book a call</a></li>
+      </ul>
+    </div>
+  </section>
+<footer class="foot-wrap">
+  <div class="foot">
+    <p>&copy; 2026 Marko Stankovic</p>
+    <p class="foot-meta">AI engineer · Belgrade</p>
+  </div>
+</footer>
+</div>
+
 </BaseLayout>
 
 <style>
-  /* Light direction, locked by issues/map-site-v2/02 (screen A). The tokens are
-     global.css's; nothing here reintroduces a hex literal. */
-
-  /* ── Shell: the sticky identity rail plus the reading column ───────────
-     The shell shares SiteNav's grid exactly (max-width 1000px, 56px inline
-     padding) so the `> ms` mark lines up with the rail's left edge and the nav
-     links line up with the content column's right edge. Changing either value
-     without changing SiteNav.astro is what knocked the header out of alignment
-     in the prototype. SiteNav is fixed and 56px tall, so the 7rem top padding
-     is nav height plus a full gap; 3.5rem cleared it by exactly zero and the
-     portrait snapped to the bar. */
-  .shell {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    gap: 3.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 7rem 56px 6rem;
-    align-items: start;
-  }
-
-  .rail {
-    position: sticky;
-    top: 7rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .rail-id {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
-  .portrait {
-    width: 104px;
-    height: 104px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--color-border-strong);
-  }
-
-  .ident-name {
-    font-size: 1.35rem;
-    font-weight: 600;
-    margin: 0.4rem 0 0;
-    letter-spacing: -0.02em;
-    color: var(--color-text-primary);
-  }
-  .ident-role {
-    color: var(--color-accent);
+  /* Alternating bands, Marko 2026-08-22: each section is full-bleed and carries its
+     own register; the inner grid is the 1000px column. */
+  .sec {
+    padding: 3rem 56px 4rem;
     margin: 0;
-    font-weight: 500;
   }
-
-  /* On desktop the rail IS the contact band, so its heading is for screen
-     readers and for the /#contact anchor only. It becomes visible on mobile,
-     where this block moves to the end of the page. */
-  .rail-meta-head {
+  .sec > * { max-width: 1000px; margin-left: auto; margin-right: auto; }
+  .light { background: var(--color-bg); color: var(--color-text-primary); }
+  .night {
+    background-color: var(--color-night-bg);
+    color: var(--color-night-text);
+    position: relative;
+    isolation: isolate;
+  }
+  /* 2D neon lattice for the dark bands, Marko 2026-08-23: the devlog header's graph
+     paper (global.css --color-grid) in the ramp, magenta left to cyan right, fixed
+     72px cells so nothing scales with band height, with a glow along the bottom.
+     Stand-in for ticket 06's scroll-following graphics. */
+  /* Lab notes: a "connecting the dots" plexus in the ramp, anchored to the band
+     bottom, fixed 300px viewBox height (slice), so it reads the same on any band height. */
+  .night > .plexus {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+    max-width: none;
+    margin: 0;
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 300px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  #field-journal { padding-bottom: 15rem; }
+  @media (max-width: 720px) { #field-journal { padding-bottom: 11rem; } }
+  .tail::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--aurora-0), var(--aurora-1) 45%, var(--aurora-2));
+    -webkit-mask-image:
+      linear-gradient(180deg, transparent 0%, #000 70%),
+      repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, #000 0 1px, transparent 1px 72px);
+    mask-image:
+      linear-gradient(180deg, transparent 0%, #000 70%),
+      repeating-linear-gradient(90deg, #000 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, #000 0 1px, transparent 1px 72px);
+    /* Top layer composites onto the union below it: fade INTERSECT (v lines ADD h lines). */
+    -webkit-mask-composite: source-in, source-over, source-over;
+    mask-composite: intersect, add, add;
+    opacity: 0.55;
+  }
+  .tail::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 0;
+    height: 260px;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(700px 160px at 18% 100%, color-mix(in srgb, var(--aurora-0) 40%, transparent), transparent 70%),
+      radial-gradient(700px 160px at 82% 100%, color-mix(in srgb, var(--aurora-2) 35%, transparent), transparent 70%);
+    filter: blur(2px);
+  }
+  .night > * { position: relative; z-index: 1; }
+  .night .sec-head h2, .night .post-title, .night .call-link, .night .facts dd { color: var(--color-night-text); }
+  .night .num { color: var(--color-aurora-cyan); }
+  .night .sec-intro, .night .post-excerpt, .night .all-link, .night .links a { color: var(--color-night-text-secondary); }
+  .night .post-date, .night .facts dt { color: var(--color-night-text-secondary); }
+  .night .post-row { border-bottom-color: var(--color-night-border); }
+  .night .post-title:hover, .night .all-link:hover, .night .links a:hover { color: var(--color-aurora-cyan); }
+  .night .links a:hover { border-bottom-color: var(--color-aurora-cyan); }
+  @media (max-width: 720px) {
+    .sec { padding: 2.25rem 24px 3rem; }
   }
 
-  .ident-facts {
-    margin: 0;
-    display: grid;
-    gap: 0.45rem;
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
   }
-  .ident-facts dt {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-muted);
-  }
-  .ident-facts dd {
-    margin: 0;
-    color: var(--color-text-secondary);
-    font-size: 0.92rem;
-  }
-
-  .ident-links {
-    list-style: none;
-    padding: 0;
-    margin: 1.25rem 0 0;
-    display: grid;
-    gap: 0.4rem;
-  }
-  .ident-links a {
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-  }
-  .ident-links a:hover {
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
     color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
+    letter-spacing: 0.04em;
   }
-  .call-link {
-    font-weight: 600;
-    color: var(--color-text-primary);
-  }
-
-  /* ── Reading column ───────────────────────────────────────────────────── */
-  .body {
-    max-width: 68ch;
-  }
-
-  .lede-line {
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
-    line-height: 1.15;
-    font-weight: 600;
-    margin: 0 0 1rem;
-    letter-spacing: -0.02em;
-    font-family: var(--font-sans);
-    color: var(--color-text-primary);
-  }
-  .lede-sub {
-    color: var(--color-text-secondary);
-    margin: 0;
-    font-size: 1.05rem;
-  }
-  .lede-about {
-    color: var(--color-text-secondary);
-    margin: 1.1rem 0 0;
-    font-size: 0.98rem;
-    line-height: 1.75;
-  }
-
-  .band {
-    margin-top: 4.5rem;
-  }
-  /* global.css:82 puts a mono `// ` before every `section h2`. That is the dark
-     register's voice, and the locked direction (ticket 02, screen A) keeps mono
-     for exactly one thing: the metric. Scoped off here rather than in global.css,
-     which the devlog and project pages still read. */
-  .band > h2::before,
-  .band-head h2::before {
-    content: none;
-  }
-  .band > h2,
-  .band-head h2 {
-    font-family: var(--font-sans);
-    font-size: 1.25rem;
+  .sec-head h2 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: 1.75rem;
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--color-text-primary);
-    margin: 0 0 0.5rem;
+    margin: 0;
   }
-  .band-intro {
+  .sec-head h2::before { content: none; }
+  .sec-intro {
     color: var(--color-text-secondary);
     margin: 0 0 1.5rem;
   }
-  .band-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .band-head h2 {
-    margin: 0;
-  }
   .all-link {
+    margin-left: auto;
     color: var(--color-text-secondary);
     text-decoration: none;
     font-size: 0.9rem;
     white-space: nowrap;
   }
-  .all-link:hover {
-    color: var(--color-accent);
-  }
+  .all-link:hover { color: var(--color-accent); }
 
-  /* ── Proof cards. Deliberately heavier than the product rows. ─────────── */
   .proof-grid {
     list-style: none;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1rem;
   }
   .proof-card {
@@ -510,9 +410,19 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     border-radius: 10px;
     padding: 1.25rem;
     background: var(--color-surface);
-    box-shadow:
-      0 1px 2px var(--color-grid),
-      0 8px 24px -16px var(--color-grid);
+    box-shadow: 0 1px 2px var(--color-grid), 0 8px 24px -16px var(--color-grid);
+    position: relative;
+    overflow: hidden;
+  }
+  /* The aurora ramp as a hairline on the card top edge: the one accent the light
+     body takes from the hero, in both variants. */
+  .proof-card::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 2px;
+    background: var(--aurora-ramp);
+    opacity: 0.8;
   }
   .proof-title {
     font-weight: 600;
@@ -521,9 +431,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     text-decoration: none;
     border-bottom: 1px solid var(--color-accent);
   }
-  .proof-title:hover {
-    color: var(--color-accent);
-  }
+  .proof-title:hover { color: var(--color-accent); }
   .proof-what {
     color: var(--color-text-secondary);
     margin: 0.5rem 0 0.9rem;
@@ -538,29 +446,19 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     align-items: baseline;
     flex-wrap: wrap;
   }
-  /* The one thing that stays mono: the metric. */
   .metric {
     font-family: var(--font-mono);
     font-size: 0.85em;
     white-space: nowrap;
   }
-  .sep {
-    color: var(--color-text-muted);
-  }
+  .sep { color: var(--color-text-muted); }
 
-  /* ── Products, deliberately lighter than the proof band ───────────────── */
-  .product-rows,
-  .post-rows,
-  .timeline,
-  .record-bullets {
+  .product-rows, .post-rows, .links {
     list-style: none;
     padding: 0;
     margin: 0;
   }
-  .product-rows {
-    display: grid;
-    gap: 0.6rem;
-  }
+  .product-rows { display: grid; gap: 0.6rem; margin-top: 1rem; }
   .product-row {
     display: flex;
     gap: 0.75rem;
@@ -569,19 +467,13 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--color-border);
   }
-  .product-row a,
-  .product-name {
+  .product-row a, .product-name {
     color: var(--color-text-primary);
     text-decoration: none;
     font-weight: 600;
   }
-  .product-row a:hover {
-    color: var(--color-accent);
-  }
-  .product-what {
-    color: var(--color-text-secondary);
-    font-size: 0.94rem;
-  }
+  .product-row a:hover { color: var(--color-accent); }
+  .product-what { color: var(--color-text-secondary); font-size: 0.94rem; }
   .product-status {
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -590,74 +482,9 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     white-space: nowrap;
   }
 
-  /* ── Timeline ─────────────────────────────────────────────────────────── */
-  .timeline {
-    display: grid;
-    gap: 2rem;
-  }
-  .record-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: baseline;
-    flex-wrap: wrap;
-  }
-  .record-role {
-    font-family: var(--font-sans);
-    font-size: 1.05rem;
-    margin: 0;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--color-text-primary);
-  }
-  .record-when {
-    color: var(--color-text-muted);
-    font-size: 0.88rem;
-    white-space: nowrap;
-  }
-  .record-org {
-    color: var(--color-text-secondary);
-    margin: 0.15rem 0 0.6rem;
-    font-size: 0.94rem;
-  }
-  .record-org .sep {
-    margin: 0 0.5rem;
-  }
-  .record-bullets {
-    display: grid;
-    gap: 0.35rem;
-  }
-  .record-bullets li {
-    color: var(--color-text-secondary);
-    padding-left: 1rem;
-    position: relative;
-    font-size: 0.95rem;
-  }
-  .record-bullets li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.65em;
-    width: 5px;
-    height: 1px;
-    background: var(--color-accent);
-  }
-
-  /* ── Devlog rows ──────────────────────────────────────────────────────── */
-  .post-rows {
-    display: grid;
-    gap: 1.5rem;
-  }
-  .post-row {
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-  /* The last row's rule would sit a gap above the contact band's own rule on
-     mobile, reading as a doubled divider. */
-  .post-row:last-child {
-    padding-bottom: 0;
-    border-bottom: 0;
-  }
+  .post-rows { display: grid; gap: 1.5rem; margin-top: 1rem; }
+  .post-row { padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .post-row:last-child { padding-bottom: 0; border-bottom: 0; }
   .post-title {
     color: var(--color-text-primary);
     text-decoration: none;
@@ -666,111 +493,48 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     line-height: 1.35;
     display: inline-block;
   }
-  .post-title:hover {
-    color: var(--color-accent);
-  }
-  .post-excerpt {
-    color: var(--color-text-secondary);
-    margin: 0.4rem 0 0.5rem;
-    font-size: 0.94rem;
-  }
-  .post-date {
-    color: var(--color-text-muted);
-    font-size: 0.82rem;
-  }
+  .post-title:hover { color: var(--color-accent); }
+  .post-excerpt { color: var(--color-text-secondary); margin: 0.4rem 0 0.5rem; font-size: 0.94rem; }
+  .post-date { color: var(--color-text-muted); font-size: 0.82rem; }
 
-  /* ── Footer ───────────────────────────────────────────────────────────── */
-  footer {
-    border-top: 1px solid var(--color-border);
+  .contact {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
   }
+  .facts { margin: 0; display: grid; gap: 0.45rem; }
+  .facts dt {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+  .facts dd { margin: 0; color: var(--color-text-secondary); font-size: 0.92rem; }
+  .links { display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: baseline; }
+  .links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .links a:hover { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+  .call-link { font-weight: 600; color: var(--color-text-primary); }
+
+  .foot-wrap { padding-inline: 56px; }
+  .tail .foot p { color: var(--color-night-text-secondary); }
   .foot {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 1.75rem 56px;
+    padding: 0 0 1.75rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
   }
-  .foot p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-  }
-  .foot-meta {
-    font-family: var(--font-mono);
-    font-size: 0.78rem !important;
-    color: var(--color-text-muted) !important;
-  }
-
-  /* ── Mobile: the rail splits ──────────────────────────────────────────
-     Marko's call 2026-08-15, resolving the question ticket 02 handed over.
-     The prototype put the whole rail above the headline, so a phone reader
-     met the photo and the link list before the positioning line. Now the
-     chip (photo, name, role) stays on top and the facts and links drop to
-     the end of the page, where the contact band belongs. `display: contents`
-     dissolves the rail so its two halves become grid children the shell can
-     order; the DOM stays single-source, so /#contact resolves on both. */
-  @media (max-width: 860px) {
-    .shell {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
-      padding: 5.5rem 28px 4rem;
-    }
-    .rail {
-      display: contents;
-    }
-    .rail-id {
-      order: 1;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.9rem;
-    }
-    .portrait {
-      width: 56px;
-      height: 56px;
-    }
-    .ident-name {
-      margin: 0;
-      font-size: 1.15rem;
-    }
-    .ident-role {
-      font-size: 0.95rem;
-    }
-    .body {
-      order: 2;
-      max-width: none;
-    }
-    .rail-meta {
-      order: 3;
-      padding-top: 2.5rem;
-      border-top: 1px solid var(--color-border);
-    }
-    .rail-meta-head {
-      position: static;
-      width: auto;
-      height: auto;
-      margin: 0 0 1rem;
-      clip: auto;
-      overflow: visible;
-      font-family: var(--font-sans);
-      font-size: 1.25rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: var(--color-text-primary);
-    }
-    .ident-links {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem 1rem;
-    }
-    .ident-links a {
-      display: inline-block;
-      min-height: 44px;
-      line-height: 44px;
-    }
-    .foot {
-      padding-inline: 28px;
-    }
+  .foot p { margin: 0; font-size: 0.85rem; color: var(--color-text-secondary); }
+  @media (max-width: 720px) {
+    .foot-wrap { padding-inline: 24px; }
+    .foot { padding: 0 0 1.5rem; }
   }
 </style>

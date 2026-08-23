@@ -1,22 +1,45 @@
 ---
-// Shared top nav for every page, in the Vercel-monochrome direction. The home
-// page carries it too as of 2026-08-09: the hero's REPL line was its only
-// identity mark, and removing that left the page with none.
+// Shared top nav for every page, rebuilt 2026-08-23 on the site-v3 register
+// (issues/10-promote-register-home.md; map-site-v3 tickets 05 and 11): the fold mark
+// plus the full-name wordmark in the display face (the wordmark hides below 480px,
+// where the name and five links do not fit), and the five labels
+// Artifacts · Field journal · Gadgets · Legend · Send word. `> ms` retired here.
+//
+// Two registers, one component. The default is the fixed light bar every inner page
+// carries. `register="night"` renders it in flow, inside the home hero band, in the
+// night tokens, so the aurora runs behind it (the prototype's _HeroC nav).
+//
+// The fold mark geometry is public/favicon.svg's path (single-sourced in
+// src/pages/proto/05/_marks.ts until slice 14 deletes the prototype); copied, not
+// imported, so the nav survives that deletion.
+type Key = "artifacts" | "journal" | "gadgets" | "legend" | "contact";
 interface Props {
-  active?: "work" | "devlog" | "contact";
+  // "work" and "devlog" are the v2 keys still passed by pages other slices own
+  // (projects/deploylog, field-journal, BlogPost); they map onto the new labels.
+  active?: Key | "work" | "devlog";
+  register?: "light" | "night";
 }
-const { active } = Astro.props;
+const { active: rawActive, register = "light" } = Astro.props;
+const alias: Record<string, Key> = { work: "gadgets", devlog: "journal" };
+const active: Key | undefined = rawActive ? (alias[rawActive] ?? (rawActive as Key)) : undefined;
 
-const links = [
-  { href: "/#work", key: "work", label: "work" },
-  { href: "/field-journal", key: "devlog", label: "devlog" },
-  { href: "/#contact", key: "contact", label: "contact" },
-] as const;
+const links: { href: string; key: Key; label: string }[] = [
+  { href: "/#artifacts", key: "artifacts", label: "Artifacts" },
+  { href: "/field-journal", key: "journal", label: "Field journal" },
+  { href: "/#gadgets", key: "gadgets", label: "Gadgets" },
+  { href: "/about", key: "legend", label: "Legend" },
+  { href: "/#contact", key: "contact", label: "Send word" },
+];
 ---
 
-<header class="site-nav">
+<header class:list={["site-nav", register]}>
   <nav aria-label="Site">
-    <a class="mark" href="/"><span class="chev">&gt;</span> ms</a>
+    <a class="mark" href="/" aria-label="Marko Stankovic, home">
+      <svg class="mk" viewBox="0 0 512 512" width="22" height="22" aria-hidden="true">
+        <path d="M136 352L200 166L256 300L312 166L376 352" fill="none" stroke="currentColor" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span class="word">Marko Stankovic</span>
+    </a>
     <ul>
       {
         links.map((l) => (
@@ -42,6 +65,14 @@ const links = [
     background: var(--color-surface-veil);
     backdrop-filter: blur(3px);
   }
+  /* In-band night register: static, inside the hero, above the canvas. */
+  .site-nav.night {
+    position: relative;
+    z-index: 1;
+    border-bottom-color: var(--color-night-border);
+    background: none;
+    backdrop-filter: none;
+  }
   nav {
     max-width: 1000px;
     margin: 0 auto;
@@ -50,36 +81,59 @@ const links = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-  }
-  @media (max-width: 720px) {
-    nav { padding-inline: 28px; }
+    gap: 1rem;
   }
   .mark {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
     color: var(--color-text-primary);
     text-decoration: none;
+    flex: none;
   }
-  .mark .chev { color: var(--color-accent); }
+  .mk { color: var(--color-accent); flex: none; }
+  .word {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .night .mark { color: var(--color-night-text); }
+  .night .mk { color: var(--color-aurora-cyan); }
   ul {
     display: flex;
-    gap: 28px;
+    gap: 24px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   ul a {
-    font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 0.9rem;
     color: var(--color-text-secondary);
     text-decoration: none;
     padding-block: 6px;
+    white-space: nowrap;
     transition: color 0.15s ease;
   }
   ul a:hover { color: var(--color-text-primary); }
   ul a.active { color: var(--color-accent); }
+  .night ul a { color: var(--color-night-text-secondary); }
+  .night ul a:hover { color: var(--color-night-text); }
+  .night ul a.active { color: var(--color-aurora-cyan); }
+  @media (max-width: 720px) {
+    nav { padding-inline: 28px; }
+    .night nav { padding-inline: 24px; }
+    ul { gap: 16px; }
+    ul a { font-size: 0.85rem; }
+  }
+  /* Five labels at 390px: the wordmark goes, the row tightens, and as a last resort the
+     list wraps onto a second line rather than clipping (measured: 0.8rem + 12px gaps
+     overflowed the 342px row by ~36px and cut "Send word" off at the edge). */
   @media (max-width: 480px) {
-    ul { gap: 18px; }
+    .word { display: none; }
+    nav { padding-inline: 16px; height: auto; min-height: 56px; padding-block: 6px; }
+    ul { gap: 10px; flex-wrap: wrap; justify-content: flex-end; row-gap: 0; }
+    ul a { font-size: 0.75rem; }
   }
 </style>
