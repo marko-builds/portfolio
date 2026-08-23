@@ -20,9 +20,9 @@ const posts = allPosts
 
 const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
 
-const pageTitle = "Devlog | Marko Stankovic";
+const pageTitle = "Field journal | Marko Stankovic";
 const pageDescription =
-  "Build notes from the products, the studio, and the occasional game system.";
+  "Notes from the dig: the apps, the gadgets, the engine, and the numbers each one produced.";
 
 const dateFmt = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" });
@@ -34,9 +34,9 @@ const dateFmt = (d: Date) =>
   <main>
     <div class="head-band">
       <div class="frame">
-        <h1 class="hero-enter">Devlog</h1>
+        <h1 class="hero-enter">Field journal</h1>
         <p class="hero-enter sub">
-          Build notes from the products, the studio, and the occasional game system.
+          Notes from the dig: the apps, the gadgets, the engine, and the numbers each one produced.
         </p>
         <p class="hero-enter rss">
           <a href="/rss.xml">RSS</a>
@@ -75,7 +75,7 @@ const dateFmt = (d: Date) =>
           }
         </div>
 
-        {posts.length === 0 && <p class="empty">No posts yet. Check back soon.</p>}
+        {posts.length === 0 && <p class="empty">No entries yet. The expedition has just started.</p>}
       </div>
     </section>
   </main>
