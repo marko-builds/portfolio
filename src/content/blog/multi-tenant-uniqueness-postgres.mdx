@@ -2,6 +2,7 @@
 title: "The Uniqueness Check You Cannot Write in App Code"
 date: "2026-07-07"
 excerpt: "I spec'd a pre-insert slug check for DeployLog and a review caught it as structurally impossible: under row-level security, the app can only see one tenant's rows. In a multi-tenant database, the UNIQUE constraint is not a backstop. It is the only enforcement that can exist."
+opener: "While hardening DeployLog before launch I wrote a pre-insert slug check that looked obviously right, and a review killed it with one sentence: the check is impossible by construction. Under row-level security the app can only see one tenant's rows. In a multi-tenant Postgres database the UNIQUE constraint is not a backstop, it is the only enforcement that can exist, and this entry is how I learned that."
 tags: ["DeployLog", "Postgres", "Supabase", "RLS", "Multi-Tenancy", "SaaS"]
 draft: true
 ---
