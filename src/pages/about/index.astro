@@ -65,7 +65,7 @@ const products = [
       <div class="col">
         <p class="kicker"><span class="num">01.</span> Map legend</p>
         <h1>Code archaeologist, based in Belgrade.</h1>
-        <p class="story"><b class="lead">Name’s Marko.</b><br />I'm a code archaeologist out of Serbia. I forge digital artifacts and AI companions, charting the course in my <a class="inl" href="/field-journal">field journal</a>. Join the expedition if you like code, making things, or finding out why something broke.</p>
+        <p class="story"><b class="lead">Name’s Marko.</b><br />I'm a code archaeologist out of Serbia. I forge digital artifacts and AI companions, charting the course in my <a class="inline-link" href="/field-journal">field journal</a>. Join the expedition if you like code, making things, or finding out why something broke.</p>
         <p class="story">The first dig was Unity and C#: a BSc in Computer Games &amp; Programming at Univerzitet Metropolitan, an internship at Inlustris Studio, then Replai, a live product, until September 2025.</p>
         <p class="story">Since then the companions do the night shift. An agent harness implements whole feature branches overnight behind tests and a review gate. Python and TypeScript underneath, Claude Code driving, Astro for this site. A media studio paints the launch art, and small gadgets check whether an AI feature actually worked. skill-vibe-test, adpreflight and duskpaper came out of that, each with a check you can run. Off duty I'm a beginner at photography, guitar and short stories.</p>
       </div>
@@ -85,7 +85,7 @@ const products = [
         <span class="num">03.</span>
         <h2>Current dig</h2>
       </div>
-      <p class="sec-intro">DeployLog’s expedition begins soon. Habitagram is on the threshold. The <a class="inl" href="/field-journal">field journal</a> records how both get there.</p>
+      <p class="sec-intro">DeployLog’s expedition begins soon. Habitagram is on the threshold. The <a class="inline-link" href="/field-journal">field journal</a> records how both get there.</p>
       <ul class="product-rows">
         {products.map((p) => (
           <li class="product-row">
@@ -104,7 +104,7 @@ const products = [
         <span class="num">04.</span>
         <h2>Join the expedition</h2>
       </div>
-      <p class="sec-intro">No newsletter. The <a class="inl" href="/field-journal">field journal</a> has a feed and the <a class="inl" href="/#gadgets">gadgets</a> live on GitHub. Neither asks for an address.</p>
+      <p class="sec-intro">No newsletter. The <a class="inline-link" href="/field-journal">field journal</a> has a feed and the <a class="inline-link" href="/#gadgets">gadgets</a> live on GitHub. Neither asks for an address.</p>
       <ul class="follow">
         <li><a href={identity.rss}><b>RSS</b><span>every journal entry, in your reader</span></a></li>
         <li><a href={identity.github} target="_blank" rel="noopener noreferrer"><b>GitHub</b><span>the gadgets, the artifacts, the commits</span></a></li>
@@ -177,7 +177,6 @@ const products = [
   .night .sec-head h2 { color: var(--color-night-text); }
   .night .num { color: var(--color-aurora-cyan); }
   .night .sec-intro, .night .aside-links, .night .follow span { color: var(--color-night-text-secondary); }
-  .night .inl { color: var(--color-aurora-cyan); }
   .night .aside-links a { color: var(--color-night-text); }
   .night .aside-links a:hover { color: var(--color-aurora-cyan); }
   .night .follow a { border-color: var(--color-night-border); background: var(--color-night-surface); color: var(--color-night-text); }
@@ -196,8 +195,6 @@ const products = [
   }
   .sec-head h2::before { content: none; }
   .sec-intro { color: var(--color-text-secondary); margin: 0 0 1.5rem; }
-  .inl { color: var(--color-accent); text-decoration: none; }
-  .inl:hover { text-decoration: underline; text-underline-offset: 3px; }
 
   /* 01: the two-column story. The first band clears the fixed nav (56px) the way the
      journal's head band does; the portrait and facts stick while the story scrolls. */
