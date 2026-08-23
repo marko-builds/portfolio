@@ -25,11 +25,11 @@
   --color-bg: #FBFAF7;
   --color-surface: #FFFFFF;
   --color-border: #E4E0D8;
-  /* PROPOSED 2026-08-23 (accent sync, map-site-v3 ticket 03 addendum): the light accents are
+  /* Set 2026-08-23 (accent sync, map-site-v3 ticket 03 addendum): the light accents are
      now the aurora hues darkened until they clear AA on both light surfaces. accent was #14707C
      (same hue, more saturated), warm was #9C6031 (hue 26, a step off the amber). Measured:
-     accent 5.02 on bg / 5.24 on surface, warm 5.00 / 5.22. Escape hatch for the gate:
-     verify/proposals/accent-sync-aurora.md names the three tokens. */
+     accent 5.02 on bg / 5.24 on surface, warm 5.00 / 5.22. Frozen in verify/gate.mjs
+     TOKEN_FROZEN since slice 09; the proposal file that carried them was deleted then. */
   --color-accent: #1D7781;
   --color-accent-dim: #1D77811F;
   --color-warm: #9B5E25;
@@ -55,8 +55,8 @@
 }
 
 
-/* PROPOSED night + aurora tokens, ticket 03 (issues/map-site-v3). They join
-   verify/gate.mjs TOKEN_FROZEN when the ticket locks them. Values: Lodestar navy,
+/* Night + aurora tokens, ticket 03 (issues/map-site-v3), frozen in verify/gate.mjs
+   TOKEN_FROZEN since slice 09. Values: Lodestar navy,
    brand cyan + amber, the "aurora" row of Borealis.qml paletteTable. Night text
    roles against --color-night-bg: text 15.2, secondary 8.1, cyan 9.6. */
 :root {

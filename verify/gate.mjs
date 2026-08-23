@@ -10,7 +10,7 @@
 // Checks: route parity, journal body equivalence (posts at /field-journal/<slug>),
 // token parity (light palette + night register + aurora ramp + brand type), weight budget (general + the aurora allowance), reduced-motion
 // render (only on a page carrying the aurora block), copy lint (every authored
-// template plus src/data/*.ts), placeholders (none in dist outside /proto/), receipts
+// template plus src/data/*.ts), placeholders (none in dist), receipts
 // (number + href + date per card, entry count = non-draft posts),
 // main-untouched.
 //
@@ -440,10 +440,10 @@ console.log('copy:');
 
 // ── 5a. placeholders (built site) ──────────────────────────────────────────
 // "[PLACEHOLDER] " prefixes marked unapproved copy through slices 10 and 11; none may
-// ship. /proto/ keeps its old copy until slice 14 deletes it, so it is excluded by the
-// one constant below (slice 14: set it to [] and the exclusion is gone).
+// ship. The constant below held ['dist/proto/'] while the prototype surface existed;
+// slice 14 deleted it (2026-08-23) and the exclusion with it. Keep it empty.
 // Known negative (2026-08-23): dist/404.html with "[PLACEHOLDER]" planted fails.
-const PLACEHOLDER_EXCLUDE = ['dist/proto/'];
+const PLACEHOLDER_EXCLUDE = [];
 console.log('placeholders:');
 {
   const pages = walk(join(ROOT, 'dist'))

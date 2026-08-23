@@ -9,19 +9,14 @@
 // carries. `register="night"` renders it in flow, inside the home hero band, in the
 // night tokens, so the aurora runs behind it (the prototype's _HeroC nav).
 //
-// The fold mark geometry is public/favicon.svg's path (single-sourced in
-// src/pages/proto/05/_marks.ts until slice 14 deletes the prototype); copied, not
-// imported, so the nav survives that deletion.
+// The fold mark geometry is public/favicon.svg's path (the ticket 05 prototype that
+// generated it was deleted in slice 14); copied, not imported.
 type Key = "artifacts" | "journal" | "gadgets" | "legend" | "contact";
 interface Props {
-  // "devlog" is the v2 key still passed by field-journal/index and BlogPost (slice 12's
-  // files); it maps onto the journal label until slice 14 retires it.
-  active?: Key | "devlog";
+  active?: Key;
   register?: "light" | "night";
 }
-const { active: rawActive, register = "light" } = Astro.props;
-const alias: Record<"devlog", Key> = { devlog: "journal" };
-const active: Key | undefined = rawActive === "devlog" ? alias.devlog : rawActive;
+const { active, register = "light" } = Astro.props;
 
 const links: { href: string; key: Key; label: string }[] = [
   { href: "/#artifacts", key: "artifacts", label: "Artifacts" },

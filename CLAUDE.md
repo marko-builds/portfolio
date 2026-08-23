@@ -1,7 +1,11 @@
 # portfolio — markostankovic.org
 
-Astro 5 static site, Tailwind v4, deployed by Cloudflare Pages from `main`. The recruiter-and-peer
-surface for the job search (priority #1), so copy changes are positioning changes.
+Astro 5 static site, Tailwind v4, deployed by Cloudflare Pages from `main`. An audience site in an
+expedition voice (`issues/prd-site-v3-audience.md`): a night hero running the Borealis aurora live,
+alternating light and night bands, the Legend page, the approved copy on every surface. Recruiters
+are served as a floor, not the design target: what he does, one verifiable built thing, a way to
+contact him, checked by a cold read. Copy changes are still positioning changes (job search is
+priority #1).
 
 - **Planning:** `issues/map-site-v2/` (the v2 map, 12 of 12 resolved 2026-08-18) and `issues/` for
   the 2026-07-03 redesign set. Rows in a map are claims — open the ticket **and** the artifact.

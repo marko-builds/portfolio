@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Marko Stankovic">
-  <!-- CANDIDATE veil, ticket map-site-v3/05. Generated from src/pages/proto/05/_marks.ts. -->
-  <rect id="tile" width="512" height="512" rx="112" fill="#0B0E15"/>
-  <g color="#5FCEDB"><path d="M112 372V236C160 150 204 306 256 196C308 86 352 280 400 204V372Z" fill="currentColor"/></g>
-</svg>

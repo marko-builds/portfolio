@@ -1,5 +1,5 @@
 // Home hero copy, receipts and inline links. Promoted 2026-08-23 from
-// src/pages/proto/_hero.ts (issues/10-promote-register-home.md); the words set by slice 11
+// the slice-03 prototype's _hero.ts, deleted in slice 14 (issues/10-promote-register-home.md); the words set by slice 11
 // (issues/11-copy-pass-and-receipts.md) from issues/copy-pack-v3.md section 11, verbatim.
 // Change a string here only by changing the copy pack first.
 export const hero = {

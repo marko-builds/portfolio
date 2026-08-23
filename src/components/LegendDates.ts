@@ -1,5 +1,5 @@
 // The Legend page's dated facts (issues/13-legend-page.md; map-site-v3 ticket 12 Answer,
-// point 2). Promoted from src/pages/proto/about/_dates.ts, which slice 14 deletes.
+// point 2). Promoted from the ticket 12 prototype's _dates.ts, deleted in slice 14.
 //
 // Every row is read off the v2 `timeline` and `education` arrays and the proof-card
 // dates; nothing is invented. The current role carries NO organization line on purpose
