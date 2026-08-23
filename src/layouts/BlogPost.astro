@@ -8,12 +8,18 @@ interface Props {
   excerpt: string;
   tags: string[];
   readingTime: number;
-  entry: string;
+  // The post's pinned entry number (issue 18). Absent on every draft, so the dev server
+  // shows "··" where the live post shows its number.
+  entry?: string;
+  // The one-line frame for the hero's lede slot (issue 18). Absent, the slot shows the
+  // excerpt. Only this slot reads it: the title, description, og tags, BlogPosting schema,
+  // RSS and the index cards keep reading `excerpt`.
+  opener?: string;
   ogImage?: string;
   draft?: boolean;
 }
 
-const { title, date, excerpt, tags, readingTime, entry, ogImage, draft } = Astro.props;
+const { title, date, excerpt, tags, readingTime, entry = '··', opener, ogImage, draft } = Astro.props;
 // Dev only. A draft that renders identically to a published post is how one gets forgotten,
 // or worse, read as already live.
 const showDraftBanner = import.meta.env.DEV && draft;
@@ -590,7 +596,7 @@ const articleSchema = {
              70 the body measures, so the two blocks of prose agree. It stays
              flush left with everything else in the hero. -->
         <p class="hero-enter text-[var(--color-text-secondary)] leading-relaxed" style="font-size: 1.05rem; max-width: 31em; --delay: 0.45s">
-          {excerpt}
+          {opener ?? excerpt}
         </p>
 
         <div class="hero-enter mt-6 pt-6 border-t border-[var(--color-border)] flex items-center gap-2 text-sm" style="--delay: 0.5s">

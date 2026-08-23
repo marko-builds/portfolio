@@ -8,8 +8,8 @@ const allPosts = await getCollection("blog");
 // import.meta.env.DEV is false under `astro build`, which is what keeps them off the live site.
 const posts = allPosts
   .filter((p) => import.meta.env.DEV || !p.data.draft)
-  // Newest first, slug tie-break reversed: the exact inverse of [slug].astro's entry
-  // numbering, so the rows read 05, 04, 03, 02, 01 top-down.
+  // Newest first, slug tie-break reversed. The order no longer derives anyone's entry number
+  // (issue 18: the number is the post's own `entry` field); it is only the reading order.
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || b.slug.localeCompare(a.slug))
   .map((post) => {
     const words = (post.body ?? "").split(/\s+/).filter(Boolean).length;

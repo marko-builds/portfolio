@@ -20,7 +20,7 @@
 
 import { execSync, spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFileSync, readdirSync, statSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -115,6 +115,7 @@ const budgetOf = (attrs) => (attrs.match(/\bdata-budget=["']([^"']*)["']/) ?? []
 const args = process.argv.slice(2);
 const doBuild = !args.includes('--no-build');
 const doFull = args.includes('--full');
+const doPinSource = args.includes('--pin-source');
 
 const walk = (dir, out = []) => {
   for (const e of readdirSync(dir)) {
@@ -124,12 +125,56 @@ const walk = (dir, out = []) => {
   return out;
 };
 
+// A journal post's frontmatter and body, read from the mdx source (checks 2b and 5c).
+// `fields` holds each top-level `key: value` line with matching surrounding quotes
+// stripped; `raw` keeps the value as written; `continued` marks a key whose next line is
+// indented, which YAML would fold into the value and which the openers check rejects as
+// "not a single line". `body` is every byte after the closing fence, verbatim.
+const POSTS_DIR = join(ROOT, 'src/content/blog');
+const readPost = (f) => {
+  const src = readFileSync(f, 'utf8');
+  const m = src.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+  if (!m) throw new Error(`${relative(ROOT, f)}: no frontmatter fence`);
+  const fields = {}, raw = {}, continued = {};
+  const lines = m[1].split('\n');
+  lines.forEach((line, i) => {
+    const kv = line.match(/^([A-Za-z_][\w-]*):\s*(.*?)\s*$/);
+    if (!kv) return;
+    const [, k, v] = kv;
+    raw[k] = v;
+    fields[k] = v.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
+    continued[k] = /^\s+\S/.test(lines[i + 1] ?? '');
+  });
+  return { slug: relative(POSTS_DIR, f).replace(/\.mdx$/, ''), fields, raw, continued, body: m[2] };
+};
+const allPosts = () => walk(POSTS_DIR).filter((f) => f.endsWith('.mdx')).sort().map(readPost);
+const isDraft = (p) => p.fields.draft === 'true';
+const sha256 = (s) => createHash('sha256').update(s).digest('hex');
+
+// One-time pin for check 2b's baseline (issue 18, 2026-08-23). Writes the file only if it
+// does not exist and exits: this baseline is never rolled, and rebaseline.mjs does not know
+// it. A body that must change is edited here by hand, hash and slug named, in its own commit.
+if (doPinSource) {
+  const f = join(BASE, 'journal-source.json');
+  if (existsSync(f)) { console.error(`refusing to re-pin ${relative(ROOT, f)}: it exists, and it is pinned once by design`); process.exit(1); }
+  const pinned = {
+    '//': 'Pinned ONCE (2026-08-23, issue 18) from the bodies as they stood at portfolio commit 1181808. NEVER re-pinned: rebaseline.mjs does not write this file and gate.mjs --pin-source refuses while it exists. A rolling pin would launder a body edit through a routine re-pin, which is the edit this check exists to make visible. A deliberate body change lands by editing its hash here, in its own commit, with the slug named. A title change lands by adding the slug to approved-titles.json.',
+  };
+  for (const p of allPosts()) pinned[p.slug] = { title: p.fields.title, body: sha256(p.body) };
+  writeFileSync(f, JSON.stringify(pinned, null, 2) + '\n');
+  console.log(`pinned ${Object.keys(pinned).length - 1} posts into ${relative(ROOT, f)}`);
+  process.exit(0);
+}
+
+// Marko's punctuation rule as one regex: em dash, en dash, arrow. Check 5 (copy lint)
+// and check 8 (openers) both read this constant; neither owns a second spelling of it.
+const BANNED = /[—–→]| -> /;
+
 // Line numbers holding a banned dash/arrow in reader-facing copy. Everything that
 // is not reader-facing is stripped first, each region tracked ACROSS lines:
 // <pre>/<script>/<style> bodies, HTML comments, and the frontmatter's // and /* */
 // comments. A self-closing <script ... /> opens nothing. See the note at check 5.
 const copyHits = (src) => {
-  const BANNED = /[—–→]| -> /;
   let codeTag = null, inHtmlComment = false, inBlockComment = false, fence = 0;
   const hits = [];
   src.split('\n').forEach((raw, i) => {
@@ -224,6 +269,33 @@ console.log('bodies:');
     const got = createHash('sha256').update(text).digest('hex');
     got === hash ? ok(`body ${slug}`) : fail(`body ${slug}`, 'content text changed');
   }
+}
+
+// ── 2b. journal bodies (source) ────────────────────────────────────────────
+// Issue 18 (2026-08-23). Check 2 freezes the five LIVE bodies as rendered; this one freezes
+// all sixteen as written, drafts included, against a baseline pinned once and never rolled
+// (journal-source.json says why in its own first line). Body = every byte after the closing
+// frontmatter fence, so a frontmatter edit (an opener, an entry number) cannot move it and a
+// one-word body edit cannot hide. The title is frozen too, unless the slug is listed in
+// approved-titles.json. Other frontmatter fields are not this check's business.
+// Known negatives (issue 18's report): a one-word body edit fails naming the slug; a title
+// edit fails until the slug is approved; a post in the baseline with no file fails.
+console.log('bodies (source):');
+{
+  const baseline = JSON.parse(readFileSync(join(BASE, 'journal-source.json'), 'utf8'));
+  const approved = JSON.parse(readFileSync(join(BASE, 'approved-titles.json'), 'utf8'));
+  const posts = Object.fromEntries(allPosts().map((p) => [p.slug, p]));
+  for (const [slug, want] of Object.entries(baseline)) {
+    if (slug === '//') continue;
+    const p = posts[slug];
+    if (!p) { fail(`body-src ${slug}`, 'in the baseline, no such mdx'); continue; }
+    if (sha256(p.body) !== want.body) { fail(`body-src ${slug}`, 'body text changed (baseline is pinned once; see journal-source.json)'); continue; }
+    if (p.fields.title === want.title) ok(`body-src ${slug}`);
+    else if (approved.includes(slug)) ok(`body-src ${slug}`, 'title changed, slug in approved-titles.json');
+    else fail(`body-src ${slug}`, `title changed and ${slug} is not in approved-titles.json`);
+  }
+  const unpinned = Object.keys(posts).filter((s) => !(s in baseline));
+  if (unpinned.length) console.log(`  NOTE ${unpinned.length} post(s) not in journal-source.json, body unfrozen: ${unpinned.join(' ')}`);
 }
 
 // ── 3. token parity ────────────────────────────────────────────────────────
@@ -490,6 +562,45 @@ console.log('receipts:');
   const live = posts.filter((f) => !/^draft:\s*true\s*$/m.test(readFileSync(f, 'utf8'))).length;
   shown === live ? ok('receipts entry count', `${shown} = ${live} non-draft posts`)
     : fail('receipts entry count', `card shows ${shown}, ${live} non-draft posts in src/content/blog`);
+}
+
+// ── 5c. openers and entry numbers ──────────────────────────────────────────
+// Issue 18 (2026-08-23). Three arms over the mdx source.
+//   opener shape: every post carrying `opener`, draft or not: one line, OPENER_WORDS words,
+//     none of BANNED (the same regex check 5 lints templates with).
+//   entry: every live post carries `entry`, written as a quoted two-digit string, unique
+//     across the live posts. Always on: the five live posts were pinned in this slice.
+//   opener presence: every live post carries an `opener`. DORMANT until at least one post in
+//     the repo has an opener (issue 19 writes them), and it says so with a NOTE rather than
+//     passing silently, so the dormant arm is visible in the output.
+// Known negatives (issue 18's report): a 120-word, a 9-word and an en-dash opener each fail
+// naming the slug and the reason; a duplicate entry "03" on a second live post fails.
+const OPENER_WORDS = [15, 80];
+console.log('openers:');
+{
+  const posts = allPosts();
+  const withOpener = posts.filter((p) => 'opener' in p.fields);
+  for (const p of withOpener) {
+    const v = p.fields.opener;
+    const reasons = [];
+    if (!v || /^[>|]/.test(p.raw.opener) || p.continued.opener) reasons.push('not a single line');
+    const words = v.split(/\s+/).filter(Boolean).length;
+    if (words < OPENER_WORDS[0] || words > OPENER_WORDS[1]) reasons.push(`${words} words, want ${OPENER_WORDS[0]} to ${OPENER_WORDS[1]}`);
+    if (BANNED.test(v)) reasons.push('em/en dash or arrow');
+    reasons.length ? fail(`opener ${p.slug}`, reasons.join('; ')) : ok(`opener ${p.slug}`, `${words} words`);
+  }
+  const live = posts.filter((p) => !isDraft(p));
+  const seen = new Map();
+  for (const p of live) {
+    const e = p.raw.entry;
+    if (e === undefined) { fail(`entry ${p.slug}`, 'live post has no entry'); continue; }
+    if (!/^"\d{2}"$/.test(e)) { fail(`entry ${p.slug}`, `entry ${e} is not a quoted two-digit string`); continue; }
+    if (seen.has(e)) { fail(`entry ${p.slug}`, `entry ${e} duplicates ${seen.get(e)}`); continue; }
+    seen.set(e, p.slug);
+    ok(`entry ${p.slug}`, e);
+  }
+  if (!withOpener.length) console.log('  NOTE no post carries an opener yet; the "every live post has an opener" arm is dormant until one does');
+  else for (const p of live) if (!('opener' in p.fields)) fail(`opener ${p.slug}`, 'live post has no opener');
 }
 
 // ── 6. main untouched ──────────────────────────────────────────────────────

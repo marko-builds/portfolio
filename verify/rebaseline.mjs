@@ -54,6 +54,9 @@ for (const f of walk(join(DIST, JOURNAL_DIR)).filter((f) => f.endsWith('index.ht
 }
 writeFileSync(join(BASE, 'devlog-bodies.json'), JSON.stringify(bodies, null, 2) + '\n');
 
+// journal-source.json (gate check 2b) is deliberately NOT written here: it is pinned once
+// (issue 18, 2026-08-23) and a rolling re-pin would launder a body edit. See its first line.
+
 writeFileSync(join(BASE, 'main-sha.txt'), sha + '\n');
 
 console.log(`routes.txt        ${routes.length} routes`);

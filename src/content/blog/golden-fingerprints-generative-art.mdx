@@ -6,6 +6,7 @@ tags: ["Testing", "Generative Media", "Python", "NumPy", "Determinism"]
 beat: engine
 ogImage: "/images/blog/golden-fingerprints-generative-art/golden-fingerprint-trip.png"
 draft: false
+entry: "01"
 ---
 
 My media engines render app art, music beds, and wallpapers from seeded math. The renders ship in real products, so a silent change is a real bug: a refactor that nudges a gradient stop, a "harmless" cleanup that reorders RNG draws. Unit tests on the math don't catch this class. The output is an image or a waveform, and the question is whether the bytes changed.
