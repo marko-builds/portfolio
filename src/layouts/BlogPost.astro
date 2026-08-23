@@ -8,11 +8,12 @@ interface Props {
   excerpt: string;
   tags: string[];
   readingTime: number;
+  entry: string;
   ogImage?: string;
   draft?: boolean;
 }
 
-const { title, date, excerpt, tags, readingTime, ogImage, draft } = Astro.props;
+const { title, date, excerpt, tags, readingTime, entry, ogImage, draft } = Astro.props;
 // Dev only. A draft that renders identically to a published post is how one gets forgotten,
 // or worse, read as already live.
 const showDraftBanner = import.meta.env.DEV && draft;
@@ -82,6 +83,128 @@ const articleSchema = {
         background: var(--aurora-ramp);
         will-change: width;
       }
+
+      /* Night post (issue 12, map-site-v3 ticket 03 + 06). The post surface IS the
+         night band: the locked night tokens are mapped onto the light roles the
+         layout and global.css already read, so every rule below and every
+         Tailwind var class keeps working and no second set of rules is needed.
+         On body rather than on a wrapper so the fixed nav, the top accent line
+         and the selection colour follow the page too. This block is inlined
+         only on pages built through this layout. --color-surface is NOT
+         remapped: the code blocks stay white cards because highlight.js's github
+         theme is tuned against white (global.css, "Code blocks"), and inline
+         code takes the cyan-alpha border token as its chip. --color-warm is
+         NOT remapped either: on a post its only readers are the dev-only draft
+         banner and the hljs built_in/symbol tokens on that white card, where
+         the amber measures 2.40 on white against the light warm's 5.22. */
+      body {
+        --color-bg: var(--color-night-bg);
+        --color-surface-veil: var(--color-night-surface);
+        --color-surface-raised: var(--color-night-surface);
+        --color-border: var(--color-night-border);
+        --color-border-strong: var(--color-night-border);
+        --color-text-primary: var(--color-night-text);
+        --color-text-secondary: var(--color-night-text-secondary);
+        --color-text-muted: var(--color-night-text-secondary);
+        --color-accent: var(--color-aurora-cyan);
+        --color-accent-dim: var(--color-night-border);
+        --color-grid: var(--color-night-border);
+        background-color: var(--color-night-bg);
+      }
+      /* The copy button sits on the white card. Its three states are restated
+         here at (0,2,0) because global.css's :hover and .copied rules are
+         (0,2,0) too and they read the remapped tokens: .copied would have set
+         cyan text on the cyan base, invisible under (hover: none). */
+      .copy-btn {
+        color: var(--color-night-bg);
+        background: var(--color-aurora-cyan);
+        border-color: var(--color-aurora-cyan);
+      }
+      .copy-btn:hover {
+        color: var(--color-aurora-cyan);
+        background: var(--color-night-bg);
+        border-color: var(--color-aurora-cyan);
+      }
+      .copy-btn.copied {
+        color: var(--color-night-bg);
+        background: var(--color-night-text);
+        border-color: var(--color-night-text);
+      }
+
+      /* The ONE scroll-synced element on the site (ticket 06). .night-post spans
+         the page; the plexus is an absolute child whose HEIGHT equals the scroll
+         distance (100% of the page minus one viewport), so a keyframe ending at
+         translateY(80%) moves it 0.8 x scrollY down the document, which is 0.2 x
+         scroll speed past the viewport, and reverses with the scrollbar. The
+         timeline is the root scroller. The svg runs one viewport taller than
+         its box so the tile still covers the screen at the end of the page.
+
+         isolation + z-index:-1 keeps it under the in-flow content without the
+         `> * { position: relative }` catch-all that ate new children on the
+         home prototype (knowledge: concept-css-band-graphics-fixed-geometry).
+         The animation sits inside @supports on purpose: outside it, a browser
+         without scroll timelines would run a 0s time animation and freeze the
+         layer at its END state, and the fallback script below has nothing to
+         fall back from. CSS.supports in that script asks the same question.
+         Reduced motion: the animation is off and the layer is static in the
+         page; the script checks the same media query and does nothing. */
+      .night-post {
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+      }
+      .plexus {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 100vh);
+        z-index: -1;
+        pointer-events: none;
+        overflow: visible;
+      }
+      .plexus svg {
+        display: block;
+        width: 100%;
+        height: calc(100% + 100vh);
+      }
+      .plexus .n0 { fill: var(--aurora-0); }
+      .plexus .n1 { fill: var(--aurora-1); }
+      .plexus .n2 { fill: var(--aurora-2); }
+      .plexus .n3 { fill: var(--aurora-3); }
+      .plexus .e { stroke: var(--color-aurora-cyan); stroke-opacity: 0.2; stroke-width: 1; }
+      .plexus .s { fill: var(--color-night-text); }
+      @keyframes plexus-drift {
+        from { transform: translateY(0); }
+        to { transform: translateY(80%); }
+      }
+      @supports (animation-timeline: scroll()) {
+        .plexus {
+          animation: plexus-drift linear both;
+          animation-timeline: scroll(root block);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .plexus { animation: none; }
+      }
+
+      /* The mono entry line, "Field journal · Entry NN · date". The journal
+         name is the way back to the index; the date sits here and not in the
+         meta row under the title, so it is printed once. */
+      .entry-line {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        color: var(--color-text-muted);
+        margin-bottom: 1.25rem;
+      }
+      .entry-line a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+      .entry-line a:hover { color: var(--color-accent); }
+      .entry-line .sep { color: var(--color-border-strong); }
 
       /* ── Code blocks ──
          The surface lives in global.css, which beat this rule on specificity
@@ -337,6 +460,52 @@ const articleSchema = {
 
     <SiteNav active="devlog" />
 
+    <div class="night-post">
+    <!-- The plexus layer: one 480px tile of nodes and edges, repeated. Colours are
+         CSS classes, not fill attributes, so the tokens resolve. -->
+    <div class="plexus" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <defs>
+          <filter id="plexus-glow"><feGaussianBlur stdDeviation="6" /></filter>
+          <pattern id="plexus-tile" width="480" height="480" patternUnits="userSpaceOnUse">
+            <g filter="url(#plexus-glow)" opacity="0.3">
+              <circle class="n0" cx="96" cy="112" r="11" />
+              <circle class="n1" cx="318" cy="64" r="14" />
+              <circle class="n2" cx="404" cy="236" r="12" />
+              <circle class="n3" cx="188" cy="342" r="15" />
+              <circle class="n1" cx="42" cy="418" r="10" />
+              <circle class="n2" cx="266" cy="190" r="9" />
+            </g>
+            <g class="e">
+              <line x1="96" y1="112" x2="266" y2="190" />
+              <line x1="266" y1="190" x2="318" y2="64" />
+              <line x1="266" y1="190" x2="404" y2="236" />
+              <line x1="266" y1="190" x2="188" y2="342" />
+              <line x1="188" y1="342" x2="42" y2="418" />
+              <line x1="404" y1="236" x2="452" y2="372" />
+              <line x1="318" y1="64" x2="150" y2="22" />
+              <line x1="96" y1="112" x2="150" y2="22" />
+              <line x1="42" y1="418" x2="96" y2="112" />
+              <line x1="452" y1="372" x2="188" y2="342" />
+            </g>
+            <g class="s">
+              <circle cx="96" cy="112" r="1.6" />
+              <circle cx="318" cy="64" r="1.6" />
+              <circle cx="404" cy="236" r="1.4" />
+              <circle cx="188" cy="342" r="1.8" />
+              <circle cx="42" cy="418" r="1.3" />
+              <circle cx="266" cy="190" r="1.5" />
+              <circle cx="452" cy="372" r="1.2" />
+              <circle cx="150" cy="22" r="1.2" />
+              <circle cx="360" cy="440" r="1" />
+              <circle cx="230" cy="270" r="0.9" />
+            </g>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#plexus-tile)" />
+      </svg>
+    </div>
+
     <main>
     <!-- ─── POST HERO ──────────────────────────────────────────────────────── -->
     <div class="relative pt-14">
@@ -351,9 +520,9 @@ const articleSchema = {
           </div>
         )}
 
-        <a href="/field-journal" class="hero-enter inline-block text-[var(--color-text-muted)] hover:text-[var(--color-accent)] font-mono text-xs mb-5 tracking-wide transition-colors duration-150" style="--delay: 0.05s">
-          devlog
-        </a>
+        <p class="hero-enter entry-line" style="--delay: 0.05s">
+          <a href="/field-journal">Field journal</a> <span class="sep" aria-hidden="true">·</span> Entry {entry} <span class="sep" aria-hidden="true">·</span> <time datetime={date.toISOString().slice(0, 10)}>{formattedDate}</time>
+        </p>
 
         <!-- Sans, 600, and the same clamp call.astro and index.astro run. The
              mono h1 at 2.75rem was the loudest thing left of the dark register:
@@ -381,8 +550,6 @@ const articleSchema = {
         </h1>
 
         <div class="hero-enter flex flex-wrap items-center gap-4 mb-5" style="--delay: 0.25s">
-          <time datetime={date.toISOString().slice(0, 10)} class="font-mono text-sm text-[var(--color-text-muted)]">{formattedDate}</time>
-          <span class="text-[var(--color-border-strong)]">·</span>
           <span class="font-mono text-sm text-[var(--color-text-muted)]">{readingTime} min read</span>
         </div>
 
@@ -434,8 +601,19 @@ const articleSchema = {
         <p class="text-[var(--color-text-muted)] text-xs font-mono">© 2026 Marko Stankovic</p>
       </div>
     </footer>
+    </div>
 
     <script>
+      // Plexus scroll-sync fallback (issue 12). Only where the CSS scroll timeline
+      // is missing and motion is allowed; mirrors the keyframe exactly (0.8 x
+      // scrollY down the document = 0.2 x scroll speed), so both paths agree.
+      if (!CSS.supports('animation-timeline: scroll()') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const plx = document.querySelector<HTMLElement>('.plexus');
+        const drift = () => { if (plx) plx.style.transform = `translateY(${scrollY * 0.8}px)`; };
+        addEventListener('scroll', drift, { passive: true });
+        drift();
+      }
+
       // ── Reading progress bar ──────────────────────────────────────────────
       (function () {
         const bar = document.getElementById('reading-progress-fill');
