@@ -7,12 +7,14 @@
 // 01 Artifacts (light), 02 Field journal (night, static star-chart plexus padded under
 // the content), 03 Gadgets (light), 04 Send word + footer (one .night.tail carrying the
 // flat neon lattice, drawn once on the page). Section ids are the nav's anchors
-// (SiteNav.astro). Words are the prototype's; slice 11 owns them.
+// (SiteNav.astro). Words: issues/copy-pack-v3.md section 11, verbatim (slice 11); the band
+// intros live in src/data/home.ts and render through linkify (inline links, PRD).
 //
 // The v2 timeline is cut from home (PRD: Legend carries the dates, slice 13).
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroAurora from "../components/HeroAurora.astro";
 import { getCollection } from "astro:content";
+import { intros, linkify } from "../data/home";
 
 // Same rule as the journal pages: in dev the site shows drafts, in a build it never does.
 const recentPosts = (await getCollection("blog"))
@@ -49,7 +51,7 @@ const proof = [
 const products = [
   { name: "deploylog", what: "Release notes from real git history.", href: "/projects/deploylog/", status: "launching" },
   { name: "habitagram", what: "Habit tracking as a journey.", href: null, status: "near launch" },
-  { name: "studio", what: "The generative media engine behind both.", href: "/field-journal", status: "internal" },
+  { name: "studio", what: "Renders the launch art for both.", href: "/field-journal", status: "internal" },
 ];
 
 // Identity facts only, all verifiable. No availability statement and no CV link
@@ -64,9 +66,9 @@ const identity = {
   call: "/call",
 };
 
-const pageTitle = "Marko Stankovic | I build AI systems and prove they work";
+const pageTitle = "Marko Stankovic. Code archaeologist, forging with AI.";
 const pageDescription =
-  "AI engineer in Serbia. A demo shows an AI feature running, not whether it worked. I build the tools that measure the difference, and I publish the numbers.";
+  "Code archaeologist out of Serbia. I forge artifacts with AI companions and keep a field journal. DeployLog digs release notes out of git history. Join the expedition.";
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -103,6 +105,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
       <span class="num">01.</span>
       <h2>Artifacts</h2>
     </div>
+    <p class="sec-intro" set:html={linkify(intros.artifacts)} />
     <ul class="product-rows">
       {products.map((p) => (
         <li class="product-row">
@@ -219,6 +222,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
         <h2>Field journal</h2>
         <a class="all-link" href="/field-journal">All entries</a>
       </div>
+      <p class="sec-intro" set:html={linkify(intros.journal)} />
       <ul class="post-rows">
         {recentPosts.map((p) => (
           <li class="post-row">
@@ -236,7 +240,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
       <span class="num">03.</span>
       <h2>Gadgets</h2>
     </div>
-    <p class="sec-intro">Open source. Every one has a repo you can read and a check you can run.</p>
+    <p class="sec-intro" set:html={linkify(intros.gadgets)} />
     <ul class="proof-grid">
       {proof.map((p) => (
         <li class="proof-card">
@@ -260,6 +264,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
       <span class="num">04.</span>
       <h2>Send word</h2>
     </div>
+    <p class="sec-intro" set:html={linkify(intros.contact)} />
     <div class="contact">
       <dl class="facts">
         <div><dt>Based</dt><dd>{identity.location}</dd></div>
@@ -277,7 +282,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
 <footer class="foot-wrap">
   <div class="foot">
     <p>&copy; 2026 Marko Stankovic</p>
-    <p class="foot-meta">AI engineer · Belgrade</p>
+    <p class="foot-meta">Code archaeologist · Belgrade</p>
   </div>
 </footer>
 </div>
@@ -388,6 +393,10 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     color: var(--color-text-secondary);
     margin: 0 0 1.5rem;
   }
+  /* Inline links (PRD, Marko 2026-08-23): accent colour, underline on hover only. */
+  .sec-intro :global(.inline-link) { color: var(--color-accent); text-decoration: none; }
+  .night .sec-intro :global(.inline-link) { color: var(--color-aurora-cyan); }
+  .sec-intro :global(.inline-link:hover) { text-decoration: underline; }
   .all-link {
     margin-left: auto;
     color: var(--color-text-secondary);

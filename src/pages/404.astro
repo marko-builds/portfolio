@@ -1,21 +1,22 @@
 ---
 // Custom 404 (GitHub Pages serves dist/404.html automatically).
 // Marko-directed route addition 2026-07-03; recorded in verify/baseline/BASELINE.md.
+// Words: issues/copy-pack-v3.md section 11 (slice 11).
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteNav from "../components/SiteNav.astro";
 ---
 
-<BaseLayout title="404 | Marko Stankovic" description="There is nothing at this address.">
+<BaseLayout title="404 | Marko Stankovic" description="Nothing buried here. The map was wrong.">
   <SiteNav />
 
   <main class="wrap pt-14">
     <div class="frame">
       <p class="repl"><span class="chev">&gt;</span> GET /this-page<span class="semi">;</span></p>
       <h1>404</h1>
-      <p class="msg">There is nothing at this address.</p>
+      <p class="msg">Nothing buried here. The map was wrong.</p>
       <div class="links">
-        <a class="btn-fill" href="/">Back to home</a>
-        <a class="btn-ghost" href="/field-journal">Read the devlog</a>
+        <a class="btn-fill" href="/">Back to camp</a>
+        <a class="btn-ghost" href="/field-journal">Open the field journal</a>
       </div>
     </div>
   </main>

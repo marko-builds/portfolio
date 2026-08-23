@@ -15,9 +15,11 @@
 // - receipts as complete cards inside the band, veil bottom-only at 0.45.
 //
 // The h1 reads --font-display (Space Grotesk 600, global.css). The nav is SiteNav in
-// its night register, in flow inside the band. Words: src/data/home.ts (slice 11).
+// its night register, in flow inside the band. Words: src/data/home.ts (slice 11); the
+// sub renders through linkify so "gadgets" and "dig site" link to their targets, and the
+// receipts row carries id="receipts" as the dig-site anchor.
 import SiteNav from "./SiteNav.astro";
-import { hero, receipts } from "../data/home";
+import { hero, receipts, linkify } from "../data/home";
 import { getCollection } from "astro:content";
 
 const postCount = (await getCollection("blog")).filter((p) => import.meta.env.DEV || !p.data.draft).length;
@@ -39,7 +41,7 @@ const rows = receipts(postCount);
     <div class="hero-text">
       <p class="kicker">{hero.name}</p>
       <h1>{hero.line}</h1>
-      <p class="sub">{hero.sub}</p>
+      <p class="sub" set:html={linkify(hero.sub)} />
       <div class="ctas">
         {hero.ctas.map((c) => (
           <a href={c.href} class:list={["cta", { primary: c.primary }]}>{c.label}</a>
@@ -48,7 +50,7 @@ const rows = receipts(postCount);
     </div>
   </div>
 
-  <ul class="receipts">
+  <ul class="receipts" id="receipts">
     {rows.map((r) => (
       <li>
         <a href={r.href}>
@@ -337,6 +339,9 @@ start();
     font-size: 1.05rem;
     max-width: 36em;
   }
+  /* Inline links (PRD, Marko 2026-08-23): accent colour, underline on hover only. */
+  .sub :global(.inline-link) { color: var(--color-aurora-cyan); text-decoration: none; }
+  .sub :global(.inline-link:hover) { text-decoration: underline; }
   .ctas { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
   .cta {
     display: inline-block;

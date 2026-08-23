@@ -1,24 +1,63 @@
-// Home hero copy and receipts, promoted 2026-08-23 from src/pages/proto/_hero.ts
-// (issues/10-promote-register-home.md). The words are the prototype's; slice 11
-// (issues/11-copy-pass-and-receipts.md, copy-pack-v3 section 11) owns every string
-// here and the three receipts' sources. The "[PLACEHOLDER] " markers ship as-is on the
-// build branch on purpose: they are the mechanical proof the words are unapproved, and
-// slice 11's "no PLACEHOLDER in dist" check fires on them.
+// Home hero copy, receipts and inline links. Promoted 2026-08-23 from
+// src/pages/proto/_hero.ts (issues/10-promote-register-home.md); the words set by slice 11
+// (issues/11-copy-pass-and-receipts.md) from issues/copy-pack-v3.md section 11, verbatim.
+// Change a string here only by changing the copy pack first.
 export const hero = {
   name: "Marko Stankovic",
-  line: "[PLACEHOLDER] I build real things with AI agents and show the receipts.",
-  sub: "[PLACEHOLDER] Agent harnesses, eval gates and a generative media engine, built in the open from Belgrade.",
+  line: "I forge relics with artificial minds, and I bring back the proof.",
+  sub: "DeployLog and Habitagram are nearly out of the vault, three open source gadgets sit on GitHub, and the engine that paints the maps is mine, built with AI agents. Every number below links to the dig site.",
   photo: "/portrait.webp",
   ctas: [
-    { label: "Read the lab notes", href: "/field-journal", primary: true },
-    { label: "See the tools", href: "#gadgets", primary: false },
+    { label: "Open the field journal", href: "/field-journal", primary: true },
+    { label: "See the gadgets", href: "#gadgets", primary: false },
   ],
 };
 
-// Receipts. The entry count is read off the content collection at build time
-// (non-draft only in a build); the other two are stand-ins until slice 11.
+// Band intros (copy pack section 11, Home body). Rendered through linkify below.
+export const intros = {
+  artifacts: "Two apps about to leave the vault, and the engine that paints their art.",
+  journal: "What got built, what collapsed, and what the instruments read either way.",
+  gadgets: "Open source, every one. Each has a repo you can read and a check you can run.",
+  contact: "Hiring, building something similar, or want to compare maps? My inbox is open.",
+};
+
+// Receipts: link + number + date (copy pack section 3 sources, section 11 labels). The
+// entry count is read off the content collection at build time, non-draft only in a
+// production build (the dev server counts drafts too). The other two are literals
+// carrying their date; the query that produces each is recorded in the copy pack:
+//   4  gh search issues --author marko-builds --repo HANCORE-linux/omarchy-plugin-marketplace --label listed --json number -q length
+//   17 gh repo list marko-builds --visibility public --limit 100 --json isFork -q '[.[] | select(.isFork|not)] | length'
+// Receipt 3 links to the repositories tab with type=source so the page shows 17 (forks excluded).
 export const receipts = (postCount: number) => [
-  { n: "3", label: "open source tools", note: "[PLACEHOLDER] source: GitHub", href: "https://github.com/marko-builds" },
-  { n: String(postCount), label: "lab notes published", note: "source: this site", href: "/field-journal" },
-  { n: "2", label: "apps shipping", note: "[PLACEHOLDER] source: stores", href: "#artifacts" },
+  { n: String(postCount), label: "journal entries", note: "this site, Aug 2026", href: "/field-journal" },
+  {
+    n: "4",
+    label: "plugins in the Omarchy (Linux desktop) marketplace",
+    note: "Aug 2026",
+    href: "https://github.com/HANCORE-linux/omarchy-plugin-marketplace/issues?q=author%3Amarko-builds+label%3Alisted",
+  },
+  { n: "17", label: "public repos", note: "github.com/marko-builds, Aug 2026", href: "https://github.com/marko-builds?tab=repositories&type=source" },
 ];
+
+// Inline links (PRD, Marko 2026-08-23): wherever body copy names a page or band, the
+// words link to it. Whole-word, case-insensitive, first occurrence per phrase; the copy
+// itself stays a plain string so it can be diffed against the copy pack character for
+// character. Longest phrase first so "field journal" is not split by "journal".
+export const inlineLinks: [string, string][] = [
+  ["field journal", "/field-journal"],
+  ["dig site", "#receipts"],
+  ["artifacts", "#artifacts"],
+  ["gadgets", "#gadgets"],
+  ["legend", "/about"],
+];
+
+const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+export const linkify = (text: string, links: [string, string][] = inlineLinks): string => {
+  let html = escapeHtml(text);
+  for (const [phrase, href] of links) {
+    const re = new RegExp(`\\b(${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})\\b`, "i");
+    html = html.replace(re, (m) => `<a class="inline-link" href="${href}">${m}</a>`);
+  }
+  return html;
+};

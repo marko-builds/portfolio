@@ -10,7 +10,8 @@
 // Checks: route parity, journal body equivalence (posts at /field-journal/<slug>),
 // token parity (light palette + night register + aurora ramp + brand type), weight budget (general + the aurora allowance), reduced-motion
 // render (only on a page carrying the aurora block), copy lint (every authored
-// template), main-untouched.
+// template), receipts (number + href + date per card, entry count = non-draft posts),
+// main-untouched.
 //
 // Re-baselined 2026-08-15 by issues/map-site-v2/10-close-out.md. Before that the
 // baseline still described the pre-redesign site, so 15 of the gate's assertions
@@ -429,6 +430,37 @@ console.log('copy:');
       ? fail(`copy ${f}`, `dash/arrow on line(s) ${hits.join(',')}`)
       : ok(`copy ${f}`);
   }
+}
+
+// ── 5b. receipts (built home) ──────────────────────────────────────────────
+// The contract from map-site-v3 ticket 03 and issue 11: every receipt card under the
+// hero carries a number, an href and a date, and the entry count equals the number of
+// non-draft posts. Read off dist/index.html, not the template: the count is computed at
+// build and the dev server counts drafts too, so only the production build can be right.
+// Known negative (issue 11, 2026-08-23): a card with its date removed from dist fails.
+console.log('receipts:');
+{
+  const html = readFileSync(join(ROOT, 'dist/index.html'), 'utf8');
+  // Astro stamps data-astro-cid-* on every scoped element, so tags are matched on their
+  // leading attributes, never on an exact opening tag.
+  const row = html.match(/<ul class="receipts" id="receipts"[^>]*>([\s\S]*?)<\/ul>/);
+  const cards = row ? [...row[1].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]) : [];
+  const DATE = /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) 20\d\d\b/;
+  const text = (s) => s.replace(/<[^>]+>/g, ' ');
+  cards.length === 3 ? ok('receipts count', '3 cards') : fail('receipts count', `${cards.length} cards, want 3`);
+  cards.forEach((c, i) => {
+    const missing = [];
+    if (!/<span class="n"[^>]*>\d+<\/span>/.test(c)) missing.push('number');
+    if (!/<a href="[^"]+"/.test(c)) missing.push('href');
+    if (!DATE.test(text(c))) missing.push('date');
+    missing.length ? fail(`receipt ${i + 1}`, `missing ${missing.join('+')}`) : ok(`receipt ${i + 1}`);
+  });
+  const journal = cards.find((c) => /href="\/field-journal"/.test(c));
+  const shown = journal ? Number((journal.match(/<span class="n"[^>]*>(\d+)<\/span>/) ?? [])[1]) : NaN;
+  const posts = walk(join(ROOT, 'src/content/blog')).filter((f) => f.endsWith('.mdx'));
+  const live = posts.filter((f) => !/^draft:\s*true\s*$/m.test(readFileSync(f, 'utf8'))).length;
+  shown === live ? ok('receipts entry count', `${shown} = ${live} non-draft posts`)
+    : fail('receipts entry count', `card shows ${shown}, ${live} non-draft posts in src/content/blog`);
 }
 
 // ── 6. main untouched ──────────────────────────────────────────────────────
