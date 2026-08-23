@@ -14,14 +14,14 @@
 // imported, so the nav survives that deletion.
 type Key = "artifacts" | "journal" | "gadgets" | "legend" | "contact";
 interface Props {
-  // "work" and "devlog" are the v2 keys still passed by pages other slices own
-  // (projects/deploylog, field-journal, BlogPost); they map onto the new labels.
-  active?: Key | "work" | "devlog";
+  // "devlog" is the v2 key still passed by field-journal/index and BlogPost (slice 12's
+  // files); it maps onto the journal label until slice 14 retires it.
+  active?: Key | "devlog";
   register?: "light" | "night";
 }
 const { active: rawActive, register = "light" } = Astro.props;
-const alias: Record<string, Key> = { work: "gadgets", devlog: "journal" };
-const active: Key | undefined = rawActive ? (alias[rawActive] ?? (rawActive as Key)) : undefined;
+const alias: Record<"devlog", Key> = { devlog: "journal" };
+const active: Key | undefined = rawActive === "devlog" ? alias.devlog : rawActive;
 
 const links: { href: string; key: Key; label: string }[] = [
   { href: "/#artifacts", key: "artifacts", label: "Artifacts" },
@@ -127,13 +127,17 @@ const links: { href: string; key: Key; label: string }[] = [
     ul { gap: 16px; }
     ul a { font-size: 0.85rem; }
   }
-  /* Five labels at 390px: the wordmark goes, the row tightens, and as a last resort the
-     list wraps onto a second line rather than clipping (measured: 0.8rem + 12px gaps
-     overflowed the 342px row by ~36px and cut "Send word" off at the edge). */
-  @media (max-width: 480px) {
+  /* Five labels plus the wordmark need ~590px (measured: with the wordmark back at 481px
+     the row's right edge sat at 555px and "Send word" was clipped). So the wordmark hides
+     below 600px, not 480px, and the list may wrap as a last resort rather than clip. */
+  @media (max-width: 600px) {
     .word { display: none; }
-    nav { padding-inline: 16px; height: auto; min-height: 56px; padding-block: 6px; }
-    ul { gap: 10px; flex-wrap: wrap; justify-content: flex-end; row-gap: 0; }
+    nav { height: auto; min-height: 56px; padding-block: 6px; }
+    ul { flex-wrap: wrap; justify-content: flex-end; row-gap: 0; }
+  }
+  @media (max-width: 480px) {
+    nav, .night nav { padding-inline: 16px; }
+    ul { gap: 10px; }
     ul a { font-size: 0.75rem; }
   }
 </style>

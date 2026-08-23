@@ -299,11 +299,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     position: relative;
     isolation: isolate;
   }
-  /* 2D neon lattice for the dark bands, Marko 2026-08-23: the devlog header's graph
-     paper (global.css --color-grid) in the ramp, magenta left to cyan right, fixed
-     72px cells so nothing scales with band height, with a glow along the bottom.
-     Stand-in for ticket 06's scroll-following graphics. */
-  /* Lab notes: a "connecting the dots" plexus in the ramp, anchored to the band
+  /* Field journal: a "connecting the dots" plexus in the ramp, anchored to the band
      bottom, fixed 300px viewBox height (slice), so it reads the same on any band height. */
   .night > .plexus {
     position: absolute;
@@ -318,6 +314,10 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
   }
   #field-journal { padding-bottom: 15rem; }
   @media (max-width: 720px) { #field-journal { padding-bottom: 11rem; } }
+  /* 2D neon lattice for the Send word tail (.tail::before), Marko 2026-08-23: the devlog header's graph
+     paper (global.css --color-grid) in the ramp, magenta left to cyan right, fixed
+     72px cells so nothing scales with band height, with a glow along the bottom.
+     Stand-in for ticket 06's scroll-following graphics. */
   .tail::before {
     content: "";
     position: absolute;
@@ -352,7 +352,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     filter: blur(2px);
   }
   .night > * { position: relative; z-index: 1; }
-  .night .sec-head h2, .night .post-title, .night .call-link, .night .facts dd { color: var(--color-night-text); }
+  .night .sec-head h2, .night .post-title, .night .links a.call-link, .night .facts dd { color: var(--color-night-text); }
   .night .num { color: var(--color-aurora-cyan); }
   .night .sec-intro, .night .post-excerpt, .night .all-link, .night .links a { color: var(--color-night-text-secondary); }
   .night .post-date, .night .facts dt { color: var(--color-night-text-secondary); }
@@ -518,7 +518,7 @@ const fmt = (d: Date) => d.toLocaleDateString("en-GB", { year: "numeric", month:
     border-bottom: 1px solid transparent;
   }
   .links a:hover { color: var(--color-accent); border-bottom-color: var(--color-accent); }
-  .call-link { font-weight: 600; color: var(--color-text-primary); }
+  .links a.call-link { font-weight: 600; color: var(--color-text-primary); }
 
   .foot-wrap { padding-inline: 56px; }
   .tail .foot p { color: var(--color-night-text-secondary); }

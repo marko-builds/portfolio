@@ -1,8 +1,9 @@
 // Home hero copy and receipts, promoted 2026-08-23 from src/pages/proto/_hero.ts
 // (issues/10-promote-register-home.md). The words are the prototype's; slice 11
 // (issues/11-copy-pass-and-receipts.md, copy-pack-v3 section 11) owns every string
-// here and the three receipts' sources. The "[PLACEHOLDER] " markers the prototype
-// carried are stripped at the call site (stripPlaceholder), the way proto/04 and 05 did.
+// here and the three receipts' sources. The "[PLACEHOLDER] " markers ship as-is on the
+// build branch on purpose: they are the mechanical proof the words are unapproved, and
+// slice 11's "no PLACEHOLDER in dist" check fires on them.
 export const hero = {
   name: "Marko Stankovic",
   line: "[PLACEHOLDER] I build real things with AI agents and show the receipts.",
@@ -21,5 +22,3 @@ export const receipts = (postCount: number) => [
   { n: String(postCount), label: "lab notes published", note: "source: this site", href: "/field-journal" },
   { n: "2", label: "apps shipping", note: "[PLACEHOLDER] source: stores", href: "#artifacts" },
 ];
-
-export const stripPlaceholder = (s: string) => s.replace(/^\[PLACEHOLDER\]\s*/, "");
