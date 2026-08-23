@@ -36,3 +36,7 @@ yarn-error.log*
 .claude/
 .qa-reports/
 .gstack/
+
+# Planning and AFK state live in the monolith (projects/portfolio-planning/); never public
+issues/
+.aios/

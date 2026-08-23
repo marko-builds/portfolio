@@ -5,21 +5,19 @@ import BlogPost from '../../layouts/BlogPost.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   // Dev only, so a draft has a real URL to review at. `astro build` sets DEV false and drops them.
-  // Entry number (issue 12, the mono header line "Field journal · Entry NN · date"): the
-  // post's position in date order of published posts, slug as the tie-break (three posts
-  // share 2026-07-07). Not a permanent id: an earlier-dated post published later renumbers
-  // everything after it, and the dev server counts drafts. index.astro sorts the same way,
-  // reversed, so the list reads 05, 04, 03, 02, 01 top-down.
+  // The entry number ("Field journal · Entry NN · date") is the post's own `entry` field,
+  // pinned at publish by scripts/publish-devlog.sh (issue 18). Until 2026-08-23 it was the
+  // post's position in date order, which renumbered every later entry whenever an
+  // earlier-dated post went live. A post with no `entry` (every draft) renders "··".
   return posts
     .filter(p => import.meta.env.DEV || !p.data.draft)
-    .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf() || a.slug.localeCompare(b.slug))
-    .map((post, i) => ({
+    .map((post) => ({
       params: { slug: post.slug },
-      props: { post, entry: String(i + 1).padStart(2, '0') },
+      props: { post },
     }));
 }
 
-const { post, entry } = Astro.props;
+const { post } = Astro.props;
 const { Content } = await post.render();
 
 const words = (post.body ?? '').split(/\s+/).filter(Boolean).length;
@@ -32,7 +30,8 @@ const readingTime = Math.max(1, Math.ceil(words / 200));
   excerpt={post.data.excerpt}
   tags={post.data.tags}
   readingTime={readingTime}
-  entry={entry}
+  entry={post.data.entry}
+  opener={post.data.opener}
   ogImage={post.data.ogImage}
   draft={post.data.draft}
 >
