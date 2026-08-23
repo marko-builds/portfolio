@@ -365,7 +365,13 @@ else {
       const r = await evaluate(PROBE);
       ws.close();
       return r;
-    } finally { chrome.kill(); rmSync(profile, { recursive: true, force: true }); }
+    } finally {
+      chrome.kill();
+      // chrome.kill() returns before the process exits and it keeps writing its profile,
+      // so a bare rmSync raced it to ENOTEMPTY about one run in three (2026-08-23) and
+      // reported a random /proto/ page as a motion FAIL. Retry; the dir is in tmp anyway.
+      rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    }
   }
   try {
     await sleep(500);
