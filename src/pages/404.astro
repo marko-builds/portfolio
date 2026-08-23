@@ -1,7 +1,9 @@
 ---
-// Custom 404 (GitHub Pages serves dist/404.html automatically).
+// Custom 404 (the host serves dist/404.html automatically).
 // Marko-directed route addition 2026-07-03; recorded in verify/baseline/BASELINE.md.
-// Words: issues/copy-pack-v3.md section 11 (slice 11).
+// Words: copy-pack-v3 section 11 (slice 11). Repainted to the night register 2026-08-23
+// (Marko): the v2 "> GET /this-page;" REPL line retired with the "> ms" mark; the numeral
+// keeps its outline, now in the aurora cyan.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteNav from "../components/SiteNav.astro";
 ---
@@ -9,62 +11,69 @@ import SiteNav from "../components/SiteNav.astro";
 <BaseLayout title="404 | Marko Stankovic" description="Nothing buried here. The map was wrong.">
   <SiteNav />
 
-  <main class="wrap pt-14">
+  <main class="wrap">
     <div class="frame">
-      <p class="repl"><span class="chev">&gt;</span> GET /this-page<span class="semi">;</span></p>
       <h1>404</h1>
       <p class="msg">Nothing buried here. The map was wrong.</p>
       <div class="links">
-        <a class="btn-fill" href="/">Back to camp</a>
-        <a class="btn-ghost" href="/field-journal">Open the field journal</a>
+        <a class="btn btn-fill" href="/">Back to camp</a>
+        <a class="btn" href="/field-journal">Open the field journal</a>
       </div>
     </div>
   </main>
 
+  <style is:global>
+    /* Night register: the body-level token remap the post pages, the DeployLog page and
+       /call run, so the fixed nav and every role here take the night tokens. */
+    body {
+      --color-bg: var(--color-night-bg);
+      --color-surface-veil: var(--color-night-surface);
+      --color-surface-raised: var(--color-night-surface);
+      --color-border: var(--color-night-border);
+      --color-border-strong: var(--color-night-border);
+      --color-text-primary: var(--color-night-text);
+      --color-text-secondary: var(--color-night-text-secondary);
+      --color-text-muted: var(--color-night-text-secondary);
+      --color-accent: var(--color-aurora-cyan);
+      --color-accent-dim: var(--color-night-border);
+      --color-grid: var(--color-night-border);
+      background-color: var(--color-night-bg);
+    }
+  </style>
+
   <style>
     .wrap {
-      min-height: calc(100vh - 56px);
+      min-height: 100vh;
       display: flex;
       align-items: center;
-      background:
-        linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
-        linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
+      padding-inline: 56px;
     }
     .frame {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 96px 56px;
+      padding-block: 96px;
       width: 100%;
     }
     @media (max-width: 720px) {
-      .frame { padding-inline: 28px; }
+      .wrap { padding-inline: 24px; }
     }
-    .repl {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      margin: 0 0 28px;
-    }
-    .chev { color: var(--color-accent); }
-    .semi { color: var(--color-text-muted); }
     h1 {
-      font-family: var(--font-sans);
-      font-weight: 700;
+      font-family: var(--font-display, var(--font-sans));
+      font-weight: 600;
       font-size: clamp(4rem, 14vw, 9rem);
       line-height: 1;
-      letter-spacing: -0.05em;
+      letter-spacing: -0.04em;
       margin: 0 0 20px;
       color: transparent;
-      -webkit-text-stroke: 2px var(--color-text-secondary);
+      -webkit-text-stroke: 2px var(--color-aurora-cyan);
     }
     .msg {
       color: var(--color-text-secondary);
-      font-size: 17px;
+      font-size: 1.125rem;
       margin: 0 0 40px;
     }
     .links { display: flex; flex-wrap: wrap; gap: 14px; }
-    .btn-fill,
-    .btn-ghost {
+    .btn {
       font-size: 15px;
       font-weight: 500;
       text-decoration: none;
@@ -72,10 +81,14 @@ import SiteNav from "../components/SiteNav.astro";
       display: inline-flex;
       align-items: center;
       min-height: 44px;
+      border-radius: 8px;
+      color: var(--color-night-text);
+      border: 1px solid var(--color-night-border);
+      transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
     }
-    .btn-fill { background: var(--color-text-primary); color: var(--color-bg); }
-    .btn-fill:hover { background: var(--color-surface-raised); }
-    .btn-ghost { color: var(--color-text-primary); border: 1px solid var(--color-border-strong); }
-    .btn-ghost:hover { border-color: var(--color-text-secondary); }
+    .btn:hover { border-color: var(--color-aurora-cyan); color: var(--color-aurora-cyan); }
+    .btn-fill { background: var(--color-aurora-cyan); color: var(--color-night-bg); border-color: var(--color-aurora-cyan); }
+    .btn-fill:hover { background: var(--color-night-bg); color: var(--color-aurora-cyan); }
+    @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
   </style>
 </BaseLayout>

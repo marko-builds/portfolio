@@ -2,12 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SiteNav from "../components/SiteNav.astro";
 
-// issues/map-site-v2/05-call-page.md. Survey first, scheduler last, CV alongside.
+// issues/map-site-v2/05-call-page.md. Survey first, scheduler last. The CV block was removed
+// 2026-08-23 (Marko): the CV travels with applications, not with the call page.
 //
 // Marko's calls on 2026-08-15, made when this ticket was built:
-//   * The CV link is unconditional on this page. It is not gated behind the
-//     survey and it appears nowhere else on the site (map decision 9, reversed).
-//     A recruiter who only wants to skim gets one click and no form.
 //   * The survey posts to the Formspree form that predates the 2026-07-03
 //     rebuild. The map called it "already wired for the contact form"; the form
 //     was deleted in cfdd76c and only this endpoint survived, in git history.
@@ -39,7 +37,7 @@ const purposes = [
 
 const pageTitle = "Book a call | Marko Stankovic";
 const pageDescription =
-  "Pick a slot to talk. Tell me what the call is about first, and read the CV while you are here.";
+  "Pick a slot to talk. Tell me what the call is about first.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
@@ -178,17 +176,6 @@ const pageDescription =
         </a>
       </section>
 
-      <!-- 3. THE CV, unconditional. Marko's call 2026-08-15: no gate, no reveal. -->
-      <section class="sec" id="cv">
-        <h2>Prefer to read first?</h2>
-        <p class="sec-intro">
-          The CV is the same document I send with applications.
-        </p>
-        <a class="inline-link cv-link" href="/cv">
-          <span class="metric">PDF</span>
-          Marko-Stankovic-CV.pdf
-        </a>
-      </section>
       </div>
     </div>
   </main>
@@ -402,13 +389,6 @@ const pageDescription =
     border-color: var(--color-aurora-amber);
   }
 
-  /* ── CV ───────────────────────────────────────────────────────────────── */
-  .cv-link {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    font-weight: 600;
-  }
   .metric {
     font-family: var(--font-mono);
     font-size: 0.78rem;
