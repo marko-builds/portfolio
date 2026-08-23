@@ -43,18 +43,35 @@ const pageDescription =
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <SiteNav />
+  <style is:global>
+    /* Night register (Marko, 2026-08-23): the body-level token remap BlogPost.astro
+       runs on the post pages and projects/deploylog.astro copied verbatim, so the
+       fixed nav and every role this page reads take the night tokens. */
+    body {
+      --color-bg: var(--color-night-bg);
+      --color-surface-veil: var(--color-night-surface);
+      --color-surface-raised: var(--color-night-surface);
+      --color-border: var(--color-night-border);
+      --color-border-strong: var(--color-night-border);
+      --color-text-primary: var(--color-night-text);
+      --color-text-secondary: var(--color-night-text-secondary);
+      --color-text-muted: var(--color-night-text-secondary);
+      --color-accent: var(--color-aurora-cyan);
+      --color-accent-dim: var(--color-night-border);
+      --color-grid: var(--color-night-border);
+      background-color: var(--color-night-bg);
+    }
+  </style>
+
+  <SiteNav active="contact" />
 
   <main class="page">
-    <div class="head-band">
+    <div class="head band">
       <div class="frame">
+        <p class="entry-line">
+          <a href="/#contact">Send word</a> <span class="sep" aria-hidden="true">·</span> Book a call
+        </p>
         <h1>Book a call</h1>
-        <!-- The through-line, verbatim from the home page. A cold read of this
-             page on 2026-08-15 could not tell what the author does for work (0 of
-             3 samples), because /call is a landing surface in its own right: it is
-             the link pasted into a reply, so a reader can arrive here without ever
-             passing the home page. See issues/map-site-v2/10-close-out.md. -->
-        <p class="tagline">I build AI systems and prove they work.</p>
         <p class="lede">
           Pick a slot that works for you. If you tell me what it is about first, I show
           up already knowing the context.
@@ -62,12 +79,13 @@ const pageDescription =
       </div>
     </div>
 
-    <div class="frame body">
+    <div class="body band">
+      <div class="frame">
       <!-- 1. THE SURVEY. Optional by design: a form in front of a recruiter is
            friction on the primary audience. -->
-      <section class="band" id="survey">
+      <section class="sec" id="survey">
         <h2>What is the call about?</h2>
-        <p class="band-intro" id="survey-intro">
+        <p class="sec-intro" id="survey-intro">
           Optional. Skip it and book a slot if you would rather just talk.
         </p>
 
@@ -76,7 +94,7 @@ const pageDescription =
         </p>
 
         <p class="err-note" id="err-note" hidden>
-          That did not send. Email <a class="call-link-inline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>,
+          That did not send. Email <a class="inline-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>,
           or skip it and pick a slot below.
         </p>
 
@@ -142,39 +160,40 @@ const pageDescription =
           </div>
 
           <div class="actions">
-            <button type="submit" class="send">Send</button>
-            <a class="skip" href="#book">Skip to booking</a>
+            <button type="submit" class="btn send">Send</button>
+            <a class="inline-link skip" href="#book">Skip to booking</a>
           </div>
         </form>
       </section>
 
       <!-- 2. THE SCHEDULER, last. -->
-      <section class="band" id="book">
+      <section class="sec" id="book">
         <h2>Pick a slot</h2>
-        <p class="band-intro">
+        <p class="sec-intro">
           This opens my calendar. You pick the time and get a confirmation with the
           meeting link.
         </p>
-        <a class="book" href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
+        <a class="btn book" href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
           Open the booking page
         </a>
       </section>
 
       <!-- 3. THE CV, unconditional. Marko's call 2026-08-15: no gate, no reveal. -->
-      <section class="band" id="cv">
+      <section class="sec" id="cv">
         <h2>Prefer to read first?</h2>
-        <p class="band-intro">
+        <p class="sec-intro">
           The CV is the same document I send with applications.
         </p>
-        <a class="cv-link" href="/cv">
+        <a class="inline-link cv-link" href="/cv">
           <span class="metric">PDF</span>
           Marko-Stankovic-CV.pdf
         </a>
       </section>
+      </div>
     </div>
   </main>
 
-  <footer>
+  <footer class="band">
     <div class="frame foot">
       <p>&copy; 2026 Marko Stankovic</p>
       <a class="foot-link" href="/">back to home</a>
@@ -183,75 +202,81 @@ const pageDescription =
 </BaseLayout>
 
 <style>
-  /* The light direction locked by ticket 02, in the register ticket 03 built:
-     sans headings, mono kept for small meta only. Tokens are global.css's;
-     nothing here is a hex literal. The frame matches SiteNav's grid exactly
-     (1000px, 56px inline) so the `> ms` mark lines up with the content. */
-  .frame {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding-inline: 56px;
+  /* Night register, the way projects/deploylog.astro builds it: the gutter sits on
+     the band and the inner box is the full 1000px, centred, so the h1 left edge
+     lands at 220 at 1440 and at 24 at 390. Tokens are global.css's; nothing here
+     is a literal. The fields take the night tokens directly, because the remap
+     above does not touch --color-surface. */
+  .band { padding-inline: 56px; }
+  .frame { max-width: 1000px; margin-inline: auto; }
+
+  .head {
+    padding-block: 8rem 3rem;
   }
 
-  .head-band {
-    padding-block: 8rem 3rem;
-    background:
-      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
-      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
+  /* The mono entry line, "Send word · Book a call", same shape as the post pages
+     and the DeployLog page; the band name is the way back to the home band. */
+  .entry-line {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--color-text-muted);
+    margin: 0 0 1.25rem;
   }
+  .entry-line a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .entry-line a:hover { color: var(--color-accent); }
+  .entry-line .sep { color: var(--color-border-strong); }
+
+  /* Display face on the title and the section heads, as on the DeployLog page.
+     Written here and not as a class: global.css sets h1, h2 to mono unlayered,
+     which beats any utility. */
   h1 {
-    font-family: var(--font-sans);
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
-    line-height: 1.15;
+    font-family: var(--font-display, var(--font-sans));
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.05;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--color-text-primary);
-    margin: 0 0 1rem;
-  }
-  /* The identity line. Sits between the h1 and the lede at full text weight,
-     because its job is to be readable by someone who landed here from a pasted
-     link and does not yet know whose calendar this is. */
-  .tagline {
-    color: var(--color-text-primary);
-    font-size: 1.15rem;
-    font-weight: 500;
-    max-width: 56ch;
-    margin: 0 0 0.6rem;
+    margin: 0 0 1.25rem;
   }
   .lede {
     color: var(--color-text-secondary);
-    font-size: 1.05rem;
-    max-width: 56ch;
+    font-size: 1.125rem;
+    line-height: 1.625;
+    max-width: 42rem;
     margin: 0;
   }
 
   .body {
     padding-block: 3.5rem 6rem;
-    max-width: 1000px;
   }
 
-  /* global.css:82 puts a mono `// ` before every `section h2`. That is the dark
-     register's voice; scoped off here the same way index.astro does it. */
-  .band > h2::before {
+  /* The heads drop global.css's mono "// " prefix the same way .sec-h2 does. */
+  .sec > h2::before {
     content: none;
   }
-  .band > h2 {
-    font-family: var(--font-sans);
-    font-size: 1.25rem;
+  .sec > h2 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: 1.75rem;
     font-weight: 600;
     letter-spacing: -0.01em;
+    line-height: 1.2;
     color: var(--color-text-primary);
     margin: 0 0 0.5rem;
   }
-  .band + .band {
+  .sec + .sec {
     margin-top: 4rem;
     padding-top: 3rem;
     border-top: 1px solid var(--color-border);
   }
-  .band-intro {
+  .sec-intro {
     color: var(--color-text-secondary);
     margin: 0 0 1.5rem;
-    max-width: 62ch;
+    max-width: 42em;
   }
 
   /* ── Survey ───────────────────────────────────────────────────────────── */
@@ -269,24 +294,29 @@ const pageDescription =
     display: grid;
     gap: 0.35rem;
   }
+  /* Labels mono on the secondary night text, like the chips. */
   .field label {
+    font-family: var(--font-mono);
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--color-text-muted);
+    color: var(--color-night-text-secondary);
   }
   .field input,
   .field select,
   .field textarea {
     font-family: inherit;
     font-size: 0.95rem;
-    color: var(--color-text-primary);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-strong);
+    color: var(--color-night-text);
+    background: var(--color-night-surface);
+    border: 1px solid var(--color-night-border);
     border-radius: 6px;
     padding: 0.6rem 0.7rem;
     width: 100%;
     transition: border-color 0.15s ease;
+  }
+  .field select {
+    color-scheme: dark;
   }
   .field textarea {
     resize: vertical;
@@ -295,11 +325,18 @@ const pageDescription =
   .field input:hover,
   .field select:hover,
   .field textarea:hover {
-    border-color: var(--color-text-muted);
+    border-color: var(--color-night-text-secondary);
+  }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    border-color: var(--color-aurora-cyan);
+    outline: 2px solid var(--color-aurora-cyan);
+    outline-offset: 2px;
   }
   .field input::placeholder,
   .field textarea::placeholder {
-    color: var(--color-text-muted);
+    color: var(--color-night-text-secondary);
   }
 
   /* Off-screen rather than display:none. A bot reading the DOM still finds it. */
@@ -322,30 +359,33 @@ const pageDescription =
     flex-wrap: wrap;
     margin-top: 0.4rem;
   }
-  .send {
+
+  /* Buttons: outline on the night border, aurora cyan on hover, as on DeployLog. */
+  .btn {
+    display: inline-block;
     font-family: inherit;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--color-bg);
-    background: var(--color-accent);
-    border: 1px solid var(--color-accent);
+    color: var(--color-accent);
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
     border-radius: 6px;
     padding: 0.62rem 1.4rem;
+    text-decoration: none;
     cursor: pointer;
-    transition: opacity 0.15s ease;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
   }
-  .send:hover {
-    opacity: 0.88;
+  .btn:hover {
+    color: var(--color-night-bg);
+    background: var(--color-aurora-cyan);
+    border-color: var(--color-aurora-cyan);
+  }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: default;
   }
   .skip {
-    color: var(--color-text-secondary);
-    text-decoration: none;
     font-size: 0.94rem;
-    border-bottom: 1px solid transparent;
-  }
-  .skip:hover {
-    color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
   }
 
   .sent-note,
@@ -354,38 +394,12 @@ const pageDescription =
     padding: 0.85rem 1rem;
     border: 1px solid var(--color-accent);
     border-radius: 6px;
-    background: var(--color-accent-dim);
+    background: var(--color-night-surface);
     color: var(--color-text-primary);
     max-width: 42rem;
   }
   .err-note {
-    border-color: var(--color-warm);
-    background: transparent;
-  }
-
-  /* ── Booking ──────────────────────────────────────────────────────────── */
-  .book {
-    display: inline-block;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--color-bg);
-    background: var(--color-accent);
-    border: 1px solid var(--color-accent);
-    border-radius: 6px;
-    padding: 0.62rem 1.4rem;
-    text-decoration: none;
-    transition: opacity 0.15s ease;
-  }
-  .book:hover {
-    opacity: 0.88;
-  }
-  .call-link-inline {
-    color: var(--color-text-primary);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-accent);
-  }
-  .call-link-inline:hover {
-    color: var(--color-accent);
+    border-color: var(--color-aurora-amber);
   }
 
   /* ── CV ───────────────────────────────────────────────────────────────── */
@@ -393,15 +407,8 @@ const pageDescription =
     display: inline-flex;
     align-items: baseline;
     gap: 0.6rem;
-    color: var(--color-text-primary);
-    text-decoration: none;
     font-weight: 600;
-    border-bottom: 1px solid var(--color-accent);
   }
-  .cv-link:hover {
-    color: var(--color-accent);
-  }
-  /* The one thing that stays mono on this direction, as on the home page. */
   .metric {
     font-family: var(--font-mono);
     font-size: 0.78rem;
@@ -419,28 +426,27 @@ const pageDescription =
     justify-content: space-between;
     align-items: center;
     gap: 0.5rem;
-    padding-block: 1.75rem;
+    padding-block: 2rem;
   }
   .foot p {
     margin: 0;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
   }
   .foot-link {
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     text-decoration: none;
+    transition: color 0.15s ease;
   }
   .foot-link:hover {
     color: var(--color-text-secondary);
   }
 
   @media (max-width: 720px) {
-    .frame {
-      padding-inline: 28px;
-    }
-    .head-band {
+    .band { padding-inline: 24px; }
+    .head {
       padding-block: 6.5rem 2.5rem;
     }
     .body {
@@ -449,10 +455,12 @@ const pageDescription =
     .pair {
       grid-template-columns: 1fr;
     }
-    .send,
-    .book {
+    .btn {
       min-height: 44px;
     }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .entry-line a, .foot-link, .field input, .field select, .field textarea { transition: none; }
   }
 </style>
 
