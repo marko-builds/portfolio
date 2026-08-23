@@ -255,10 +255,9 @@ section h2:not(.sr-only)::before {
 
 /* ─── Hero route draw (ticket 06, the one optional motion addition) ──────── */
 /* A dashed route across the hero, drawn on load in 600 ms ease-out. Plain markup
-   and CSS, no script, no budget. Off unless html[data-route="on"]; reduced
+   and CSS, no script, no budget. On by default (Marko's slice-17 pick, 2026-08-23: "set, route on"); reduced
    motion shows it drawn. */
-.route-draw { display: none; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-[data-route="on"] .route-draw { display: block; }
+.route-draw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 /* pathLength="100" on the path, so the dasharray is in path percent: 50 dash/gap
    pairs summing to 100, then a 100-unit gap. With the offset at 100 the gap covers
    the whole route; as it runs to 0 the dashes come through left to right. */
@@ -267,36 +266,12 @@ section h2:not(.sr-only)::before {
   stroke-dasharray: 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 1.2 .8 0 100;
   stroke-dashoffset: 0;
 }
-[data-route="on"] .route-draw path { animation: route-draw 600ms ease-out both; }
+.route-draw path { animation: route-draw 600ms ease-out both; }
 @keyframes route-draw {
   from { stroke-dashoffset: 100; }
   to { stroke-dashoffset: 0; }
 }
 
-/* EYEBALL HARNESS, remove after the slice-17 pick */
-html[data-motion="tight"] { --reveal-y: 8px; --reveal-ms: 320ms; --reveal-stagger: 40ms; }
-html[data-motion="loose"] { --reveal-y: 16px; --reveal-ms: 520ms; --reveal-stagger: 80ms; }
-.eyeball-pill { display: none; }
-html[data-motion] .eyeball-pill, html[data-route] .eyeball-pill {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-  position: fixed;
-  right: 12px;
-  bottom: 12px;
-  z-index: 9999;
-  padding: 0.45rem 0.7rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--color-night-text);
-  background: var(--color-night-bg);
-  border: 1px solid var(--color-night-border);
-  border-radius: 8px;
-}
-.eyeball-pill a { color: var(--color-night-text-secondary); text-decoration: none; }
-.eyeball-pill a:hover, .eyeball-pill a.on { color: var(--color-aurora-cyan); }
-.eyeball-pill b { color: var(--color-aurora-cyan); font-weight: 500; }
-/* END EYEBALL HARNESS */
 
 /* ─── Nav Links ──────────────────────────────────────────────────────── */
 .nav-link {
@@ -351,7 +326,7 @@ html[data-motion] .eyeball-pill, html[data-route] .eyeball-pill {
   }
   .hov { transition: none; }
   .hov:hover { translate: none; }
-  [data-route="on"] .route-draw path { animation: none; }
+  .route-draw path { animation: none; }
 
   /* Cancel hero entrance animations — elements are visible at rest */
   .hero-enter {
