@@ -258,6 +258,12 @@ section h2:not(.sr-only)::before {
    and CSS, no script, no budget. On by default (Marko's slice-17 pick, 2026-08-23: "set, route on"); reduced
    motion shows it drawn. */
 .route-draw { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+/* The viewBox is 1440x600 and stretches to the hero; a phone hero is ~390x1300, which turned the
+   gentle curve into a tall wave, and capped to the hero's foot it hid behind the receipt cards
+   (Marko, 2026-08-23). A phone hero has no empty ground for it: desktop and tablet only. */
+@media (max-width: 720px) {
+  .route-draw { display: none; }
+}
 /* pathLength="100" on the path, so the dasharray is in path percent: 50 dash/gap
    pairs summing to 100, then a 100-unit gap. With the offset at 100 the gap covers
    the whole route; as it runs to 0 the dashes come through left to right. */
