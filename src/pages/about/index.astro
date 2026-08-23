@@ -17,11 +17,14 @@
 // per the PRD: where the copy names a page or band, the words link to it, underline on
 // hover only.
 //
-// The only script is the drag helper, ~742 B unmarked inside the general budget: mouse
-// pointers only so touch keeps native momentum, snap off while dragging and back on
-// release, the click after a drag over a linked tile suppressed. It also reads ?scroll=N
-// for captures. Byte-identical to the prototype's, so the gate's content-hash dedupe
-// counts it once while /proto/about/ still builds.
+// The only script is the drag helper, unmarked inside the general budget: mouse pointers
+// only so touch keeps native momentum, snap off while dragging and back on release, the
+// click after a drag over a linked tile suppressed. Pointer capture is taken on the FIRST
+// move past the 4px threshold, never on pointerdown: capturing on pointerdown retargets
+// the click to the rail and a still click on a linked tile (Now, the GitHub tiles) never
+// navigated (review of 0c0bc94, reproduced over CDP). A cancelled drag clears the
+// suppression at once; a finished drag clears it after the click it suppresses. The
+// prototype's ?scroll=N capture hook is gone; captures scroll over CDP.
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import SiteNav from "../../components/SiteNav.astro";
 import LegendStrip from "../../components/LegendStrip.astro";
@@ -118,7 +121,7 @@ const products = [
 </BaseLayout>
 
 <script is:inline>
-(function(){var q=new URLSearchParams(location.search).get("scroll");document.querySelectorAll("[data-rail]").forEach(function(r){if(q)r.scrollLeft=+q;var on=false,mv=false,x=0,s=0;r.addEventListener("pointerdown",function(e){if(e.pointerType!=="mouse"||e.button)return;on=true;mv=false;x=e.clientX;s=r.scrollLeft;r.setPointerCapture(e.pointerId)});r.addEventListener("pointermove",function(e){if(!on)return;var d=e.clientX-x;if(!mv&&Math.abs(d)<4)return;if(!mv){mv=true;r.classList.add("drag")}r.scrollLeft=s-d});function up(){if(!on)return;on=false;r.classList.remove("drag")}r.addEventListener("pointerup",up);r.addEventListener("pointercancel",up);r.addEventListener("click",function(e){if(mv){e.preventDefault();mv=false}},true)})})();
+(function(){document.querySelectorAll("[data-rail]").forEach(function(r){var on=false,mv=false,x=0,s=0,id=0;r.addEventListener("pointerdown",function(e){if(e.pointerType!=="mouse"||e.button)return;on=true;mv=false;x=e.clientX;s=r.scrollLeft;id=e.pointerId});r.addEventListener("pointermove",function(e){if(!on)return;var d=e.clientX-x;if(!mv&&Math.abs(d)<4)return;if(!mv){mv=true;r.classList.add("drag");r.setPointerCapture(id)}r.scrollLeft=s-d});function up(e){if(!on)return;on=false;r.classList.remove("drag");if(e.type==="pointercancel")mv=false;else if(mv)setTimeout(function(){mv=false},0)}r.addEventListener("pointerup",up);r.addEventListener("pointercancel",up);r.addEventListener("click",function(e){if(mv){e.preventDefault();e.stopPropagation();mv=false}},true)})})();
 </script>
 
 <style>
@@ -192,7 +195,7 @@ const products = [
     margin: 0;
   }
   .sec-head h2::before { content: none; }
-  .sec-intro { color: var(--color-text-secondary); margin: 0 0 1.5rem; max-width: 36em; }
+  .sec-intro { color: var(--color-text-secondary); margin: 0 0 1.5rem; }
   .inl { color: var(--color-accent); text-decoration: none; }
   .inl:hover { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -258,7 +261,7 @@ const products = [
   .product-status { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-muted); margin-left: auto; white-space: nowrap; }
 
   /* 04: the two follow cards and the aside. */
-  .follow { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; max-width: 640px; }
+  .follow { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
   .follow a {
     display: grid;
     gap: 0.2rem;

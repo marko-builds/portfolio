@@ -15,10 +15,11 @@ empty; re-pinning it is still slice 16's job), `devlog-bodies.json` byte-identic
 
 - **Routes: 25** (was 24). Added: `/about/`, the Legend page (`src/pages/about/index.astro`,
   `src/components/LegendStrip.astro`, `LegendDates.ts`). Removed: none.
-- **Weight: unchanged at 6127 B across 6 unmarked blocks.** The page's drag script is 742 B and
-  byte-identical to `/proto/about/`'s, so the content-hash dedupe counts it once; the number holds
-  when slice 14 deletes the prototype, because `/about/` carries the same bytes. Aurora budget
-  untouched (9135 B, no aurora on inner routes).
+- **Weight: 6906 B across 7 unmarked blocks** (was 6127 across 6). The page's drag script is
+  779 B and no longer the prototype's bytes (review of 0c0bc94: pointer capture moved off
+  pointerdown so a still click on a linked tile navigates; the `?scroll=` hook dropped), so both
+  copies count until slice 14 deletes `/proto/about/`, after which the number drops by its 742 B.
+  Aurora budget untouched (9135 B, no aurora on inner routes).
 - **Motion, tokens, bodies, Lighthouse floors: untouched.** `/about/` carries no aurora block, so
   the reduced-motion arm does not run on it; its own reduced-motion contract (the strip's
   `scroll-behavior: smooth` only under `prefers-reduced-motion: no-preference`) was read off the

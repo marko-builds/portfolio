@@ -101,6 +101,14 @@ h3 {
   font-family: var(--font-mono);
 }
 
+/* ─── Anchor targets under the fixed nav ─────────────────────────────── */
+/* The site nav is a 57px fixed bar (56px + its border), so an in-page anchor
+   (#current-dig on Legend, #gadgets / #contact on home) landed with its heading
+   underneath it. Review of 0c0bc94. */
+[id] {
+  scroll-margin-top: 4.5rem;
+}
+
 /* ─── Top accent border ──────────────────────────────────────────────── */
 body::before {
   content: '';
