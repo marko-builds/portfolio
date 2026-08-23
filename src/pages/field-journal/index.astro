@@ -20,7 +20,10 @@ const posts = allPosts
     };
   });
 
-const allTags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+// Beats replace tags as the index navigation (Marko 2026-08-23). Only the beats at
+// least one listed post carries get a button; tags stay keywords on the post page.
+const BEATS = ["artifacts", "gadgets", "engine", "agents", "games"] as const;
+const beats = BEATS.filter((b) => posts.some((p) => p.data.beat === b));
 
 const pageTitle = "Field journal | Marko Stankovic";
 const pageDescription =
@@ -50,15 +53,15 @@ const dateFmt = (d: Date) =>
       <div class="frame">
         <h2 class="sr-only">Posts</h2>
 
-        <div class="tag-bar" role="group" aria-label="Filter posts by tag">
-          <button class="tag-btn active" data-tag="all">all</button>
-          {allTags.map((tag) => <button class="tag-btn" data-tag={tag}>{tag}</button>)}
+        <div class="tag-bar" role="group" aria-label="Filter posts by beat">
+          <button class="tag-btn active" data-beat="all">all</button>
+          {beats.map((beat) => <button class="tag-btn" data-beat={beat}>{beat}</button>)}
         </div>
 
         <div class="post-rows">
           {
             posts.map((post) => (
-              <a class="post-row" href={`/field-journal/${post.slug}/`} data-tags={post.data.tags.join(",")}>
+              <a class="post-row" href={`/field-journal/${post.slug}/`} data-beat={post.data.beat}>
                 <div class="row-meta">
                   <span class="post-date">{dateFmt(post.data.date)}</span>
                   <span class="post-time">{post.readingTime} min</span>
@@ -66,11 +69,7 @@ const dateFmt = (d: Date) =>
                 <div class="row-main">
                   <span class="post-title">{post.data.title}</span>
                   <span class="post-excerpt">{post.data.excerpt}</span>
-                  <span class="post-tags">
-                    {post.data.tags.map((t) => (
-                      <span class="post-tag">{t}</span>
-                    ))}
-                  </span>
+                  {post.data.beat && <span class="post-beat">{post.data.beat}</span>}
                 </div>
               </a>
             ))
@@ -90,14 +89,43 @@ const dateFmt = (d: Date) =>
   </footer>
 </BaseLayout>
 
+<style is:global>
+  /* Night index (Marko 2026-08-23): the same body-level remap BlogPost.astro
+     runs on the post pages, copied verbatim rather than written a second way,
+     so the fixed nav, the text roles, the borders, the rows and the beat
+     buttons all read the night tokens through the roles they already use.
+     --color-surface stays white here too, which is why .post-row:hover below
+     reads the veil. No plexus on the index. */
+  body {
+    --color-bg: var(--color-night-bg);
+    --color-surface-veil: var(--color-night-surface);
+    --color-surface-raised: var(--color-night-surface);
+    --color-border: var(--color-night-border);
+    --color-border-strong: var(--color-night-border);
+    --color-text-primary: var(--color-night-text);
+    --color-text-secondary: var(--color-night-text-secondary);
+    --color-text-muted: var(--color-night-text-secondary);
+    --color-accent: var(--color-aurora-cyan);
+    --color-accent-dim: var(--color-night-border);
+    --color-grid: var(--color-night-border);
+    background-color: var(--color-night-bg);
+  }
+</style>
+
 <style>
+  /* The 1000px column, built the way index.astro's .sec builds it: the gutter
+     sits on the band and the inner box is the full 1000px, centred. The first
+     version put the 56px padding inside a 1000px max-width box, so the content
+     ran 888px wide (276 to 1164 at 1440) against the home page's 1000 (220 to
+     1220), and the mobile gutter was 28px against the site's 24. Measured off
+     the built page at both widths, before and after. */
+  .head-band, .list-band, footer { padding-inline: 56px; }
   .frame {
     max-width: 1000px;
     margin: 0 auto;
-    padding-inline: 56px;
   }
   @media (max-width: 720px) {
-    .frame { padding-inline: 28px; }
+    .head-band, .list-band, footer { padding-inline: 24px; }
     /* The other half of call.astro's head band, missed by the first copy. */
     .head-band { padding-block: 6.5rem 2.5rem; }
   }
@@ -116,9 +144,6 @@ const dateFmt = (d: Date) =>
      8rem. Matching declarations is not matching output. */
   .head-band {
     padding-block: 8rem 3rem;
-    background:
-      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 100% 96px,
-      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 96px 100%;
   }
   h1 {
     font-family: var(--font-sans);
@@ -207,12 +232,12 @@ const dateFmt = (d: Date) =>
     display: grid;
     grid-template-columns: 130px 1fr;
     gap: 24px;
-    padding: 22px 4px;
+    padding: 22px 0;
     border-bottom: 1px solid var(--color-border);
     text-decoration: none;
     transition: background-color 0.15s ease;
   }
-  .post-row:hover { background: var(--color-surface); }
+  .post-row:hover { background: var(--color-surface-veil); }
   .post-row.filtered-out { display: none; }
   .row-meta {
     display: flex;
@@ -243,13 +268,16 @@ const dateFmt = (d: Date) =>
     line-height: 1.6;
     max-width: 62ch;
   }
-  .post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
-  .post-tag {
+  .post-beat {
+    align-self: flex-start;
+    margin-top: 2px;
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--color-text-muted);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 4px;
+    padding: 2px 8px;
   }
-  .post-tag::before { content: "#"; color: var(--color-accent); }
   @media (max-width: 640px) {
     .post-row { grid-template-columns: 1fr; gap: 8px; }
     .row-meta { flex-direction: row; gap: 14px; }
@@ -281,17 +309,16 @@ const dateFmt = (d: Date) =>
 </style>
 
 <script>
-  // Tag filter over the post rows
+  // Beat filter over the post rows
   const btns = document.querySelectorAll<HTMLButtonElement>(".tag-btn");
   const rows = document.querySelectorAll<HTMLElement>(".post-row");
   btns.forEach((btn) => {
     btn.addEventListener("click", () => {
       btns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      const tag = btn.dataset.tag ?? "all";
+      const beat = btn.dataset.beat ?? "all";
       rows.forEach((row) => {
-        const rowTags = (row.dataset.tags ?? "").split(",");
-        row.classList.toggle("filtered-out", tag !== "all" && !rowTags.includes(tag));
+        row.classList.toggle("filtered-out", beat !== "all" && row.dataset.beat !== beat);
       });
     });
   });

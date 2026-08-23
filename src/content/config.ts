@@ -7,6 +7,7 @@ const blog = defineCollection({
     date: z.coerce.date(),
     excerpt: z.string(),
     tags: z.array(z.string()),
+    beat: z.enum(["artifacts","gadgets","engine","agents","games"]).optional(),
     draft: z.boolean().optional().default(false),
     ogImage: z.string().optional(),
   }),
