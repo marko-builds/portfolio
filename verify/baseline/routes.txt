@@ -14,4 +14,11 @@
 /devlog/skill-vibe-test-decay-probe/
 /devlog/swipeable-panorama-continuous-ridge/
 /devlog/zero-dollar-media-stack/
+/field-journal/
+/field-journal/building-pipeline-tooling-with-claude-code/
+/field-journal/golden-fingerprints-generative-art/
+/field-journal/skill-vibe-test-decay-probe/
+/field-journal/swipeable-panorama-continuous-ridge/
+/field-journal/zero-dollar-media-stack/
+/lab-notes/
 /projects/deploylog/

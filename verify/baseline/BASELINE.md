@@ -7,6 +7,40 @@ Captured 2026-07-03 (issue 01). Every later gate compares against this.
 > site was before the site-v2 redesign. The values the gate reads today are in that section. Read
 > it first.
 
+## Re-pin, 2026-08-23 (issues/09-gate-config-reconcile.md, branch build/site-v3)
+
+Routes and bodies re-pinned by `node verify/rebaseline.mjs 6a5b8c5b7e6e66e10a8cc2fba78cd4b569576d3d`
+against the real build. The main sha is the same one ticket 07 pinned, passed back in unchanged
+(`git diff -- verify/baseline/main-sha.txt` empty); re-pinning it is slice 16's job.
+
+- **Routes: 24** (was 17). The journal moved from `/devlog` to `/field-journal` (map-site-v3
+  ticket 10, amendment 2026-08-23). Added: `/field-journal/` and `/field-journal/<slug>/` for the
+  five non-draft posts (building-pipeline-tooling-with-claude-code, golden-fingerprints-generative-art,
+  skill-vibe-test-decay-probe, swipeable-panorama-continuous-ridge, zero-dollar-media-stack), plus
+  `/lab-notes/`, a redirect stub. Removed: none by path. `/devlog/`, `/devlog/<slug>/`, `/blog/`
+  and `/blog/<slug>/` keep their lines but are now meta-refresh stubs (one hop each to
+  `/field-journal...`), not pages. `/about/` is not pinned: it does not exist until slice 13.
+- **Why the page move is in this slice and not slice 12.** Astro 5.18 builds a dynamic config
+  redirect (`/devlog/[slug]`) by calling the TARGET route's `getStaticPaths`, so the build fails
+  with `GetStaticPathsRequired` while `/field-journal/[slug]` has no page; and a config redirect
+  replaces a file-based page with the same pattern rather than the page shadowing it
+  (`astro/dist/core/routing/manifest/create.js`, the `filteredFiledBasedRoutes` filter). The two
+  page files were `git mv`'d with only their hrefs changed; slice 12 still owns the visual work.
+- **Journal bodies: 5**, byte-identical hashes, now read from `dist/field-journal/<slug>/` (the
+  `JOURNAL_DIR` constant in both scripts). The file keeps its `devlog-bodies.json` name.
+- **Tokens: 30** (was 16). Accent, accent-dim and warm re-frozen to the confirmed aurora sync
+  (`#1D7781`, `#1D77811F`, `#9B5E25`); `verify/proposals/accent-sync-aurora.md` deleted. The seven
+  night tokens, `--aurora-0..5` and `--aurora-ramp` added from the ticket 03 lock. The parser now
+  strips CSS comments first: the night block's own comment mentions `--color-night-bg:` and the
+  first match had been winning.
+- **Weight, motion, Lighthouse floors: untouched.** The `--full` page list points at
+  `/field-journal/` and `/field-journal/zero-dollar-media-stack/`; keys and floors unchanged.
+- **Planted negatives** (each restored, plant string grep = 0): off-token hex in `global.css`
+  `FAIL token --color-accent: #DEADBE != #1D7781 and no proposal names it`; unbudgeted inline
+  script in `dist/index.html` `FAIL js budget: 16191 B > 10240 B across 7 unmarked inline blocks`;
+  em dash in `404.astro` `FAIL copy src/pages/404.astro: dash/arrow on line(s) 18`. The token and
+  copy arms read source, so a plant in `dist/` cannot fire them.
+
 ## Re-pin, 2026-08-22 (map-site-v3 ticket 07)
 
 Two arms were red on main before any v3 code existed, so ticket 07 re-pinned them before adding

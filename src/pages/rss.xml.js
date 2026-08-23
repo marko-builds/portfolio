@@ -10,7 +10,7 @@ export async function GET(context) {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
   return rss({
-    title: 'Marko Stankovic · Devlog',
+    title: 'Marko Stankovic · Field journal',
     description:
       'Build notes on the systems, tooling, and measurements behind the work.',
     site: context.site,
@@ -18,7 +18,7 @@ export async function GET(context) {
       title: post.data.title,
       description: post.data.excerpt,
       pubDate: post.data.date,
-      link: `/devlog/${post.slug}/`,
+      link: `/field-journal/${post.slug}/`,
     })),
     customData: '<language>en-us</language>',
   });

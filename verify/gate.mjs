@@ -7,8 +7,8 @@
 //   node verify/gate.mjs --no-build reuse existing dist/
 //   node verify/gate.mjs --full     also run Lighthouse vs the 01 baseline (slow)
 //
-// Checks: route parity, devlog body equivalence, token parity (light palette +
-// brand type), weight budget (general + the aurora allowance), reduced-motion
+// Checks: route parity, journal body equivalence (posts at /field-journal/<slug>),
+// token parity (light palette + night register + aurora ramp + brand type), weight budget (general + the aurora allowance), reduced-motion
 // render (only on a page carrying the aurora block), copy lint (every authored
 // template), main-untouched.
 //
@@ -51,13 +51,25 @@ const AURORA_BUDGET_BYTES = 11264;
 // Ticket 08 measured every text role in this set at >= 4.5 contrast against BOTH
 // --color-bg and --color-surface, and darkened text-muted and warm to get there.
 // Freezing the values pins that measurement; it does not re-derive it.
+//
+// Re-frozen 2026-08-23 (issues/09-gate-config-reconcile.md) to the site-v3 lock:
+//   - accent, accent-dim and warm are the aurora hues darkened to clear AA on both light
+//     surfaces (map-site-v3 ticket 03 "Accent sync", confirmed by Marko 2026-08-23). They
+//     were #14707C / #14707C1F / #9C6031 and passed only through
+//     verify/proposals/accent-sync-aurora.md, which that slice deleted: a frozen value
+//     needs no proposal, and a proposal left behind would let the next drift through.
+//   - the night tokens and the aurora ramp (ticket 03 lock, point 2). Provenance per
+//     ticket 07's answer: night-bg is brands/marko/brand.json backgroundDeep, aurora-cyan
+//     is its accent, aurora-amber is its gold; the ramp is the "aurora" row of the
+//     Borealis.qml paletteTable and is not in brand.json at all. Copied values, not
+//     bridged: a drift in brand.json does not move the site (v2 decision 4 still holds).
 const TOKEN_FROZEN = {
   '--color-bg': '#FBFAF7',
   '--color-surface': '#FFFFFF',
   '--color-border': '#E4E0D8',
-  '--color-accent': '#14707C',
-  '--color-accent-dim': '#14707C1F',
-  '--color-warm': '#9C6031',
+  '--color-accent': '#1D7781',
+  '--color-accent-dim': '#1D77811F',
+  '--color-warm': '#9B5E25',
   '--color-border-strong': '#CFC9BD',
   '--color-text-primary': '#1A1D23',
   '--color-text-secondary': '#5B6270',
@@ -66,7 +78,28 @@ const TOKEN_FROZEN = {
   '--color-surface-veil': '#F3F1ECCC',
   '--color-backdrop': '#1A1D23',
   '--color-grid': '#1A1D2312',
+  // night register (ticket 03 lock)
+  '--color-night-bg': '#0B0E15',
+  '--color-night-surface': '#121726CC',
+  '--color-night-border': '#5FCEDB4D',
+  '--color-night-text': '#E6E9EF',
+  '--color-night-text-secondary': '#A7B0C0',
+  '--color-aurora-cyan': '#5FCEDB',
+  '--color-aurora-amber': '#D99A5E',
+  // aurora ramp (ticket 03 lock)
+  '--aurora-0': '#962DB4',
+  '--aurora-1': '#5A6ECD',
+  '--aurora-2': '#23C8C8',
+  '--aurora-3': '#1EEB82',
+  '--aurora-4': '#19B450',
+  '--aurora-5': '#084623',
+  '--aurora-ramp': 'linear-gradient(90deg, var(--aurora-0), var(--aurora-1), var(--aurora-2), var(--aurora-3), var(--aurora-4))',
 };
+// Where the journal posts are read from for check 2. Was dist/devlog; the route moved to
+// /field-journal (map-site-v3 ticket 10, amendment 2026-08-23). rebaseline.mjs reads the
+// same directory. Until slice 12 moves the pages this arm reads "page missing" for every
+// post, which is the correct answer: the baseline describes the destination, not the tree.
+const JOURNAL_DIR = 'field-journal';
 // css var -> brand.json font key. Compared on the first family in the stack, with
 // spaces dropped: brand.json says "JetBrainsMono", CSS says 'JetBrains Mono'.
 const FONT_MAP = { '--font-sans': 'body', '--font-mono': 'code' };
@@ -175,12 +208,14 @@ console.log('routes:');
   else ok('route parity', `${built.length} routes identical`);
 }
 
-// ── 2. devlog body equivalence ─────────────────────────────────────────────
+// ── 2. journal body equivalence ────────────────────────────────────────────
+// Keyed by slug; the file keeps its devlog-bodies.json name (re-keyed to the new
+// route by the path below, not duplicated).
 console.log('bodies:');
 {
   const baseline = JSON.parse(readFileSync(join(BASE, 'devlog-bodies.json'), 'utf8'));
   for (const [slug, hash] of Object.entries(baseline)) {
-    const f = join(ROOT, 'dist/devlog', slug, 'index.html');
+    const f = join(ROOT, 'dist', JOURNAL_DIR, slug, 'index.html');
     if (!existsSync(f)) { fail(`body ${slug}`, 'page missing'); continue; }
     const m = readFileSync(f, 'utf8').match(/<article class="prose">(.*?)<\/article>/s);
     if (!m) { fail(`body ${slug}`, 'no <article class="prose"> found'); continue; }
@@ -193,7 +228,10 @@ console.log('bodies:');
 // ── 3. token parity ────────────────────────────────────────────────────────
 console.log('tokens:');
 {
-  const css = readFileSync(join(ROOT, 'src/styles/global.css'), 'utf8');
+  // Comments stripped first (2026-08-23, issue 09): the PROPOSED night block's own comment
+  // reads "against --color-night-bg: text 15.2, ..." and the first match won, so the check
+  // compared a comment fragment against the frozen value and reported #0B0E15 != #0B0E15.
+  const css = readFileSync(join(ROOT, 'src/styles/global.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const vars = {};
   for (const m of css.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) vars[m[1]] ??= m[2].trim();
   const brandFonts = JSON.parse(readFileSync(BRAND_JSON, 'utf8')).fonts;
@@ -414,7 +452,9 @@ if (doFull) {
   // measuring a 404 against a July score. /call/ is new and is the conversion page.
   const PAGES = {
     home: '/', projects_deploylog: '/projects/deploylog/', call: '/call/',
-    devlog: '/devlog/', 'devlog_zero-dollar-media-stack': '/devlog/zero-dollar-media-stack/',
+    // Re-pointed again 2026-08-23 (issue 09): the journal moved to /field-journal. Keys keep
+    // their names so lighthouse-summary.json's floors still resolve; floors untouched.
+    devlog: '/field-journal/', 'devlog_zero-dollar-media-stack': '/field-journal/zero-dollar-media-stack/',
   };
   const server = spawn('npx', ['astro', 'preview', '--port', '4399'], { cwd: ROOT, stdio: 'ignore' });
   try {

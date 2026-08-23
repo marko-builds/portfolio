@@ -39,11 +39,13 @@ const routes = walk(DIST)
   .sort();
 writeFileSync(join(BASE, 'routes.txt'), routes.join('\n') + '\n');
 
-// devlog bodies — same extraction and hash as gate check 2
+// journal bodies — same extraction and hash as gate check 2, read from the same
+// directory (JOURNAL_DIR there). Moved from dist/devlog 2026-08-23, issue 09.
+const JOURNAL_DIR = 'field-journal';
 const bodies = {};
-for (const f of walk(join(DIST, 'devlog')).filter((f) => f.endsWith('index.html'))) {
-  const slug = relative(join(DIST, 'devlog'), f).replace(/\/?index\.html$/, '');
-  if (!slug) continue; // the devlog index itself
+for (const f of walk(join(DIST, JOURNAL_DIR)).filter((f) => f.endsWith('index.html'))) {
+  const slug = relative(join(DIST, JOURNAL_DIR), f).replace(/\/?index\.html$/, '');
+  if (!slug) continue; // the journal index itself
   const m = readFileSync(f, 'utf8').match(/<article class="prose">(.*?)<\/article>/s);
   if (!m) { console.error(`  no <article class="prose"> in ${slug} — skipped`); continue; }
   bodies[slug] = createHash('sha256')
