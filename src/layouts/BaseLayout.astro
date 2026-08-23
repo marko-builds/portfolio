@@ -31,9 +31,16 @@ const canonicalURL = Astro.url.href;
 // ~0.27px — so the card read "I build AI systems" and lost the half carrying the positioning.
 // v3 fills the line solid. Verified by shrinking both to 160px and comparing. New filename
 // again, and for the same reason: v2 was already scraped into LinkedIn's cache.
+//
+// og-default-v4.png, 2026-08-23 (site-v3, issues/15-og-card-v4.md): v3 still carried the
+// "> MarkoStankovic(AI Engineer);" mark and the v2 headline after the site moved to the
+// expedition register and the fold mark. v4 is the fold mark on its tile, the full-name
+// wordmark in Space Grotesk, the approved hero line on three lines with the second clause
+// dim, on navy under the aurora ramp hairline. Source: play/og_card_portfolio_v4.html,
+// variant b (optically centred), Marko's pick at 1x and 600px. New filename, same reason.
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site).href
-  : new URL("/og-default-v3.png", Astro.site).href;
+  : new URL("/og-default-v4.png", Astro.site).href;
 ---
 
 <!doctype html>
