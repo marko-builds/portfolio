@@ -17,7 +17,7 @@
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 
-const require = createRequire('~/.claude/skills/qa/');
+const require = createRequire(`${process.env.HOME}/.claude/skills/qa/`);
 const { chromium } = require('playwright');
 
 const BASE = 'http://localhost:4399';
