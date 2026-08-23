@@ -97,8 +97,7 @@ const TOKEN_FROZEN = {
 };
 // Where the journal posts are read from for check 2. Was dist/devlog; the route moved to
 // /field-journal (map-site-v3 ticket 10, amendment 2026-08-23). rebaseline.mjs reads the
-// same directory. Until slice 12 moves the pages this arm reads "page missing" for every
-// post, which is the correct answer: the baseline describes the destination, not the tree.
+// same directory; the pages moved there in the same slice (issue 09, folded in from 12).
 const JOURNAL_DIR = 'field-journal';
 // css var -> brand.json font key. Compared on the first family in the stack, with
 // spaces dropped: brand.json says "JetBrainsMono", CSS says 'JetBrains Mono'.
