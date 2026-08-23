@@ -34,36 +34,174 @@ const pageDescription =
     </script>
   </Fragment>
 
+  <style is:global>
+    /* Night register (Marko, 2026-08-23): the body-level token remap BlogPost.astro
+       runs on the post pages, copied verbatim, so the fixed nav, every Tailwind
+       var class on this page, the lightbox and the screenshot frame read the
+       night tokens through the roles they already use. */
+    body {
+      --color-bg: var(--color-night-bg);
+      --color-surface-veil: var(--color-night-surface);
+      --color-surface-raised: var(--color-night-surface);
+      --color-border: var(--color-night-border);
+      --color-border-strong: var(--color-night-border);
+      --color-text-primary: var(--color-night-text);
+      --color-text-secondary: var(--color-night-text-secondary);
+      --color-text-muted: var(--color-night-text-secondary);
+      --color-accent: var(--color-aurora-cyan);
+      --color-accent-dim: var(--color-night-border);
+      --color-grid: var(--color-night-border);
+      background-color: var(--color-night-bg);
+    }
+    /* Dark code cards, same rules as the post pages: the hljs theme this page
+       loads is github-dark (BaseLayout, codeHighlighting), so the card takes the
+       night surface and border and the light-era warm override is lifted. */
+    .prose pre code.hljs,
+    pre code.hljs {
+      background: var(--color-night-surface);
+      border-color: var(--color-night-border);
+    }
+    .prose pre code.hljs .hljs-built_in,
+    .prose pre code.hljs .hljs-symbol,
+    pre code.hljs .hljs-built_in,
+    pre code.hljs .hljs-symbol {
+      color: inherit;
+    }
+    .copy-btn {
+      color: var(--color-night-bg);
+      background: var(--color-aurora-cyan);
+      border-color: var(--color-aurora-cyan);
+    }
+    .copy-btn:hover {
+      color: var(--color-aurora-cyan);
+      background: var(--color-night-bg);
+      border-color: var(--color-aurora-cyan);
+    }
+    .copy-btn.copied {
+      color: var(--color-night-bg);
+      background: var(--color-night-text);
+      border-color: var(--color-night-text);
+    }
+  </style>
+
+  <style>
+    /* The site column, built the way field-journal/index.astro builds it: the
+       gutter sits on the band and the inner box is the full 1000px, centred.
+       At 1440 the h1 left edge lands at 220, at 390 at 24. */
+    .band { padding-inline: 56px; }
+    .frame { max-width: 1000px; margin-inline: auto; }
+    @media (max-width: 720px) {
+      .band { padding-inline: 24px; }
+    }
+
+    /* The mono entry line, "Artifacts · DeployLog", same shape as the post
+       pages' entry line; the band name is the way back to the home band. */
+    .entry-line {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.02em;
+      color: var(--color-text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .entry-line a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .entry-line a:hover { color: var(--color-accent); }
+    .entry-line .sep { color: var(--color-border-strong); }
+
+    /* Display face on the title and the section heads, as on the post title
+       and the home page's .sec-head h2. Written here and not as a Tailwind
+       class: global.css sets h1, h2 to mono unlayered, which beats any utility.
+       The heads drop the mono "// " prefix the same way .sec-head h2 does. */
+    .page-title,
+    .sec-h2 {
+      font-family: var(--font-display, var(--font-sans));
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    .sec-h2 {
+      font-size: 1.75rem;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .sec-h2::before { content: none; }
+
+    /* Mono chips on the night border, like the journal index's .post-beat. */
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      border: 1px solid var(--color-border-strong);
+      border-radius: 4px;
+      padding: 0.25rem 0.75rem;
+    }
+
+    /* Inline code in the prose: cyan on the cyan-alpha border token, as on the
+       post pages. The old Tailwind tint was an accent at 10 percent alpha. */
+    .code-chip {
+      font-family: var(--font-mono);
+      color: var(--color-accent);
+      background: var(--color-accent-dim);
+      border-radius: 3px;
+    }
+
+    /* Buttons: outline on the night border, aurora cyan on hover. */
+    .btn {
+      color: var(--color-accent);
+      background: transparent;
+      border: 1px solid var(--color-border-strong);
+      border-radius: 6px;
+      transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .btn:hover {
+      color: var(--color-night-bg);
+      background: var(--color-aurora-cyan);
+      border-color: var(--color-aurora-cyan);
+    }
+
+    /* The overview screenshot keeps its frame, on the night tokens. The
+       .screenshot-wrap below it reads --color-border through the remap. */
+    .shot {
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      background: var(--color-surface-raised);
+    }
+    .shot img { display: block; width: 100%; height: auto; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn, .entry-line a { transition: none; }
+    }
+  </style>
+
   <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
   <SiteNav active="artifacts" />
 
   <main>
     <!-- ─── HERO ──────────────────────────────────────────────────────────── -->
-    <div class="relative pt-14">
-      <div class="relative max-w-5xl mx-auto px-6 py-20">
-        <a
-          href="/#artifacts"
-          class="hero-enter inline-block text-[var(--color-text-muted)] hover:text-[var(--color-accent)] font-mono text-xs mb-6 tracking-wide transition-colors duration-150"
-          style="--delay: 0.05s"
-        >
-          Projects
-        </a>
+    <div class="relative pt-14 band">
+      <div class="relative frame py-20">
+        <p class="hero-enter entry-line" style="--delay: 0.05s">
+          <a href="/#artifacts">Artifacts</a> <span class="sep" aria-hidden="true">·</span> DeployLog
+        </p>
 
         <div class="hero-enter flex flex-wrap gap-2 mb-6" style="--delay: 0.15s">
           <span
-            class="text-xs font-mono bg-[var(--color-accent)]/[0.08] text-[var(--color-accent)] border border-[var(--color-accent)]/20 px-3 py-1"
+            class="chip"
           >
             Launching · solo, full-stack
           </span>
           <span
-            class="text-xs font-mono bg-[var(--color-accent)]/[0.08] text-[var(--color-accent)] border border-[var(--color-accent)]/20 px-3 py-1"
+            class="chip"
           >
             Next.js · Supabase · Stripe
           </span>
         </div>
 
         <h1
-          class="hero-enter font-mono font-bold text-[var(--color-text-primary)] mb-5"
+          class="hero-enter page-title text-[var(--color-text-primary)] mb-5"
           style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.05; letter-spacing: -0.02em; --delay: 0.3s"
         >
           DeployLog
@@ -75,10 +213,10 @@ const pageDescription =
         >
           Keeping a changelog current is the first chore to slip when a release is late.
           DeployLog makes it automatic: publish entries to a hosted page and an <code
-            class="font-mono text-[var(--color-accent)] text-base bg-[var(--color-accent)]/10 px-1.5"
+            class="code-chip text-base px-1.5"
             >embeddable widget</code
           >, or let a <code
-            class="font-mono text-[var(--color-accent)] text-base bg-[var(--color-accent)]/10 px-1.5"
+            class="code-chip text-base px-1.5"
             >published npm CLI</code
           > turn git commits into release notes with an LLM. Built solo, end to
           end.
@@ -89,7 +227,7 @@ const pageDescription =
             href="https://deploylog.dev"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[var(--color-accent)]/[0.08] border border-[var(--color-accent)]/15 hover:border-[var(--color-accent)]/30 text-sm text-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors duration-150"
+            class="btn inline-flex items-center gap-2 px-5 py-2.5 text-sm"
           >
             Visit deploylog.dev
             <svg
@@ -110,7 +248,7 @@ const pageDescription =
             href="https://www.npmjs.com/package/deploylog"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-link inline-flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-[var(--color-accent)]/[0.08] border border-[var(--color-accent)]/15 hover:border-[var(--color-accent)]/30 text-sm text-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors duration-150"
+            class="github-link btn inline-flex items-center gap-2 px-5 py-2.5 text-sm"
           >
             The CLI on npm
             <svg
@@ -132,10 +270,10 @@ const pageDescription =
     </div>
 
     <!-- ─── OVERVIEW MEDIA ────────────────────────────────────────────────── -->
-    <div class="border-t border-[var(--color-border)]/50 py-12">
-      <div class="max-w-4xl mx-auto px-6">
+    <div class="border-t border-[var(--color-border)]/50 py-12 band">
+      <div class="frame">
         <div
-          class="reveal overflow-hidden border border-[var(--color-border)] bg-[var(--color-surface-raised)]"
+          class="reveal shot"
         >
           <Image
             src={screenshot1}
@@ -155,9 +293,9 @@ const pageDescription =
     </div>
 
     <!-- ─── ONE PLATFORM, FOUR SURFACES ──────────────────────────────────── -->
-    <section id="surfaces" class="py-20 border-t border-[var(--color-border)]/50">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
+    <section id="surfaces" class="py-20 border-t border-[var(--color-border)]/50 band">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">
           One Platform, Four Publishing Surfaces
         </h2>
         <div
@@ -192,9 +330,9 @@ const pageDescription =
     </section>
 
     <!-- ─── TWO AUTH MODELS ──────────────────────────────────────────────── -->
-    <section id="auth" class="py-20 border-t border-[var(--color-border)]/50">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
+    <section id="auth" class="py-20 border-t border-[var(--color-border)]/50 band">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">
           Two Auth Models That Never Mix
         </h2>
         <div
@@ -207,17 +345,17 @@ const pageDescription =
               class="text-[var(--color-text-primary)] font-medium">Row-Level Security</strong
             > does the access control. The CLI and integrations authenticate with
             a <code
-              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+              class="code-chip text-sm px-1"
               >dk_</code
             >-prefixed API key (stored only as a SHA-256 hash) and run through the
             service-role client, which bypasses RLS, so those endpoints must
             filter by <code
-              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+              class="code-chip text-sm px-1"
               >org_id</code
             > explicitly. The rule that keeps it safe: a given route handler uses
             exactly one of these, never both. CLI-only routes live under their own
             <code
-              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+              class="code-chip text-sm px-1"
               >/api/cli/*</code
             > namespace.
           </p>
@@ -226,9 +364,9 @@ const pageDescription =
     </section>
 
     <!-- ─── PLAN GATING + BILLING ────────────────────────────────────────── -->
-    <section id="billing" class="py-20 border-t border-[var(--color-border)]/50">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
+    <section id="billing" class="py-20 border-t border-[var(--color-border)]/50 band">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">
           Capability-Based Plan Gating + Stripe Billing
         </h2>
         <div
@@ -237,18 +375,18 @@ const pageDescription =
         >
           <p>
             Every paid feature reads through one primitive (<code
-              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+              class="code-chip text-sm px-1"
               >can(org, capability)</code
             >) backed by a truth table keyed on the org's plan. Adding a new
             gated feature is one row in the table plus one call at the gate site,
             rather than scattering <code
-              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+              class="code-chip text-sm px-1"
               >plan === "pro"</code
             > checks across the codebase. Stripe is the source of truth for plan
             state: Checkout and the Customer Portal drive everything, and a
             webhook reconciles the org's plan on every subscription change, with a
             <code
-              class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+              class="code-chip text-sm px-1"
               >stripe_events</code
             > table providing idempotency.
           </p>
@@ -271,9 +409,9 @@ if (!can(org, "unlimited_projects") && projectCount >= FREE_PROJECT_LIMIT) {
     </section>
 
     <!-- ─── AI RELEASE NOTES ─────────────────────────────────────────────── -->
-    <section id="ai-notes" class="py-20 border-t border-[var(--color-border)]/50">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
+    <section id="ai-notes" class="py-20 border-t border-[var(--color-border)]/50 band">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">
           AI Release Notes, Shared by CLI and Dashboard
         </h2>
         <div
@@ -297,9 +435,9 @@ deploylog push --from-git --ai-summarize`} /></pre>
     </section>
 
     <!-- ─── STACK ─────────────────────────────────────────────────────────── -->
-    <section id="stack" class="py-20 border-t border-[var(--color-border)]/50">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">Stack</h2>
+    <section id="stack" class="py-20 border-t border-[var(--color-border)]/50 band">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">Stack</h2>
         <div
           class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 max-w-3xl text-[var(--color-text-secondary)]"
           style="--delay: 100ms"
@@ -319,11 +457,11 @@ deploylog push --from-git --ai-summarize`} /></pre>
     <!-- ─── SCREENSHOTS ───────────────────────────────────────────────────── -->
     <section
       id="screenshots"
-      class="py-20 border-t border-[var(--color-border)]/50"
+      class="py-20 border-t border-[var(--color-border)]/50 band"
       data-screenshots={poster1.src}
     >
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">
           Screenshots
         </h2>
         <div class="grid grid-cols-1 gap-4 max-w-3xl">
@@ -352,9 +490,9 @@ deploylog push --from-git --ai-summarize`} /></pre>
     </section>
 
     <!-- ─── RETROSPECTIVE ─────────────────────────────────────────────────── -->
-    <section id="retrospective" class="py-20 border-t border-[var(--color-border)]/50">
-      <div class="max-w-5xl mx-auto px-6">
-        <h2 class="reveal text-lg font-semibold text-[var(--color-text-primary)] mb-10">
+    <section id="retrospective" class="py-20 border-t border-[var(--color-border)]/50 band">
+      <div class="frame">
+        <h2 class="reveal sec-h2 mb-10">
           Retrospective
         </h2>
         <ul class="reveal space-y-4 max-w-3xl" style="--delay: 100ms">
@@ -365,7 +503,7 @@ deploylog push --from-git --ai-summarize`} /></pre>
                 >One capability table beats scattered plan checks.</strong
               >
               Routing every gate through <code
-                class="font-mono text-[var(--color-accent)] text-sm bg-[var(--color-accent)]/10 px-1"
+                class="code-chip text-sm px-1"
                 >can()</code
               > meant adding the Pro tier late in development touched one file, not
               twenty.
@@ -399,9 +537,9 @@ deploylog push --from-git --ai-summarize`} /></pre>
   </main>
 
   <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
-  <footer class="border-t border-[var(--color-border)]/50 py-8">
+  <footer class="border-t border-[var(--color-border)]/50 py-8 band">
     <div
-      class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4"
+      class="frame flex flex-col sm:flex-row items-center justify-between gap-4"
     >
       <p class="text-[var(--color-text-secondary)] text-sm">© 2026 Marko Stankovic</p>
       <a
