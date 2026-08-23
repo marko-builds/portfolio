@@ -34,7 +34,7 @@ export const receipts = (postCount: number) => [
     n: "4",
     label: "plugins in the Omarchy (Linux desktop) marketplace",
     note: "Aug 2026",
-    href: "https://github.com/HANCORE-linux/omarchy-plugin-marketplace/issues?q=author%3Amarko-builds+label%3Alisted",
+    href: "https://omarchyplugins.com/?author=marko-builds",
   },
   { n: "17", label: "public repos", note: "github.com/marko-builds, Aug 2026", href: "https://github.com/marko-builds?tab=repositories&type=source" },
 ];

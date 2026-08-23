@@ -111,6 +111,22 @@ const articleSchema = {
         --color-grid: var(--color-night-border);
         background-color: var(--color-night-bg);
       }
+      /* Code blocks go dark on the night page (Marko, 2026-08-23): the hljs theme on
+         post pages is github-dark (BaseLayout), tuned against #0d1117, so the card
+         takes the night surface over navy and the night border; the light-era
+         warm override for built_in/symbol is lifted here because github-dark's own
+         token colours were measured against a dark ground. */
+      .prose pre code.hljs,
+      pre code.hljs {
+        background: var(--color-night-surface);
+        border-color: var(--color-night-border);
+      }
+      .prose pre code.hljs .hljs-built_in,
+      .prose pre code.hljs .hljs-symbol,
+      pre code.hljs .hljs-built_in,
+      pre code.hljs .hljs-symbol {
+        color: inherit;
+      }
       /* The copy button sits on the white card. Its three states are restated
          here at (0,2,0) because global.css's :hover and .copied rules are
          (0,2,0) too and they read the remapped tokens: .copied would have set
@@ -280,6 +296,10 @@ const articleSchema = {
         line-height: 1.7;
         color: var(--color-text-primary);
         max-width: 31em;
+        /* Centred in the 720px reading container (Marko, 2026-08-23); the code
+           breakout below pulls itself back to the container edges with a
+           negative inline margin, since cqi measures the container, not .prose. */
+        margin-inline: auto;
       }
 
       .prose p {
@@ -367,7 +387,9 @@ const articleSchema = {
         max-width: calc(100vw - 3rem);
         width: 100cqi;
         max-width: 100cqi;
+        margin-inline: calc(50% - 50cqi);
       }
+      .prose .pre-wrap pre { margin-inline: 0; }
 
       /* Blockquotes */
       /* Ticket 03 (2026-08-22): Marko read the 558px text column against 720px
