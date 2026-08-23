@@ -5,9 +5,11 @@ import BlogPost from '../../layouts/BlogPost.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   // Dev only, so a draft has a real URL to review at. `astro build` sets DEV false and drops them.
-  // Entry numbers count up from the first post (issue 12: the mono header line reads
-  // "Field journal · Entry NN · date"). Sorted oldest first, slug as the tie-break because
-  // three published posts share 2026-07-07; the number is then stable across builds.
+  // Entry number (issue 12, the mono header line "Field journal · Entry NN · date"): the
+  // post's position in date order of published posts, slug as the tie-break (three posts
+  // share 2026-07-07). Not a permanent id: an earlier-dated post published later renumbers
+  // everything after it, and the dev server counts drafts. index.astro sorts the same way,
+  // reversed, so the list reads 05, 04, 03, 02, 01 top-down.
   return posts
     .filter(p => import.meta.env.DEV || !p.data.draft)
     .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf() || a.slug.localeCompare(b.slug))

@@ -93,7 +93,10 @@ const articleSchema = {
          only on pages built through this layout. --color-surface is NOT
          remapped: the code blocks stay white cards because highlight.js's github
          theme is tuned against white (global.css, "Code blocks"), and inline
-         code takes the cyan-alpha border token as its chip. */
+         code takes the cyan-alpha border token as its chip. --color-warm is
+         NOT remapped either: on a post its only readers are the dev-only draft
+         banner and the hljs built_in/symbol tokens on that white card, where
+         the amber measures 2.40 on white against the light warm's 5.22. */
       body {
         --color-bg: var(--color-night-bg);
         --color-surface-veil: var(--color-night-surface);
@@ -105,14 +108,27 @@ const articleSchema = {
         --color-text-muted: var(--color-night-text-secondary);
         --color-accent: var(--color-aurora-cyan);
         --color-accent-dim: var(--color-night-border);
-        --color-warm: var(--color-aurora-amber);
         --color-grid: var(--color-night-border);
         background-color: var(--color-night-bg);
       }
+      /* The copy button sits on the white card. Its three states are restated
+         here at (0,2,0) because global.css's :hover and .copied rules are
+         (0,2,0) too and they read the remapped tokens: .copied would have set
+         cyan text on the cyan base, invisible under (hover: none). */
       .copy-btn {
         color: var(--color-night-bg);
         background: var(--color-aurora-cyan);
         border-color: var(--color-aurora-cyan);
+      }
+      .copy-btn:hover {
+        color: var(--color-aurora-cyan);
+        background: var(--color-night-bg);
+        border-color: var(--color-aurora-cyan);
+      }
+      .copy-btn.copied {
+        color: var(--color-night-bg);
+        background: var(--color-night-text);
+        border-color: var(--color-night-text);
       }
 
       /* The ONE scroll-synced element on the site (ticket 06). .night-post spans
@@ -188,7 +204,7 @@ const articleSchema = {
         transition: color 0.15s ease;
       }
       .entry-line a:hover { color: var(--color-accent); }
-      .entry-line .sep { margin-inline: 0.5em; color: var(--color-border-strong); }
+      .entry-line .sep { color: var(--color-border-strong); }
 
       /* ── Code blocks ──
          The surface lives in global.css, which beat this rule on specificity
@@ -505,7 +521,7 @@ const articleSchema = {
         )}
 
         <p class="hero-enter entry-line" style="--delay: 0.05s">
-          <a href="/field-journal">Field journal</a><span class="sep">·</span>Entry {entry}<span class="sep">·</span><time datetime={date.toISOString().slice(0, 10)}>{formattedDate}</time>
+          <a href="/field-journal">Field journal</a> <span class="sep" aria-hidden="true">·</span> Entry {entry} <span class="sep" aria-hidden="true">·</span> <time datetime={date.toISOString().slice(0, 10)}>{formattedDate}</time>
         </p>
 
         <!-- Sans, 600, and the same clamp call.astro and index.astro run. The
