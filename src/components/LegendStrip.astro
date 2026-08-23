@@ -1,0 +1,195 @@
+---
+// The Legend page's "Expedition log" dates strip (issues/13-legend-page.md; map-site-v3
+// ticket 12 Answer, point 2). Promoted from src/pages/proto/about/_Strip.astro's "line"
+// treatment, the Lazarev shape: tiles sit on a horizontal route, a dot marks each date on
+// it, date and label hang below.
+//
+// The mechanics are CSS: a full-bleed rail that is the scroll container, `scroll-snap-type:
+// x mandatory`, one snap point per card on the column gutter (`scroll-padding-inline`),
+// the scrollbar hidden, `tabindex=0` so the arrow keys scroll it natively, smooth scroll
+// only when the visitor has not asked for reduced motion. Pointer drag for mouse users is
+// the page's inline script (about/index.astro); it toggles `.drag` here, which turns snap
+// off until release.
+//
+// The route line is one dashed SVG stroke in the track (the static theme motif the PRD
+// allows; no viewBox, so one unit is one pixel and the dashes never stretch). The track,
+// not the rail, carries the gutter padding: a percentage inside the track resolves against
+// the rail's width (the viewport), which is the number the gutter needs, and the line can
+// then span the whole scrollable width with plain left:0 / right:0.
+//
+// A date with no photo gets a typographic tile (year in the display face on a night tile,
+// the ramp hairline on top), so the inventory's gaps read as a treatment, not holes.
+import { dates } from "./LegendDates";
+interface Props { labelledby: string }
+const { labelledby } = Astro.props;
+---
+
+<div class="rail" data-rail tabindex="0" role="region" aria-labelledby={labelledby}>
+  <div class="track">
+    <svg class="route" aria-hidden="true"><line x1="0" y1="1" x2="100%" y2="1" stroke-width="1.5" stroke-dasharray="7 5" stroke-linecap="round"/></svg>
+    <ol class="cards">
+      {dates.map((d) => {
+        const Tag = d.href ? "a" : "div";
+        const ext = d.href?.startsWith("http");
+        return (
+          <li class="card">
+            <Tag class="card-in" href={d.href} target={ext ? "_blank" : undefined} rel={ext ? "noopener noreferrer" : undefined}>
+              {d.photo ? (
+                <img class="tile photo" src={d.photo} alt="" width="480" height="480" loading="lazy" draggable="false" />
+              ) : (
+                <span class="tile type" aria-hidden="true">
+                  <b>{d.year}</b>
+                  {d.figure && <i>{d.figure}</i>}
+                </span>
+              )}
+              <span class="dot" aria-hidden="true"></span>
+              <span class="when">{d.when}</span>
+              <span class="what">{d.label}</span>
+              <span class="org">{d.org}</span>
+            </Tag>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</div>
+
+<style>
+  /* The rail fills the band's content box (the page's `.sec > *` column cap is scoped to
+     the page and never reaches this element; measured, not assumed), so --bleed is just the
+     band padding: a -56px margin puts the rail's edges on the viewport's. A first version
+     added the column leftover to it and the rail ran 316px past the viewport at 1440.
+     --gutter (on the track and on scroll-padding) resolves its percentage against the rail,
+     i.e. the viewport, and lands the first snapped card on the 1000px column's left edge. */
+  .rail {
+    --card: 232px;
+    --tile: 144px;
+    --bleed: 56px;
+    --gutter: max(56px, (100% - 1000px) / 2);
+    max-width: none;
+    margin: 1.5rem calc(-1 * var(--bleed)) 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+  @media (prefers-reduced-motion: no-preference) { .rail { scroll-behavior: smooth; } }
+  @media (hover: hover) and (pointer: fine) { .rail { cursor: grab; } }
+  .rail.drag {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    cursor: grabbing;
+    user-select: none;
+  }
+  .rail.drag .card-in { pointer-events: none; }
+  .rail:focus-visible { outline: 2px solid var(--color-aurora-cyan); outline-offset: -2px; border-radius: 4px; }
+
+  .track {
+    position: relative;
+    width: max-content;
+    padding: 0.5rem var(--gutter) 1rem;
+  }
+  /* Centred on the dots: track padding-top (0.5rem) + tile + the .card-in row gap
+     (0.15rem) + the dot's margin-top (0.25rem) + half the 9px dot, minus half the 2px
+     line. Measured 1115.4 vs 1112.5 before this sum was written out. */
+  .route {
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(var(--tile) + 0.9rem + 3.5px);
+    width: 100%;
+    height: 2px;
+    display: block;
+    pointer-events: none;
+  }
+  .route line { stroke: var(--color-aurora-cyan); stroke-opacity: 0.55; }
+
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    position: relative;
+  }
+  .card { flex: none; width: var(--card); scroll-snap-align: start; }
+  .card-in {
+    display: grid;
+    grid-template-rows: var(--tile) 1rem auto auto auto;
+    align-content: start;
+    gap: 0.15rem;
+    text-decoration: none;
+    color: var(--color-night-text);
+  }
+  .tile {
+    width: var(--tile);
+    height: var(--tile);
+    border-radius: 10px 10px 0 0;
+    border: 1px solid var(--color-night-border);
+    border-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    background: var(--color-night-surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .photo { object-fit: cover; display: block; }
+  .type b {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-aurora-cyan);
+  }
+  .type i {
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-night-text-secondary);
+    margin-top: 0.35rem;
+  }
+  /* The ramp as a 2px hairline along the tile top: the one accent the night tiles share
+     with the light body's proof cards. */
+  .type::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 2px;
+    background: var(--aurora-ramp);
+    opacity: 0.8;
+  }
+  /* The date marker on the route; the halo in the band colour breaks the dashes around it. */
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--color-aurora-cyan);
+    margin: 0.25rem 0 0 calc(var(--tile) / 2 - 4px);
+    box-shadow: 0 0 0 4px var(--color-night-bg);
+    position: relative;
+  }
+  .when {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    margin-top: 0.4rem;
+    color: var(--color-aurora-cyan);
+  }
+  .what { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+  .org { font-size: 0.85rem; color: var(--color-night-text-secondary); }
+  a.card-in:hover .what { text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (max-width: 720px) {
+    .rail { --bleed: 24px; --gutter: 24px; --card: 196px; --tile: 120px; }
+    .type b { font-size: 1.7rem; }
+    .cards { gap: 1rem; }
+  }
+</style>
