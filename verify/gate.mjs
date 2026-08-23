@@ -502,9 +502,16 @@ console.log('receipts:');
 console.log('main:');
 {
   const sha = readFileSync(join(BASE, 'main-sha.txt'), 'utf8').trim();
+  // A re-pin commit moves main by exactly itself, so an exact match could only ever be
+  // green the instant before the pin landed (2026-08-23: the site-v3 merge re-pin measured
+  // 62 PASS and then went red on its own commit). A move whose whole diff is under
+  // verify/baseline/ IS the re-pin and passes, named as such; anything else is a move.
   for (const ref of ['main', 'origin/main']) {
     const got = sh(`git rev-parse ${ref}`).trim();
-    got === sha ? ok(`main untouched (${ref})`, sha.slice(0, 7))
+    if (got === sha) { ok(`main untouched (${ref})`, sha.slice(0, 7)); continue; }
+    const touched = sh(`git diff --name-only ${sha} ${got} 2>/dev/null || echo "?"`).trim().split('\n').filter(Boolean);
+    const onlyPin = touched.length > 0 && touched.every((f) => f.startsWith('verify/baseline/'));
+    onlyPin ? ok(`main untouched (${ref})`, `${got.slice(0, 7)} = pinned ${sha.slice(0, 7)} + the re-pin commit only`)
       : fail(`main untouched (${ref})`, `${ref} is ${got.slice(0, 7)}, pinned ${sha.slice(0, 7)}`);
   }
 }
