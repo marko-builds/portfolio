@@ -454,7 +454,7 @@ console.log('placeholders:');
   const hits = pages.filter((f) => readFileSync(join(ROOT, f), 'utf8').includes('PLACEHOLDER'));
   hits.length
     ? fail('placeholders', `PLACEHOLDER in ${hits.join(', ')}`)
-    : ok('placeholders', `${pages.length} pages clean, excluding ${PLACEHOLDER_EXCLUDE.join(' ')}`);
+    : ok('placeholders', `${pages.length} pages clean${PLACEHOLDER_EXCLUDE.length ? ', excluding ' + PLACEHOLDER_EXCLUDE.join(' ') : ''}`);
 }
 
 // ── 5b. receipts (built home) ──────────────────────────────────────────────
