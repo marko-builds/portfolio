@@ -5,7 +5,7 @@ excerpt: "Tuning art needs sliders and instant redraw. Shipping art needs determ
 opener: "Generative art has two jobs that want opposite tools: finding the look wants sliders and instant redraw, shipping it wants determinism and tests. My workflow is a zero-dependency browser canvas for the feel, a shared math spec with a conformance fixture, and a 1:1 port into the Python engine. The port is a tested claim, not a hope, and this entry shows the contract that makes it one."
 tags: ["Generative Media", "Workflow", "JavaScript", "Python", "Look Dev"]
 beat: engine
-ogImage: "/images/blog/browser-prototype-then-port/harness-1280x900.png"
+ogImage: "/images/blog/browser-prototype-then-port/harness.png"
 entry: "09"
 draft: false
 ---
@@ -18,7 +18,7 @@ The split is simple. Prototype in a browser canvas, lock the parameters, port th
 
 The look-dev harness (the page where I tune the look) is a plain canvas page plus four ES modules. No framework, no build step, no npm install. For the sea biome it exposes what the look needs. Five color pickers (sand, sky reflection, shallow water, deep water, desert body). A seam editor for the edge where sand meets water, with a position slider and three edge kinds (catmull, torn, hard). Sliders for the ripple texture's frequency, amplitude and strength. Path waypoints you move by clicking the canvas. Every control redraws immediately.
 
-![The sea look-dev harness in a browser: a portrait canvas on the left with sand above a wavy seam and banded blue water below, and on the right the five palette pickers, the seam controls set to catmull at position 0.26, the band split, the signature texture sliders, and the Export params JSON and Screenshot PNG buttons.](/images/blog/browser-prototype-then-port/harness-1280x900.png)
+![The sea look-dev harness in a browser: a portrait canvas on the left with sand above a wavy seam and banded blue water below, and on the right the five palette pickers, the seam controls set to catmull at position 0.26, the band split, the signature texture sliders, and the Export params JSON and Screenshot PNG buttons.](/images/blog/browser-prototype-then-port/harness.png)
 
 When the look lands, one button validates the parameters and downloads a JSON file. Another takes a screenshot. There is also a headless variant: a Node script that runs the same renderer module and writes a PNG using nothing but Node builtins, so I can eyeball a candidate without opening a browser.
 

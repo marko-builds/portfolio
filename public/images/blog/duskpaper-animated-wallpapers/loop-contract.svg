@@ -16,7 +16,7 @@
 <text class="ttl" x="16" y="76">frame(t) closes on itself</text>
 <rect class="n" x="16" y="100" width="688" height="150"/>
 <text class="code" x="36" y="140">tau = 2*pi*t / period</text>
-<text class="code" x="36" y="180">motion = sum of S*cos(m*tau) + C*sin(m*tau)</text>
+<text class="code" x="36" y="180">motion = sum S*cos(m*tau) + C*sin(m*tau)</text>
 <text class="amb" x="36" y="224">m is an integer: 1, 2, 3 ...</text>
 <rect class="n" x="16" y="280" width="688" height="290"/>
 <line x1="56" y1="420" x2="664" y2="420" stroke="#2A3242" stroke-width="2"/>

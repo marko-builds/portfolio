@@ -4,7 +4,7 @@
 <style>
  .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
  .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
- .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .sub{font:500 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#0B0E15}
  .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
  .code{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
  .amb{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}

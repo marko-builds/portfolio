@@ -32,7 +32,7 @@
 <rect class="n" x="374" y="630" width="330" height="92" style="stroke:#5FCEDB"/><text class="lab" x="390" y="670">Fresh build</text><text class="sub" x="390" y="704">wheel built from the edit</text>
 <path d="M370 676 L346 676" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
 <rect class="n" x="16" y="630" width="330" height="92" style="stroke:#5FCEDB"/><text class="lab" x="32" y="670">New bytes run</text><text class="sub" x="32" y="704">grep the installed copy</text>
-<rect x="16" y="760" width="688" height="116" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
+<rect x="16" y="760" width="688" height="96" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
 <text class="sub" x="36" y="800">Second cache: set reuses an existing encode,</text>
 <text class="sub" x="36" y="834">so the scene's cached mp4 has to go too.</text>
 </svg>

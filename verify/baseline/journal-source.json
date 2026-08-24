@@ -2,7 +2,7 @@
   "//": "Pinned ONCE (2026-08-23, issue 18) from the bodies as they stood at portfolio commit 1181808. NEVER re-pinned: rebaseline.mjs does not write this file and gate.mjs --pin-source refuses while it exists. A rolling pin would launder a body edit through a routine re-pin, which is the edit this check exists to make visible. A deliberate body change lands by editing its hash here, in its own commit, with the slug named. A title change lands by adding the slug to approved-titles.json.",
   "browser-prototype-then-port": {
     "title": "Prototype in the Browser, Ship in Python: How I Look-Dev Generative Art",
-    "body": "ad4fdcc5026a99973d59fb2b6f4ea242d1bef1966e11f07535b1b197f6e52c41"
+    "body": "d4ba651cb945644f2b0d9f6b1bfa7bc0b4f1b4caa1bf712bce3b0f99d93c88a7"
   },
   "building-pipeline-tooling-with-claude-code": {
     "title": "The Agent Is Only as Good as the Check That Grades It",
