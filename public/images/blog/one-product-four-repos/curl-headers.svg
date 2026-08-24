@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" width="720" height="720" role="img" aria-labelledby="t d">
+<title id="t">Live cache headers on the widget data endpoint: STALE at 301 seconds, then HIT</title>
+<desc id="d">Terminal output. The demo project id and the widget data URL are set as shell variables, then curl fetches the endpoint and grep keeps the cache headers. Past the five minute window the response reads age 301, cache-control public, x-vercel-cache STALE. The same command run again after the refresh reads age 30, cache-control public, x-vercel-cache HIT. A caption reads: the second clock, read off the edge itself.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .k{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .m{font:400 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,monospace;fill:#E4E9EC}
+ .c{font:400 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,monospace;fill:#8792A0}
+ .amb{fill:#D99A5E}
+ .cy{fill:#5FCEDB}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="720"/>
+<text class="k" x="16" y="36">LIVE HEADERS</text>
+<text class="ttl" x="16" y="76">widget-data, read at the edge</text>
+<rect class="p" x="16" y="96" width="688" height="552"/>
+<text class="m" x="32" y="136">$ P=1bcdf792-e1bf-4cbf-bf2b-65afbc875582</text>
+<text class="m" x="32" y="174">$ U=https://deploylog.dev/api/widget-data</text>
+<text class="m" x="32" y="212">$ curl -sD- -o/dev/null "$U?projectId=$P" |</text>
+<text class="m" x="32" y="250">    grep -iE 'cache|^age'</text>
+<text class="m" x="32" y="288">age: 301</text>
+<text class="m" x="32" y="326">cache-control: public</text>
+<text class="m" x="32" y="364">x-vercel-cache: <tspan class="amb">STALE</tspan></text>
+<text class="c" x="32" y="440"># same command, after the refresh</text>
+<text class="m" x="32" y="478">age: 30</text>
+<text class="m" x="32" y="516">cache-control: public</text>
+<text class="m" x="32" y="554">x-vercel-cache: <tspan class="cy">HIT</tspan></text>
+<text class="c" x="32" y="620">$ _</text>
+<text class="gate" x="16" y="700">The second clock, read off the edge itself.</text>
+</svg>
