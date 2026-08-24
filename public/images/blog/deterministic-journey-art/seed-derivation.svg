@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 640" width="720" height="640" role="img" aria-labelledby="t d">
+<title id="t">Seed derivation before and after the fix</title>
+<desc id="d">Two cards. Before: the per biome random stream was keyed with Python's built in hash, which is salted per process through PYTHONHASHSEED, so every run produced different bytes while the code claimed seed 42. After: the key comes from hashlib sha256 of the tier and primitive name, the first four bytes reduced modulo two to the 31, fed with the seed and tier into numpy's default_rng. Same bytes in every process, pinned by a sha256 fingerprint test.</desc>
+<style>
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .code{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .amb{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<text class="k" x="16" y="36">SEED DERIVATION</text>
+<text class="ttl" x="16" y="76">A real seed over a salted key</text>
+<rect x="16" y="100" width="688" height="190" fill="#0B0E15" stroke="#2A3242" stroke-width="2" rx="6"/>
+<text class="lab" x="36" y="140">before</text>
+<text class="code" x="36" y="180">key = hash(...)</text>
+<text class="amb" x="36" y="222">salted per process (PYTHONHASHSEED):</text>
+<text class="amb" x="36" y="256">new bytes every run</text>
+<rect x="16" y="320" width="688" height="300" fill="#0B0E15" stroke="#5FCEDB" stroke-width="2" rx="6"/>
+<text class="lab" x="36" y="360">after (_rng in journey_biome.py)</text>
+<text class="code" x="36" y="400">digest = hashlib.sha256(</text>
+<text class="code" x="36" y="434">  f&quot;{tier}:{primitive}&quot;.encode()).digest()</text>
+<text class="code" x="36" y="468">key = int.from_bytes(digest[:4], &quot;big&quot;)</text>
+<text class="code" x="36" y="502">      % (2**31)</text>
+<text class="code" x="36" y="536">np.random.default_rng([seed, tier, key])</text>
+<text class="amb" x="36" y="578">same bytes in every process,</text>
+<text class="amb" x="36" y="612">pinned by a sha256 fingerprint test</text>
+</svg>

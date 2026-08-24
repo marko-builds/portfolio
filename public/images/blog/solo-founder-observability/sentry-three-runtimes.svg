@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" width="720" height="860" role="img" aria-labelledby="t d">
+<title id="t">Sentry across three runtimes: one DSN, production only</title>
+<desc id="d">Three stacked panels for the browser, the server and the edge runtime, each naming its Sentry config file and its sample rates as read from source. The browser panel carries traces at 1, session replays at 0.1 and replays on error at 1.0. The server and edge panels carry traces at 1 only. A shared bar below them names the single DSN env var NEXT_PUBLIC_SENTRY_DSN and the switch enabled only when NODE_ENV is production.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#5FCEDB;letter-spacing:.08em}
+ .m{font:400 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#8792A0}
+ .v{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#E4E9EC}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<text class="k" x="16" y="36">ERRORS</text>
+<text class="ttl" x="16" y="76">Three runtimes, three inits, one DSN</text>
+<g transform="translate(0,100)">
+ <rect class="n" x="16" y="24" width="600" height="176"/>
+ <text class="k" x="36" y="60">01</text><text class="lab" x="96" y="60">Browser</text>
+ <text class="m" x="36" y="96">sentry.client.config.ts</text>
+ <text class="v" x="36" y="130">tracesSampleRate 1</text>
+ <text class="v" x="36" y="162">replaysSession 0.1  onError 1.0</text>
+ <rect class="n" x="16" y="240" width="600" height="144"/>
+ <text class="k" x="36" y="276">02</text><text class="lab" x="96" y="276">Server</text>
+ <text class="m" x="36" y="312">sentry.server.config.ts</text>
+ <text class="v" x="36" y="346">tracesSampleRate 1</text>
+ <rect class="n" x="16" y="424" width="600" height="144"/>
+ <text class="k" x="36" y="460">03</text><text class="lab" x="96" y="460">Edge</text>
+ <text class="m" x="36" y="496">sentry.edge.config.ts</text>
+ <text class="v" x="36" y="530">tracesSampleRate 1</text>
+ <path d="M644 112 H664 V496 H644" fill="none" stroke="#3E7A85" stroke-width="2" stroke-dasharray="6 6"/>
+ <path d="M664 304 H700" fill="none" stroke="#3E7A85" stroke-width="2" stroke-dasharray="6 6"/>
+ <text class="sub" transform="rotate(-90 690 304)" x="690" y="304" text-anchor="middle">shared</text>
+ <rect x="16" y="608" width="688" height="140" fill="#12151C" stroke="#5FCEDB" stroke-width="2" rx="6"/>
+ <text class="gate" x="36" y="648">One DSN, one switch</text>
+ <text class="v" x="36" y="686">dsn: NEXT_PUBLIC_SENTRY_DSN</text>
+ <text class="v" x="36.0" y="720">enabled: NODE_ENV</text><text class="v" x="316.8" y="720">=</text><text class="v" x="332.4" y="720">=</text><text class="v" x="348.0" y="720">=</text><text class="v" x="379.2" y="720">'production'</text>
+</g>
+</svg>

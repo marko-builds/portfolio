@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" width="720" height="860" role="img" aria-labelledby="t d">
+<title id="t">The sign-off order: red until the eyeball</title>
+<desc id="d">Five steps in sequence. Prototype in the browser, export the validated JSON, port the values into the engine, eyeball the engine render at seed 42 against the prototype on a phone, then re-pin the golden fingerprint. A bracket beside the port and eyeball steps reads: golden red. A gate below reads: the golden stays red until the eyeball, on purpose.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .arc{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<text class="k" x="16" y="36">THE SIGN-OFF</text>
+<text class="ttl" x="16" y="76">Red until the eyeball</text>
+
+<rect class="n" x="16" y="104" width="600" height="96"/>
+<text class="k" x="36" y="138">01</text>
+<text class="lab" x="92" y="138">Prototype</text>
+<text class="sub" x="36" y="180">browser sliders, instant redraw</text>
+<path d="M316 200 V226" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+
+<rect class="n" x="16" y="230" width="600" height="96"/>
+<text class="k" x="36" y="264">02</text>
+<text class="lab" x="92" y="264">Export JSON</text>
+<text class="sub" x="36" y="306">validated against the schema first</text>
+<path d="M316 326 V352" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+
+<rect class="n" x="16" y="356" width="600" height="96"/>
+<text class="k" x="36" y="390">03</text>
+<text class="lab" x="92" y="390">Port</text>
+<text class="sub" x="36" y="432">values baked into journey_biome.py</text>
+<path d="M316 452 V478" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+
+<rect class="n" x="16" y="482" width="600" height="96"/>
+<text class="k" x="36" y="516">04</text>
+<text class="lab" x="92" y="516">Device eyeball</text>
+<text class="sub" x="36" y="558">engine at seed 42 vs the prototype, on a phone</text>
+<path d="M316 578 V604" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+
+<rect class="n" x="16" y="608" width="600" height="96" style="stroke:#5FCEDB"/>
+<text class="k" x="36" y="642">05</text>
+<text class="lab" x="92" y="642">Re-pin the golden</text>
+<text class="sub" x="36" y="684">sha256 of the raw render, committed</text>
+
+<path d="M640 360 H660 V574 H640" fill="none" stroke="#D99A5E" stroke-width="3"/>
+<text class="arc" transform="rotate(-90 690 467)" x="690" y="467" text-anchor="middle">golden red</text>
+
+<rect x="16" y="732" width="688" height="112" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
+<text class="gate" x="36" y="774">The golden stays red until the eyeball,</text>
+<text class="gate" x="36" y="810">on purpose.</text>
+</svg>

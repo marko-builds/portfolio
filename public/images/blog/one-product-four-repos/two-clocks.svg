@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" width="720" height="860" role="img" aria-labelledby="t d">
+<title id="t">Two clocks: the origin answers at once, the edge answers from a copy</title>
+<desc id="d">Two boxes and a timeline. The origin box: the server-rendered changelog page, cache-control private and no-store, fresh on the next request. The edge box: widget data, RSS and JSON feed, s-maxage 300 and stale-while-revalidate 60, answered from the edge copy. The timeline starts at publish. From 0 to 300 seconds the edge may still serve the old payload; from 300 to 360 seconds it serves the stale copy while it refetches; after that it is fresh. A closing line reads: check the surface you are about to look at, not the origin.</desc>
+<style>
+ .bg{fill:#12151C}
+ .n{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .m{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+ .amb{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="860"/>
+<text class="k" x="16" y="36">TWO CLOCKS</text>
+<text class="ttl" x="16" y="76">One publish, two different nows</text>
+<rect class="n" x="16" y="100" width="688" height="150" style="stroke:#5FCEDB"/>
+<text class="k" x="36" y="136">ORIGIN</text>
+<text class="lab" x="36" y="172">Server-rendered changelog page</text>
+<text class="m" x="36" y="204">cache-control: private, no-store</text>
+<text class="sub" x="36" y="236">fresh on the next request</text>
+<rect class="n" x="16" y="280" width="688" height="182" style="stroke:#D99A5E"/>
+<text class="k" x="36" y="316" style="fill:#D99A5E">EDGE</text>
+<text class="lab" x="36" y="352">Widget data, RSS feed, JSON feed</text>
+<text class="m" x="36" y="384">s-maxage=300,</text>
+<text class="m" x="36" y="416">stale-while-revalidate=60</text>
+<text class="sub" x="36" y="448">answered from the edge copy</text>
+<text class="sub" x="40" y="520">publish</text>
+<path d="M40 530 V600" stroke="#5FCEDB" stroke-width="3"/>
+<rect x="40" y="560" width="433" height="40" fill="#1E2A38"/>
+<rect x="473" y="560" width="87" height="40" fill="#5A4530"/>
+<rect x="560" y="560" width="120" height="40" fill="#1F4A52"/>
+<path d="M40 600 H680" stroke="#5A6675" stroke-width="2"/>
+<path d="M473 555 V605" stroke="#8792A0" stroke-width="2"/>
+<path d="M560 555 V605" stroke="#8792A0" stroke-width="2"/>
+<text class="m" x="40" y="640">0 s</text>
+<text class="m" x="473" y="640" text-anchor="middle">300 s</text>
+<text class="m" x="560" y="640" text-anchor="start">360 s</text>
+<text class="sub" x="40" y="684">0 to 300 s: the edge may still serve the old payload</text>
+<text class="amb" x="40" y="718">300 to 360 s: serves stale, refetches behind it</text>
+<text class="sub" x="40" y="752">after that: fresh, until the next publish</text>
+<text class="gate" x="16" y="810">Check the surface you are about to look at,</text>
+<text class="gate" x="16" y="844">not the origin.</text>
+</svg>

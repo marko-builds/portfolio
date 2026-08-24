@@ -2,7 +2,7 @@
   "//": "Pinned ONCE (2026-08-23, issue 18) from the bodies as they stood at portfolio commit 1181808. NEVER re-pinned: rebaseline.mjs does not write this file and gate.mjs --pin-source refuses while it exists. A rolling pin would launder a body edit through a routine re-pin, which is the edit this check exists to make visible. A deliberate body change lands by editing its hash here, in its own commit, with the slug named. A title change lands by adding the slug to approved-titles.json.",
   "browser-prototype-then-port": {
     "title": "Prototype in the Browser, Ship in Python: How I Look-Dev Generative Art",
-    "body": "1635c1a78fdd3abd568acda27f28f349d189a767b963b93be15efb19cdc8d483"
+    "body": "d4ba651cb945644f2b0d9f6b1bfa7bc0b4f1b4caa1bf712bce3b0f99d93c88a7"
   },
   "building-pipeline-tooling-with-claude-code": {
     "title": "The Agent Is Only as Good as the Check That Grades It",
@@ -10,15 +10,11 @@
   },
   "deterministic-journey-art": {
     "title": "From SDXL to NumPy: Making Habitagram's Journey Art Deterministic",
-    "body": "98e26b90002d6a5ddd6ac726dc8632e28ced3b5a0547830bc67a730026125e1e"
+    "body": "b13adf2238299a611b99d43723c07888d3a65b3a1370c1ce901aee933d68e190"
   },
   "duskpaper-animated-wallpapers": {
     "title": "Duskpaper: Animated Wallpapers Synthesized From NumPy, Looped Forever",
-    "body": "9c58f0a4d9d4e5a60f4b0cda55b07bd717123231a07b58eb045cfcbe2f5cd596"
-  },
-  "enemy-ai-state-machine": {
-    "title": "Replacing a Tangled Update Loop with a Generic State Machine in Unity",
-    "body": "eb4955ce8a489e942ac1343b06c5e72e7f438dc0e3a738374e12fd7e60f32bda"
+    "body": "4b62872972de2544f8a9198b3c30d78376e3410daed35deca84ad09c1d99684a"
   },
   "golden-fingerprints-generative-art": {
     "title": "Golden Fingerprints: Regression Tests for Generative Art",
@@ -26,23 +22,11 @@
   },
   "multi-tenant-uniqueness-postgres": {
     "title": "The Uniqueness Check You Cannot Write in App Code",
-    "body": "8ca95e826e15e1b135ddb8b82c780003a6f256117c6f7570219b50c54977d9c5"
-  },
-  "object-pooling-endless-runner": {
-    "title": "Fixing GC Allocation Spikes in Unity with a Queue-Based Object Pool",
-    "body": "4beedd937844d148d584cdca2bb0f9c1c50927d1a6b692fd326ed187b75a651b"
+    "body": "37a2df7203682f23df98f3270baf9aed8c270db9109d2b8e5a17acf352041fc6"
   },
   "one-product-four-repos": {
     "title": "One Product, Four Repos: DeployLog's Satellite Architecture",
-    "body": "3b70316448527a7a7010b266411e49a43a5416baa61749523623c1a98342085f"
-  },
-  "relic-rush-obstacle-system": {
-    "title": "Designing Fair Difficulty in Unity: From Random Spawning to a Hand-Authored Pattern System",
-    "body": "00b2251c55c2ab3d96b3ed95a4a0c1c8c8d0b12a8a6068e3d78ddfa7faa6235d"
-  },
-  "relic-rush-pivot": {
-    "title": "Unity Endless Runner Design Pivot: From Random Obstacles to Narrative Escape Game",
-    "body": "6c23b97c077620073bef6fa8dc05ad7b4edd6cd56ed3a1aea4fcc7094d66c71a"
+    "body": "887b059efec525f423e6423a518133299d4ee6a9906f1f0066350d780b397064"
   },
   "skill-vibe-test-decay-probe": {
     "title": "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate.",
@@ -50,15 +34,11 @@
   },
   "solo-founder-observability": {
     "title": "Observability for a Solo Launch: What I Wired Before DeployLog Went Live",
-    "body": "24eccc240f20c59f258b3f08352b3cf3f27ec60313b0c1332deef5e226932205"
+    "body": "5f52e4ca5abcb9da08d88eefec976c4fbab48c6e74b6cc77d00f15c6d039a556"
   },
   "swipeable-panorama-continuous-ridge": {
     "title": "One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Art",
     "body": "a97f7ec31ab83c73065793a7410e0a34aa6aecc0053b6a928c85362009ac7529"
-  },
-  "tictactoe-theme-system": {
-    "title": "One ScriptableObject Per Theme: A Data-Driven Theme System in Unity",
-    "body": "a4746607343926873aad35c4f949123b5d43c176e182ee3af0dc1a0764e52603"
   },
   "zero-dollar-media-stack": {
     "title": "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math",

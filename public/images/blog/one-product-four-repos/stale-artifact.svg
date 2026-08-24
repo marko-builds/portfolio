@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900" role="img" aria-labelledby="t d">
+<title id="t">The stale artifact: a merged widget fix that never reached the CDN</title>
+<desc id="d">Three steps in sequence, then a fix. Step one: git push, src/widget.ts changed, but dist/ is gitignored so no bundle is in the repo. Step two: Cloudflare Pages with an empty build command publishes the repo as-is and produces no dist/. Step three: cdn.deploylog.dev/widget.js still serves the previous bundle; merged, not deployed. The fix box: build command npm run build, output directory dist. A closing line reads: know which event produces the artifact, then verify at the consumer's end.</desc>
+<style>
+ .bg{fill:#12151C}
+ .n{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .m{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<rect class="bg" width="720" height="900"/>
+<text class="k" x="16" y="36">THE STALE ARTIFACT</text>
+<text class="ttl" x="16" y="76">Merged, and the CDN did not move</text>
+<rect class="n" x="16" y="100" width="688" height="130"/>
+<text class="k" x="36" y="136">01  GIT PUSH</text>
+<text class="lab" x="36" y="172">src/widget.ts changed</text>
+<text class="sub" x="36" y="204">dist/ is gitignored, so the repo holds no bundle</text>
+<path d="M360 230 V266" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="n" x="16" y="270" width="688" height="130"/>
+<text class="k" x="36" y="306">02  CLOUDFLARE PAGES</text>
+<text class="lab" x="36" y="342">build command: empty</text>
+<text class="sub" x="36" y="374">publishes the repo as-is, produces no dist/</text>
+<path d="M360 400 V436" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="n" x="16" y="440" width="688" height="130" style="stroke:#D99A5E"/>
+<text class="k" x="36" y="476" style="fill:#D99A5E">03  CDN</text>
+<text class="lab" x="36" y="512">cdn.deploylog.dev/widget.js</text>
+<text class="sub" x="36" y="544">still the previous bundle. Merged, not deployed.</text>
+<rect class="n" x="16" y="610" width="688" height="150" style="stroke:#5FCEDB"/>
+<text class="k" x="36" y="646">THE FIX</text>
+<text class="m" x="36" y="684">Build command: npm run build</text>
+<text class="m" x="36" y="716">Output directory: dist</text>
+<text class="sub" x="36" y="748">two fields in the Pages settings</text>
+<text class="gate" x="16" y="820">Know which event produces the artifact.</text>
+<text class="gate" x="16" y="854">Then verify at the consumer's end.</text>
+</svg>
