@@ -9,7 +9,7 @@ draft: false
 entry: "05"
 ---
 
-The game I am building has tooling around it: headless Blender exporters, an Unreal import plugin, the validation that rejects a bad asset before it reaches the engine. I write that tooling with Claude Code, and the model writes a lot of the code. The reason the tools are reliable is not the model. It is the loop I put around it.
+I build tooling for my game: headless Blender exporters, an Unreal import plugin, the validation that rejects a bad asset before it reaches the engine. I write it with Claude Code, and the model writes a lot of the code. The reason the tools are reliable is not the model. It is the loop I put around it.
 
 ![Diagram of the loop around the model: align on a one page spec, write one failing test, make it pass, verify against a deterministic build, then return for the next slice. Done is a passing check, never "it looks correct".](/images/blog/building-pipeline-tooling-with-claude-code/the-loop.svg)
 
