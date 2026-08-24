@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900" role="img" aria-labelledby="t d">
+<title id="t">The drill: force a failure before you trust the alert</title>
+<desc id="d">Five steps in sequence. Create a throwaway monitor, point it at a route that returns 404, wait one check interval, watch the Monitor is DOWN email land in the inbox, then delete the monitor. A gate below reads: an alert path you have never seen fire is a hope, not an alert. Run 2026-06-29, passed.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#5FCEDB;letter-spacing:.08em}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<text class="k" x="16" y="36">THE DRILL</text>
+<text class="ttl" x="16" y="76">Watch it fire once, on purpose</text>
+<g transform="translate(0,100)">
+ <rect class="n" x="16" y="16" width="688" height="82"/><text class="k" x="36" y="50">01</text><text class="lab" x="96" y="50">Create a throwaway monitor</text><text class="sub" x="96" y="84">same account, same alert email</text>
+ <path d="M360 98 V128" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <rect class="n" x="16" y="132" width="688" height="82"/><text class="k" x="36" y="166">02</text><text class="lab" x="96" y="166">Point it at a route that 404s</text><text class="sub" x="96" y="200">a failure you can produce at will</text>
+ <path d="M360 214 V244" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <rect class="n" x="16" y="248" width="688" height="82"/><text class="k" x="36" y="282">03</text><text class="lab" x="96" y="282">Wait one check interval</text><text class="sub" x="96" y="316">300 s on the free tier</text>
+ <path d="M360 330 V360" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <rect class="n" x="16" y="364" width="688" height="82" style="stroke:#5FCEDB"/><text class="k" x="36" y="398">04</text><text class="lab" x="96" y="398">"Monitor is DOWN" lands in the inbox</text><text class="sub" x="96" y="432">now a real alert has a known shape</text>
+ <path d="M360 446 V476" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <rect class="n" x="16" y="480" width="688" height="82"/><text class="k" x="36" y="514">05</text><text class="lab" x="96" y="514">Delete the monitor</text><text class="sub" x="96" y="548">run 2026-06-29, passed</text>
+ <rect x="16" y="600" width="688" height="152" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
+ <text class="gate" x="36" y="640">An alert path you have never seen fire</text>
+ <text class="gate" x="36" y="674">is a hope, not an alert.</text>
+ <text class="sub" x="36" y="712">Ten minutes turns "should work"</text>
+ <text class="sub" x="36" y="740">into "watched it work".</text>
+</g>
+</svg>

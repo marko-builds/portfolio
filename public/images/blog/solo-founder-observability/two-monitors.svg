@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900" role="img" aria-labelledby="t d">
+<title id="t">Two uptime monitors and what each one guards</title>
+<desc id="d">UptimeRobot polls every 300 seconds. The first monitor hits the readiness route, which checks Supabase then Upstash Redis and answers 200 with status ready or 503 naming the failed dependency. The second monitor hits the widget-data endpoint with a pinned project id, the payload that customer sites load. Both feed the public status page at stats.uptimerobot.com, linked as Status in the site footer.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#5FCEDB;letter-spacing:.08em}
+ .m{font:400 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#E4E9EC}
+ .ok{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#5FCEDB}
+ .bad{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#D99A5E}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<text class="k" x="16" y="36">UPTIME</text>
+<text class="ttl" x="16" y="76">Two monitors, and the pair is the point</text>
+<g transform="translate(0,100)">
+ <rect class="n" x="16" y="16" width="688" height="72"/>
+ <text class="lab" x="36" y="50">UptimeRobot</text><text class="sub" x="262" y="50">polls both every 300 s</text>
+ <path d="M200 88 V124" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <path d="M520 88 V124" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <rect class="n" x="16" y="128" width="688" height="210"/>
+ <text class="k" x="36" y="164">01</text><text class="m" x="96" y="164">GET /api/ready</text>
+ <text class="sub" x="36" y="200">checks Supabase, then Upstash Redis</text>
+ <text class="ok" x="36" y="240">200 {"status":"ready"}</text>
+ <text class="bad" x="36" y="276">503 failed: "supabase" | "upstash"</text>
+ <text class="sub" x="36" y="314">the alert already names the broken dependency</text>
+ <rect class="n" x="16" y="368" width="688" height="176"/>
+ <text class="k" x="36" y="404">02</text><text class="m" x="96" y="404">GET /api/widget-data</text>
+ <text class="sub" x="36" y="440">?projectId= a pinned project, never deleted</text>
+ <text class="sub" x="36" y="476">the payload the changelog widget loads</text>
+ <text class="sub" x="36" y="512">on every customer site that embeds it</text>
+ <path d="M360 544 V580" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+ <rect x="16" y="584" width="688" height="176" fill="#12151C" stroke="#5FCEDB" stroke-width="2" rx="6"/>
+ <text class="gate" x="36" y="624">Public status page</text>
+ <text class="m" x="36" y="662">stats.uptimerobot.com/T8uYvUA2xj</text>
+ <text class="sub" x="36" y="700">linked as Status in the site footer</text>
+ <text class="sub" x="36" y="736">answers "is it just me?" without a support email</text>
+</g>
+</svg>

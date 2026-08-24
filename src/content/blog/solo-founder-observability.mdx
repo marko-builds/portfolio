@@ -1,33 +1,42 @@
 ---
 title: "Observability for a Solo Launch: What I Wired Before DeployLog Went Live"
-date: "2026-07-07"
+date: "2026-08-10"
 excerpt: "When you launch alone, nobody pages you. You find out from a user, or you never find out. Here is the monitoring I set up before launching DeployLog: Sentry across three runtimes, two uptime monitors, a public status page, and one drill most people skip."
-opener: "A solo launch fails in one specific way: the product breaks and you hear about it from a polite email three days later, or never. Before DeployLog went live I closed that gap with Sentry across three runtimes, two uptime monitors and a public status page, then ran the drill most people skip: forcing a failure and watching the alert arrive."
+opener: "A solo launch fails in one specific way: the product breaks and you hear about it from a polite email three days later, or never. Before the DeployLog launch I closed that gap with Sentry across three runtimes, two uptime monitors and a public status page, then ran the drill most people skip: forcing a failure and watching the alert arrive."
 tags: ["DeployLog", "Observability", "Sentry", "Next.js", "SaaS", "Launch"]
+beat: artifacts
+entry: "10"
+ogImage: "/images/blog/solo-founder-observability/og-ready-response.png"
 draft: true
 ---
 
-A solo launch has a specific failure mode: the product breaks and you learn about it from a polite email three days later, or from silence. There is no on-call rotation. Either the system tells you, or nobody does.
+There is no on-call rotation on a solo launch. Either the system tells you, or nobody does.
 
-DeployLog is my changelog tool for indie devs, and before launch I closed this gap with a small, deliberate stack. Nothing here is novel. The point is that all of it was verified working before the first user arrived, not after.
+DeployLog is my changelog tool for indie devs: write release notes in Markdown, publish them to a hosted page and an embeddable widget. It goes live on September 15. Nothing below is novel. The point is that all of it was verified working before the first user arrives, not after.
 
 ## Errors: Sentry across all three runtimes
 
-Next.js code runs in three places (browser, server, edge), and each needs its own Sentry init. All three share one DSN and only enable in production, so local dev noise never reaches the project.
+Next.js code runs in three places inside one app (browser, server, edge functions), and each needs its own Sentry init. All three share one DSN and only enable in production, so local dev noise never reaches the project.
 
 The sample rates are a launch-phase choice: 100% of traces, 10% of sessions recorded as replays, and 100% replay capture on errors. At launch traffic, full tracing costs nothing and every error comes with a replay attached. I'll dial it down when volume makes it expensive.
 
-One gotcha cost me an evening: the DSN ships in the browser bundle by design, so it lives in a `NEXT_PUBLIC_` env var. In Vercel, that variable must be marked non-sensitive, and it only takes effect after a rebuild. Get either wrong and the SDK silently no-ops. No error, no events, just a dashboard that stays quiet while you assume you're covered.
+![Three Sentry inits, one per runtime, sharing one DSN and one production-only switch, with the sample rates read from the three config files.](/images/blog/solo-founder-observability/sentry-three-runtimes.svg)
 
-## Uptime: two monitors, chosen deliberately
+One gotcha cost me an evening: the DSN (the key that tells the SDK which Sentry project to send events to) ships in the browser bundle by design, so it lives in a `NEXT_PUBLIC_` env var. In Vercel, that variable must be marked non-sensitive, and it only takes effect after a rebuild. Get either wrong and the SDK silently no-ops. No error, no events, just a dashboard that stays quiet while you assume you're covered.
+
+## Uptime: two monitors
 
 UptimeRobot polls two endpoints, and the pair is the point.
 
-The first is `/api/ready`, a readiness route I wrote for exactly this. It checks the launch-critical dependencies (Supabase and Upstash) and returns 200 with `{ status: 'ready' }`, or a 503 that names the failed dependency. When it goes down, the alert already contains the diagnosis.
+The first is `/api/ready`, a readiness route I wrote for exactly this. It checks the launch-critical dependencies (Supabase for the database, Upstash Redis for rate limiting) and returns 200 with `{ status: 'ready' }`, or a 503 that names the failed dependency. When it goes down, the alert already contains the diagnosis.
 
-The second is the public widget-data endpoint, with a real project id. That one guards the promise customers actually depend on: the changelog widget embedded on their sites. The app being up is worthless if the embed endpoint is down, so the embed endpoint gets its own monitor.
+![The readiness route polled on 2026-08-24, 22 days before launch: curl returns the JSON body status ready and HTTP 200.](/images/blog/solo-founder-observability/ready-response.svg)
+
+The second is the public widget-data endpoint, with a pinned project id that never gets deleted. That one guards the promise customers depend on: the changelog widget embedded on their sites. The app being up is worthless if the embed endpoint is down, so the embed endpoint gets its own monitor.
 
 Both feed a public status page, linked in the footer. It costs nothing and answers "is it just me?" without a support email.
+
+![Two UptimeRobot monitors, one on the readiness route with its named dependencies and one on the widget-data endpoint that customer sites load, both feeding the public status page linked from the footer.](/images/blog/solo-founder-observability/two-monitors.svg)
 
 ## The drill: force a failure before you trust the alert
 
@@ -35,12 +44,14 @@ This is the step I'd argue for hardest. After wiring everything, I created a thr
 
 An alert path you have never seen fire is a hope, not an alert. Any link in the chain can be silently wrong: a typo'd address, a spam filter, a notification setting. The drill takes ten minutes and converts "should work" into "watched it work." Mine passed, and now a real DOWN email has a known shape I'll recognize at a glance.
 
+![The drill in five steps: create a throwaway monitor, point it at a route that 404s, wait one check interval, watch the DOWN email land, delete the monitor.](/images/blog/solo-founder-observability/the-drill.svg)
+
 The same logic applied to Sentry: I confirmed a real captured event end to end before calling it done, because a dashboard with zero events is indistinguishable from a dashboard that was never wired.
 
 ## The runbook: written when calm
 
-Last piece: an incident-response runbook, written before launch while nothing was on fire. It is deliberately simple. All alerts route to a single inbox, there is no escalation because there is nobody to escalate to, and the fast path for a bad deploy is Vercel's instant rollback. Triage, roll back, communicate on the status page, investigate after.
+Last piece: an incident-response runbook, written before launch while nothing was on fire. It is simple on purpose. All alerts route to a single inbox, there is no escalation because there is nobody to escalate to, and the fast path for a bad deploy is Vercel's instant rollback. Triage, roll back, communicate on the status page, investigate after.
 
 A solo runbook mostly exists to remove decisions from the worst moment. Future me, reading alerts on a phone at 2am, follows steps instead of improvising.
 
-None of this took longer than a day. DeployLog is at [deploylog.dev](https://deploylog.dev), and the status page is linked in the footer, doing its quiet job.
+None of this took longer than a day, and it has been watching the app since June, well before the first user arrives. DeployLog is at [deploylog.dev](https://deploylog.dev).

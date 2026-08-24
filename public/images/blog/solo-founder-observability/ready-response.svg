@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" role="img" aria-labelledby="t d">
+<title id="t">The readiness route polled on 2026-08-24, 22 days before launch</title>
+<desc id="d">A terminal card. The first command, curl on deploylog.dev/api/ready, prints the JSON body with status ready. The second command prints the HTTP status code 200. A footer line notes the date, 22 days before the September 15 launch.</desc>
+<style>
+ .k{font:600 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .cmd{font:400 26px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#8792A0}
+ .out{font:600 28px 'JetBrains Mono','JetBrainsMono Nerd Font',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0;fill:#E4E9EC}
+ .ok{fill:#5FCEDB}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+</style>
+<text class="k" x="16" y="36">REAL EVIDENCE</text>
+<text class="ttl" x="16" y="76">The readiness route, today</text>
+<rect x="16" y="100" width="688" height="230" fill="#0B0E15" stroke="#2A3242" stroke-width="2" rx="6"/>
+<circle cx="44" cy="126" r="6" fill="#2A3242"/><circle cx="66" cy="126" r="6" fill="#2A3242"/><circle cx="88" cy="126" r="6" fill="#2A3242"/>
+<text class="cmd" x="36" y="172">$ curl -s https://deploylog.dev/api/ready</text>
+<text class="out ok" x="36" y="208">{"status":"ready"}</text>
+<text class="cmd" x="36" y="256">$ curl -s -o /dev/null -w '%{http_code}' \</text>
+<text class="cmd" x="100" y="288">https://deploylog.dev/api/ready</text>
+<text class="out ok" x="36" y="322">200</text>
+<text class="sub" x="16" y="372">Polled 2026-08-24, 22 days before the September 15 launch.</text>
+</svg>
