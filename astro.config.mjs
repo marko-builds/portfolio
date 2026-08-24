@@ -18,6 +18,18 @@ const rehypePostReveal = () => (tree) => {
     if (n.type !== 'element' || !(REVEAL_TAGS.has(n.tagName) || isImgOnly(n))) continue;
     const cls = n.properties.className;
     n.properties.className = [...(Array.isArray(cls) ? cls : cls ? [cls] : []), 'reveal'];
+    // Open full size (journal review, 2026-08-24). Post images render at 340 css px on a
+    // phone (the figure sits on the 31em text measure, ticket 03), and a 1676 px strip with
+    // 14 px labels is 3 px there. A plain link to the file is the zero-JS fallback: the
+    // browser opens it at native size and the phone pinch-zooms. Only image-only paragraphs,
+    // so an image inside a figure with its own markup is left alone.
+    if (isImgOnly(n)) {
+      n.children = n.children.map((c) =>
+        c.type === 'element' && c.tagName === 'img'
+          ? { type: 'element', tagName: 'a', properties: { href: c.properties.src, className: ['zoom'], target: '_blank', rel: 'noopener', ariaLabel: 'Open the image at full size' }, children: [c] }
+          : c,
+      );
+    }
   }
 };
 

@@ -434,6 +434,60 @@ const articleSchema = {
         margin-bottom: 1.5rem;
       }
 
+      /* The open-full-size link the rehype step in astro.config.mjs wraps around every
+         image-only paragraph's image. It is a block, so the image keeps its own margins,
+         and it carries none of the prose link paint. */
+      .prose a.zoom {
+        display: block;
+        border-bottom: none;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* Media figures (journal review, 2026-08-24). Audio and video embeds written
+         as raw HTML in a post body. They sit on the reading measure like images.
+         color-scheme: dark asks the browser for its dark native controls, so a
+         white <audio> bar does not land on the night surface. No autoplay
+         anywhere: the site gates motion on prefers-reduced-motion and a loop
+         that starts itself would ignore that (and cost mobile data). MDX parses
+         raw HTML as JSX nodes, so the reveal plugin in astro.config.mjs never
+         marks these; they are always visible, which is the right default for a
+         control a reader has to find. */
+      .prose figure.media {
+        margin: 1.5rem 0;
+        color-scheme: dark;
+      }
+      .prose figure.media video,
+      .prose figure.media audio {
+        display: block;
+        width: 100%;
+      }
+      .prose figure.media video {
+        border: 1px solid var(--color-border);
+        background: #000;
+      }
+      .prose figure.media figcaption {
+        margin: 0.5rem 0 0;
+      }
+      /* A row of small players (the SFX trio). One column under 560px, so the
+         native controls keep their full width on a phone. */
+      .prose .media-row {
+        display: grid;
+        gap: 0.75rem 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        margin: 1.5rem 0;
+      }
+      .prose .media-row figure.media {
+        margin: 0;
+      }
+      .prose .media-row .media-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 0.35rem;
+        text-align: left;
+      }
+
       /* HR */
       .prose hr {
         border: none;
