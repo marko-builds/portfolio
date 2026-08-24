@@ -53,7 +53,7 @@ engine carries a self-test" (flow.py, the silk scene, has no `__main__` seam tes
 - VERIFIED | 2026-08-24 | projects/duskpaper/src/duskpaper/cli.py:44-47 | scenes range from about a minute (fireflies) to thirty-five (caustics)
 - VERIFIED | 2026-08-24 | projects/duskpaper/src/duskpaper/cli.py:328-329 | for a two-minute 30 fps loop
 - VERIFIED | 2026-08-24 | projects/duskpaper/src/duskpaper/cli.py:32 | Playback is mpvpaper with hardware decode
-- VERIFIED | 2026-08-24 | projects/duskpaper/README.md:71-72 | around 5% of one core at 1600p on an Intel iGPU
+- VERIFIED | 2026-08-24 | projects/duskpaper/README.md:74-75 | around 5% of one core at 1600p on an Intel iGPU
 - VERIFIED | 2026-08-24 | cmd: mpvpaper -h (the -p flag, "Automagically pause mpv when the wallpaper is hidden", passed at cli.py:268) | it pauses itself when a fullscreen window covers the wallpaper
 
 ## line 29 (heading)
@@ -96,9 +96,9 @@ engine carries a self-test" (flow.py, the silk scene, has no `__main__` seam tes
 - VERIFIED | 2026-08-24 | projects/duskpaper/src/duskpaper/cli.py:241-268 | Duskpaper stops static wallpaper daemons when it starts, records what it stopped
 - VERIFIED | 2026-08-24 | projects/duskpaper/src/duskpaper/cli.py:273-287 | duskpaper off restores exactly what you had
 - UNCHECKABLE | 2026-08-24 | effort figure, no time record; git log shows v0 on Thu 2026-07-02 and the HEVC fix on Sat 2026-07-04 | it took a weekend plus one codec lesson
-- VERIFIED | 2026-08-24 | projects/duskpaper/README.md:76-84 | The repo has since grown an Omarchy 4 plugin that runs the aurora as a live shader inside the shell
+- VERIFIED | 2026-08-24 | projects/duskpaper/README.md:79-87 | The repo has since grown an Omarchy 4 plugin that runs the aurora as a live shader inside the shell
 - VERIFIED | 2026-08-24 | projects/duskpaper/manifest.json:1-14 | with no render wait and no video file
-- VERIFIED | 2026-08-24 | projects/duskpaper/README.md:110-111 | the CLI still works on its own
+- VERIFIED | 2026-08-24 | projects/duskpaper/README.md:113-114 | the CLI still works on its own
 
 ## line 53
 - VERIFIED | 2026-08-24 | cmd: gh repo view marko-builds/duskpaper --json visibility (PUBLIC, MIT) | Code is at [github.com/marko-builds/duskpaper](https://github.com/marko-builds/duskpaper).
