@@ -43,7 +43,7 @@ The Blender side is headless and scripted. Same input, same output, no clicking.
 
 Determinism is what makes the test loop trustworthy. If the build wandered between runs, a passing test would prove nothing. Because it does not, green means green.
 
-![Two columns comparing builds. On the left, a deterministic build: three runs all produce hash 9f2c and pass the budget check, with the note that a fluffed run just re-runs clean, and the verdict that red means the code changed and green means green. On the right, a build that wanders: three runs produce hashes 9f2c, 41ab and c07e while nothing in the code changed, and the verdict that green proves only that this run agreed with itself. A band underneath reads: a check is only worth what its inputs are worth, so make the build boring first.](/images/blog/building-pipeline-tooling-with-claude-code/determinism.svg)
+![Two panels comparing builds. On top, a deterministic build: three runs all produce hash 9f2c and pass the budget check, with the note that a fluffed run just re-runs clean, and the verdict that red means the code changed and green means green. Below it, a build that wanders: three runs produce hashes 9f2c, 41ab and c07e while nothing in the code changed, and the verdict that green proves only that this run agreed with itself. A band underneath reads: a check is only worth what its inputs are worth, so make the build boring first.](/images/blog/building-pipeline-tooling-with-claude-code/determinism.svg)
 
 ## Nothing ships done without evidence
 

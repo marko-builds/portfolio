@@ -1,43 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 372" width="880" height="372" role="img" aria-labelledby="t d">
-<title id="t">The pre-flight report: five checks that run before an asset is trusted</title>
-<desc id="d">Five validation checks with their real thresholds. Triangle budget 300 to 1500 for props. Longest axis between 1 and 100000 unreal units, where a 1 metre crate should read about 100. Lightmap UVs present on static meshes. StaticMesh assets carry the SM_ prefix. Normal maps use TC_NORMALMAP compression. The report is read only: it names what is wrong and mutates nothing.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 700" width="720" height="700" role="img" aria-labelledby="t d">
+<title id="t">The pre-flight report: four checks that run before an asset is trusted</title>
+<desc id="d">Four validation checks with their real thresholds. Triangle budget 300 to 1500 for props. Longest axis between 1 and 100000 unreal units, where a 1 metre crate should read about 100. StaticMesh assets carry the SM_ prefix. Normal maps use TC_NORMALMAP compression. The report is read only: it names what is wrong and mutates nothing.</desc>
 <style>
- .n{fill:#12151C;stroke:#2A3242;stroke-width:1.5;rx:4}
- .lab{font:600 15px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
- .sub{font:400 12.5px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
- .k{font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
- .mono{font:400 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB}
- .row{font:600 13.5px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
- .gate{font:600 13px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .mono{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB}
+ .row{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
 </style>
 <g>
- <text class="k" x="16" y="30">PRE-FLIGHT REPORT</text>
- <text class="lab" x="16" y="54">Checked before an asset is trusted, with the thresholds written down</text>
+ <text class="k" x="16" y="36">PRE-FLIGHT REPORT</text>
+ <text class="ttl" x="16" y="76">Checked before an asset is trusted,</text>
+ <text class="ttl" x="16" y="114">with the thresholds written down</text>
 
- <rect class="n" x="16" y="76" width="848" height="46"/>
- <text class="row" x="36" y="97">Triangle budget</text>
- <text class="sub" x="36" y="114">props, LOD0</text>
- <text class="mono" x="560" y="105">300 to 1500 tris</text>
+ <rect class="n" x="16" y="136" width="688" height="92"/>
+ <text class="row" x="36" y="174">Triangle budget</text>
+ <text class="mono" x="684" y="174" text-anchor="end">300 to 1500 tris</text>
+ <text class="sub" x="36" y="206">props, LOD0</text>
 
- <rect class="n" x="16" y="130" width="848" height="46"/>
- <text class="row" x="36" y="151">Scale drift</text>
- <text class="sub" x="36" y="168">a 1 m crate should read about 100 uu</text>
- <text class="mono" x="560" y="159">longest axis 1 to 100000 uu</text>
+ <rect class="n" x="16" y="240" width="688" height="92"/>
+ <text class="row" x="36" y="278">Scale drift</text>
+ <text class="mono" x="684" y="278" text-anchor="end">longest axis 1 to 100000 uu</text>
+ <text class="sub" x="36" y="310">a 1 m crate should read about 100 uu</text>
 
- <rect class="n" x="16" y="184" width="848" height="46"/>
- <text class="row" x="36" y="205">Lightmap UVs</text>
- <text class="sub" x="36" y="222">static meshes only</text>
- <text class="mono" x="560" y="213">present</text>
+ <rect class="n" x="16" y="344" width="688" height="122"/>
+ <text class="row" x="36" y="382">Naming contract</text>
+ <text class="mono" x="684" y="382" text-anchor="end">SM_ prefix</text>
+ <text class="sub" x="36" y="414">so the folder contract between</text>
+ <text class="sub" x="36" y="444">the two programs holds</text>
 
- <rect class="n" x="16" y="238" width="848" height="46"/>
- <text class="row" x="36" y="259">Naming contract</text>
- <text class="sub" x="36" y="276">so the folder contract between the two programs holds</text>
- <text class="mono" x="560" y="267">SM_ prefix</text>
+ <rect class="n" x="16" y="478" width="688" height="92"/>
+ <text class="row" x="36" y="516">Normal map compression</text>
+ <text class="mono" x="684" y="516" text-anchor="end">TC_NORMALMAP</text>
+ <text class="sub" x="36" y="548">the flag the green-channel slice depends on</text>
 
- <rect class="n" x="16" y="292" width="848" height="46"/>
- <text class="row" x="36" y="313">Normal map compression</text>
- <text class="sub" x="36" y="330">the flag the green-channel slice depends on</text>
- <text class="mono" x="560" y="321">TC_NORMALMAP</text>
-
- <text class="gate" x="16" y="362">Read only. It reports and never mutates, so the report is evidence rather than a repair that hides the fault.</text>
+ <text class="gate" x="16" y="610">Read only. It reports and never mutates,</text>
+ <text class="gate" x="16" y="644">so the report is evidence rather than</text>
+ <text class="gate" x="16" y="678">a repair that hides the fault.</text>
 </g></svg>
