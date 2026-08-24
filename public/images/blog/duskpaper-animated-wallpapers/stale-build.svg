@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900" role="img" aria-labelledby="t d">
+<title id="t">The stale build chain: uv tool install with force reuses the cached wheel, reinstall with no cache rebuilds it</title>
+<desc id="d">Two rows of boxes. The first, labelled what I typed, runs from an edit to the encoder, to uv tool install with the force flag, to a cached wheel for version 0.1.0, to the old bytes running: the fix never left the source tree. The second, labelled what installs the edit, runs from the same edit, to uv tool install with reinstall and no cache, to a fresh build, to the new bytes running. A note at the bottom adds the second cache: duskpaper set reuses an existing encode, so the scene's cached mp4 has to go too.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .code{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+ .amb{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<text class="k" x="16" y="36">THE STALE BUILD</text>
+<text class="ttl" x="16" y="76">Same version, same cached wheel</text>
+<text class="k" x="16" y="126">WHAT I TYPED</text>
+<rect class="n" x="16" y="140" width="330" height="92" style="stroke:#2A3242"/><text class="lab" x="32" y="180">Edit the encoder</text><text class="sub" x="32" y="214">source tree, still 0.1.0</text>
+<rect class="n" x="374" y="140" width="330" height="92" style="stroke:#2A3242"/><text class="lab" x="390" y="180">install --force .</text><text class="sub" x="390" y="214">reinstalls the tool entry</text>
+<path d="M346 186 L370 186" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M539 232 L539 256" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="n" x="374" y="260" width="330" height="92" style="stroke:#D99A5E"/><text class="lab" x="390" y="300">Cached wheel 0.1.0</text><text class="sub" x="390" y="334">the build is not redone</text>
+<path d="M370 306 L346 306" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="n" x="16" y="260" width="330" height="92" style="stroke:#D99A5E"/><text class="lab" x="32" y="300">Old bytes run</text><text class="sub" x="32" y="334">the edit never shipped</text>
+<text class="gate" x="16" y="398">The version number did not change,</text>
+<text class="gate" x="16" y="432">so uv saw nothing to rebuild.</text>
+<text class="k" x="16" y="496">WHAT INSTALLS THE EDIT</text>
+<rect class="n" x="16" y="510" width="330" height="92" style="stroke:#2A3242"/><text class="lab" x="32" y="550">Edit the encoder</text><text class="sub" x="32" y="584">source tree, still 0.1.0</text>
+<rect class="n" x="374" y="510" width="330" height="92" style="stroke:#2A3242"/><text class="lab" x="390" y="550">--reinstall --no-cache</text><text class="sub" x="390" y="584">or bump the version</text>
+<path d="M346 556 L370 556" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M539 602 L539 626" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="n" x="374" y="630" width="330" height="92" style="stroke:#5FCEDB"/><text class="lab" x="390" y="670">Fresh build</text><text class="sub" x="390" y="704">wheel built from the edit</text>
+<path d="M370 676 L346 676" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="n" x="16" y="630" width="330" height="92" style="stroke:#5FCEDB"/><text class="lab" x="32" y="670">New bytes run</text><text class="sub" x="32" y="704">grep the installed copy</text>
+<rect x="16" y="760" width="688" height="116" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
+<text class="sub" x="36" y="800">Second cache: set reuses an existing encode,</text>
+<text class="sub" x="36" y="834">so the scene's cached mp4 has to go too.</text>
+</svg>
