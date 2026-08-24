@@ -29,6 +29,6 @@ export const dates: DateEntry[] = [
   { when: "2025", year: "2025", figure: "BSc", label: "Degree completed", org: "Univerzitet Metropolitan, Belgrade", photo: null },
   { when: "Sep 2025", year: "2025", figure: "Sep", label: "AI Engineer", org: "Belgrade", photo: null },
   { when: "Jul 2026", year: "2026", figure: "Jul", label: "skill-vibe-test and duskpaper, open source", org: "github.com/marko-builds", photo: null, href: "https://github.com/marko-builds" },
-  { when: "Aug 2026", year: "2026", figure: "Aug", label: "adpreflight, open source", org: "github.com/marko-builds", photo: null, href: "https://github.com/marko-builds/adpreflight" },
+  { when: "Aug 2026", year: "2026", figure: "Aug", label: "adpreflight and four Omarchy plugins, open source", org: "github.com/marko-builds", photo: null, href: "https://omarchyplugins.com/?author=marko-builds" },
   { when: "Now", year: "Now", label: "DeployLog and Habitagram", org: "Belgrade", photo: "/habitagram-mark.svg", href: "#current-dig" },
 ];
