@@ -26,7 +26,7 @@ const { labelledby } = Astro.props;
 
 <div class="rail" data-rail tabindex="0" role="region" aria-labelledby={labelledby}>
   <div class="track">
-    <svg class="route" aria-hidden="true"><line x1="0" y1="1" x2="100%" y2="1" stroke-width="1.5" stroke-dasharray="7 5" stroke-linecap="round"/></svg>
+    <svg class="route" aria-hidden="true"><line x1="0" y1="50%" x2="100%" y2="50%" stroke-linecap="round"/></svg>
     <ol class="cards">
       {dates.map((d) => {
         const Tag = d.href ? "a" : "div";
@@ -64,10 +64,10 @@ const { labelledby } = Astro.props;
      --gutter (on the track and on scroll-padding) resolves its percentage against the rail,
      i.e. the viewport, and lands the first snapped card on the 1000px column's left edge. */
   .rail {
-    --card: 232px;
-    --tile: 144px;
-    --bleed: 56px;
-    --gutter: max(56px, (100% - 1000px) / 2);
+    --card: 14.5rem;
+    --tile: 9rem;
+    --bleed: 3.5rem;
+    --gutter: max(3.5rem, (100% - 62.5rem) / 2);
     max-width: none;
     margin: 1.5rem calc(-1 * var(--bleed)) 0;
     overflow-x: auto;
@@ -100,13 +100,16 @@ const { labelledby } = Astro.props;
   .route {
     position: absolute;
     left: 0; right: 0;
-    top: calc(var(--tile) + 0.9rem + 3.5px);
+    top: calc(var(--tile) + 0.9rem + 0.21875rem);
     width: 100%;
-    height: 2px;
+    height: 0.125rem;
     display: block;
     pointer-events: none;
   }
-  .route line { stroke: var(--color-aurora-cyan); stroke-opacity: 0.55; }
+  /* Stroke geometry in CSS rem (the line is y1/y2 50%, centred in the scaling box), so
+     the dashes scale with the tiles above 1920 instead of staying device-fixed. At the
+     1rem root these are the old 1.5px stroke and 7 5 dasharray exactly. */
+  .route line { stroke: var(--color-aurora-cyan); stroke-opacity: 0.55; stroke-width: 0.09375rem; stroke-dasharray: 0.4375rem 0.3125rem; }
 
   .cards {
     list-style: none;
@@ -132,13 +135,13 @@ const { labelledby } = Astro.props;
   .tile { grid-row: 1; }
   .dot { grid-row: 2; }
   .txt { grid-row: 3; display: flex; flex-direction: column; }
-  .card:nth-child(even) .tile { grid-row: 3; border-radius: 0 0 10px 10px; border-bottom: 1px solid var(--color-night-border); border-top: 0; }
+  .card:nth-child(even) .tile { grid-row: 3; border-radius: 0 0 0.625rem 0.625rem; border-bottom: 1px solid var(--color-night-border); border-top: 0; }
   .card:nth-child(even) .txt { grid-row: 1; justify-content: flex-end; padding-bottom: 0.4rem; }
   .card:nth-child(even) .type::before { top: auto; bottom: 0; }
   .tile {
     width: var(--tile);
     height: var(--tile);
-    border-radius: 10px 10px 0 0;
+    border-radius: 0.625rem 0.625rem 0 0;
     border: 1px solid var(--color-night-border);
     border-bottom: 0;
     display: flex;
@@ -180,11 +183,11 @@ const { labelledby } = Astro.props;
   }
   /* The date marker on the route; the halo in the band colour breaks the dashes around it. */
   .dot {
-    width: 9px; height: 9px;
+    width: 0.5625rem; height: 0.5625rem;
     border-radius: 50%;
     background: var(--color-aurora-cyan);
-    margin: 0.25rem 0 0 calc(var(--tile) / 2 - 4px);
-    box-shadow: 0 0 0 4px var(--color-night-bg);
+    margin: 0.25rem 0 0 calc(var(--tile) / 2 - 0.28125rem);
+    box-shadow: 0 0 0 0.25rem var(--color-night-bg);
     position: relative;
   }
   .when {
