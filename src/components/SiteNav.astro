@@ -127,8 +127,16 @@ const links: { href: string; key: Key; label: string }[] = [
      below 600px, not 480px, and the list may wrap as a last resort rather than clip. */
   @media (max-width: 600px) {
     .word { display: none; }
-    nav { height: auto; min-height: 56px; padding-block: 6px; }
-    ul { flex-wrap: wrap; justify-content: flex-end; row-gap: 0; }
+    nav { flex-wrap: wrap; height: auto; min-height: 56px; padding-block: 6px; row-gap: 2px; }
+    /* The list never wraps inside itself. When the five labels do not fit beside the
+       mark (a narrow in-app browser, a large system font) the whole row drops under
+       the mark as one unit, left-aligned with it, instead of "Send word" spilling to
+       a right-aligned second line on its own (2026-08-24, seen in Instagram's in-app
+       browser). Past that it scrolls sideways rather than clipping. BlogPost.astro's
+       progress track reads the resulting nav height off a ResizeObserver, so a
+       two-row nav does not put the bar through the header. */
+    ul { flex: 0 0 auto; flex-wrap: nowrap; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+    ul::-webkit-scrollbar { display: none; }
   }
   @media (max-width: 480px) {
     nav, .night nav { padding-inline: 16px; }
