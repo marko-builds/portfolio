@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900" role="img" aria-labelledby="t d">
+<title id="t">A race window versus no check at all</title>
+<desc id="d">Three stacked panels. First, check then insert with one tenant: a check box reading free, an insert box, and an amber bracket between them labelled race window, where another writer can land. Second, check then insert under row-level security: the check reads clean because it saw one tenant, and the insert fails with 23505; there is no window because there was never a check. Third, the constraint alone, outlined in cyan: one insert statement that returns either 201 created or 23505, atomic, with no read and no privilege escalation.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .b{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 27px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<rect class="bg" width="720" height="900"/>
+<text class="k" x="16" y="36">TWO ARGUMENTS</text>
+<text class="ttl" x="16" y="76">A race window versus no check at all</text>
+
+<rect class="p" x="16" y="100" width="688" height="240"/>
+<text class="lab" x="36" y="140">Check then insert, one tenant</text>
+<rect class="b" x="36" y="166" width="250" height="60"/><text class="mono" x="56" y="206">check: free</text>
+<rect class="b" x="434" y="166" width="250" height="60"/><text class="mono" x="454" y="206">insert</text>
+<path d="M290 196 H426" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M296 240 V252 H424 V240" fill="none" stroke="#D99A5E" stroke-width="2"/>
+<text class="sub am" x="360" y="288" text-anchor="middle">race window</text>
+<text class="sub" x="36" y="326">another writer lands between the two statements</text>
+
+<rect class="p" x="16" y="360" width="688" height="240"/>
+<text class="lab" x="36" y="400">Check then insert, under RLS</text>
+<rect class="b" x="36" y="426" width="250" height="60"/><text class="mono" x="56" y="466">check: clean</text>
+<rect class="b" x="434" y="426" width="250" height="60" style="stroke:#D99A5E"/><text class="mono am" x="454" y="466">insert: 23505</text>
+<path d="M290 456 H426" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<text class="sub" x="36" y="520">the check answered for one tenant, with confidence</text>
+<text class="sub" x="36" y="556">no window, because there was never a check</text>
+
+<rect class="p" x="16" y="620" width="688" height="260" style="stroke:#5FCEDB"/>
+<text class="lab cy" x="36" y="660">The constraint alone</text>
+<rect class="b" x="36" y="686" width="250" height="60"/><text class="mono" x="56" y="726">insert</text>
+<path d="M290 716 H426" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<text class="mono cy" x="434" y="710">201 created</text>
+<text class="mono am" x="434" y="748">or 23505</text>
+<text class="sub" x="36" y="800">one statement, atomic, no read before it</text>
+<text class="sub" x="36" y="836">no privilege escalation to make it work</text>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 840" width="720" height="840" role="img" aria-labelledby="t d">
+<title id="t">The session client sees one tenant</title>
+<desc id="d">One projects table in one Postgres database holds rows for two organizations. A dashed cyan bubble surrounds Org A, the caller, with the projects docs and api. Org B sits outside the bubble, marked invisible under row-level security, holding changelog and my-app. Below the table, a select for the slug my-app returns zero rows and the check reads clean, and the insert of the same slug fails with a 23505 unique violation on projects_slug_key, raised by the row the query could not see.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 27px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .monod{font:400 27px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="840"/>
+<text class="k" x="16" y="36">THE BUBBLE</text>
+<text class="ttl" x="16" y="76">The session client sees one tenant</text>
+
+<rect class="p" x="16" y="100" width="688" height="436"/>
+<text class="sub" x="36" y="136">projects table, one database for every tenant</text>
+
+<rect x="36" y="156" width="648" height="150" fill="none" stroke="#5FCEDB" stroke-width="2" stroke-dasharray="8 6" rx="6"/>
+<text class="lab cy" x="56" y="192">Org A, the caller</text>
+<text class="mono" x="56" y="234">docs</text>
+<text class="mono" x="56" y="272">api</text>
+<text class="sub cy" x="664" y="272" text-anchor="end">what the query can see</text>
+
+<rect x="36" y="326" width="648" height="190" fill="none" stroke="#2A3242" stroke-width="2" rx="6"/>
+<text class="lab" x="56" y="362" style="fill:#8792A0">Org B, another tenant</text>
+<text class="monod" x="56" y="404">changelog</text>
+<text class="mono am" x="56" y="442">my-app</text>
+<text class="sub" x="56" y="494">invisible under row-level security</text>
+
+<rect class="p" x="16" y="556" width="688" height="116"/>
+<text class="mono cy" x="36" y="598">select ... where slug = 'my-app'</text>
+<text class="sub" x="36" y="640">0 rows. The check reads clean.</text>
+
+<rect class="p" x="16" y="692" width="688" height="132"/>
+<text class="mono am" x="36" y="734">insert ... slug = 'my-app'</text>
+<text class="sub" x="36" y="772">23505 unique violation, projects_slug_key</text>
+<text class="sub" x="36" y="806">raised by the row the query could not see</text>
+</svg>

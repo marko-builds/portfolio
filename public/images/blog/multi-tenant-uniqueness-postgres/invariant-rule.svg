@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 780" width="720" height="780" role="img" aria-labelledby="t d">
+<title id="t">Cross-tenant invariants live in the schema</title>
+<desc id="d">Three chips name the shape: uniqueness, quotas, reservations, each a fact about every tenant's rows. An amber panel names the wrong move, an app-level check on the session client, which answers for one tenant. Three numbered steps follow: declare it in the schema with UNIQUE, CHECK or a trigger; let the database throw, 23505 on the insert, atomic; translate at the boundary, a 409 with a generic message that leaks nothing.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .c{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:26}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 27px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="780"/>
+<text class="k" x="16" y="36">THE RULE</text>
+<text class="ttl" x="16" y="76">Cross-tenant invariants live in the schema</text>
+
+<rect class="c" x="16" y="104" width="216" height="52"/><text class="mono" x="124" y="140" text-anchor="middle">uniqueness</text>
+<rect class="c" x="252" y="104" width="216" height="52"/><text class="mono" x="360" y="140" text-anchor="middle">quotas</text>
+<rect class="c" x="488" y="104" width="216" height="52"/><text class="mono" x="596" y="140" text-anchor="middle">reservations</text>
+<text class="sub" x="16" y="196">one shape: a fact about every tenant's rows</text>
+
+<rect class="p" x="16" y="224" width="688" height="116" style="stroke:#D99A5E"/>
+<text class="lab am" x="36" y="264">An app-level check on the session client</text>
+<text class="sub" x="36" y="304">answers for one tenant, with confidence. Theater.</text>
+
+<rect class="p" x="16" y="372" width="688" height="110"/>
+<text class="k" x="36" y="408">01</text>
+<text class="lab" x="100" y="408">Declare it in the schema</text>
+<text class="sub" x="100" y="448">UNIQUE (slug), a CHECK, a trigger</text>
+
+<rect class="p" x="16" y="506" width="688" height="110"/>
+<text class="k" x="36" y="542">02</text>
+<text class="lab" x="100" y="542">Let the database throw</text>
+<text class="sub" x="100" y="582">23505 on the insert, atomic, no read</text>
+
+<rect class="p" x="16" y="640" width="688" height="110" style="stroke:#5FCEDB"/>
+<text class="k" x="36" y="676">03</text>
+<text class="lab" x="100" y="676">Translate at the boundary</text>
+<text class="sub" x="100" y="716">409, a generic message, nothing leaked</text>
+</svg>

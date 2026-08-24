@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 760" width="720" height="760" role="img" aria-labelledby="t d">
+<title id="t">Insert, 23505, next candidate</title>
+<desc id="d">A ladder of insert attempts read from the create-project route. Attempt 1 inserts my-app and gets 23505. Attempt 2 inserts my-app-2 and gets 23505. Attempt 3 inserts my-app-3 and gets 201 created, marked in cyan as the usual exit. Attempts 4 to 9 are collapsed. Attempt 10, my-app-10, is the last rung. If all ten collide, the route answers 409 CONFLICT with the message: Could not generate a unique URL for this project name. Try a different name. A footer names the constant MAX_SLUG_ATTEMPTS = 10 in src/lib/slug.ts.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 27px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .monod{font:400 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="760"/>
+<text class="k" x="16" y="36">THE LADDER</text>
+<text class="ttl" x="16" y="76">Insert, 23505, next candidate</text>
+
+<rect class="p" x="16" y="100" width="688" height="420"/>
+<text class="monod" x="36" y="140">attempt</text>
+<text class="monod" x="200" y="140">slug</text>
+<text class="monod" x="470" y="140">result</text>
+<line x1="36" y1="156" x2="684" y2="156" stroke="#2A3242" stroke-width="2"/>
+
+<text class="mono" x="36" y="200">1</text><text class="mono" x="200" y="200">my-app</text><text class="mono am" x="470" y="200">23505</text>
+<text class="mono" x="36" y="252">2</text><text class="mono" x="200" y="252">my-app-2</text><text class="mono am" x="470" y="252">23505</text>
+<rect x="26" y="270" width="668" height="52" fill="none" stroke="#5FCEDB" stroke-width="2" rx="6"/>
+<text class="mono cy" x="36" y="304">3</text><text class="mono cy" x="200" y="304">my-app-3</text><text class="mono cy" x="470" y="304">201 created</text>
+<text class="sub" x="36" y="360">the usual exit: a suffix absorbs the collision</text>
+<text class="monod" x="36" y="416">4 to 9</text><text class="monod" x="200" y="416">my-app-4 ...</text><text class="monod" x="470" y="416">23505</text>
+<text class="mono" x="36" y="468">10</text><text class="mono" x="200" y="468">my-app-10</text><text class="mono am" x="470" y="468">23505</text>
+<text class="sub" x="36" y="506">the last rung</text>
+
+<rect class="p" x="16" y="540" width="688" height="150" style="stroke:#D99A5E"/>
+<text class="lab am" x="36" y="580">409 CONFLICT, only if all ten collide</text>
+<text class="sub" x="36" y="620">Could not generate a unique URL for this</text>
+<text class="sub" x="36" y="656">project name. Try a different name.</text>
+
+<text class="monod" x="16" y="736">MAX_SLUG_ATTEMPTS = 10, src/lib/slug.ts</text>
+</svg>
