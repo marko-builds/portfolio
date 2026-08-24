@@ -10,9 +10,7 @@ draft: false
 entry: "03"
 ---
 
-Launching an app means producing media: a music bed for the demo video, a click and a success chime for the UI, an ambient loop for the channel. Stock libraries bring licensing fine print. AI generators bring training-data questions I don't want attached to my products. So I took a third path: synthesize everything from math, in Python, on my own machine.
-
-The stack is four engines in one folder. `music.py`, `sfx.py`, a set of scenery renderers behind one orchestrator, and `vfx.py` for overlay loops. No samples, no models, no downloads. If a sound exists in the output, a formula in the repo produced it.
+Stock and AI generators both fail the provenance test, so the stack is four engines in one folder: `music.py`, `sfx.py`, a set of scenery renderers behind one orchestrator, and `vfx.py` for overlay loops. No samples, no models, no downloads. If a sound exists in the output, a formula in the repo produced it. Same seed, same bytes, so the media pipeline can be tested like code.
 
 ![Four panels, one per engine. First: a spectrogram of the synthesized zap, a bank of falling diagonal lines as the saw sweep drops from 1900 Hz to 200 Hz, with a horizontal ripple from the 75 Hz buzz. Second: the waveform envelope of four bars of the lofi loop, two either side of the loop point, where the wrap is marked in amber and looks like the ordinary bar lines marked in grey. Third: a frame of the embers scene, warm orange sparks scattered over black. Fourth: a frame of the god rays overlay, pale gold shafts fanning down from a source above the top edge, with the bottom corners fading to pure black.](/images/blog/zero-dollar-media-stack/synth-engines.png)
 
@@ -64,7 +62,7 @@ Embers is the clearest look at how a seamless loop gets engineered rather than c
 
 `vfx.py` renders nine overlay assets, among them dust, bokeh, smoke, light leaks, sparkles and god rays. Seven of them are additive light on true black, built for a Screen blend, so a comp can drop one over footage without a matte. Two ship a straight alpha channel instead, and one of those, smoke, darkens the footage rather than adding to it.
 
-God rays shows what that constraint buys. A source point sits above the top edge, and for every pixel the engine takes the angle back to it and carves bright shafts out of a smooth angular pattern built from a few integer frequencies. The shimmer is those same modes drifting, so the beams breathe without the loop breaking. Then a radial raised-cosine window fades the whole thing to exactly zero past a finite radius, which is what makes the bottom corners genuinely black instead of nearly black. Nearly black is a grey rectangle over someone's footage.
+God rays shows what that constraint buys. A source point sits above the top edge, and for every pixel the engine takes the angle back to it and carves bright shafts out of a smooth angular pattern built from a few integer frequencies. The shimmer is those same modes drifting, so the beams breathe without the loop breaking. Then a radial raised-cosine window fades the whole thing to exactly zero past a finite radius, which is what makes the bottom corners black instead of nearly black. Nearly black is a grey rectangle over someone's footage.
 
 The module's self-test asserts both properties: that frame zero equals frame period, and that the far corners are pure black.
 
@@ -73,8 +71,8 @@ The module's self-test asserts both properties: that frame zero equals frame per
 <figcaption>vfx.py, god-rays, an 8 second loop at 1280 by 720. Frame zero equals frame period, and the bottom corners are pure black.</figcaption>
 </figure>
 
-The video studio consumes all of this through vendored wrappers (`bin/music`, `bin/sfx`), so a motion-graphics comp can request a mood or a whoosh without leaving its own repo.
+The video studio, my Remotion motion-graphics repo, consumes all of this through vendored wrappers (`bin/music`, `bin/sfx`), so a motion-graphics comp can request a mood or a whoosh without leaving its own repo.
 
 ## Why bother
 
-Cost is the obvious answer, but determinism is the real one. Every engine renders the same bytes for the same seed, which means the media pipeline can be tested like code. That is a separate post, because regression-testing art turned out to be its own problem.
+Cost is the obvious answer. Determinism is the one that paid off, and regression-testing art turned out to be its own problem. That is the [golden fingerprints](/field-journal/golden-fingerprints-generative-art/) entry.
