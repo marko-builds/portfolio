@@ -24,7 +24,7 @@ A reference file per engine commits the fingerprints. The music engine pins all 
 
 ![A table with one row per reference file. Journey biome: seed 42, 9 cases, uint8, six biomes plus the stacked canvas and two sea variants. Landscape: seed 42, 7 cases, uint8, six palettes at t 0 plus forest at t 7.5. Aurora: no seed, 10 cases, uint8, five palettes at t 0 and t 20 with meteors off. Progress panorama: seed 52, 12 cases, uint8, six tiles each in colour and gray. Music: seed 30, 6 cases, float64, six moods of 8 bars each. Totals: 44 pinned cases, 38 tests in run-goldens.sh across 11 classes. The music row is outlined in amber with a note that float64 is toolchain locked, so a numpy, BLAS or FFT change can trip a false regression.](/images/blog/golden-fingerprints-generative-art/reference-table.svg)
 
-`run-goldens.sh` runs the whole lane in about a minute, 38 tests, because it hashes raw render output and never touches ffmpeg. Pulling in the encode-heavy suites would turn a fast pixel-pin into a multi-minute run. It also runs a JS conformance suite, which matters for the look-dev workflow I'll cover separately.
+`run-goldens.sh` runs the whole lane in about a minute, 38 tests, because it hashes raw render output and never touches ffmpeg. Pulling in the encode-heavy suites would turn a fast pixel-pin into a multi-minute run. It also runs a JS conformance suite, which belongs to the look-dev workflow in the [prototype in the browser, ship in Python](/field-journal/browser-prototype-then-port/) entry.
 
 ## The rules that keep the goldens honest
 
