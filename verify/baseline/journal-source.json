@@ -16,10 +16,6 @@
     "title": "Duskpaper: Animated Wallpapers Synthesized From NumPy, Looped Forever",
     "body": "9c58f0a4d9d4e5a60f4b0cda55b07bd717123231a07b58eb045cfcbe2f5cd596"
   },
-  "enemy-ai-state-machine": {
-    "title": "Replacing a Tangled Update Loop with a Generic State Machine in Unity",
-    "body": "eb4955ce8a489e942ac1343b06c5e72e7f438dc0e3a738374e12fd7e60f32bda"
-  },
   "golden-fingerprints-generative-art": {
     "title": "Golden Fingerprints: Regression Tests for Generative Art",
     "body": "9d214b353259cd9ca541bd5b9ea508c813940023870a5e61c6f4b2bfb33fbc74"
@@ -28,21 +24,9 @@
     "title": "The Uniqueness Check You Cannot Write in App Code",
     "body": "8ca95e826e15e1b135ddb8b82c780003a6f256117c6f7570219b50c54977d9c5"
   },
-  "object-pooling-endless-runner": {
-    "title": "Fixing GC Allocation Spikes in Unity with a Queue-Based Object Pool",
-    "body": "4beedd937844d148d584cdca2bb0f9c1c50927d1a6b692fd326ed187b75a651b"
-  },
   "one-product-four-repos": {
     "title": "One Product, Four Repos: DeployLog's Satellite Architecture",
     "body": "3b70316448527a7a7010b266411e49a43a5416baa61749523623c1a98342085f"
-  },
-  "relic-rush-obstacle-system": {
-    "title": "Designing Fair Difficulty in Unity: From Random Spawning to a Hand-Authored Pattern System",
-    "body": "00b2251c55c2ab3d96b3ed95a4a0c1c8c8d0b12a8a6068e3d78ddfa7faa6235d"
-  },
-  "relic-rush-pivot": {
-    "title": "Unity Endless Runner Design Pivot: From Random Obstacles to Narrative Escape Game",
-    "body": "6c23b97c077620073bef6fa8dc05ad7b4edd6cd56ed3a1aea4fcc7094d66c71a"
   },
   "skill-vibe-test-decay-probe": {
     "title": "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate.",
@@ -55,10 +39,6 @@
   "swipeable-panorama-continuous-ridge": {
     "title": "One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Art",
     "body": "a97f7ec31ab83c73065793a7410e0a34aa6aecc0053b6a928c85362009ac7529"
-  },
-  "tictactoe-theme-system": {
-    "title": "One ScriptableObject Per Theme: A Data-Driven Theme System in Unity",
-    "body": "a4746607343926873aad35c4f949123b5d43c176e182ee3af0dc1a0764e52603"
   },
   "zero-dollar-media-stack": {
     "title": "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math",
