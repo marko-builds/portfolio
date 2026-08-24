@@ -70,7 +70,7 @@ const articleSchema = {
       /* ── Reading progress bar ── */
       #reading-progress-track {
         position: fixed;
-        top: 3.5rem; /* matches the nav's 3.5rem height */
+        top: var(--nav-h, 3.5rem); /* the nav's measured height (set by the ResizeObserver in the script below); 3.5rem until it runs */
         left: 0;
         width: 100%;
         height: 3px;
@@ -719,6 +719,19 @@ const articleSchema = {
         addEventListener('scroll', drift, { passive: true });
         drift();
       }
+
+      // ── Progress track sits on the nav's real bottom edge ────────────────
+      // Below 600px the nav may wrap to two rows (SiteNav.astro), so its height
+      // is measured, not assumed: with a constant 3.5rem, Instagram's in-app
+      // browser drew the bar through the middle of the header (2026-08-24).
+      (function () {
+        const nav = document.querySelector<HTMLElement>('.site-nav');
+        if (!nav) return;
+        const set = () => document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+        if ('ResizeObserver' in window) new ResizeObserver(set).observe(nav);
+        else addEventListener('resize', set);
+        set();
+      })();
 
       // ── Reading progress bar ──────────────────────────────────────────────
       (function () {
