@@ -10,7 +10,7 @@ draft: false
 entry: "01"
 ---
 
-My media engines render app art, music beds, and wallpapers from seeded math. The renders ship in real products, so a silent change is a real bug: a refactor that nudges a gradient stop, a "harmless" cleanup that reorders RNG draws. Unit tests on the math don't catch this class. The output is an image or a waveform, and the question is whether the bytes changed.
+The renders come from seeded math (procedural, no trained model anywhere) and ship baked into app builds, so a shifted band is a store release to fix: a refactor that nudges a gradient stop, a "harmless" cleanup that reorders RNG draws. Unit tests on the math do not catch this class. The output is an image or a waveform, and the question is whether the bytes changed.
 
 So the bytes are the test. I call them golden fingerprints.
 
@@ -44,10 +44,12 @@ That is the whole contract in two rows. One flipped bit in one channel of one pi
 
 ## The toolchain is part of the fingerprint
 
-One caveat is worth the whole post. The visual engines output uint8, which is stable everywhere. The music engine outputs float64, and float64 is only bit-exact on one toolchain. A different numpy, BLAS, or FFT backend can flip low-order bits and trip a false regression while the audio is identical to any ear.
+The caveat: the visual engines output uint8, which is stable everywhere. The music engine outputs float64, and float64 is only bit-exact on one toolchain. A different numpy, BLAS, or FFT backend can flip low-order bits and trip a false regression while the audio is identical to any ear.
 
 The fix is to treat the toolchain as pinned along with the reference: refs are generated on one machine, numpy gets pinned before the suite runs anywhere else, and an intentional change regenerates refs on that same machine. The comment at the top of the script says exactly this, because future me will forget.
 
 ## What this buys
 
-The engines are now refactorable. I rewrote the biome seam model, restructured band fills, and added new edge types, all against a wall of fingerprints that would have caught any accidental change to shipped art. For deterministic generative work, this is the cheapest safety net I know: one hash per approved output, an explicit ritual to move it, and a human eyeball as the only thing allowed to bless a new one.
+The engines are now refactorable. I rewrote the biome seam model, restructured band fills, and added new edge types, all against a wall of fingerprints that would have caught any accidental change to shipped art. For deterministic generative work this is the cheapest safety net I know, and a human eyeball stays the only thing allowed to bless a new reference.
+
+`goldens.py` is 77 lines. If you pin renders and want it, write me: contact@markostankovic.org.
