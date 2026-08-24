@@ -170,11 +170,16 @@ if (doPinSource) {
 // and check 8 (openers) both read this constant; neither owns a second spelling of it.
 const BANNED = /[—–→]| -> /;
 
+// "relic" forbidden 2026-08-24 (Marko; copy-pack-v3 amendment of the same date): its
+// connotation reads as old code. Scoped to check 5's templates and data ONLY — the Relic
+// Rush journal entries keep the game's name, so check 8 (openers) must not read this.
+const RELIC = /\brelics?\b/i;
+
 // Line numbers holding a banned dash/arrow in reader-facing copy. Everything that
 // is not reader-facing is stripped first, each region tracked ACROSS lines:
 // <pre>/<script>/<style> bodies, HTML comments, and the frontmatter's // and /* */
 // comments. A self-closing <script ... /> opens nothing. See the note at check 5.
-const copyHits = (src) => {
+const copyHits = (src, re = BANNED) => {
   let codeTag = null, inHtmlComment = false, inBlockComment = false, fence = 0;
   const hits = [];
   src.split('\n').forEach((raw, i) => {
@@ -223,7 +228,7 @@ const copyHits = (src) => {
       if (kind === 'html') inHtmlComment = true;
       if (kind === 'block') inBlockComment = true;
     }
-    if (BANNED.test(visible)) hits.push(i + 1);
+    if (re.test(visible)) hits.push(i + 1);
   });
   return hits;
 };
@@ -503,10 +508,15 @@ console.log('copy:');
     // A .ts module is all "frontmatter": prefix an opening fence so its // and /* */
     // comments are stripped the way an .astro frontmatter's are; string literals are linted.
     const src = readFileSync(join(ROOT, f), 'utf8');
-    const hits = copyHits(f.endsWith('.ts') ? '---\n' + src : src).map((n) => (f.endsWith('.ts') ? n - 1 : n));
-    hits.length
-      ? fail(`copy ${f}`, `dash/arrow on line(s) ${hits.join(',')}`)
-      : ok(`copy ${f}`);
+    const linted = f.endsWith('.ts') ? '---\n' + src : src;
+    const adj = (n) => (f.endsWith('.ts') ? n - 1 : n);
+    const hits = copyHits(linted).map(adj);
+    const relics = copyHits(linted, RELIC).map(adj);
+    const reasons = [
+      ...(hits.length ? [`dash/arrow on line(s) ${hits.join(',')}`] : []),
+      ...(relics.length ? [`forbidden word "relic" on line(s) ${relics.join(',')}`] : []),
+    ];
+    reasons.length ? fail(`copy ${f}`, reasons.join('; ')) : ok(`copy ${f}`);
   }
 }
 
