@@ -1,7 +1,7 @@
 ---
 title: "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate."
 date: "2026-07-07"
-excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and had to throw most of the result away. The part that held up: by turn 6 the agent had stopped running the script the skill prescribes. The skill did not stop working. It stopped being consulted."
+excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and had to throw most of the result away. The part that held up: in one of the two conversations, by turn 6 the agent had stopped running the script the skill prescribes. The skill did not stop working. It stopped being consulted."
 opener: "A Claude Code skill steers the agent on turn one; the question is turn ten, after the context has filled with other things. I built skill-vibe-test to measure that decay, pointed it at one of my own skills, and the first run was thrown out by the gate I had written into it. What held up is the useful part, and so is how I know which part that is."
 tags: ["AI Engineering", "Claude Code", "Evals", "Python", "LLM", "Agents"]
 beat: agents
@@ -51,7 +51,7 @@ That's the point where I wrote this post the first time, and the sentence I wrot
 
 Going back to the transcripts a month later, three things were wrong with that.
 
-There's no curve. Eight failures out of eight is a flat line at FAIL. A metric that returns the same value at every point cannot show a trend. Here is that run, redrawn from its saved transcripts by the current harness:
+There's no curve. Eight failures out of eight is a flat line at FAIL. A metric that returns the same value at every point cannot show a trend. Here is that run, redrawn from its saved transcripts:
 
 ![Chart titled "skill-vibe-test: does capabilities-health still steer sonnet as context fills?" plotting two conversations across baseline, turn 6, turn 8 and turn 10. Both lines sit flat on the FAIL axis at every probe point, with no point anywhere near PASS. Red X markers mark escape hatches at turns 6 and 8. A red banner across the top of the plot reads "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve".](/images/blog/skill-vibe-test-decay-probe/decay-flatline.svg)
 
@@ -89,7 +89,7 @@ The subtler one: the subject can see the experiment. Early sandboxes were temp d
 
 The tool exits 1 on any decay, so a skill can be gated on surviving its own vibe test before it ships. The harness is public at github.com/marko-builds/skill-vibe-test. For skills that keep failing, the fix is usually structural rather than rhetorical: move the invariant out of prose and into something the agent cannot drift from, a script, a hook, a hard check.
 
-The harness change I made after re-reading this: a bypassed gate is now loud. When the turn-1 probe fails and `--no-baseline-gate` is set, the run records it and every artifact says so. The terminal summary leads with it, the report carries it as a banner above the results, and the chart gets a red stamp across the top reading "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve." A status field in a JSON file nobody opens is not loud. A safeguard you can silently switch off is a safeguard that will be silently switched off.
+The harness change I made after re-reading this: a bypassed gate is now loud. When the turn-1 probe fails and `--no-baseline-gate` is set, the run records it and every artifact except the raw transcript JSON says so. The terminal summary leads with it, the report carries it as a banner above the results, and the chart gets a red stamp across the top reading "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve." A status field in a JSON file nobody opens is not loud. A safeguard you can silently switch off is a safeguard that will be silently switched off.
 
 The judge was too generous with one label. I was too generous with the whole run.
 
