@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" width="720" height="860" role="img" aria-labelledby="t d">
+<title id="t">The same seven lines, run two ways</title>
+<desc id="d">Terminal output. node on the file prints the greeting. The bin entry is a symlink to the same file and prints nothing. The two sides of the comparison never match through the symlink.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .b{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .dim{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+ .cyt{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB}
+ .amt{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="860"/>
+<text class="k" x="16" y="36">REPRODUCED</text>
+<text class="ttl" x="16" y="76">The same seven lines, run two ways</text>
+<rect class="p" x="16" y="100" width="688" height="740"/>
+<text class="dim" x="32" y="140">$ node node_modules/hello-cli/index.js</text>
+<text class="cyt" x="32" y="176">hello from the CLI, version 1.0.0</text>
+<text class="mono" x="32" y="212">exit 0</text>
+<text class="dim" x="32" y="272">$ readlink node_modules/.bin/hello-cli</text>
+<text class="mono" x="32" y="308">../hello-cli/index.js</text>
+<text class="dim" x="32" y="368">$ ./node_modules/.bin/hello-cli</text>
+<text class="amt" x="32" y="404">(nothing)</text>
+<text class="mono" x="32" y="440">exit 0</text>
+<line x1="32" y1="472" x2="688" y2="472" stroke="#2A3242" stroke-width="2"/>
+<text class="sub" x="32" y="512">the two sides of the ===</text>
+<text class="lab" x="32" y="556">argv[1]</text>
+<text class="mono" x="32" y="592">/proj/node_modules/.bin/hello-cli</text>
+<text class="lab" x="32" y="648">import.meta.url</text>
+<text class="mono" x="32" y="684">file:///proj/node_modules/</text>
+<text class="mono" x="32" y="716">  hello-cli/index.js</text>
+<text class="lab" x="32" y="772">file:// + argv[1]</text>
+<text class="mono" x="32" y="808">file:///proj/node_modules/.bin/hello-cli</text>
+</svg>

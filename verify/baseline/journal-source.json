@@ -43,5 +43,9 @@
   "zero-dollar-media-stack": {
     "title": "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math",
     "body": "90b747c93fc397c30a2f25c27af545f9d07a09c9a5d68c3df3e39d4caf0ca75b"
+  },
+  "green-suite-silent-cli": {
+    "title": "The Suite Was Green, and the Installed CLI Did Nothing",
+    "body": "1a48c8049cc557d3249686fc673aeb87ef74defc8ee0df8c36975e72c43d9ded"
   }
 }

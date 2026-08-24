@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 640" width="720" height="640" role="img" aria-labelledby="t d">
+<title id="t">Two paths to one file</title>
+<desc id="d">The typed path is a symlink to the real file. argv[1] keeps the typed path, import.meta.url holds the real one, and the strict equality between them is never true through the symlink.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .b{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .dim{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+ .cyt{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB}
+ .amt{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<rect class="bg" width="720" height="640"/>
+<text class="k" x="16" y="36">ONE SYMLINK</text>
+<text class="ttl" x="16" y="76">Two paths to one file</text>
+<rect class="p" x="16" y="100" width="688" height="130"/>
+<text class="sub" x="32" y="136">what you typed</text>
+<text class="mono" x="32" y="176">node_modules/.bin/changelogue</text>
+<text class="cyt" x="32" y="212">process.argv[1] keeps this</text>
+<line x1="360" y1="232" x2="360" y2="292" stroke="#5A6675" stroke-width="3" marker-end="url(#a)"/>
+<text class="sub" x="380" y="270">symlink, resolved on load</text>
+<rect class="p" x="16" y="300" width="688" height="130"/>
+<text class="sub" x="32" y="336">the file node loaded</text>
+<text class="mono" x="32" y="376">node_modules/changelogue/dist/index.js</text>
+<text class="cyt" x="32" y="412">import.meta.url holds this</text>
+<rect class="b" x="16" y="460" width="688" height="160"/>
+<text class="lab" x="32" y="500">import.meta.url === argv[1]</text>
+<text class="amt" x="32" y="540">false, on every installed run</text>
+<text class="sub" x="32" y="580">so parse() never runs and the</text>
+<text class="sub" x="32" y="610">process exits 0 with no output</text>
+</svg>
