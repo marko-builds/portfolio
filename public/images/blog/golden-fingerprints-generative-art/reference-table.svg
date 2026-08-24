@@ -27,37 +27,37 @@
 <text class="d" x="40" y="134">engine</text>
 <text class="d" x="440" y="134" text-anchor="end">seed</text>
 <text class="d" x="545" y="134" text-anchor="end">cases</text>
-<text class="d" x="680" y="134" text-anchor="end">dtype</text>
+<text class="d" x="672" y="134" text-anchor="end">dtype</text>
 <path d="M40 148 H680" stroke="#2a3242" stroke-width="1.5"/>
 <rect class="p" x="40" y="158" width="640" height="72" rx="6"/>
 <text class="h" x="60" y="190">journey biome</text>
 <text class="m" x="440" y="190" text-anchor="end">42</text>
 <text class="m" x="545" y="190" text-anchor="end">9</text>
-<text class="m" x="680" y="190" text-anchor="end">uint8</text>
+<text class="m" x="672" y="190" text-anchor="end">uint8</text>
 <text class="d" x="60" y="220">six biomes, stacked canvas, two sea variants</text>
 <rect class="p" x="40" y="238" width="640" height="72" rx="6"/>
 <text class="h" x="60" y="270">landscape</text>
 <text class="m" x="440" y="270" text-anchor="end">42</text>
 <text class="m" x="545" y="270" text-anchor="end">7</text>
-<text class="m" x="680" y="270" text-anchor="end">uint8</text>
+<text class="m" x="672" y="270" text-anchor="end">uint8</text>
 <text class="d" x="60" y="300">six palettes at t 0, plus forest at t 7.5</text>
 <rect class="p" x="40" y="318" width="640" height="72" rx="6"/>
 <text class="h" x="60" y="350">aurora</text>
 <text class="md" x="440" y="350" text-anchor="end">none</text>
 <text class="m" x="545" y="350" text-anchor="end">10</text>
-<text class="m" x="680" y="350" text-anchor="end">uint8</text>
+<text class="m" x="672" y="350" text-anchor="end">uint8</text>
 <text class="d" x="60" y="380">five palettes at t 0 and t 20, meteors off</text>
 <rect class="p" x="40" y="398" width="640" height="72" rx="6"/>
 <text class="h" x="60" y="430">progress panorama</text>
 <text class="m" x="440" y="430" text-anchor="end">52</text>
 <text class="m" x="545" y="430" text-anchor="end">12</text>
-<text class="m" x="680" y="430" text-anchor="end">uint8</text>
+<text class="m" x="672" y="430" text-anchor="end">uint8</text>
 <text class="d" x="60" y="460">six tiles, each in colour and gray</text>
 <rect class="p" x="40" y="478" width="640" height="72" rx="6" style="stroke:#d99a5e"/>
 <text class="h" x="60" y="510">music</text>
 <text class="m" x="440" y="510" text-anchor="end">30</text>
 <text class="m" x="545" y="510" text-anchor="end">6</text>
-<text class="ma" x="680" y="510" text-anchor="end">float64</text>
+<text class="ma" x="672" y="510" text-anchor="end">float64</text>
 <text class="d" x="60" y="540">six moods, 8 bars each</text>
 <path d="M40 556 H680" stroke="#2a3242" stroke-width="1.5"/>
 <text class="b" x="60" y="588">pinned cases</text>

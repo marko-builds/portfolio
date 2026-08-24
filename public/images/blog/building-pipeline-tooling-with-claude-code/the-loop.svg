@@ -1,8 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 800" width="720" height="800" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900" role="img" aria-labelledby="t d">
 <title id="t">The loop around the model: align, red, green, verify</title>
 <desc id="d">Four stages in sequence. Align on a one page spec, write one failing test, make it pass, then verify against evidence. A return arc runs from verify back to the failing test for the next slice. A gate below reads: done is a passing check, never "it looks correct".</desc>
 <style>
  .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
  .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
  .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
  .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
@@ -10,7 +11,9 @@
  .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
 </style>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
-<g>
+<text class="k" x="16" y="36">THE LOOP</text>
+<text class="ttl" x="16" y="76">Align, one failing test, pass, verify</text>
+<g transform="translate(0,100)">
  <rect class="n" x="16" y="24" width="600" height="110"/><text class="k" x="36" y="60">01</text><text class="lab" x="36" y="94">Align</text><text class="sub" x="36" y="124">one page spec first</text>
  <rect class="n" x="16" y="174" width="600" height="110"/><text class="k" x="36" y="210">02</text><text class="lab" x="36" y="244">One failing test</text><text class="sub" x="36" y="274">the spec it cannot talk past</text>
  <rect class="n" x="16" y="324" width="600" height="110"/><text class="k" x="36" y="360">03</text><text class="lab" x="36" y="394">Make it pass</text><text class="sub" x="36" y="424">one behaviour, nothing else</text>
