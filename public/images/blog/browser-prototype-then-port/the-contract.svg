@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 860" width="720" height="860" role="img" aria-labelledby="t d">
+<title id="t">The contract: one spec, two stacks, one fixture</title>
+<desc id="d">A render spec with four portable functions feeds two implementations, render_math.mjs for the JS harness and render_spec.py for the Python engine. Both are asserted against the same committed file, spec_conformance_fixture.json, at a tolerance of 1e-6. A gate below reads: drift on either side fails a test before an eyeball has to notice.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .file{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5A6675"/></marker></defs>
+<text class="k" x="16" y="36">THE CONTRACT</text>
+<text class="ttl" x="16" y="76">One spec, two stacks, one fixture</text>
+
+<rect class="n" x="16" y="110" width="688" height="150"/>
+<text class="k" x="36" y="146">SPEC</text>
+<text class="lab" x="36" y="182">Four portable functions</text>
+<text class="sub" x="36" y="216">Catmull-Rom edge, multi-stop gradient,</text>
+<text class="sub" x="36" y="246">band-local position, contour-line field</text>
+
+<path d="M188 260 V300" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M532 260 V300" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+
+<rect class="n" x="16" y="304" width="340" height="150"/>
+<text class="k" x="36" y="340">JS HARNESS</text>
+<text class="file" x="36" y="378">render_math.mjs</text>
+<text class="sub" x="36" y="412">browser canvas and</text>
+<text class="sub" x="36" y="442">the headless Node PNG</text>
+
+<rect class="n" x="364" y="304" width="340" height="150"/>
+<text class="k" x="384" y="340">PYTHON ENGINE</text>
+<text class="file" x="384" y="378">render_spec.py</text>
+<text class="sub" x="384" y="412">numpy, PIL, grain,</text>
+<text class="sub" x="384" y="442">and the golden</text>
+
+<path d="M188 454 V494" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M532 454 V494" stroke="#5A6675" stroke-width="2" marker-end="url(#a)"/>
+
+<rect class="n" x="16" y="498" width="688" height="186" style="stroke:#5FCEDB"/>
+<text class="k" x="36" y="534">ONE FIXTURE, FROZEN</text>
+<text class="file" x="36" y="572">spec_conformance_fixture.json</text>
+<text class="sub" x="36" y="606">inputs and expected outputs, tolerance 1e-6</text>
+<text class="sub" x="36" y="636">render_math.test.mjs and test_render_spec.py</text>
+<text class="sub" x="36" y="666">both read this file and nothing else</text>
+
+<rect x="16" y="716" width="688" height="120" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
+<text class="gate" x="36" y="758">Drift on either side fails a test,</text>
+<text class="gate" x="36" y="794">before an eyeball has to notice.</text>
+</svg>

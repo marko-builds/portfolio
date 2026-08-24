@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 800" width="720" height="800" role="img" aria-labelledby="t d">
+<title id="t">The port: the locked sea values as they ship</title>
+<desc id="d">Five rows read out of journey_biome.py. Seam: catmull, 0.26 from the top. Control points: (0.0, 0.24), (0.5, 0.29), (1.0, 0.25). Water gradient: three stops, skyReflect at 0.0, shallow at 0.43, deep at 1.0. Ripple: contour, freq 5.5, amp 5.5, strength 0.045. Gate: below_edge 0, water only, so sand rows stay byte-identical.</desc>
+<style>
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .v{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+</style>
+<text class="k" x="16" y="36">THE PORT</text>
+<text class="ttl" x="16" y="76">Locked values, as shipped</text>
+
+<rect class="n" x="16" y="104" width="688" height="100"/>
+<text class="lab" x="36" y="142">Seam</text>
+<text class="v" x="36" y="180">catmull, 0.26 from the top</text>
+
+<rect class="n" x="16" y="216" width="688" height="100"/>
+<text class="lab" x="36" y="254">Seam control points</text>
+<text class="v" x="36" y="292">(0.0, 0.24)  (0.5, 0.29)  (1.0, 0.25)</text>
+
+<rect class="n" x="16" y="328" width="688" height="130"/>
+<text class="lab" x="36" y="366">Water gradient, three stops</text>
+<text class="v" x="36" y="404">skyReflect 0.0, shallow 0.43, deep 1.0</text>
+<text class="sub" x="36" y="440">the harness's two bands, collapsed into one curve</text>
+
+<rect class="n" x="16" y="470" width="688" height="100"/>
+<text class="lab" x="36" y="508">Ripple (contour signature)</text>
+<text class="v" x="36" y="546">freq 5.5, amp 5.5, strength 0.045</text>
+
+<rect class="n" x="16" y="582" width="688" height="130" style="stroke:#5FCEDB"/>
+<text class="lab" x="36" y="620">Ripple gate, new in the engine</text>
+<text class="v" x="36" y="658">below_edge 0, water only</text>
+<text class="sub" x="36" y="694">its test: sand rows byte-identical, water rows modulated</text>
+
+<text class="sub" x="16" y="768">read out of play/journey_biome.py, the sea Biome</text>
+</svg>

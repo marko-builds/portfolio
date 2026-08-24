@@ -1,40 +1,64 @@
 ---
 title: "Prototype in the Browser, Ship in Python: How I Look-Dev Generative Art"
-date: "2026-07-07"
+date: "2026-08-06"
 excerpt: "Tuning art needs sliders and instant redraw. Shipping art needs determinism and tests. My workflow uses both: a zero-dependency browser canvas for the feel, a shared math spec with a conformance fixture, and a 1:1 port into the production engine."
 opener: "Generative art has two jobs that want opposite tools: finding the look wants sliders and instant redraw, shipping it wants determinism and tests. My workflow is a zero-dependency browser canvas for the feel, a shared math spec with a conformance fixture, and a 1:1 port into the Python engine. The port is a tested claim, not a hope, and this entry shows the contract that makes it one."
 tags: ["Generative Media", "Workflow", "JavaScript", "Python", "Look Dev"]
-draft: true
+beat: engine
+ogImage: "/images/blog/browser-prototype-then-port/harness-1280x900.png"
+entry: "09"
+draft: false
 ---
 
-There are two jobs in generative art and they want opposite tools. Finding the look is an interactive job: drag a slider, watch the seam curve move, try a bluer deep water, undo. Shipping the look is an engineering job: the render must be deterministic, tested, and reproducible on any machine. I used to do both jobs in the production engine and it was slow in the worst way, a full Python render per tweak.
+I used to do both jobs in the production engine, and every tweak cost a full Python render. That engine draws the journey art for Habitagram, a habit tracker due December 2026: a climb in six stages the code calls biomes. This entry follows one of them, the sea, from browser sliders to the shipped engine.
 
-Now I split them. Prototype in a browser canvas, lock the parameters, port the math 1:1 into the Python engine. The port is protected by a shared spec, so "1:1" is a tested claim, not a hope.
+The split is simple. Prototype in a browser canvas, lock the parameters, port the math 1:1 into the Python engine. A shared spec holds both sides to the same numbers, so "1:1" is something a test checks.
 
-## The harness: one HTML file, no dependencies
+## The harness: one HTML page, no dependencies
 
-The look-dev harness is a plain canvas page. No framework, no build step, no npm install. For the sea biome it exposes exactly what the look needs: five color pickers (sand, sky reflection, shallow water, deep water, desert body), a seam editor with a position slider and a choice of edge kinds, sliders for the ripple texture's frequency and strength, and draggable waypoints for the path. Every control redraws immediately.
+The look-dev harness (the page where I tune the look) is a plain canvas page plus four ES modules. No framework, no build step, no npm install. For the sea biome it exposes what the look needs. Five color pickers (sand, sky reflection, shallow water, deep water, desert body). A seam editor for the edge where sand meets water, with a position slider and three edge kinds (catmull, torn, hard). Sliders for the ripple texture's frequency, amplitude and strength. Path waypoints you move by clicking the canvas. Every control redraws immediately.
 
-When the look lands, one button validates the parameters and downloads a JSON file. Another takes a screenshot. There is also a headless variant that renders the same compose module under Node and writes a PNG, so I can eyeball a candidate without opening a browser.
+![The sea look-dev harness in a browser: a portrait canvas on the left with sand above a wavy seam and banded blue water below, and on the right the five palette pickers, the seam controls set to catmull at position 0.26, the band split, the signature texture sliders, and the Export params JSON and Screenshot PNG buttons.](/images/blog/browser-prototype-then-port/harness-1280x900.png)
 
-The point of zero dependencies is speed of iteration on the harness itself. Adding a slider is four lines. Nothing to install, nothing to break.
+When the look lands, one button validates the parameters and downloads a JSON file. Another takes a screenshot. There is also a headless variant: a Node script that runs the same renderer module and writes a PNG using nothing but Node builtins, so I can eyeball a candidate without opening a browser.
+
+The point of zero dependencies is speed of iteration on the harness itself. Adding a slider is four lines.
 
 ## The contract: one spec, two implementations, one fixture
 
-The dangerous step is the port. JS and Python both have floating point, but they don't share your intentions: which Catmull-Rom parameterization, how gradient stops interpolate, what happens outside the domain. A visually identical port that quietly disagrees at the edges will bite months later.
+The dangerous step is the port. JS and Python both have floating point, but they don't share your intentions: which Catmull-Rom parameterization (the curve through the seam's control points), how gradient stops interpolate, what happens outside the domain. A visually identical port that quietly disagrees at the edges will bite months later.
 
-So the portable math lives in a spec with four functions: Catmull-Rom evaluation, multi-stop gradient interpolation, band-local position remapping, and a contour-line field. Both stacks implement it, and both are asserted against the same committed conformance fixture, a JSON file of inputs and expected outputs at 1e-6 tolerance. If the JS harness and the Python engine ever disagree about what `catmull_eval` returns, a test fails before an eyeball has to notice.
+So the portable math lives in a spec with four functions: Catmull-Rom evaluation, multi-stop gradient interpolation, band-local position remapping, and a contour-line field (the sine ripple on the water). Both stacks implement it, and both are asserted against the same committed conformance fixture, a JSON file of inputs and expected outputs at 1e-6 tolerance. If the JS harness and the Python engine ever disagree about the curve's value at x = 0.375, a test fails before an eyeball has to notice.
 
-What stays out of the contract matters too. The paper grain and torn-edge texture are Python-only, built on numpy's RNG and gaussian filters. The browser only approximates them, and no test pretends otherwise. Grain drift is caught downstream by the engine's golden fingerprint instead.
+![One spec, two stacks, one fixture: the render spec's four portable functions are implemented in render_math.mjs for the JS harness and render_spec.py for the Python engine, and both test files assert against spec_conformance_fixture.json at a tolerance of 1e-6. Drift on either side fails a test.](/images/blog/browser-prototype-then-port/the-contract.svg)
+
+This is the Catmull-Rom block of the fixture, values as committed, whitespace condensed:
+
+```json
+"catmull_rom": {
+  "control_points": [[0.0, 0.0], [0.25, 100.0], [0.5, 50.0], [0.75, 150.0], [1.0, 100.0]],
+  "queries":    [0.0, 0.125,  0.25,  0.375, 0.5,  0.625, 0.75,  0.875,  1.0],
+  "expected_y": [0.0, 53.125, 100.0, 75.0,  50.0, 100.0, 150.0, 131.25, 100.0],
+  "tolerance": 1e-06
+}
+```
+
+Some things stay out of the contract on purpose. The paper grain and torn-edge texture are Python-only, built on numpy's RNG and scipy's gaussian filters. The browser only approximates them, and no test pretends otherwise. Grain drift is caught downstream by the engine's [golden fingerprint](/field-journal/golden-fingerprints-generative-art/) instead, a sha256 of the raw render pinned in a test.
 
 ## The port, concretely
 
-The sea look I locked last week exported as a JSON of parameters, and the port is those values baked into the engine's biome spec. The seam became a Catmull-Rom edge at 0.26 from the top with control points at (0.0, 0.24), (0.5, 0.29), (1.0, 0.25). The water became a three-stop gradient from sky reflection through shallow to deep. The ripple became a contour signature at frequency 5.5, gated to render only below the seam so the sand shore stays smooth.
+The locked sea look exported as a JSON of parameters, and the port is those values baked into the engine's biome spec. The seam became a Catmull-Rom edge at 0.26 from the top with control points at (0.0, 0.24), (0.5, 0.29), (1.0, 0.25). The water became a three-stop gradient from sky reflection through shallow to deep. The ripple became a contour signature at frequency 5.5, gated to render only below the seam so the sand shore stays smooth.
 
-That gating didn't exist in the engine, so the port added it as a capability with its own test: sand rows byte-identical to before, water rows visibly modulated. Ports grow the engine; each look leaves a reusable feature behind.
+![The locked sea parameters as ported into journey_biome.py: a catmull seam at 0.26 from the top with control points (0.0, 0.24), (0.5, 0.29), (1.0, 0.25); a three stop water gradient with shallow at 0.43; a contour ripple at frequency 5.5, amplitude 5.5 and strength 0.045; and a ripple gate of below_edge 0 so only the water is modulated.](/images/blog/browser-prototype-then-port/the-port.svg)
 
-The last step is the sign-off. The engine renders at the pinned seed, I compare against the prototype on an actual device, and only then does the golden fingerprint get re-pinned. Until that eyeball happens the golden stays red on purpose.
+That gating didn't exist in the engine, so the port added it as a capability with its own test: sand rows byte-identical to before, water rows visibly modulated. Each port leaves a feature behind.
+
+The last step is the sign-off. The engine renders at the pinned seed (42), I compare against the prototype on a phone, and only then does the golden fingerprint get re-pinned. Until that eyeball happens the golden stays red on purpose.
+
+![The sign-off order: prototype in the browser, export the validated JSON, port the values into the engine, eyeball the engine render at seed 42 against the prototype on a phone, then re-pin the golden. The golden stays red through the port and the eyeball.](/images/blog/browser-prototype-then-port/the-sign-off.svg)
 
 ## Why this beats picking one tool
 
-JS is the feel surface, Python is the production truth, and the conformance fixture is the bridge that lets them disagree loudly instead of silently. I get sub-second iteration while exploring and full determinism while shipping, and the cost is one spec file and a fixture I wrote once.
+JS finds the look and Python ships it. The fixture is what lets the two disagree loudly instead of silently. I get instant redraw while exploring and full determinism while shipping, for the price of one spec file and a fixture I wrote once.
+
+The other half of this contract, the golden that catches what the fixture cannot, has its own entry: [golden fingerprints for generative art](/field-journal/golden-fingerprints-generative-art/).
