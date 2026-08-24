@@ -10,9 +10,9 @@ draft: false
 entry: "04"
 ---
 
-Habitagram's progress screen answers "how far have I climbed?" with a picture: one continuous mountain ridge rising out of the sea, across desert, steppe, forest, and volcano, to a snowed summit. You swipe through it page by page, each page one milestone, your reached pages in color and the locked ones in grey.
+Habitagram, my habit tracker, has a progress screen that answers "how far have I climbed?" with a picture: one continuous mountain ridge rising out of the sea, across desert, steppe, forest, and volcano, to a snowed summit. You swipe through it page by page, each page one milestone, your reached pages in color and the locked ones in grey.
 
-The art is a single panorama, 6480x1920, rendered by a numpy engine and sliced into six 1080x1920 portrait tiles. Continuity across swipes is the entire point, and almost every bug in this feature was some way of accidentally breaking it.
+The art is a single panorama, 6480x1920, rendered by a numpy engine and sliced into six 1080x1920 portrait tiles. Slice continuous art into pages and both the display and the export get a chance to put a seam back. A green test will not tell you.
 
 ![The full panorama at 6480x1920, downscaled to a wide strip. A single mountain ridge climbs from a blue sea on the left, through desert, steppe, forest and volcano, to a snowed summit on the right. Five cyan tick marks show where the strip is cut into six pages; the ridge, the dashed trail and the paper grain all run continuously across every cut.](/images/blog/swipeable-panorama-continuous-ridge/panorama-continuous-ridge.png)
 
@@ -46,9 +46,9 @@ The fix inverts the layout contract. Each page renders at exact screen width wit
 
 The wanderer marker sits at each page's horizontal center, anchored per page as fractions and riding the ridge's y at that point. Center placement is deliberate: it is the furthest a sprite can be from both seams.
 
-And the reached-versus-locked split depends on the user's current tier, which arrives from an async query. Render before it resolves and the frontier defaults to zero, flashing the user's own past biomes grey for a frame. The sibling journey screen already gated on the loading state; the new screen didn't, until it did. When you copy a pattern to a new screen, copy its load-gate too.
+And the reached-versus-locked split depends on the user's current tier (how far up the ridge their streak has taken them), which arrives from an async query. Render before it resolves and the frontier defaults to zero, flashing the user's own past biomes grey for a frame. The sibling journey screen already gated on the loading state; the new screen didn't, until it did. When you copy a pattern to a new screen, copy its load-gate too.
 
-The engine's output is locked by golden-fingerprint tests, all twelve tiles hashed at the approved seed, so the ridge you swipe through today is provably the one that was signed off on a real device.
+The engine's output is locked by golden-fingerprint tests, all twelve tiles hashed at the approved seed, so the render is pinned to the one I signed off on a real device.
 
 ## The seam I put back on the way out
 
@@ -62,6 +62,8 @@ The export loop runs `img.quantize(colors=255)` on each tile before saving it. S
 
 The golden tests never saw it. They pin the raw RGBA bytes of the render, so they guard the art before the knife and never look at the PNG that ships. Green the whole time.
 
-The fix is to quantize the full strip once and slice after, which is the same rule as the grain and the trail. Continuity is only free if every operator sees the whole world before the knife comes out, and the export quantizer is an operator I forgot to count.
+The fix is to quantize the full strip once and slice after. Same rule as the grain and the trail: the export quantizer is an operator I forgot to count. That change is not in the engine yet; as of this writing the export loop still quantizes each tile on its own.
 
 One boundary in that image is not a bug. The sea meets the desert at exactly one sixth of the strip because that's where the shore is placed, and it measures the same in both renders.
+
+If you are slicing continuous art into pages, write me: contact@markostankovic.org.

@@ -32,6 +32,6 @@
 <rect x="16" y="600" width="688" height="196" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
 <text class="gate" x="36" y="642">Every harmonic lands on its start value,</text>
 <text class="gate" x="36" y="676">so the last frame flows into the first.</text>
-<text class="sub" x="36" y="722">Each engine asserts, on every run:</text>
+<text class="sub" x="36" y="722">Seven of the eight engines assert, on every run:</text>
 <text class="code" x="36" y="762">max |frame(0) - frame(period)| &lt;= 1</text>
 </svg>

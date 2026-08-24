@@ -6,19 +6,19 @@
   },
   "building-pipeline-tooling-with-claude-code": {
     "title": "The Agent Is Only as Good as the Check That Grades It",
-    "body": "9255ad44abeb421e7d1ea5f53379ef4b6f34f8e64bf4b53210c9f1fd6f38e956"
+    "body": "90351183c620c3fda61b4e5cfb0b5e75de6448d5be967cb7c9d165a78a217f59"
   },
   "deterministic-journey-art": {
     "title": "From SDXL to NumPy: Making Habitagram's Journey Art Deterministic",
-    "body": "b13adf2238299a611b99d43723c07888d3a65b3a1370c1ce901aee933d68e190"
+    "body": "9a12b6f308b95a723af2ee8cdc3c6d5930dd7dcbb69deb266a86f1887589a82e"
   },
   "duskpaper-animated-wallpapers": {
     "title": "Duskpaper: Animated Wallpapers Synthesized From NumPy, Looped Forever",
-    "body": "4b62872972de2544f8a9198b3c30d78376e3410daed35deca84ad09c1d99684a"
+    "body": "d806af4cbd8dfce10083ca0a3ee3308386c87512f225ad72257eeba098708fe6"
   },
   "golden-fingerprints-generative-art": {
     "title": "Golden Fingerprints: Regression Tests for Generative Art",
-    "body": "9d214b353259cd9ca541bd5b9ea508c813940023870a5e61c6f4b2bfb33fbc74"
+    "body": "d23c584fa202744b69693fe20803391831d7e4a53af663ceff3f0f1235f5dfb8"
   },
   "multi-tenant-uniqueness-postgres": {
     "title": "The Uniqueness Check You Cannot Write in App Code",
@@ -26,11 +26,11 @@
   },
   "one-product-four-repos": {
     "title": "One Product, Four Repos: DeployLog's Satellite Architecture",
-    "body": "887b059efec525f423e6423a518133299d4ee6a9906f1f0066350d780b397064"
+    "body": "96d2e88d5ec4072ce4548fc26787f7ab0b2df3d2c1cfe277678dacfd2ba150c6"
   },
   "skill-vibe-test-decay-probe": {
     "title": "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate.",
-    "body": "ed6bd4b7f3bd3d0af3c13a6dcba4c3ed45b8885519a5f0177fa55a797ba52819"
+    "body": "72b65e6498054b94a2b7d3411d87007390bd07d8901a2ac6eb9dcd3373a2fc1b"
   },
   "solo-founder-observability": {
     "title": "Observability for a Solo Launch: What I Wired Before DeployLog Went Live",
@@ -38,10 +38,10 @@
   },
   "swipeable-panorama-continuous-ridge": {
     "title": "One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Art",
-    "body": "a97f7ec31ab83c73065793a7410e0a34aa6aecc0053b6a928c85362009ac7529"
+    "body": "7750b8edd05e4ddde547d77d9a61f05307f359afe429ba909d4c4d0c2d49ef68"
   },
   "zero-dollar-media-stack": {
     "title": "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math",
-    "body": "8481f953734476eba63cad191d18df8b25348e776c6564e72d68cdd805e95af5"
+    "body": "89e76c3d1e254fe7f9aabfa4fe72f1fa6007cb17f5a19f83a298776f8e4dfb98"
   }
 }

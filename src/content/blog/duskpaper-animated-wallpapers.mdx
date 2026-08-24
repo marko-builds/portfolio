@@ -18,9 +18,9 @@ Hyprland is a tiling compositor for Wayland, and it draws no wallpaper of its ow
 
 ## Loops that close by construction
 
-A wallpaper loop plays thousands of times a day, so the seam has to be mathematically absent. A crossfade only hides it. Every engine follows one contract: a `frame(t)` function returning an RGB array, where all motion is built from integer-frequency harmonics of `tau = 2*pi*t/period`. At `t = period`, every sine and cosine in the scene has completed a whole number of cycles and lands exactly on its starting value. The last frame flows into the first because the math cannot do otherwise.
+A wallpaper loop plays hundreds of times a day, so the seam has to be mathematically absent. A crossfade only hides it. Every engine follows one contract: a `frame(t)` function returning an RGB array, where all motion is built from integer-frequency harmonics of `tau = 2*pi*t/period`. At `t = period`, every sine and cosine in the scene has completed a whole number of cycles and lands exactly on its starting value. The last frame flows into the first because the math cannot do otherwise.
 
-Each engine carries a self-test asserting `frame(0)` and `frame(period)` differ by at most 1 per channel. Frames pipe as raw bytes straight into ffmpeg's stdin; there is no intermediate image sequence on disk.
+Seven of the eight engines carry a self-test asserting `frame(0)` and `frame(period)` differ by at most 1 per channel (silk has none yet). Frames pipe as raw bytes straight into ffmpeg's stdin; there is no intermediate image sequence on disk.
 
 ![Diagram of the loop contract: tau equals two pi t over period, and every motion term is a sine or cosine of an integer multiple of tau. Three waves with frequencies one, two and three cross one period and each ends at the height it started. The gate reads: every engine asserts frame(0) and frame(period) differ by at most 1 per channel.](/images/blog/duskpaper-animated-wallpapers/loop-contract.svg)
 
