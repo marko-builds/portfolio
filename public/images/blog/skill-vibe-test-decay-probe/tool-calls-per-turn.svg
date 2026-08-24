@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 740" width="720" height="740" role="img" aria-labelledby="t d">
+<title id="t">Tool calls per turn in both conversations</title>
+<desc id="d">Horizontal bar chart, one row per turn 1 to 10, two bars per row. Conversation 1 in cyan: 14 calls at turn 1, 0 at turns 2 to 7, 1 at turn 8, 0 at turn 9, 1 at turn 10. Conversation 2 in amber: 13 at turn 1, 0 at turns 2 to 5, 3 at turn 6, 0 at turn 7, 1 at turn 8, 0 at turn 9, 2 at turn 10. Probe turns 1, 6, 8 and 10 are marked.</desc>
+<style>
+ .t{font:600 32px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .k{font:600 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5fcedb;letter-spacing:.05em}
+ .l{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .lb{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .d{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792a0}
+ .m{font:500 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e4e9ec}
+ .md{font:500 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792a0}
+ .w{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#ffffff}
+ .p{fill:#0b0e15;stroke:#2a3242;stroke-width:1.5}
+</style>
+<rect width="720" height="740" rx="12" fill="#12151c"/>
+<text class="k" x="24" y="38">SKILL-VIBE-TEST</text>
+<text class="t" x="24" y="76">Tool calls per turn, from the trace</text>
+<rect x="24" y="96" width="14" height="14" fill="#5fcedb"/>
+<text class="d" x="48" y="110">conversation 1</text>
+<rect x="250" y="96" width="14" height="14" fill="#d99a5e" opacity="0.6"/>
+<text class="d" x="274" y="110">conversation 2</text>
+<rect class="p" x="24" y="132" width="672" height="576" rx="6"/>
+<rect x="25" y="140" width="670" height="56" fill="#5fcedb" opacity="0.06"/>
+<text class="lb" x="40" y="177.0">turn 1</text>
+<text class="k" x="154" y="177.0">probe</text>
+<path d="M246 144 V192" stroke="#2a3242" stroke-width="1.5"/>
+<rect x="246" y="146" width="390.0" height="18" rx="3" fill="#5fcedb" opacity="1"/>
+<text class="m" x="646.0" y="164">14</text>
+<rect x="246" y="170" width="362.1" height="18" rx="3" fill="#d99a5e" opacity="0.6"/>
+<text class="m" x="618.1428571428571" y="188">13</text>
+<text class="d" x="40" y="233.0">turn 2</text>
+<path d="M246 200 V248" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="220">0</text>
+<text class="md" x="256" y="244">0</text>
+<text class="d" x="40" y="289.0">turn 3</text>
+<path d="M246 256 V304" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="276">0</text>
+<text class="md" x="256" y="300">0</text>
+<text class="d" x="40" y="345.0">turn 4</text>
+<path d="M246 312 V360" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="332">0</text>
+<text class="md" x="256" y="356">0</text>
+<text class="d" x="40" y="401.0">turn 5</text>
+<path d="M246 368 V416" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="388">0</text>
+<text class="md" x="256" y="412">0</text>
+<rect x="25" y="420" width="670" height="56" fill="#5fcedb" opacity="0.06"/>
+<text class="lb" x="40" y="457.0">turn 6</text>
+<text class="k" x="154" y="457.0">probe</text>
+<path d="M246 424 V472" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="444">0</text>
+<rect x="246" y="450" width="83.6" height="18" rx="3" fill="#d99a5e" opacity="0.6"/>
+<text class="m" x="339.57142857142856" y="468">3</text>
+<text class="d" x="40" y="513.0">turn 7</text>
+<path d="M246 480 V528" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="500">0</text>
+<text class="md" x="256" y="524">0</text>
+<rect x="25" y="532" width="670" height="56" fill="#5fcedb" opacity="0.06"/>
+<text class="lb" x="40" y="569.0">turn 8</text>
+<text class="k" x="154" y="569.0">probe</text>
+<path d="M246 536 V584" stroke="#2a3242" stroke-width="1.5"/>
+<rect x="246" y="538" width="27.9" height="18" rx="3" fill="#5fcedb" opacity="1"/>
+<text class="m" x="283.85714285714283" y="556">1</text>
+<rect x="246" y="562" width="27.9" height="18" rx="3" fill="#d99a5e" opacity="0.6"/>
+<text class="m" x="283.85714285714283" y="580">1</text>
+<text class="d" x="40" y="625.0">turn 9</text>
+<path d="M246 592 V640" stroke="#2a3242" stroke-width="1.5"/>
+<text class="md" x="256" y="612">0</text>
+<text class="md" x="256" y="636">0</text>
+<rect x="25" y="644" width="670" height="56" fill="#5fcedb" opacity="0.06"/>
+<text class="lb" x="40" y="681.0">turn 10</text>
+<text class="k" x="154" y="681.0">probe</text>
+<path d="M246 648 V696" stroke="#2a3242" stroke-width="1.5"/>
+<rect x="246" y="650" width="27.9" height="18" rx="3" fill="#5fcedb" opacity="1"/>
+<text class="m" x="283.85714285714283" y="668">1</text>
+<rect x="246" y="674" width="55.7" height="18" rx="3" fill="#d99a5e" opacity="0.6"/>
+<text class="m" x="311.7142857142857" y="692">2</text>
+</svg>

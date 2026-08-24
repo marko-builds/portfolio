@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 724" width="720" height="724" role="img" aria-labelledby="t d">
+<title id="t">What I published against what the run supports</title>
+<desc id="d">Two stacked panels. The top panel, what I published: a textbook decay curve; eight of eight failed; four escape hatches; 31k to 54k. The bottom panel, what the run supports, each with its source in the transcripts: a flat line at FAIL, eight of eight with no trend; the baseline gate was bypassed; two escape hatches and two over-called, because conversation 2 ran the script at turns 6 and 8; 31k to 40k in conversation 1 and 38k to 54k in conversation 2; tool calls in conversation 1 of 14, then 0, then 1 at turns 1, 6 and 8.</desc>
+<style>
+ .t{font:600 32px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .k{font:600 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5fcedb;letter-spacing:.05em}
+ .l{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .lb{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .d{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792a0}
+ .m{font:500 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e4e9ec}
+ .md{font:500 26px 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792a0}
+ .w{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#ffffff}
+ .p{fill:#0b0e15;stroke:#2a3242;stroke-width:1.5}
+</style>
+<rect width="720" height="724" rx="12" fill="#12151c"/>
+<text class="k" x="24" y="38">SKILL-VIBE-TEST</text>
+<text class="t" x="24" y="76">Claimed, and supported</text>
+<rect class="p" x="24" y="100" width="672" height="128" rx="6"/>
+<text class="k" x="44" y="134" style="fill:#d99a5e">WHAT I PUBLISHED</text>
+<circle cx="52" cy="165" r="6" fill="#d99a5e"/>
+<text class="l" x="72" y="174">a textbook decay curve</text>
+<circle cx="372" cy="165" r="6" fill="#d99a5e"/>
+<text class="l" x="392" y="174">eight of eight failed</text>
+<circle cx="52" cy="203" r="6" fill="#d99a5e"/>
+<text class="l" x="72" y="212">four escape hatches</text>
+<circle cx="372" cy="203" r="6" fill="#d99a5e"/>
+<text class="l" x="392" y="212">31k to 54k</text>
+<rect class="p" x="24" y="252" width="672" height="448" rx="6"/>
+<text class="k" x="44" y="286">WHAT THE RUN SUPPORTS</text>
+<rect x="46" y="317" width="12" height="12" fill="#5fcedb"/>
+<text class="l" x="72" y="332">a flat line at FAIL: eight of eight, no trend</text>
+<text class="md" x="72" y="364">probes[].verdict.passed: all false</text>
+<rect x="46" y="393" width="12" height="12" fill="#5fcedb"/>
+<text class="l" x="72" y="408">the baseline gate was bypassed</text>
+<text class="md" x="72" y="440">status completed while turn 1 failed</text>
+<rect x="46" y="469" width="12" height="12" fill="#5fcedb"/>
+<text class="l" x="72" y="484">two escape hatches, and two over-called</text>
+<text class="md" x="72" y="516">conv 2 ran the script at turns 6 and 8</text>
+<rect x="46" y="545" width="12" height="12" fill="#5fcedb"/>
+<text class="l" x="72" y="560">31k to 40k in conv 1, 38k to 54k in conv 2</text>
+<text class="md" x="72" y="592">probes[].context_tokens</text>
+<rect x="46" y="621" width="12" height="12" fill="#5fcedb"/>
+<text class="l" x="72" y="636">tool calls in conv 1: 14, then 0, then 1</text>
+<text class="md" x="72" y="668">turns 1, 6 and 8 of the trace</text>
+</svg>
