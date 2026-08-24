@@ -10,8 +10,8 @@ interface Props {
 }
 
 const {
-  title = "Marko Stankovic. Code archaeologist, forging with AI.",
-  description = "Code archaeologist out of Serbia. I forge artifacts with AI companions and keep a field journal. DeployLog digs release notes out of git history.",
+  title = "Marko Stankovic. Software engineer, building with AI.",
+  description = "Software engineer out of Serbia. I create constructs of artificial intelligence and keep a field journal. DeployLog digs release notes out of git history.",
   ogImage,
   ogType = "website",
   codeHighlighting = false,
@@ -38,9 +38,14 @@ const canonicalURL = Astro.url.href;
 // wordmark in Space Grotesk, the approved hero line on three lines with the second clause
 // dim, on navy under the aurora ramp hairline. Source: play/og_card_portfolio_v4.html,
 // variant b (optically centred), Marko's pick at 1x and 600px. New filename, same reason.
+//
+// og-default-v5.png, 2026-08-24: v4 carried "I forge relics with artificial minds" and Marko
+// made "relic" a forbidden word (its connotation reads as old code; copy-pack-v3 amendment of
+// the same date). Same composition, hero line now "I create constructs of artificial
+// intelligence". Source: play/og_card_portfolio_v5.html, variant b. New filename, same reason.
 const ogImageURL = ogImage
   ? new URL(ogImage, Astro.site).href
-  : new URL("/og-default-v4.png", Astro.site).href;
+  : new URL("/og-default-v5.png", Astro.site).href;
 ---
 
 <!doctype html>

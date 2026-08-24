@@ -4,7 +4,7 @@
 // Change a string here only by changing the copy pack first.
 export const hero = {
   name: "Marko Stankovic",
-  line: "I forge relics with artificial minds, and I bring back the proof.",
+  line: "I create constructs of artificial intelligence, and I bring back the proof.",
   sub: "DeployLog and Habitagram are nearly out of the vault, three open source gadgets sit on GitHub, and the engine that paints the maps is mine, built with AI agents. Every number below links to the dig site.",
   photo: "/portrait.webp",
   ctas: [
