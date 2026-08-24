@@ -7,6 +7,7 @@
 /blog/deterministic-journey-art/
 /blog/duskpaper-animated-wallpapers/
 /blog/golden-fingerprints-generative-art/
+/blog/green-suite-silent-cli/
 /blog/skill-vibe-test-decay-probe/
 /blog/swipeable-panorama-continuous-ridge/
 /blog/zero-dollar-media-stack/
@@ -18,6 +19,7 @@
 /devlog/deterministic-journey-art/
 /devlog/duskpaper-animated-wallpapers/
 /devlog/golden-fingerprints-generative-art/
+/devlog/green-suite-silent-cli/
 /devlog/skill-vibe-test-decay-probe/
 /devlog/swipeable-panorama-continuous-ridge/
 /devlog/zero-dollar-media-stack/
@@ -27,6 +29,7 @@
 /field-journal/deterministic-journey-art/
 /field-journal/duskpaper-animated-wallpapers/
 /field-journal/golden-fingerprints-generative-art/
+/field-journal/green-suite-silent-cli/
 /field-journal/skill-vibe-test-decay-probe/
 /field-journal/swipeable-panorama-continuous-ridge/
 /field-journal/zero-dollar-media-stack/
