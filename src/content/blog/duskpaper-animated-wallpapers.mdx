@@ -18,7 +18,7 @@ Hyprland is a tiling compositor for Wayland, and it draws no wallpaper of its ow
 
 ## Loops that close by construction
 
-A wallpaper loop plays hundreds of times a day, so the seam has to be mathematically absent. A crossfade only hides it. Every engine follows one contract: a `frame(t)` function returning an RGB array, where all motion is built from integer-frequency harmonics of `tau = 2*pi*t/period`. At `t = period`, every sine and cosine in the scene has completed a whole number of cycles and lands exactly on its starting value. The last frame flows into the first because the math cannot do otherwise.
+A wallpaper loop plays hundreds of times a day, so the seam has to be mathematically absent. A crossfade only hides it. Every engine follows one contract: a `frame(t)` function returning an RGB array, where all motion is built from integer-frequency harmonics of `tau = 2*pi*t/period`. At `t = period`, every sine and cosine in the scene has completed a whole number of cycles and lands exactly on its starting value. The last frame flows into the first because the math cannot do otherwise. The embers scene in the [media stack](/field-journal/zero-dollar-media-stack/) entry closes its loop the same way.
 
 Seven of the eight engines carry a self-test asserting `frame(0)` and `frame(period)` differ by at most 1 per channel (silk has none yet). Frames pipe as raw bytes straight into ffmpeg's stdin; there is no intermediate image sequence on disk.
 

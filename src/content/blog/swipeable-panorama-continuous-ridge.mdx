@@ -46,9 +46,9 @@ The fix inverts the layout contract. Each page renders at exact screen width wit
 
 The wanderer marker sits at each page's horizontal center, anchored per page as fractions and riding the ridge's y at that point. Center placement is deliberate: it is the furthest a sprite can be from both seams.
 
-And the reached-versus-locked split depends on the user's current tier (how far up the ridge their streak has taken them), which arrives from an async query. Render before it resolves and the frontier defaults to zero, flashing the user's own past biomes grey for a frame. The sibling journey screen already gated on the loading state; the new screen didn't, until it did. When you copy a pattern to a new screen, copy its load-gate too.
+And the reached-versus-locked split depends on the user's current tier (how far up the ridge their streak has taken them), which arrives from an async query. Render before it resolves and the frontier defaults to zero, flashing the user's own past biomes grey for a frame. The sibling [journey screen](/field-journal/deterministic-journey-art/) already gated on the loading state; the new screen didn't, until it did. When you copy a pattern to a new screen, copy its load-gate too.
 
-The engine's output is locked by golden-fingerprint tests, all twelve tiles hashed at the approved seed, so the render is pinned to the one I signed off on a real device.
+The engine's output is locked by [golden-fingerprint](/field-journal/golden-fingerprints-generative-art/) tests, all twelve tiles hashed at the approved seed, so the render is pinned to the one I signed off on a real device.
 
 ## The seam I put back on the way out
 

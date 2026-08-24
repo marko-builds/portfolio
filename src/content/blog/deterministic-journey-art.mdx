@@ -26,13 +26,13 @@ So SDXL got demoted to what it is good at, one-off hero sprites, and I rebuilt t
 
 ## A paper-cut style, from formulas
 
-The look is layered paper: flat color bands with torn edges, like cut construction paper. Each biome is a stack of bands with one of three edge types: torn (a wavy line plus smoothed noise for the deckle), hard (a crisp cut for cross-hue boundaries where any gradient would bleed), or a Catmull-Rom curve through control points for shaped coastlines.
+The look is layered paper: flat color bands with torn edges, like cut construction paper. Each biome is a stack of bands with one of three edge types: torn (a wavy line plus smoothed noise for the deckle), hard (a crisp cut for cross-hue boundaries where any gradient would bleed), or a Catmull-Rom curve through control points for shaped coastlines, the sea shore among them, which later got its own look-dev pass in a browser: the [prototype in the browser](/field-journal/browser-prototype-then-port/) entry.
 
 ![The three edge kinds drawn by the engine at seed 42, one per panel. Torn: a wave of 44 px amplitude with noise of sigma 7 smoothed by a 9 px average. Hard: 28 px amplitude, noise sigma 1.2, a 5 px average, flat fills on both sides. Catmull: a curve through 3 control points and no random numbers, the sea shore.](/images/blog/deterministic-journey-art/edge-types.svg)
 
 What sells the paper is the grain. Two orthogonal passes of smoothed white noise, vertical fibers and horizontal fibers, blended half and half into a weave, then high-passed so only the ~4px tooth remains, plus a soft large-scale mottle for uneven lighting. Applied at 16% strength it reads as canvas texture instead of pixel noise.
 
-One bug got past the design. Per-biome random-number streams were keyed with Python's built-in `hash()`, which is salted per process. Every run rendered slightly different art while the code claimed seed 42, invisible until I diffed two renders byte for byte. The fix is `hashlib.sha256` for any seed derivation that must reproduce. A test now pins every biome's SHA-256 at seed 42 in `test_refs/journey_biome_ref.json`, so this class of bug cannot return silently.
+One bug got past the design. Per-biome random-number streams were keyed with Python's built-in `hash()`, which is salted per process. Every run rendered slightly different art while the code claimed seed 42, invisible until I diffed two renders byte for byte. The fix is `hashlib.sha256` for any seed derivation that must reproduce. A test now pins every biome's SHA-256 at seed 42 in `test_refs/journey_biome_ref.json`, so this class of bug cannot return silently; that harness is the [golden fingerprints](/field-journal/golden-fingerprints-generative-art/) entry.
 
 ![Two code cards. Before: key = hash(...), salted per process through PYTHONHASHSEED, new bytes every run. After: the _rng function in journey_biome.py takes hashlib.sha256 of the tier and primitive name, keeps the first 4 bytes modulo 2 to the 31, and feeds seed, tier and key into np.random.default_rng, the same bytes in every process.](/images/blog/deterministic-journey-art/seed-derivation.svg)
 

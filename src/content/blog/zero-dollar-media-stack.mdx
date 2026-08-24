@@ -54,7 +54,7 @@ The honest limit: this covers designed sounds, not recordings. Applause, animals
 
 ## Scenery kits in one command
 
-The visual side works the same way. Fifteen scene engines render numpy frames: aurora curtains, rain, starfields, terminal code rain, silk flow, water caustics, drifting embers. `scenery.py` orchestrates a full kit: it renders one seamless base loop (60 seconds by default), stitches it to an hour with ffmpeg stream looping, then cuts a 15-second vertical reel, LinkedIn and YouTube banners, and a thumbnail from the same frames. One command, one folder of deliverables.
+The visual side works the same way. Fifteen scene engines render numpy frames: aurora curtains, rain, starfields, terminal code rain, silk flow, water caustics, drifting embers. The desktop cousin, which loops the same kind of scene as a live wallpaper, is the [duskpaper](/field-journal/duskpaper-animated-wallpapers/) entry. `scenery.py` orchestrates a full kit: it renders one seamless base loop (60 seconds by default), stitches it to an hour with ffmpeg stream looping, then cuts a 15-second vertical reel, LinkedIn and YouTube banners, and a thumbnail from the same frames. One command, one folder of deliverables.
 
 Embers is the clearest look at how a seamless loop gets engineered rather than crossfaded. Sparks are splatted into a buffer and blurred into soft glowing dots over black. Each one drifts upward a whole number of frame-heights per loop, so it re-enters the bottom exactly as it leaves the top, and a vertical edge fade hides the moment it wraps. Same trick as the reverb tail: make the period divide the motion and the seam has nowhere to appear.
 
