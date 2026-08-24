@@ -18,6 +18,8 @@ I built skill-vibe-test to answer that with a measurement instead of a feeling. 
 
 One test run is a scripted 10-turn conversation with a real agent, driven headlessly through session resumption so the context accumulates for real. Turn 1 gives the base task and establishes the baseline. Turns 2 through 5, 7, and 9 are fillers, several hundred words each of deliberately unrelated content (refrigeration cycles, trip planning, photosynthesis) whose only job is to dilute the context. Turns 6, 8, and 10 probe again with skill-relevant tasks.
 
+![The ten turn schedule as a strip. Turn 1 is the baseline probe at 31,925 context tokens. Turns 2 to 5 are fillers about refrigeration, a lighthouse keeper story, a trip through Japan and the metric system. Turn 6 is a probe at 37,990 tokens. Turn 7 is a filler about dinner ideas. Turn 8 is a probe at 39,384 tokens. Turn 9 is a filler about photosynthesis. Turn 10 is a probe at 40,979 tokens. Token counts are from conversation 1.](/images/blog/skill-vibe-test-decay-probe/probe-schedule.svg)
+
 Scoring is where most eval ideas die, so the judge is deliberately narrow. Before the run, a cold call extracts an observable-behavior rubric from the skill: five to eight checkable criteria like "runs the health script before any analysis, visible as a Bash call" or "never edits the capabilities file directly." The judge then scores each probe against that rubric using the tool-call trace, what the agent actually executed, not its prose. An agent that writes a lovely paragraph about running the script while not running it fails.
 
 Each verdict also carries an escape-hatch flag, for the distinct failure where the agent doesn't just miss steps but abandons the procedure entirely and hand-rolls its own approach. That distinction matters: partial compliance degrades output, escape-hatching means the skill has effectively unloaded.
@@ -51,7 +53,7 @@ Going back to the transcripts a month later, three things were wrong with that.
 
 There's no curve. Eight failures out of eight is a flat line at FAIL. A metric that returns the same value at every point cannot show a trend. Here is that run, redrawn from its saved transcripts by the current harness:
 
-![Chart titled "skill-vibe-test: does capabilities-health still steer sonnet as context fills?" plotting two conversations across baseline, turn 6, turn 8 and turn 10. Both lines sit flat on the FAIL axis at every probe point, with no point anywhere near PASS. Red X markers mark escape hatches at turns 6 and 8. A red banner across the top of the plot reads "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve".](/images/blog/skill-vibe-test-decay-probe/decay-flatline.png)
+![Chart titled "skill-vibe-test: does capabilities-health still steer sonnet as context fills?" plotting two conversations across baseline, turn 6, turn 8 and turn 10. Both lines sit flat on the FAIL axis at every probe point, with no point anywhere near PASS. Red X markers mark escape hatches at turns 6 and 8. A red banner across the top of the plot reads "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve".](/images/blog/skill-vibe-test-decay-probe/decay-flatline.svg)
 
 The red banner is the fix described at the end of this post, applied to the run that motivated it. The original chart carried no such warning, which is exactly how I came to publish it.
 
@@ -69,9 +71,13 @@ In the first conversation, the agent was asked at turn 6 whether any skills on d
 
 Compare that to the same agent's baseline in the same conversation, where it made fourteen calls including the census script the procedure requires. The skill didn't stop working between turn 1 and turn 6. It stopped being consulted. The agent went from running the prescribed script and getting the log format wrong, to not running the script at all.
 
+![Bar chart of tool calls per turn for both conversations. Conversation 1 in cyan: 14 calls at turn 1, none at turns 2 to 7, 1 at turn 8, none at turn 9, 1 at turn 10. Conversation 2 in amber: 13 at turn 1, none at turns 2 to 5, 3 at turn 6, none at turn 7, 1 at turn 8, none at turn 9, 2 at turn 10. Turns 1, 6, 8 and 10 are marked as probes.](/images/blog/skill-vibe-test-decay-probe/tool-calls-per-turn.svg)
+
 That's a degradation in the behavior the skill was written to produce, and you can check it yourself in the committed transcripts without agreeing with a single one of the judge's verdicts. It's a smaller claim than the one I originally made. It's the one I can defend.
 
 For the record, the honest version of the numbers: context went from about 31k to 40k tokens in the first conversation and 38k to 54k in the second. My original write-up quoted "31k to 54k," which is the start of one run and the end of the other.
+
+![Two panels. What I published: a textbook decay curve, eight of eight failed, four escape hatches, 31k to 54k. What the run supports, each with its source in the transcripts: a flat line at FAIL with no trend, the baseline gate was bypassed, two escape hatches and two over-called because conversation 2 ran the script at turns 6 and 8, 31k to 40k in conversation 1 and 38k to 54k in conversation 2, and tool calls in conversation 1 of 14, then 0, then 1.](/images/blog/skill-vibe-test-decay-probe/claimed-vs-supported.svg)
 
 ## Two lessons from building the harness
 

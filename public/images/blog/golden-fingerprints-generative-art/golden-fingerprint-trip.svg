@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 756" width="720" height="756" role="img" aria-labelledby="t d">
+<title id="t">What a golden fingerprint does when one bit moves</title>
+<desc id="d">Two result rows for the sea biome rendered at its pinned seed. The first, marked PASS in green, reads render at seed 42, untouched: sha256 matches the committed reference. The second, marked FAIL in red, reads same render, one pixel's low bit flipped, and shows the expected hash dbf8ca0cff255ed78024bd8340a6cd7a9cf9ec3eb66136429e4d5f658a08812e against a different hash beginning 856b11ccf7dc401a4f4512db6c4d2ed4aef1c39ac4943768. Below: the array is 2400 by 1080 by 3, so that is one changed value out of 7,776,000. A regression test that has never been red is a hope. This one has been red on purpose.</desc>
+<style>
+ .t{font:700 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .h{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .b{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .d{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792a0}
+ .m{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e4e9ec}
+ .mc{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5fcedb}
+ .md{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792a0}
+ .ma{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d99a5e}
+ .mg{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#6ec88c}
+ .mr{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d0342c}
+ .a{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d99a5e}
+ .g{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#6ec88c}
+ .r{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .c{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#5fcedb}
+ .hr{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .pill{font:700 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#0b0e15}
+ .p{fill:#0b0e15;stroke:#2a3242;stroke-width:1.5}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5a6675"/></marker></defs>
+<rect width="720" height="756" fill="#12151c"/>
+<text class="t" x="40" y="52">What a golden fingerprint does</text>
+<text class="t" x="40" y="92">when one bit moves</text>
+<text class="d" x="40" y="130">The sea biome rendered at its pinned seed,</text>
+<text class="d" x="40" y="160">checked against the committed reference twice.</text>
+<rect class="p" x="40" y="186" width="640" height="116" rx="6"/>
+<rect x="60" y="206" width="96" height="38" rx="4" fill="#6ec88c"/><text class="pill" x="108.0" y="234" text-anchor="middle">PASS</text>
+<text class="h" x="176" y="234">render at seed 42, untouched</text>
+<text class="md" x="60" y="282">sha256 matches the committed reference</text>
+<rect class="p" x="40" y="322" width="640" height="282" rx="6"/>
+<rect x="60" y="342" width="96" height="38" rx="4" fill="#d0342c"/><text class="pill" x="108.0" y="370" text-anchor="middle">FAIL</text>
+<text class="h" x="176" y="364">same render,</text>
+<text class="h" x="176" y="394">one pixel's low bit flipped</text>
+<text class="md" x="60" y="432">expected</text>
+<text class="m" x="60" y="462">dbf8ca0cff255ed78024bd8340a6cd7a</text>
+<text class="m" x="60" y="490">9cf9ec3eb66136429e4d5f658a08812e</text>
+<text class="ma" x="60" y="524">got</text>
+<text class="ma" x="60" y="554">856b11ccf7dc401a4f4512db6c4d2ed4</text>
+<text class="ma" x="60" y="582">aef1c39ac4943768...</text>
+<text class="b" x="40" y="638">The array is 2400 x 1080 x 3, so that is</text>
+<text class="b" x="40" y="670">one changed value out of 7,776,000.</text>
+<text class="d" x="40" y="706">A regression test that has never been red</text>
+<text class="d" x="40" y="736">is a hope. This one has been red on purpose.</text>
+</svg>

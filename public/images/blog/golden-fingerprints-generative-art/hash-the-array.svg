@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 760" width="720" height="760" role="img" aria-labelledby="t d">
+<title id="t">Hash the array, not the file</title>
+<desc id="d">One render at the pinned seed gives an ndarray of shape 2400 by 1080 by 3 with dtype uint8. Two paths lead down from it. The left path takes the raw bytes with tobytes and hashes them with sha256, giving a fingerprint of three fields, shape, dtype and sha256, and the same digest on every machine. The right path encodes a PNG through libpng into file bytes; the same pixels can give other bytes on another libpng, so the digest can move with no pixel change and the file is not a fingerprint.</desc>
+<style>
+ .t{font:700 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .h{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .b{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .d{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792a0}
+ .m{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e4e9ec}
+ .mc{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5fcedb}
+ .md{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792a0}
+ .ma{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d99a5e}
+ .mg{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#6ec88c}
+ .mr{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d0342c}
+ .a{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d99a5e}
+ .g{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#6ec88c}
+ .r{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .c{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#5fcedb}
+ .hr{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .pill{font:700 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#0b0e15}
+ .p{fill:#0b0e15;stroke:#2a3242;stroke-width:1.5}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5a6675"/></marker></defs>
+<rect width="720" height="760" fill="#12151c"/>
+<text class="t" x="40" y="52">Hash the array, not the file</text>
+<text class="d" x="40" y="88">One render, two paths. One digest is portable.</text>
+<rect class="p" x="40" y="108" width="640" height="76" rx="6"/>
+<text class="h" x="60" y="140">one render at the pinned seed</text>
+<text class="m" x="60" y="172">ndarray [2400, 1080, 3] uint8</text>
+<path d="M360 184 V208 H192.0 V232" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M360 184 V208 H528.0 V232" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<text class="c" x="192.0" y="262" text-anchor="middle">raw ndarray</text>
+<text class="a" x="528.0" y="262" text-anchor="middle">PNG file</text>
+<rect class="p" x="28" y="276" width="328" height="72" rx="6" style="stroke:#5fcedb"/>
+<text class="m" x="44" y="306">.tobytes()</text>
+<text class="d" x="44" y="336">the raw pixel bytes</text>
+<rect class="p" x="364" y="276" width="328" height="72" rx="6" style="stroke:#d99a5e"/>
+<text class="m" x="380" y="306">PNG encode</text>
+<text class="d" x="380" y="336">through libpng</text>
+<path d="M192.0 348 L192.0 370" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M528.0 348 L528.0 370" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="p" x="28" y="370" width="328" height="52" rx="6" style="stroke:#5fcedb"/>
+<text class="m" x="44" y="405">sha256</text>
+<rect class="p" x="364" y="370" width="328" height="52" rx="6" style="stroke:#d99a5e"/>
+<text class="m" x="380" y="405">file bytes</text>
+<path d="M192.0 422 L192.0 444" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M528.0 422 L528.0 444" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="p" x="28" y="444" width="328" height="150" rx="6" style="stroke:#5fcedb"/>
+<text class="c" x="44" y="478">the fingerprint</text>
+<text class="md" x="44" y="514">shape</text>
+<text class="m" x="144" y="514">[2400,1080,3]</text>
+<text class="md" x="44" y="548">dtype</text>
+<text class="m" x="144" y="548">uint8</text>
+<text class="md" x="44" y="582">sha256</text>
+<text class="mc" x="144" y="582">dbf8ca0c...</text>
+<rect class="p" x="364" y="444" width="328" height="150" rx="6" style="stroke:#d99a5e"/>
+<text class="a" x="380" y="478">not a fingerprint</text>
+<text class="d" x="380" y="514">same pixels can</text>
+<text class="d" x="380" y="548">give other bytes</text>
+<text class="d" x="380" y="582">on another libpng</text>
+<path d="M192.0 594 L192.0 616" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<path d="M528.0 594 L528.0 616" fill="none" stroke="#5a6675" stroke-width="2" marker-end="url(#a)"/>
+<rect class="p" x="28" y="616" width="328" height="70" rx="6" style="stroke:#6ec88c"/>
+<text class="g" x="44" y="646">same digest on</text>
+<text class="g" x="44" y="676">every machine</text>
+<rect class="p" x="364" y="616" width="328" height="70" rx="6" style="stroke:#d0342c"/>
+<text class="r" x="380" y="646">digest can move</text>
+<text class="r" x="380" y="676">with no pixel change</text>
+<text class="d" x="40" y="718">goldens.py hashes the ndarray before any</text>
+<text class="d" x="40" y="748">encoding. Those three fields are the entry.</text>
+</svg>

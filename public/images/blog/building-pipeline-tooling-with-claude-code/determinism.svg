@@ -1,35 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 336" width="880" height="336" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 844" width="720" height="844" role="img" aria-labelledby="t d">
 <title id="t">Why determinism is what makes a passing test mean anything</title>
-<desc id="d">Two columns. On the left, a deterministic build: the same input produces the same output on every run, so a red test means the code changed and green means green. On the right, a build that wanders between runs: the output differs each time, so a passing test proves only that this run happened to agree, and a failing test cannot tell a real regression from noise.</desc>
+<desc id="d">Two panels. On the top, a deterministic build: the same input produces the same output on every run, so a red test means the code changed and green means green. On the bottom, a build that wanders between runs: the output differs each time, so a passing test proves only that this run happened to agree, and a failing test cannot tell a real regression from noise.</desc>
 <style>
- .n{fill:#12151C;stroke:#2A3242;stroke-width:1.5;rx:4}
- .lab{font:600 15px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
- .sub{font:400 12.5px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
- .k{font:600 11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
- .mono{font:400 12.5px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
- .verdict{font:600 13.5px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
- .gate{font:600 13px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
+ .n{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 30px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792A0}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em}
+ .mono{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .verdict{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+ .gate{font:600 28px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#D99A5E}
 </style>
 <g>
- <text class="k" x="16" y="30" fill="#5FCEDB">DETERMINISM</text>
- <text class="lab" x="16" y="54">The property the whole test loop rests on</text>
+ <text class="k" x="16" y="36" fill="#5FCEDB">DETERMINISM</text>
+ <text class="ttl" x="16" y="76">The property the whole test loop</text>
+ <text class="ttl" x="16" y="114">rests on</text>
 
- <rect class="n" x="16" y="76" width="416" height="184" style="stroke:#5FCEDB"/>
- <text class="lab" x="38" y="106">Headless, scripted, same every time</text>
- <text class="mono" x="38" y="134">run 1   sha 9f2c...  budget ok</text>
- <text class="mono" x="38" y="156">run 2   sha 9f2c...  budget ok</text>
- <text class="mono" x="38" y="178">run 3   sha 9f2c...  budget ok</text>
- <text class="sub" x="38" y="206">A fluffed run just re-runs clean.</text>
- <text class="verdict" x="38" y="238" fill="#5FCEDB">Red means the code changed. Green means green.</text>
+ <rect class="n" x="16" y="136" width="688" height="254" style="stroke:#5FCEDB"/>
+ <text class="lab" x="38" y="174">Headless, scripted, same every time</text>
+ <text class="mono" x="38" y="208">run 1   sha 9f2c...  budget ok</text>
+ <text class="mono" x="38" y="238">run 2   sha 9f2c...  budget ok</text>
+ <text class="mono" x="38" y="268">run 3   sha 9f2c...  budget ok</text>
+ <text class="sub" x="38" y="302">A fluffed run just re-runs clean.</text>
+ <text class="verdict" x="38" y="336" fill="#5FCEDB">Red means the code changed.</text>
+ <text class="verdict" x="38" y="368" fill="#5FCEDB">Green means green.</text>
 
- <rect class="n" x="448" y="76" width="416" height="184"/>
- <text class="lab" x="470" y="106">A build that wanders between runs</text>
- <text class="mono" x="470" y="134">run 1   sha 9f2c...  budget ok</text>
- <text class="mono" x="470" y="156">run 2   sha 41ab...  budget ok</text>
- <text class="mono" x="470" y="178">run 3   sha c07e...  budget ok</text>
- <text class="sub" x="470" y="206">Nothing in the code changed.</text>
- <text class="verdict" x="470" y="238" fill="#8792A0">Green proves only that this run agreed with itself.</text>
+ <rect class="n" x="16" y="414" width="688" height="254"/>
+ <text class="lab" x="38" y="452">A build that wanders between runs</text>
+ <text class="mono" x="38" y="486">run 1   sha 9f2c...  budget ok</text>
+ <text class="mono" x="38" y="516">run 2   sha 41ab...  budget ok</text>
+ <text class="mono" x="38" y="546">run 3   sha c07e...  budget ok</text>
+ <text class="sub" x="38" y="580">Nothing in the code changed.</text>
+ <text class="verdict" x="38" y="614" fill="#8792A0">Green proves only that this run</text>
+ <text class="verdict" x="38" y="646" fill="#8792A0">agreed with itself.</text>
 
- <rect x="16" y="276" width="848" height="48" fill="#12151C" stroke="#2A3242" stroke-width="1.5" rx="4"/>
- <text class="gate" x="36" y="306">A check is only worth what its inputs are worth. Make the build boring first, then the test can carry weight.</text>
+ <rect x="16" y="692" width="688" height="136" fill="#12151C" stroke="#2A3242" stroke-width="2" rx="6"/>
+ <text class="gate" x="36" y="728">A check is only worth what its inputs</text>
+ <text class="gate" x="36" y="762">are worth. Make the build boring first,</text>
+ <text class="gate" x="36" y="796">then the test can carry weight.</text>
 </g></svg>

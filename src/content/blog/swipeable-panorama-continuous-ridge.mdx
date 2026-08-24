@@ -34,11 +34,11 @@ The greyed "locked" variants follow the same rule: the full panorama is rendered
 
 ## The crop that undid all of it
 
-The tiles are exactly 9:16. Modern phones are taller, and React Native's `resizeMode="cover"` handles that by scaling up and cropping the sides. On a 20:9 screen that quietly removes about 9% of each tile's width, and which 9%? The left and right edges. The exact columns where each tile connects to its neighbors.
+The tiles are exactly 9:16. Modern phones are taller, and React Native's `resizeMode="cover"` handles that by scaling up and cropping the sides. On a 20:9 screen that quietly removes about a tenth of each tile from each edge, a fifth of its width in all, and which tenth? The left and right edges. The exact columns where each tile connects to its neighbors.
 
 Every seam I had engineered to be invisible became a step: swipe, and the ridge jumps sideways by the cropped amount. The art had no seams; the display manufactured them.
 
-![Two versions of the same steppe-to-forest page boundary, zoomed in, with the terrain silhouette traced as a line. In the top version, labelled cover, each page has been scaled up and cropped by about nine percent and the traced ridge jumps vertically at the boundary. In the bottom version, labelled contain, the same two pages sit at exact screen width and the traced ridge runs straight through the boundary with no step.](/images/blog/swipeable-panorama-continuous-ridge/panorama-cover-crop.png)
+![Two versions of the same steppe-to-forest page boundary, zoomed in, with the terrain silhouette traced as a line. In the top version, labelled cover, each page has been scaled up and cropped by about a tenth from each edge and the traced ridge jumps vertically at the boundary. In the bottom version, labelled no crop, the same two pages sit at exact screen width at the art's own aspect and the traced ridge runs straight through the boundary with no step.](/images/blog/swipeable-panorama-continuous-ridge/panorama-cover-crop.png)
 
 The fix inverts the layout contract. Each page renders at exact screen width with no horizontal crop, bottom-aligned so the terrain hugs the bottom and the transparent sky above blends into the theme background. Cover-crop is fine for standalone images. For edge-matched slices it is never acceptable, because the edges are the feature.
 

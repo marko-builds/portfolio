@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 756" width="720" height="756" role="img" aria-labelledby="t d">
+<title id="t">Blast radius of a reference update</title>
+<desc id="d">Two runs compared across five reference files, one row per engine with its flag: music with UPDATE_MUSIC_REF, journey biome with UPDATE_JOURNEY_REF and marked broken, landscape with UPDATE_LANDSCAPE_REF, aurora with UPDATE_AURORA_REF, progress panorama with UPDATE_PANORAMA_REF. Run A sets UPDATE_MUSIC_REF=1 and runs python3 -m unittest test_music: only the music row is pinned, the other four are untouched, one reference re-pinned. Run B is rejected and hypothetical: a single UPDATE_REF=1 under python3 -m unittest discover pins all five rows at once, and the broken journey biome engine is pinned as correct, so nothing trips.</desc>
+<style>
+ .t{font:700 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .h{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .b{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .d{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792a0}
+ .m{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e4e9ec}
+ .mc{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5fcedb}
+ .md{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792a0}
+ .ma{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d99a5e}
+ .mg{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#6ec88c}
+ .mr{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d0342c}
+ .a{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d99a5e}
+ .g{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#6ec88c}
+ .r{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .c{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#5fcedb}
+ .hr{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .pill{font:700 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#0b0e15}
+ .p{fill:#0b0e15;stroke:#2a3242;stroke-width:1.5}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5a6675"/></marker></defs>
+<rect width="720" height="756" fill="#12151c"/>
+<text class="t" x="40" y="52">Blast radius of a reference update</text>
+<text class="d" x="40" y="88">Five refs, five flags. Which files get re-pinned?</text>
+<rect class="p" x="40" y="108" width="640" height="72" rx="6" style="stroke:#5fcedb"/>
+<text class="c" x="60" y="138">A</text>
+<text class="mc" x="100" y="138">UPDATE_MUSIC_REF=1</text>
+<text class="md" x="100" y="168">python3 -m unittest test_music</text>
+<rect class="p" x="40" y="192" width="640" height="72" rx="6" style="stroke:#d99a5e"/>
+<text class="a" x="60" y="222">B</text>
+<text class="ma" x="100" y="222">UPDATE_REF=1</text>
+<text class="d" x="310" y="222">rejected, hypothetical</text>
+<text class="md" x="100" y="252">python3 -m unittest discover</text>
+<text class="d" x="40" y="304">engine and its flag</text>
+<text class="c" x="445" y="304" text-anchor="middle">A</text>
+<text class="a" x="605" y="304" text-anchor="middle">B</text>
+<path d="M40 318 H680" stroke="#2a3242" stroke-width="1.5"/>
+<rect class="p" x="40" y="328" width="640" height="56" rx="6"/>
+<text class="h" x="60" y="354">music</text>
+<text class="md" x="60" y="380">UPDATE_MUSIC_REF</text>
+<rect x="375" y="337" width="140" height="38" rx="4" fill="#5fcedb"/><text class="pill" x="445.0" y="365" text-anchor="middle">pinned</text>
+<rect x="535" y="337" width="140" height="38" rx="4" fill="#d99a5e"/><text class="pill" x="605.0" y="365" text-anchor="middle">pinned</text>
+<rect class="p" x="40" y="392" width="640" height="56" rx="6" style="stroke:#d0342c"/>
+<text class="hr" x="60" y="418">journey biome, broken</text>
+<text class="md" x="60" y="444">UPDATE_JOURNEY_REF</text>
+<text class="d" x="445" y="429" text-anchor="middle">untouched</text>
+<rect x="535" y="401" width="140" height="38" rx="4" fill="#d0342c"/><text class="pill" x="605.0" y="429" text-anchor="middle">pinned</text>
+<rect class="p" x="40" y="456" width="640" height="56" rx="6"/>
+<text class="h" x="60" y="482">landscape</text>
+<text class="md" x="60" y="508">UPDATE_LANDSCAPE_REF</text>
+<text class="d" x="445" y="493" text-anchor="middle">untouched</text>
+<rect x="535" y="465" width="140" height="38" rx="4" fill="#d99a5e"/><text class="pill" x="605.0" y="493" text-anchor="middle">pinned</text>
+<rect class="p" x="40" y="520" width="640" height="56" rx="6"/>
+<text class="h" x="60" y="546">aurora</text>
+<text class="md" x="60" y="572">UPDATE_AURORA_REF</text>
+<text class="d" x="445" y="557" text-anchor="middle">untouched</text>
+<rect x="535" y="529" width="140" height="38" rx="4" fill="#d99a5e"/><text class="pill" x="605.0" y="557" text-anchor="middle">pinned</text>
+<rect class="p" x="40" y="584" width="640" height="56" rx="6"/>
+<text class="h" x="60" y="610">progress panorama</text>
+<text class="md" x="60" y="636">UPDATE_PANORAMA_REF</text>
+<text class="d" x="445" y="621" text-anchor="middle">untouched</text>
+<rect x="535" y="593" width="140" height="38" rx="4" fill="#d99a5e"/><text class="pill" x="605.0" y="621" text-anchor="middle">pinned</text>
+<text class="g" x="40" y="674">A: one reference re-pinned.</text>
+<text class="r" x="40" y="706">B: all five, the broken engine now</text>
+<text class="r" x="40" y="736">pinned as correct. Nothing trips.</text>
+</svg>

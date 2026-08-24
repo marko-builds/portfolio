@@ -6,7 +6,7 @@
   },
   "building-pipeline-tooling-with-claude-code": {
     "title": "The Agent Is Only as Good as the Check That Grades It",
-    "body": "ea66df63246a36555f6d4ab6fb569cd34ca35809d7829429203967adca23ecfb"
+    "body": "9255ad44abeb421e7d1ea5f53379ef4b6f34f8e64bf4b53210c9f1fd6f38e956"
   },
   "deterministic-journey-art": {
     "title": "From SDXL to NumPy: Making Habitagram's Journey Art Deterministic",
@@ -22,7 +22,7 @@
   },
   "golden-fingerprints-generative-art": {
     "title": "Golden Fingerprints: Regression Tests for Generative Art",
-    "body": "d100ce8e83fefb27a43c372e741432cce05d5089fb8c2e53ad13b3bfd4d73547"
+    "body": "9d214b353259cd9ca541bd5b9ea508c813940023870a5e61c6f4b2bfb33fbc74"
   },
   "multi-tenant-uniqueness-postgres": {
     "title": "The Uniqueness Check You Cannot Write in App Code",
@@ -46,7 +46,7 @@
   },
   "skill-vibe-test-decay-probe": {
     "title": "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate.",
-    "body": "41fe718b03928bb34c56aa0514efa9b1831a18065533ee404a39b9c7715b333e"
+    "body": "ed6bd4b7f3bd3d0af3c13a6dcba4c3ed45b8885519a5f0177fa55a797ba52819"
   },
   "solo-founder-observability": {
     "title": "Observability for a Solo Launch: What I Wired Before DeployLog Went Live",
@@ -54,7 +54,7 @@
   },
   "swipeable-panorama-continuous-ridge": {
     "title": "One Ridge, Six Screens: Building a Swipeable Panorama From Continuous Art",
-    "body": "dbb67f03144c413032673601c2ca7745d9fd37790a167159ef989162faa6f2a2"
+    "body": "a97f7ec31ab83c73065793a7410e0a34aa6aecc0053b6a928c85362009ac7529"
   },
   "tictactoe-theme-system": {
     "title": "One ScriptableObject Per Theme: A Data-Driven Theme System in Unity",
@@ -62,6 +62,6 @@
   },
   "zero-dollar-media-stack": {
     "title": "The $0 Media Stack: Music, SFX, and Scenery Synthesized From Math",
-    "body": "e34c6c40e03883cd5cf8adcee96d66d4bd2360cbf53cc6d4870b6d4705c7f6b4"
+    "body": "8481f953734476eba63cad191d18df8b25348e776c6564e72d68cdd805e95af5"
   }
 }

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 758" width="720" height="758" role="img" aria-labelledby="t d">
+<title id="t">The reference table, one file per engine</title>
+<desc id="d">Five reference files. Journey biome pins nine cases at seed 42, six biomes plus the stacked canvas and two sea variants, uint8. Landscape pins seven cases at seed 42, six palettes at t 0 plus forest at t 7.5, uint8. Aurora pins ten cases with no seed, five palettes at t 0 and t 20 with meteors off, uint8. Progress panorama pins twelve cases at seed 52, six tiles each in colour and gray, uint8. Music pins six cases at seed 30, six moods of 8 bars each, float64. That is 44 pinned cases, and run-goldens.sh runs 38 tests in 11 classes. The music row is marked in amber: float64 is toolchain locked, a numpy, BLAS or FFT change can flip low bits and trip a false regression, so numpy is pinned first.</desc>
+<style>
+ .t{font:700 34px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .h{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .b{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#e4e9ec}
+ .d{font:400 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#8792a0}
+ .m{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e4e9ec}
+ .mc{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5fcedb}
+ .md{font:500 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792a0}
+ .ma{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d99a5e}
+ .mg{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#6ec88c}
+ .mr{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#d0342c}
+ .a{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d99a5e}
+ .g{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#6ec88c}
+ .r{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .c{font:600 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#5fcedb}
+ .hr{font:700 26px ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;fill:#d0342c}
+ .pill{font:700 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#0b0e15}
+ .p{fill:#0b0e15;stroke:#2a3242;stroke-width:1.5}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5a6675"/></marker></defs>
+<rect width="720" height="758" fill="#12151c"/>
+<text class="t" x="40" y="52">One reference file per engine</text>
+<text class="d" x="40" y="88">From play/test_refs. A case is shape, dtype, sha256.</text>
+<text class="d" x="40" y="134">engine</text>
+<text class="d" x="440" y="134" text-anchor="end">seed</text>
+<text class="d" x="545" y="134" text-anchor="end">cases</text>
+<text class="d" x="672" y="134" text-anchor="end">dtype</text>
+<path d="M40 148 H680" stroke="#2a3242" stroke-width="1.5"/>
+<rect class="p" x="40" y="158" width="640" height="72" rx="6"/>
+<text class="h" x="60" y="190">journey biome</text>
+<text class="m" x="440" y="190" text-anchor="end">42</text>
+<text class="m" x="545" y="190" text-anchor="end">9</text>
+<text class="m" x="672" y="190" text-anchor="end">uint8</text>
+<text class="d" x="60" y="220">six biomes, stacked canvas, two sea variants</text>
+<rect class="p" x="40" y="238" width="640" height="72" rx="6"/>
+<text class="h" x="60" y="270">landscape</text>
+<text class="m" x="440" y="270" text-anchor="end">42</text>
+<text class="m" x="545" y="270" text-anchor="end">7</text>
+<text class="m" x="672" y="270" text-anchor="end">uint8</text>
+<text class="d" x="60" y="300">six palettes at t 0, plus forest at t 7.5</text>
+<rect class="p" x="40" y="318" width="640" height="72" rx="6"/>
+<text class="h" x="60" y="350">aurora</text>
+<text class="md" x="440" y="350" text-anchor="end">none</text>
+<text class="m" x="545" y="350" text-anchor="end">10</text>
+<text class="m" x="672" y="350" text-anchor="end">uint8</text>
+<text class="d" x="60" y="380">five palettes at t 0 and t 20, meteors off</text>
+<rect class="p" x="40" y="398" width="640" height="72" rx="6"/>
+<text class="h" x="60" y="430">progress panorama</text>
+<text class="m" x="440" y="430" text-anchor="end">52</text>
+<text class="m" x="545" y="430" text-anchor="end">12</text>
+<text class="m" x="672" y="430" text-anchor="end">uint8</text>
+<text class="d" x="60" y="460">six tiles, each in colour and gray</text>
+<rect class="p" x="40" y="478" width="640" height="72" rx="6" style="stroke:#d99a5e"/>
+<text class="h" x="60" y="510">music</text>
+<text class="m" x="440" y="510" text-anchor="end">30</text>
+<text class="m" x="545" y="510" text-anchor="end">6</text>
+<text class="ma" x="672" y="510" text-anchor="end">float64</text>
+<text class="d" x="60" y="540">six moods, 8 bars each</text>
+<path d="M40 556 H680" stroke="#2a3242" stroke-width="1.5"/>
+<text class="b" x="60" y="588">pinned cases</text>
+<text class="mc" x="545" y="588" text-anchor="end">44</text>
+<text class="b" x="60" y="620">tests in run-goldens.sh, 11 classes</text>
+<text class="mc" x="545" y="620" text-anchor="end">38</text>
+<rect class="p" x="40" y="642" width="640" height="100" rx="6" style="stroke:#d99a5e"/>
+<text class="a" x="60" y="676">float64 is toolchain locked</text>
+<text class="d" x="60" y="706">a numpy, BLAS or FFT change can flip low bits</text>
+<text class="d" x="60" y="734">and trip a false regression. Pin numpy first.</text>
+</svg>
