@@ -1,7 +1,7 @@
 ---
 title: "I Built a Skill Decay Probe. Its First Run Was Invalid by Its Own Gate."
 date: "2026-07-07"
-excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and had to throw most of the result away. Here is the part that held up, and how I know which part that is."
+excerpt: "Claude Code skills steer an agent well on turn one. I built skill-vibe-test to check whether the steering survives a long session, pointed it at one of my own skills, and had to throw most of the result away. The part that held up: by turn 6 the agent had stopped running the script the skill prescribes. The skill did not stop working. It stopped being consulted."
 opener: "A Claude Code skill steers the agent on turn one; the question is turn ten, after the context has filled with other things. I built skill-vibe-test to measure that decay, pointed it at one of my own skills, and the first run was thrown out by the gate I had written into it. What held up is the useful part, and so is how I know which part that is."
 tags: ["AI Engineering", "Claude Code", "Evals", "Python", "LLM", "Agents"]
 beat: agents
@@ -10,21 +10,21 @@ draft: false
 entry: "02"
 ---
 
-A Claude Code skill is a markdown file of instructions the agent loads for a task: run this script first, never edit that file, append the log in this exact format. Turn one, freshly loaded, they work. My question was about turn ten: after the conversation has moved through other topics and the context has filled with unrelated material, does the agent still follow the procedure, or does it quietly start improvising?
+A Claude Code skill is a markdown file of instructions the agent loads for a task: run this script first, never edit that file, append the log in this exact format. Turn one, freshly loaded, they work. My question was about turn ten: after the conversation has moved through other topics and the context has filled with unrelated material, does the agent still follow the procedure, or does it quietly improvise, so that you find out from the artifact it got wrong rather than from the agent?
 
 I built skill-vibe-test to answer that with a measurement instead of a feeling. Then I pointed it at one of my own skills, and I got two answers. The first was that the skill behaved badly. The second, which took me a month to go back and find, was that my run could not support the claim I wanted to make from it.
 
 ## The probe
 
-One test run is a scripted 10-turn conversation with a real agent, driven headlessly through session resumption so the context accumulates for real. Turn 1 gives the base task and establishes the baseline. Turns 2 through 5, 7, and 9 are fillers, several hundred words each of deliberately unrelated content (refrigeration cycles, trip planning, photosynthesis) whose only job is to dilute the context. Turns 6, 8, and 10 probe again with skill-relevant tasks.
+One test run is a scripted 10-turn conversation with a real agent, driven headlessly through session resumption so the context accumulates across one session. Turn 1 gives the base task and establishes the baseline. Turns 2 through 5, 7, and 9 are fillers, several hundred words each of deliberately unrelated content (refrigeration cycles, trip planning, photosynthesis) whose only job is to dilute the context. Turns 6, 8, and 10 probe again with skill-relevant tasks.
 
 ![The ten turn schedule as a strip. Turn 1 is the baseline probe at 31,925 context tokens. Turns 2 to 5 are fillers about refrigeration, a lighthouse keeper story, a trip through Japan and the metric system. Turn 6 is a probe at 37,990 tokens. Turn 7 is a filler about dinner ideas. Turn 8 is a probe at 39,384 tokens. Turn 9 is a filler about photosynthesis. Turn 10 is a probe at 40,979 tokens. Token counts are from conversation 1.](/images/blog/skill-vibe-test-decay-probe/probe-schedule.svg)
 
-Scoring is where most eval ideas die, so the judge is deliberately narrow. Before the run, a cold call extracts an observable-behavior rubric from the skill: five to eight checkable criteria like "runs the health script before any analysis, visible as a Bash call" or "never edits the capabilities file directly." The judge then scores each probe against that rubric using the tool-call trace, what the agent actually executed, not its prose. An agent that writes a lovely paragraph about running the script while not running it fails.
+Scoring is where most eval ideas die, so the judge is deliberately narrow. Before the run, a cold call (one model call with only the skill file in context) extracts an observable-behavior rubric from the skill: five to eight checkable criteria like "runs the health script before any analysis, visible as a Bash call" or "never edits the capabilities file directly." The judge then scores each probe against that rubric using the tool-call trace, what the agent actually executed, not its prose. An agent that writes a lovely paragraph about running the script while not running it fails.
 
 Each verdict also carries an escape-hatch flag, for the distinct failure where the agent doesn't just miss steps but abandons the procedure entirely and hand-rolls its own approach. That distinction matters: partial compliance degrades output, escape-hatching means the skill has effectively unloaded.
 
-There's one more piece, and it's the piece this post is really about. The baseline is a gate. If the skill cannot steer a fresh, undiluted context, then whatever happens at turn 10 isn't decay, it's a skill that never worked. So the harness stops:
+One more piece. The baseline is a gate. If the skill cannot steer a fresh, undiluted context, then turn 10 measures a skill that never worked in the first place. So the harness stops:
 
 ```python
 if cfg.baseline_gate:
@@ -39,7 +39,7 @@ if cfg.baseline_gate:
 
 ## First target: my own tooling
 
-The first real subject was capabilities-health, a maintenance skill of mine with a strict procedure. Two conversations against Sonnet, judged by Sonnet, $1.77 for the run.
+The first real subject was capabilities-health, a maintenance skill of mine with a strict procedure. Two conversations against Sonnet, judged by Sonnet, $1.77 of API spend for the run including the judge.
 
 Every probe failed. Both baselines, both turn 6s, both turn 8s, both turn 10s. Eight out of eight.
 
@@ -73,7 +73,7 @@ Compare that to the same agent's baseline in the same conversation, where it mad
 
 ![Bar chart of tool calls per turn for both conversations. Conversation 1 in cyan: 14 calls at turn 1, none at turns 2 to 7, 1 at turn 8, none at turn 9, 1 at turn 10. Conversation 2 in amber: 13 at turn 1, none at turns 2 to 5, 3 at turn 6, none at turn 7, 1 at turn 8, none at turn 9, 2 at turn 10. Turns 1, 6, 8 and 10 are marked as probes.](/images/blog/skill-vibe-test-decay-probe/tool-calls-per-turn.svg)
 
-That's a degradation in the behavior the skill was written to produce, and you can check it yourself in the committed transcripts without agreeing with a single one of the judge's verdicts. It's a smaller claim than the one I originally made. It's the one I can defend.
+That's a degradation in the behavior the skill was written to produce, and it is visible in the raw tool trace of the saved transcripts without agreeing with a single one of the judge's verdicts. It's a smaller claim than the one I originally made. It's the one I can defend.
 
 For the record, the honest version of the numbers: context went from about 31k to 40k tokens in the first conversation and 38k to 54k in the second. My original write-up quoted "31k to 54k," which is the start of one run and the end of the other.
 
@@ -81,16 +81,16 @@ For the record, the honest version of the numbers: context went from about 31k t
 
 ## Two lessons from building the harness
 
-Measuring context size looked trivial and wasn't. The CLI's reported usage aggregates every internal iteration of an agentic turn, and summing it produced an impossible 256k "context." The truthful number is the last iteration's input picture, the final API call's input plus cache reads. Read the last element, not the sum.
+Measuring context size looked trivial and wasn't. The CLI's reported usage aggregates every internal iteration of an agentic turn, and summing it produced an impossible 256k "context." The truthful number is the last iteration only: the final API call's input tokens plus cache reads and cache writes. Read the last element, not the sum.
 
 The subtler one: the subject can see the experiment. Early sandboxes were temp directories prefixed `skill-vibe-`, and a transcript showed the agent reading its own path and reasoning about "this skill-vibe checkout," aware it was being tested. Sandboxes are now prefixed `repo-`. Anything the subject can observe (paths, file names, stub contents) is part of the experiment, and it will read the label on the jar.
 
 ## What it changes
 
-The tool exits 1 on any decay, so a skill can be gated on surviving its own vibe test before it ships. For skills that keep failing, the fix is usually structural rather than rhetorical: move the invariant out of prose and into something the agent cannot drift from, a script, a hook, a hard check.
+The tool exits 1 on any decay, so a skill can be gated on surviving its own vibe test before it ships. The harness is public at github.com/marko-builds/skill-vibe-test. For skills that keep failing, the fix is usually structural rather than rhetorical: move the invariant out of prose and into something the agent cannot drift from, a script, a hook, a hard check.
 
-The harness change I made after re-reading this: a bypassed gate is now loud. When the turn-1 probe fails and `--no-baseline-gate` is set, the run records it and every artifact says so. The terminal summary leads with it, the report carries it as a banner above the results, and the chart gets a red stamp across the top reading "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve." Not just a status field in a JSON file nobody opens. A safeguard you can silently switch off is a safeguard that will be silently switched off.
+The harness change I made after re-reading this: a bypassed gate is now loud. When the turn-1 probe fails and `--no-baseline-gate` is set, the run records it and every artifact says so. The terminal summary leads with it, the report carries it as a banner above the results, and the chart gets a red stamp across the top reading "BASELINE GATE BYPASSED: turn 1 already failed, so this is not a decay curve." A status field in a JSON file nobody opens is not loud. A safeguard you can silently switch off is a safeguard that will be silently switched off.
 
-It's easy to build an instrument, point it at something, and then read its output through the conclusion you were hoping for. The judge was too generous with one label. I was too generous with the whole run.
+The judge was too generous with one label. I was too generous with the whole run.
 
 Trust in an agent's steering should be measured, not vibed. So should trust in the thing doing the measuring, which is a funny lesson to get from a tool with vibe in its name.
