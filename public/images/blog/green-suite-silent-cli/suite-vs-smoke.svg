@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" width="720" height="720" role="img" aria-labelledby="t d">
+<title id="t">Same tree, two checks</title>
+<desc id="d">With the guard as shipped, vitest reports 98 passed and the smoke check fails. With the fix, vitest reports 98 passed and the smoke check passes. Only the smoke check moves.</desc>
+<style>
+ .bg{fill:#12151C}
+ .p{fill:#0B0E15;stroke:#2A3242;stroke-width:2;rx:6}
+ .b{fill:#12151C;stroke:#2A3242;stroke-width:2;rx:6}
+ .k{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB;letter-spacing:.08em}
+ .ttl{font:600 34px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#E4E9EC}
+ .lab{font:600 28px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#E4E9EC}
+ .sub{font:400 26px ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:#8792A0}
+ .mono{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#E4E9EC}
+ .dim{font:400 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#8792A0}
+ .cy{fill:#5FCEDB}
+ .am{fill:#D99A5E}
+ .cyt{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#5FCEDB}
+ .amt{font:600 26px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#D99A5E}
+</style>
+<rect class="bg" width="720" height="720"/>
+<text class="k" x="16" y="36">CALIBRATED</text>
+<text class="ttl" x="16" y="76">Same tree, two checks</text>
+<rect x="16" y="100" width="688" height="260" fill="#0B0E15" stroke="#D99A5E" stroke-width="2" rx="6"/>
+<text class="lab" x="32" y="140">the guard as it shipped</text>
+<text class="dim" x="32" y="184">$ npx vitest run</text>
+<text class="cyt" x="32" y="220">Tests  98 passed (98)</text>
+<text class="dim" x="32" y="268">$ npm run smoke</text>
+<text class="amt" x="32" y="304">SMOKE FAIL: --version printed</text>
+<text class="amt" x="32" y="336">nothing through the bin symlink</text>
+<rect x="16" y="384" width="688" height="230" fill="#0B0E15" stroke="#5FCEDB" stroke-width="2" rx="6"/>
+<text class="lab" x="32" y="424">with the fix</text>
+<text class="dim" x="32" y="468">$ npx vitest run</text>
+<text class="cyt" x="32" y="504">Tests  98 passed (98)</text>
+<text class="dim" x="32" y="552">$ npm run smoke</text>
+<text class="cyt" x="32" y="588">SMOKE PASS: bin symlink works</text>
+<text class="sub" x="16" y="660">The suite is green in both boxes.</text>
+<text class="sub" x="16" y="694">Only the check that takes the user's path moves.</text>
+</svg>

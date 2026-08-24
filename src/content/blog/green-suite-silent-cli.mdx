@@ -1,0 +1,73 @@
+---
+title: "The Suite Was Green, and the Installed CLI Did Nothing"
+date: "2026-08-09"
+excerpt: "changelogue passed 98 tests and, once installed, exited 0 with no output for every user. The bug sat in the entry-point guard, below the line any import can reach. The fix is small. The smoke check that proves it, calibrated by putting the bug back, is the check I kept."
+opener: "Ninety-eight tests passed. The installed binary ran, printed nothing, and exited with code 0. Nothing that imports a module can see how that module is invoked, so the unit suite was blind to the one path every installed user takes. This is the near miss, the one-line cause, and the smoke check I calibrated by putting the bug back."
+tags: ["Node.js", "npm", "CLI", "Testing", "Verification"]
+beat: artifacts
+draft: false
+entry: "12"
+ogImage: "/images/blog/green-suite-silent-cli/og-silent-cli.png"
+---
+
+changelogue is a small CLI that writes a changelog from git history. The whole bug is one line at the bottom of its `src/index.ts`:
+
+```ts
+if (import.meta.url === `file://${process.argv[1]}`) {
+  buildProgram().parse(process.argv)
+}
+```
+
+It asks a fair question. Is this file the one node was told to run? If yes, parse the arguments and do the work. If no, something imported the file, so stay quiet and let the importer call `buildProgram()` itself.
+
+`node dist/index.js` answers yes. The path node was given and the path of the file it loaded are the same string. Every development run and every test run took that route, and every one of them worked.
+
+`npx changelogue` answers no. And a no here is silent by design: no parse, no output, no error, exit 0.
+
+## What npm does with a bin
+
+npm does not copy a package's bin into place. It writes a symlink at `node_modules/.bin/changelogue` that points at `../changelogue/dist/index.js`. When node loads that file, it resolves the symlink first, so `import.meta.url` holds the real path. `process.argv[1]` keeps whatever you typed, symlink and all. The two sides of that `===` never agree through the bin entry, and the bin entry is the only one a user has.
+
+![Two paths to one file. What you typed, node_modules/.bin/changelogue, is a symlink to node_modules/changelogue/dist/index.js. process.argv[1] keeps the typed path. import.meta.url resolves the symlink and holds the real path. The guard compares the two with a strict equality, and through the symlink they are never equal, so the CLI never runs.](/images/blog/green-suite-silent-cli/two-sides.svg)
+
+You can reproduce it with a seven-line package. I did. The terminal below is that package running, both ways.
+
+![Terminal output from a seven-line package with the same guard. Running node on the file directly prints the greeting and exits 0. readlink shows the bin entry is a symlink to the same file. Running the bin entry prints nothing and exits 0. The last three lines print the two sides of the comparison: argv[1] is the .bin path, import.meta.url is the resolved file, and gluing file:// onto argv[1] produces a URL that matches neither.](/images/blog/green-suite-silent-cli/repro-terminal.svg)
+
+## Why 98 tests could not see it
+
+The unit suite imports `buildProgram()` and drives it in-process. That is the right way to test what a CLI does, and it is why the suite could not fail here. Importing the module runs the guard once, with a vitest worker as `argv[1]`, so the guard takes its false branch and does nothing, which is what a test wants. The true branch, the one that runs for a user, is never executed by anything that imports the file.
+
+![Three ways to reach the guard. A test file imports index.ts: argv[1] is a vitest worker, the guard is false, nothing runs, and the test drives buildProgram() itself. A dev run of node dist/index.js: both sides hold the same path, the guard is true, and parse runs. A user run through node_modules/.bin: argv[1] is the symlink, import.meta.url is the real file, the guard is false, and the process exits 0 having done nothing. Only the third row is what a user sees, and no test takes it.](/images/blog/green-suite-silent-cli/three-ways.svg)
+
+Nothing that imports a module can test how that module is invoked. That is the scope of every unit suite. Green is evidence about the code the tests reached and nothing past it, which is the same rule as [the agent being only as good as the check that grades it](/field-journal/building-pipeline-tooling-with-claude-code/).
+
+## The check that takes the user's path
+
+The fix is small. Resolve the symlink before comparing, and build the URL with `pathToFileURL` instead of gluing `file://` onto a string, which also breaks on a path with a space in it.
+
+```ts
+function isEntryPoint(): boolean {
+  const invoked = process.argv[1]
+  if (!invoked) return false
+  try {
+    return import.meta.url === pathToFileURL(realpathSync(invoked)).href
+  } catch {
+    return false
+  }
+}
+```
+
+The check I kept is [scripts/smoke.sh](https://github.com/marko-builds/changelogue/blob/main/scripts/smoke.sh). It packs the package, installs the tarball into a throwaway project, and runs the tool through `node_modules/.bin` in a throwaway git repo with one commit. It asserts three things: `--version` prints the manifest version, `--help` prints usage, and the repo produces output that names the commit. Every assertion goes through the symlink, because that is the path the suite cannot take.
+
+Then I calibrated it. I put the old guard back and ran the check. It failed, with the message written for this bug. I restored the fix and ran it again. It passed. A check I have not watched fail is a comment with an exit code.
+
+![Two columns, same tree. Left, the guard as it shipped: npx vitest run reports 98 passed, and npm run smoke reports SMOKE FAIL, --version printed nothing through the bin symlink, exit 1. Right, with the fix: 98 passed, and SMOKE PASS, bin symlink works, exit 0. The unit suite is green in both columns. Only the smoke check moves.](/images/blog/green-suite-silent-cli/suite-vs-smoke.svg)
+
+## What it would have cost
+
+changelogue is the changelog generator I built alongside [DeployLog](https://deploylog.dev), and it was not on npm yet. I found this on the day I was preparing the first publish, so the cost is the one it avoided. npm does not let you publish over a version, so a silent 0.1.0 would have stayed 0.1.0 on the registry, and the first thing every early user saw would have been a command that does nothing. The suite would have been green the whole time.
+
+## The rule I kept
+
+Before you publish a CLI, run it once the way a user will: `./node_modules/.bin/<name> --version` from a project that installed the tarball, not `node dist/index.js` from the repo. If it prints nothing, you have this bug. And if you want the check to keep earning its place, break the guard on purpose and watch it fail once.
