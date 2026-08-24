@@ -5,7 +5,7 @@
 export const hero = {
   name: "Marko Stankovic",
   line: "I create constructs of artificial intelligence, and I bring back the proof.",
-  sub: "DeployLog and Habitagram are nearly out of the vault, three open source gadgets sit on GitHub, and the engine that paints the maps is mine, built with AI agents. Every number below links to the dig site.",
+  sub: "DeployLog and Habitagram are nearly out of the vault, eight open source gadgets sit on GitHub, and the engine that paints the maps is mine, built with AI agents. Every number below links to the dig site.",
   photo: "/portrait.webp",
   ctas: [
     { label: "Open the field journal", href: "/field-journal", primary: true },

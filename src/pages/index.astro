@@ -22,8 +22,12 @@ const recentPosts = (await getCollection("blog"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 4);
 
-// Gadgets: the v2 proof cards, verbatim. Every card carries a link, a number and a date,
-// each read off the repos themselves on 2026-08-15 (gh repo list + each README).
+// Gadgets: the proof cards. Every card carries a link, a number and a date, each read off
+// the repo itself on 2026-08-24 (gh repo list + each README + the source line the metric
+// comes from). The words and the metric sources are recorded in the copy pack
+// (issues/copy-pack-v3.md section 11, "Gadget cards"); change them there first. Expanded
+// 2026-08-24 from the three v2 cards (read 2026-08-15): duskpaper had grown from 6 to 8
+// scenes, and five repos had gone public since.
 const proof = [
   {
     name: "skill-vibe-test",
@@ -40,11 +44,46 @@ const proof = [
     href: "https://github.com/marko-builds/adpreflight",
   },
   {
+    name: "reef-rush",
+    what: "A 25 second HTML5 playable ad you can open and play. One file, no network at runtime, sound synthesized in code. Built to show the packaging rules ad networks enforce, and it passes adpreflight on both rule packs.",
+    metric: "1 file, 3.6 MB of the 5 MB limit",
+    date: "Aug 2026",
+    href: "https://github.com/marko-builds/reef-rush",
+  },
+  {
+    name: "changelogue",
+    what: "Changelogs from real git history, no commit convention required. Offline by default; bring your own model to group messy commits into readable notes. Nothing leaves your machine on the default path.",
+    metric: "3 AI providers, offline by default",
+    date: "Aug 2026",
+    href: "https://github.com/marko-builds/changelogue",
+  },
+  {
     name: "duskpaper",
     what: "Renders animated wallpapers on your machine, at your resolution, from your seed. Every loop is seamless by construction, not by luck.",
-    metric: "6 scene engines",
+    metric: "8 scene engines",
     date: "Jul 2026",
     href: "https://github.com/marko-builds/duskpaper",
+  },
+  {
+    name: "borealis",
+    what: "A fullscreen aurora you summon on Omarchy when you step away. One fragment shader draws the curtains, the stars, the meteors, a crescent moon, a ridge and the water below. No assets; the math is ported from my aurora engine.",
+    metric: "5 palettes, 0 assets",
+    date: "Aug 2026",
+    href: "https://github.com/marko-builds/borealis",
+  },
+  {
+    name: "porthole",
+    what: "Pins a live, cropped view of any window in a corner of your screen, always on top, on every workspace. Crop the two lines of a build log that matter and stop flipping workspaces to check on them.",
+    metric: "resizes 200 to 1400 px wide",
+    date: "Aug 2026",
+    href: "https://github.com/marko-builds/porthole",
+  },
+  {
+    name: "lodestar",
+    what: "Learn Omarchy by doing it. One task at a time on your own desktop, confirmed by listening to Hyprland's own window and workspace events. It reads events, never your screen.",
+    metric: "8 lessons, about ten minutes",
+    date: "Aug 2026",
+    href: "https://github.com/marko-builds/lodestar",
   },
 ];
 
