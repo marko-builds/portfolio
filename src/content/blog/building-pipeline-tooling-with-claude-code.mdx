@@ -1,19 +1,19 @@
 ---
 title: "The Agent Is Only as Good as the Check That Grades It"
 date: "2026-08-19"
-excerpt: "How I ship tooling an AI agent wrote and actually trust the result: align before any code, build in vertical slices test first, and keep the build deterministic so a passing check means something."
-opener: "The tooling around our game, the headless Blender exporters and the Unreal import plugin, is written with Claude Code, and most of that code comes from the model. The tools are reliable anyway, and the credit belongs to the loop I put around the model: align on a one page spec, one failing test at a time, and a deterministic build that makes a passing check mean something."
+excerpt: "How I ship tooling an AI agent wrote and trust the result: align before any code, build in vertical slices test first, and keep the build deterministic so a passing check means something."
+opener: "The tooling around the game I am building, the headless Blender exporters and the Unreal import plugin, is written with Claude Code, and most of that code comes from the model. The tools are reliable anyway, and the credit belongs to the loop I put around the model: align on a one page spec, one failing test at a time, and a deterministic build that makes a passing check mean something."
 tags: ["Claude Code", "AI Agents", "TDD", "Verification", "Blender", "Unreal Engine"]
 beat: agents
 draft: false
 entry: "05"
 ---
 
-I build the tooling around our game with Claude Code. The headless Blender exporters, the Unreal import plugin, the validation that rejects a bad asset before it reaches the engine. The model writes a lot of that code. The reason the tools are reliable is not the model. It is the loop I put around it.
+I build tooling for my game: headless Blender exporters, an Unreal import plugin, the validation that rejects a bad asset before it reaches the engine. I write it with Claude Code, and the model writes a lot of the code. The reason the tools are reliable is not the model. It is the loop I put around it.
 
 ![Diagram of the loop around the model: align on a one page spec, write one failing test, make it pass, verify against a deterministic build, then return for the next slice. Done is a passing check, never "it looks correct".](/images/blog/building-pipeline-tooling-with-claude-code/the-loop.svg)
 
-## The work AI is actually good at here
+## The work AI is good at here
 
 Pipeline tooling is repetitive, well specified, and testable. That is the sweet spot for an agent. A normal-map channel flip, a scale check, a folder contract between two programs: each one has a right answer you can write down and verify.
 
@@ -21,7 +21,7 @@ The creative work stays with me. The agent does not design the asset or make the
 
 ## Align before any code gets written
 
-Most of the bad output I have seen from an AI agent was not a coding mistake. It was an alignment mistake. The agent built the wrong thing correctly.
+Most of the bad output I have seen from an AI agent came from misalignment rather than bad code. The agent built the wrong thing correctly.
 
 So I do not start with code. I start with a short interview, one question at a time, until the agent and I are describing the same tool. Then a one page spec: the inputs, the output, the edge cases, what done means. Ten minutes of this removes most of the rework.
 
@@ -35,7 +35,7 @@ Take the importer's normal-map fix. Blender writes normals in OpenGL convention,
 
 Working test-first is what stops an agent from handing back a wall of plausible code that does not actually run. The test is the spec the agent cannot talk its way around.
 
-Note what the slice is not. It is not "fix normal maps". It is one question, `is_normal_map`, with a right answer on both branches. The earlier version of this code flipped every texture it touched, which looks fine on a normal map and quietly wrecks a base colour map. A slice small enough to test is also small enough to be wrong in only one way.
+Note what the slice is. It is one question, `is_normal_map`, with a right answer on both branches, rather than the whole of "fix normal maps". The earlier version of this code flipped every texture it touched, which looks fine on a normal map and quietly wrecks a base colour map. A slice small enough to test is also small enough to be wrong in only one way.
 
 ## Keep the build deterministic
 
@@ -51,16 +51,16 @@ The rule I hold hardest: the agent does not get to decide a task is finished. A 
 
 ![The pre-flight report as four checks with their thresholds. Triangle budget of 300 to 1500 tris for props at LOD0. Scale drift, where the longest axis must land between 1 and 100000 unreal units and a 1 metre crate should read about 100. A naming contract requiring the SM underscore prefix so the folder contract between the two programs holds. Normal map compression set to TC_NORMALMAP, the flag the green-channel slice depends on. A line underneath reads: read only, it reports and never mutates, so the report is evidence rather than a repair that hides the fault.](/images/blog/building-pipeline-tooling-with-claude-code/preflight-validation.svg)
 
-The thresholds are the interesting part. They are written down, so the check has an answer it can be wrong about. A validator with no numbers in it is a comment.
+The thresholds are written down, so the check has an answer it can be wrong about. A validator with no numbers in it is a comment.
 
 That sounds strict for solo work. It is the reason I can lean on these tools instead of babysitting them.
 
 ## What I learned
 
-The discipline matters more than the model. A capable agent with no feedback loop produces fast, confident, broken work. The same agent inside a loop of align, test, then verify produces tooling I trust in the pipeline.
+A capable agent with no feedback loop produces fast, confident, broken work. The same agent inside a loop of align, test, then verify produces tooling I trust in the pipeline.
 
 The loop is also a ceiling. The agent is only ever as good as the check that grades it, so most of my effort goes into making the check sharp, not into prompting.
 
 This is where the tooling layer is heading. Unreal 5.8 shipped an experimental MCP server that lets an agent drive the editor directly. The teams that get value from that will be the ones whose checks are sharp enough to grade what the agent produces. That is the part I work on.
 
-Code is at [github.com/marko-builds](https://github.com/marko-builds). The plugin this post describes is public in [BlenderBridge](https://github.com/marko-builds/BlenderBridge).
+Code is at [github.com/marko-builds](https://github.com/marko-builds). The plugin this post describes is public in [BlenderBridge](https://github.com/marko-builds/BlenderBridge); the validator with those thresholds is `validate.py` and the flip is one line in `importer.py`.
