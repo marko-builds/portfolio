@@ -62,7 +62,7 @@ Embers is the clearest look at how a seamless loop gets engineered rather than c
 
 ## Overlays that composite onto anything
 
-`vfx.py` renders nine overlay assets, among them dust, bokeh, smoke, light leaks, sparkles and god rays. All of them are additive light on true black, exported with an alpha channel so a comp can drop one over footage without a matte.
+`vfx.py` renders nine overlay assets, among them dust, bokeh, smoke, light leaks, sparkles and god rays. Seven of them are additive light on true black, built for a Screen blend, so a comp can drop one over footage without a matte. Two ship a straight alpha channel instead, and one of those, smoke, darkens the footage rather than adding to it.
 
 God rays shows what that constraint buys. A source point sits above the top edge, and for every pixel the engine takes the angle back to it and carves bright shafts out of a smooth angular pattern built from a few integer frequencies. The shimmer is those same modes drifting, so the beams breathe without the loop breaking. Then a radial raised-cosine window fades the whole thing to exactly zero past a finite radius, which is what makes the bottom corners genuinely black instead of nearly black. Nearly black is a grey rectangle over someone's footage.
 
