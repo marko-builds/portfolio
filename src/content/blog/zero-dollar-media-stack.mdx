@@ -5,7 +5,7 @@ excerpt: "My apps needed launch media: music beds, UI sounds, ambient video. Ins
 opener: "Launching an app needs media: a music bed, a click, an ambient loop. Stock brings licence fine print and AI generators bring training-data questions I do not want near my products, so I took the third road and synthesized all of it from math, in Python, on my own machine. Four engines, every render deterministic and copyright-clean. Here is how each one is built."
 tags: ["Generative Media", "Python", "NumPy", "DSP", "Audio Synthesis", "Indie Dev"]
 beat: engine
-ogImage: "/images/blog/zero-dollar-media-stack/synth-engines.png"
+ogImage: "/images/blog/zero-dollar-media-stack/synth-engines-og.png"
 draft: false
 entry: "03"
 ---
@@ -26,6 +26,11 @@ Two details make the output usable rather than a toy. First, loudness: a two-pas
 
 There is also a `--stems` flag that exports per-bus loops (drums, bass, pad, lead) with a manifest, which is how the same engine feeds game audio.
 
+<figure class="media">
+<audio controls preload="none" src="/media/blog/zero-dollar-media-stack/lofi-loop.mp3"></audio>
+<figcaption>music.py, lofi, seed 30. 8 bars at 75 bpm, mastered to -14 LUFS. Press play and let it wrap: the reverb tail is a circular convolution, so the seam has nowhere to appear.</figcaption>
+</figure>
+
 ## Sound effects are envelopes and filters
 
 `sfx.py` synthesizes 33 sounds: clicks, whooshes, impacts, zaps, coins, explosions, a teleport. Each one is a small recipe. A whoosh is noise swept dark to bright and back under a hann window, panning left to right as it goes. A zap is a saw sweep from 1900 Hz to 200 Hz with a 75 Hz amplitude buzz and some crackle on top. The coin is two square waves, 988 Hz then 1319 Hz, straight out of the arcade lineage.
@@ -33,6 +38,21 @@ There is also a `--stems` flag that exports per-bus loops (drums, bass, pad, lea
 Every recipe takes an RNG and jitters pitch, timing, and filter cutoffs, so one seed gives one variant and the variant count is unlimited. `--pack` renders the whole library with a manifest in one command.
 
 The honest limit: this covers designed sounds, not recordings. Applause, animals, a real camera shutter are not synthesizable, and the tooling says so and points to CC0 sources instead of faking it.
+
+<div class="media-row">
+<figure class="media">
+<div class="media-label">whoosh, seed 7</div>
+<audio controls preload="none" src="/media/blog/zero-dollar-media-stack/whoosh.mp3"></audio>
+</figure>
+<figure class="media">
+<div class="media-label">zap, seed 7</div>
+<audio controls preload="none" src="/media/blog/zero-dollar-media-stack/zap.mp3"></audio>
+</figure>
+<figure class="media">
+<div class="media-label">coin, seed 7</div>
+<audio controls preload="none" src="/media/blog/zero-dollar-media-stack/coin.mp3"></audio>
+</figure>
+</div>
 
 ## Scenery kits in one command
 
@@ -47,6 +67,11 @@ Embers is the clearest look at how a seamless loop gets engineered rather than c
 God rays shows what that constraint buys. A source point sits above the top edge, and for every pixel the engine takes the angle back to it and carves bright shafts out of a smooth angular pattern built from a few integer frequencies. The shimmer is those same modes drifting, so the beams breathe without the loop breaking. Then a radial raised-cosine window fades the whole thing to exactly zero past a finite radius, which is what makes the bottom corners genuinely black instead of nearly black. Nearly black is a grey rectangle over someone's footage.
 
 The module's self-test asserts both properties: that frame zero equals frame period, and that the far corners are pure black.
+
+<figure class="media">
+<video controls muted loop playsinline preload="none" poster="/media/blog/zero-dollar-media-stack/god-rays-poster.jpg" src="/media/blog/zero-dollar-media-stack/god-rays.mp4"></video>
+<figcaption>vfx.py, god-rays, an 8 second loop at 1280 by 720. Frame zero equals frame period, and the bottom corners are pure black.</figcaption>
+</figure>
 
 The video studio consumes all of this through vendored wrappers (`bin/music`, `bin/sfx`), so a motion-graphics comp can request a mood or a whoosh without leaving its own repo.
 
