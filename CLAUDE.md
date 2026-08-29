@@ -1,12 +1,12 @@
 # portfolio — markostankovic.org
 
 Astro 5 static site, Tailwind v4, deployed by Cloudflare Pages from `main`. An audience site in an
-expedition voice (PRD in the monolith at `projects/portfolio-planning/issues/prd-site-v3-audience.md`): a night hero running the Borealis aurora live,
+expedition voice (PRD at `~/Projects/monolith/projects/portfolio-planning/issues/prd-site-v3-audience.md`): a night hero running the Borealis aurora live,
 alternating light and night bands, the Legend page, the approved copy on every surface. Recruiters
 are served as a floor, not the design target: what he does, one verifiable built thing, a way to
 contact him, checked by a cold read. Copy changes are still positioning changes.
 
-- **Planning record lives in the monolith**, `projects/portfolio-planning/` (private): the maps, PRDs,
+- **Planning record lives in the monolith**, `~/Projects/monolith/projects/portfolio-planning/` (private; this repo moved to `~/Work/ai-env/projects/` on 2026-08-29, the planning dir did not): the maps, PRDs,
   copy packs, cold reads, build slices and the review captures. Moved out of this public repo
   2026-08-23. Provenance comments in `src/` and `verify/` cite `issues/...` paths; resolve them
   there. Rows in a map are claims — open the ticket **and** the artifact.
