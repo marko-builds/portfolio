@@ -6,7 +6,7 @@ alternating light and night bands, the Legend page, the approved copy on every s
 are served as a floor, not the design target: what he does, one verifiable built thing, a way to
 contact him, checked by a cold read. Copy changes are still positioning changes.
 
-- **Planning record lives in the monolith**, `~/Projects/monolith/projects/portfolio-planning/` (private; this repo moved to `~/Work/ai-env/projects/` on 2026-08-29, the planning dir did not): the maps, PRDs,
+- **Planning record lives in the monolith**, `~/Projects/monolith/projects/portfolio-planning/` (private; both repos sit under `~/Projects/monolith/projects/` again since 2026-09-02): the maps, PRDs,
   copy packs, cold reads, build slices and the review captures. Moved out of this public repo
   2026-08-23. Provenance comments in `src/` and `verify/` cite `issues/...` paths; resolve them
   there. Rows in a map are claims — open the ticket **and** the artifact.
