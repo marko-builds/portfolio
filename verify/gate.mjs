@@ -491,7 +491,7 @@ else {
       // banner: on Windows the Edge launcher can hand off to a browser process whose stderr
       // is not this pipe. Line 1 is the port, line 2 the browser target's path. The file is
       // absent until the browser writes it and EBUSY while it does (Windows locks it mid-write;
-      // one launch in sixteen, 2026-09-26), so both read as "not yet", and a line 2 that is not
+      // about one launch in twenty, 2026-09-26), so both read as "not yet", and a line 2 that is not
       // a whole /devtools/browser/<uuid> is a partial write, retried the same way.
       let active = null;
       for (let i = 0; i < 150 && !active; i++) {
