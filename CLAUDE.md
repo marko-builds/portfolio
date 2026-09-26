@@ -12,7 +12,10 @@ contact him, checked by a cold read. Copy changes are still positioning changes.
   there. Rows in a map are claims — open the ticket **and** the artifact.
 - **Gate:** `node verify/gate.mjs` (route parity, token lint, budget, copy lint, main-untouched).
   Its Lighthouse floors are noisy and per-item; read
-  `.claude/rules/verification-before-completion.md` before re-pinning any of them.
+  `.claude/rules/verification-before-completion.md` before re-pinning any of them. Runs on
+  Linux and Windows (since 2026-09-26): the motion arm and `--full` use the first Chrome or
+  Chromium installed (Edge last on Windows), or the browser named by `GATE_BROWSER`. The floors
+  were measured on the old Linux box; Windows scores are not comparable to them yet.
 - **Publishing:** posts live in `src/content/blog/*.mdx` and ship `draft: true`. The site filters on
   `draft` only, never on the date, so the flip **is** the publish. `scripts/publish-devlog.sh` in
   the monolith does it on a timer behind an approval sentinel.
