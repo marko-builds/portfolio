@@ -40,7 +40,7 @@ and C++, plus full-stack TypeScript on Next.js. He works CLI-first on Arch Linux
 - [DeployLog](https://deploylog.dev): changelog and release-notes platform that
   turns git commits into a published changelog (hosted page, embeddable widget,
   npm CLI, and a GitHub Action) from one source, with AI-drafted notes. Built
-  full-stack on Next.js, Supabase, and Stripe. Status: launching 2026-09-15.
+  full-stack on Next.js, Supabase, and Stripe. Status: live since 2026-09-15.
   Details: https://markostankovic.org/projects/deploylog
 - [duskpaper](https://github.com/marko-builds/duskpaper): generative animated
   Wayland wallpapers rendered locally at your seed and resolution, from his own
