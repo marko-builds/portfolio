@@ -11,9 +11,13 @@
 
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+// Portable since 2026-09-26, the same two fixes as gate.mjs: URL.pathname gave /C:/... on
+// Windows, and path.relative returns backslashes there, so routes and slugs go through rel.
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const rel = (from, to) => relative(from, to).split(sep).join('/');
 const BASE = join(ROOT, 'verify/baseline');
 const DIST = join(ROOT, 'dist');
 
@@ -34,7 +38,7 @@ const walk = (dir, out = []) => {
 // routes — same derivation as gate check 1, /proto/ excluded the same way
 const routes = walk(DIST)
   .filter((f) => f.endsWith('.html'))
-  .map((f) => '/' + relative(DIST, f).replace(/index\.html$/, ''))
+  .map((f) => '/' + rel(DIST, f).replace(/index\.html$/, ''))
   .filter((r) => !r.startsWith('/proto/'))
   .sort();
 writeFileSync(join(BASE, 'routes.txt'), routes.join('\n') + '\n');
@@ -44,7 +48,7 @@ writeFileSync(join(BASE, 'routes.txt'), routes.join('\n') + '\n');
 const JOURNAL_DIR = 'field-journal';
 const bodies = {};
 for (const f of walk(join(DIST, JOURNAL_DIR)).filter((f) => f.endsWith('index.html'))) {
-  const slug = relative(join(DIST, JOURNAL_DIR), f).replace(/\/?index\.html$/, '');
+  const slug = rel(join(DIST, JOURNAL_DIR), f).replace(/\/?index\.html$/, '');
   if (!slug) continue; // the journal index itself
   const m = readFileSync(f, 'utf8').match(/<article class="prose">(.*?)<\/article>/s);
   if (!m) { console.error(`  no <article class="prose"> in ${slug} — skipped`); continue; }
@@ -52,7 +56,10 @@ for (const f of walk(join(DIST, JOURNAL_DIR)).filter((f) => f.endsWith('index.ht
     .update(m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())
     .digest('hex');
 }
-writeFileSync(join(BASE, 'devlog-bodies.json'), JSON.stringify(bodies, null, 2) + '\n');
+// Keys sorted by slug, so a re-pin writes the same bytes on every filesystem: readdir order
+// is name order on NTFS and arbitrary on ext4, and a Windows re-pin reordered two lines.
+const sorted = Object.fromEntries(Object.entries(bodies).sort(([a], [b]) => (a < b ? -1 : 1)));
+writeFileSync(join(BASE, 'devlog-bodies.json'), JSON.stringify(sorted, null, 2) + '\n');
 
 // journal-source.json (gate check 2b) is deliberately NOT written here: it is pinned once
 // (issue 18, 2026-08-23) and a rolling re-pin would launder a body edit. See its first line.

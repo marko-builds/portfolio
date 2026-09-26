@@ -17,14 +17,29 @@
 // Re-baselined 2026-08-15 by issues/map-site-v2/10-close-out.md. Before that the
 // baseline still described the pre-redesign site, so 15 of the gate's assertions
 // failed by construction and its verdict carried no information at all.
+//
+// Portable since 2026-09-26 (the Windows 11 box), each break measured there: URL.pathname
+// gave ROOT as /C:/..., so every join became C:\C:\... and route parity crashed;
+// path.relative returns backslashes, so every nested route read as missing and the
+// src/data copy lint skipped home.ts in silence (a false pass); execSync runs cmd.exe,
+// where `>/dev/null` and `2>/dev/null` break; the motion arm spawned python3 and
+// /usr/bin/chromium; and a browser still holding its profile made the cleanup rmSync
+// throw out of `finally`, which reported as the check's FAIL. Paths that are compared or
+// printed are repo-relative with forward slashes (rel below), git runs through
+// execFileSync, the motion arm's static server is in-process, and the browser is
+// resolved per platform (BROWSER below).
 
-import { execSync, spawn } from 'node:child_process';
+import { execSync, execFileSync, spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdtempSync, rmSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { createServer } from 'node:http';
+import { join, relative, sep, extname } from 'node:path';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
+// Forward-slash relative path: the one spelling every route, slug and file name is compared in.
+const rel = (from, to) => relative(from, to).split(sep).join('/');
 const BASE = join(ROOT, 'verify/baseline');
 const BRAND_JSON = join(ROOT, '../claude-video-studio/brands/marko/brand.json');
 const JS_BUDGET_BYTES = 10240;
@@ -108,7 +123,29 @@ const FONT_MAP = { '--font-sans': 'body', '--font-mono': 'code' };
 const failures = [];
 const ok = (name, msg) => console.log(`  PASS ${name}${msg ? ` (${msg})` : ''}`);
 const fail = (name, msg) => { failures.push(`${name}: ${msg}`); console.log(`  FAIL ${name}: ${msg}`); };
-const sh = (cmd) => execSync(cmd, { cwd: ROOT, encoding: 'utf8' });
+// git through execFileSync, never a shell string: cmd.exe has no /dev/null, and a redirect
+// that fails there skips the command and runs the `||` fallback instead.
+const git = (...a) => execFileSync('git', a, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+
+// The Chromium-family browser for the reduced-motion arm and --full's Lighthouse run.
+// GATE_BROWSER wins, then CHROME_PATH (Lighthouse's own variable). A variable that names no
+// file is an error, never a quiet fallback to another browser. Otherwise the first one
+// installed; Edge closes the win32 list because the Windows box shipped only Edge until
+// Chrome arrived 2026-09-26.
+const BROWSER_CANDIDATES = process.platform === 'win32'
+  ? ['C:/Program Files/Google/Chrome/Application/chrome.exe',
+     'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+     ...(process.env.LOCALAPPDATA ? [join(process.env.LOCALAPPDATA, 'Google/Chrome/Application/chrome.exe')] : []),
+     'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+     'C:/Program Files/Microsoft/Edge/Application/msedge.exe']
+  : ['/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/google-chrome'];
+const BROWSER_ENV = ['GATE_BROWSER', 'CHROME_PATH'].find((k) => process.env[k]);
+const BROWSER = BROWSER_ENV
+  ? (existsSync(process.env[BROWSER_ENV]) ? process.env[BROWSER_ENV] : null)
+  : (BROWSER_CANDIDATES.find((p) => existsSync(p)) ?? null);
+const NO_BROWSER = BROWSER_ENV
+  ? `${BROWSER_ENV}=${process.env[BROWSER_ENV]} does not exist`
+  : `no Chromium-family browser at ${BROWSER_CANDIDATES.join(', ')}; set GATE_BROWSER`;
 // data-budget="<name>" on an inline <script>, or undefined when unmarked.
 const budgetOf = (attrs) => (attrs.match(/\bdata-budget=["']([^"']*)["']/) ?? [])[1];
 
@@ -129,12 +166,15 @@ const walk = (dir, out = []) => {
 // `fields` holds each top-level `key: value` line with matching surrounding quotes
 // stripped; `raw` keeps the value as written; `continued` marks a key whose next line is
 // indented, which YAML would fold into the value and which the openers check rejects as
-// "not a single line". `body` is every byte after the closing fence, verbatim.
+// "not a single line". `body` is every byte after the closing fence, verbatim except that
+// CRLF reads as LF: Git for Windows checks out with core.autocrlf=true by default, and a
+// clone made that way failed all twelve pinned bodies with no word changed (2026-09-26).
+// Line endings belong to the checkout; the check exists to catch a word.
 const POSTS_DIR = join(ROOT, 'src/content/blog');
 const readPost = (f) => {
   const src = readFileSync(f, 'utf8');
   const m = src.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
-  if (!m) throw new Error(`${relative(ROOT, f)}: no frontmatter fence`);
+  if (!m) throw new Error(`${rel(ROOT, f)}: no frontmatter fence`);
   const fields = {}, raw = {}, continued = {};
   const lines = m[1].split('\n');
   lines.forEach((line, i) => {
@@ -145,7 +185,7 @@ const readPost = (f) => {
     fields[k] = v.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1');
     continued[k] = /^\s+\S/.test(lines[i + 1] ?? '');
   });
-  return { slug: relative(POSTS_DIR, f).replace(/\.mdx$/, ''), fields, raw, continued, body: m[2] };
+  return { slug: rel(POSTS_DIR, f).replace(/\.mdx$/, ''), fields, raw, continued, body: m[2].replace(/\r\n/g, '\n') };
 };
 const allPosts = () => walk(POSTS_DIR).filter((f) => f.endsWith('.mdx')).sort().map(readPost);
 const isDraft = (p) => p.fields.draft === 'true';
@@ -156,13 +196,13 @@ const sha256 = (s) => createHash('sha256').update(s).digest('hex');
 // it. A body that must change is edited here by hand, hash and slug named, in its own commit.
 if (doPinSource) {
   const f = join(BASE, 'journal-source.json');
-  if (existsSync(f)) { console.error(`refusing to re-pin ${relative(ROOT, f)}: it exists, and it is pinned once by design`); process.exit(1); }
+  if (existsSync(f)) { console.error(`refusing to re-pin ${rel(ROOT, f)}: it exists, and it is pinned once by design`); process.exit(1); }
   const pinned = {
     '//': 'Pinned ONCE (2026-08-23, issue 18) from the bodies as they stood at portfolio commit 1181808. NEVER re-pinned: rebaseline.mjs does not write this file and gate.mjs --pin-source refuses while it exists. A rolling pin would launder a body edit through a routine re-pin, which is the edit this check exists to make visible. A deliberate body change lands by editing its hash here, in its own commit, with the slug named. A title change lands by adding the slug to approved-titles.json.',
   };
   for (const p of allPosts()) pinned[p.slug] = { title: p.fields.title, body: sha256(p.body) };
   writeFileSync(f, JSON.stringify(pinned, null, 2) + '\n');
-  console.log(`pinned ${Object.keys(pinned).length - 1} posts into ${relative(ROOT, f)}`);
+  console.log(`pinned ${Object.keys(pinned).length - 1} posts into ${rel(ROOT, f)}`);
   process.exit(0);
 }
 
@@ -235,17 +275,18 @@ const copyHits = (src, re = BANNED) => {
 
 if (doBuild) {
   console.log('build:');
-  try { sh('npm run build 2>&1 >/dev/null'); ok('astro build'); }
+  // stdout dropped and stderr kept for the failure line, which is what `2>&1 >/dev/null` did.
+  try { execSync('npm run build', { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'] }); ok('astro build'); }
   catch (e) { fail('astro build', e.message.split('\n')[0]); report(); }
 }
 
 // ── 1. route parity ────────────────────────────────────────────────────────
 console.log('routes:');
 {
-  const baseline = readFileSync(join(BASE, 'routes.txt'), 'utf8').trim().split('\n').sort();
+  const baseline = readFileSync(join(BASE, 'routes.txt'), 'utf8').trim().split(/\r?\n/).sort();
   const all = walk(join(ROOT, 'dist'))
     .filter((f) => f.endsWith('.html'))
-    .map((f) => '/' + relative(join(ROOT, 'dist'), f).replace(/index\.html$/, ''))
+    .map((f) => '/' + rel(join(ROOT, 'dist'), f).replace(/index\.html$/, ''))
     .sort();
   // /proto/ pages are issue-03 throwaway review artifacts; excluded from parity,
   // must be deleted after the direction pick (issue 03 acceptance).
@@ -412,28 +453,58 @@ const auroraPages = [];
 // with the rm.matches branch removed fails the reduced arm (output in the ticket).
 console.log('motion:');
 if (!auroraPages.length) console.log(`  NOTE no page carries data-budget="${AURORA_MARK}", reduced-motion check not run`);
+else if (!BROWSER) fail('reduced motion', NO_BROWSER);
 else {
-  const PORT = 4398;
-  const server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1', '-d', join(ROOT, 'dist')], { stdio: 'ignore' });
+  console.log(`  NOTE browser ${BROWSER}`);
+  // In-process static server on a free port (was python3 -m http.server on a fixed 4398): no
+  // python3 to resolve, and no fixed port that a stale server can hold while serving an old dist.
+  const DIST = join(ROOT, 'dist');
+  const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript',
+    '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain', '.svg': 'image/svg+xml', '.png': 'image/png',
+    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif',
+    '.ico': 'image/x-icon', '.woff': 'font/woff', '.woff2': 'font/woff2', '.pdf': 'application/pdf', '.mp4': 'video/mp4', '.webm': 'video/webm' };
+  const server = createServer((req, res) => {
+    let p = decodeURIComponent(new URL(req.url, 'http://gate').pathname);
+    if (p.endsWith('/')) p += 'index.html';
+    const f = join(DIST, p);
+    if (!f.startsWith(DIST + sep) || !existsSync(f) || !statSync(f).isFile()) { res.writeHead(404).end(); return; }
+    res.writeHead(200, { 'content-type': MIME[extname(f).toLowerCase()] ?? 'application/octet-stream' }).end(readFileSync(f));
+  });
+  await new Promise((r, j) => { server.once('error', j); server.listen(0, '127.0.0.1', r); });
+  const PORT = server.address().port;
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const PROBE = `(() => { const c = document.querySelector('[data-aurora="canvas"]'), p = document.querySelector('[data-aurora="poster"]');
     return { rm: matchMedia('(prefers-reduced-motion: reduce)').matches, webgl: !!document.createElement('canvas').getContext('webgl2'),
       canvas: c ? getComputedStyle(c).display : null, poster: p ? getComputedStyle(p).display : null }; })()`;
   async function render(url, reduced) {
     const profile = mkdtempSync(join(tmpdir(), 'gate-rm-'));
-    const chrome = spawn('/usr/bin/chromium', ['--headless=new', '--remote-debugging-port=0', '--enable-unsafe-swiftshader',
+    const chrome = spawn(BROWSER, ['--headless=new', '--remote-debugging-port=0', '--enable-unsafe-swiftshader',
       '--no-first-run', '--no-default-browser-check', '--window-size=1280,800', `--user-data-dir=${profile}`,
       ...(reduced ? ['--force-prefers-reduced-motion'] : []), 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
+    let err = '', spawnErr = null, ws = null;
+    chrome.on('error', (e) => { spawnErr = e; });
+    chrome.stderr.on('data', (d) => { err += d; });
+    let id = 0; const waiting = new Map();
+    const send = (method, params = {}, sessionId) => new Promise((res, rej) => { const n = ++id; waiting.set(n, { res, rej }); ws.send(JSON.stringify({ id: n, method, params, sessionId })); });
     try {
-      const wsUrl = await new Promise((res, rej) => {
-        let err = ''; const t = setTimeout(() => rej(new Error('chromium did not open a CDP port: ' + err.slice(-200))), 15000);
-        chrome.stderr.on('data', (d) => { err += d; const m = err.match(/DevTools listening on (ws:\/\/\S+)/); if (m) { clearTimeout(t); res(m[1]); } });
-      });
-      const ws = new WebSocket(wsUrl);
+      // The CDP endpoint is read from DevToolsActivePort in the profile, not from the stderr
+      // banner: on Windows the Edge launcher can hand off to a browser process whose stderr
+      // is not this pipe. Line 1 is the port, line 2 the browser target's path. The file is
+      // absent until the browser writes it and EBUSY while it does (Windows locks it mid-write;
+      // one launch in sixteen, 2026-09-26), so both read as "not yet", and a line 2 that is not
+      // a whole /devtools/browser/<uuid> is a partial write, retried the same way.
+      let active = null;
+      for (let i = 0; i < 150 && !active; i++) {
+        if (spawnErr) throw new Error(`could not start ${BROWSER}: ${spawnErr.message}`);
+        let lines = [];
+        try { lines = readFileSync(join(profile, 'DevToolsActivePort'), 'utf8').split(/\r?\n/); } catch {}
+        if (/^\d+$/.test(lines[0] ?? '') && /^\/devtools\/browser\/[0-9a-f-]{36}$/.test(lines[1] ?? '')) active = lines;
+        else await sleep(100);
+      }
+      if (!active) throw new Error('browser did not open a CDP port: ' + err.slice(-200));
+      ws = new WebSocket(`ws://127.0.0.1:${active[0].trim()}${active[1].trim()}`);
       await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; });
-      let id = 0; const waiting = new Map();
       ws.onmessage = (e) => { const m = JSON.parse(e.data); const w = waiting.get(m.id); if (!w) return; waiting.delete(m.id); m.error ? w.rej(new Error(m.error.message)) : w.res(m.result); };
-      const send = (method, params = {}, sessionId) => new Promise((res, rej) => { const n = ++id; waiting.set(n, { res, rej }); ws.send(JSON.stringify({ id: n, method, params, sessionId })); });
       const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
       const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
       await send('Runtime.enable', {}, sessionId);
@@ -441,21 +512,38 @@ else {
       const evaluate = async (expression) => (await send('Runtime.evaluate', { expression, returnByValue: true }, sessionId)).result.value;
       for (let i = 0; i < 50 && (await evaluate('document.readyState')) !== 'complete'; i++) await sleep(100);
       await sleep(800); // the page's first rAF flips the live class; the spike measured first paint at 33 ms on SwiftShader
-      const r = await evaluate(PROBE);
-      ws.close();
-      return r;
+      return await evaluate(PROBE);
     } finally {
+      // Close the browser over its own DevTools endpoint before killing anything. kill() alone
+      // is not enough on Windows: the browser's children outlive the spawned pid and keep the
+      // profile locked (the monolith counted 17 to 40 orphaned msedge.exe per script,
+      // 2026-09-26). The endpoint file is re-read here, on a connection of its own, so a run that
+      // failed before its probe socket opened still closes its browser. Each wait is capped, so
+      // a browser that never answers cannot hang the gate.
+      ws?.close();
+      let lines = [], closer = null;
+      try { lines = readFileSync(join(profile, 'DevToolsActivePort'), 'utf8').split(/\r?\n/); } catch {}
+      if (lines[1]) {
+        try {
+          closer = new WebSocket(`ws://127.0.0.1:${lines[0].trim()}${lines[1].trim()}`);
+          await Promise.race([new Promise((r, j) => { closer.onopen = r; closer.onerror = j; }), sleep(3000)]);
+          if (closer.readyState === WebSocket.OPEN) closer.send(JSON.stringify({ id: 1, method: 'Browser.close' }));
+        } catch {}
+      }
+      if (chrome.exitCode === null && !spawnErr) await Promise.race([new Promise((r) => chrome.once('exit', r)), sleep(3000)]);
+      closer?.close();
       chrome.kill();
-      // chrome.kill() returns before the process exits and it keeps writing its profile,
-      // so a bare rmSync raced it to ENOTEMPTY about one run in three (2026-08-23) and
-      // reported a random /proto/ page as a motion FAIL. Retry; the dir is in tmp anyway.
-      rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+      // A profile the gate cannot remove is a cleanup problem, not a verdict on the page, so it
+      // prints a NOTE and never throws. Throwing here replaced a measured result with a FAIL:
+      // ENOTEMPTY about one run in three on Linux (2026-08-23), EPERM on Windows (2026-09-25).
+      try { rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); }
+      catch (e) { console.log(`  NOTE could not remove browser profile ${profile}: ${e.code ?? e.message} (a browser may still be running from it)`); }
     }
   }
   try {
     await sleep(500);
     for (const f of auroraPages) {
-      const route = '/' + relative(join(ROOT, 'dist'), f).replace(/index\.html$/, '');
+      const route = '/' + rel(DIST, f).replace(/index\.html$/, '');
       const url = `http://127.0.0.1:${PORT}${route}`;
       const shown = (d) => d !== null && d !== 'none';
       try {
@@ -470,7 +558,7 @@ else {
           : ok(`reduced motion ${route}`, `motion: canvas=${m.canvas} poster=${m.poster}; reduced: canvas=${r.canvas} poster=${r.poster}`);
       } catch (e) { fail(`reduced motion ${route}`, e.message.split('\n')[0]); }
     }
-  } finally { server.kill(); }
+  } finally { server.close(); }
 }
 
 // ── 5. copy lint (every authored template) ─────────────────────────────────
@@ -501,8 +589,8 @@ console.log('copy:');
   // lives in src/data/home.ts, so a scan of .astro alone could never see it.
   const authored = ['src/pages', 'src/components', 'src/layouts', 'src/data']
     .flatMap((d) => walk(join(ROOT, d)))
-    .filter((f) => f.endsWith('.astro') || (f.includes('/src/data/') && f.endsWith('.ts')))
-    .map((f) => relative(ROOT, f))
+    .map((f) => rel(ROOT, f))
+    .filter((f) => f.endsWith('.astro') || (f.startsWith('src/data/') && f.endsWith('.ts')))
     .sort();
   for (const f of authored) {
     // A .ts module is all "frontmatter": prefix an opening fence so its // and /* */
@@ -530,7 +618,7 @@ console.log('placeholders:');
 {
   const pages = walk(join(ROOT, 'dist'))
     .filter((f) => f.endsWith('.html'))
-    .map((f) => relative(ROOT, f))
+    .map((f) => rel(ROOT, f))
     .filter((f) => !PLACEHOLDER_EXCLUDE.some((x) => f.startsWith(x)))
     .sort();
   const hits = pages.filter((f) => readFileSync(join(ROOT, f), 'utf8').includes('PLACEHOLDER'));
@@ -628,9 +716,10 @@ console.log('main:');
   // 62 PASS and then went red on its own commit). A move whose whole diff is under
   // verify/baseline/ IS the re-pin and passes, named as such; anything else is a move.
   for (const ref of ['main', 'origin/main']) {
-    const got = sh(`git rev-parse ${ref}`).trim();
+    const got = git('rev-parse', ref).trim();
     if (got === sha) { ok(`main untouched (${ref})`, sha.slice(0, 7)); continue; }
-    const touched = sh(`git diff --name-only ${sha} ${got} 2>/dev/null || echo "?"`).trim().split('\n').filter(Boolean);
+    let touched;
+    try { touched = git('diff', '--name-only', sha, got).trim().split(/\r?\n/).filter(Boolean); } catch { touched = ['?']; }
     const onlyPin = touched.length > 0 && touched.every((f) => f.startsWith('verify/baseline/'));
     onlyPin ? ok(`main untouched (${ref})`, `${got.slice(0, 7)} = pinned ${sha.slice(0, 7)} + the re-pin commit only`)
       : fail(`main untouched (${ref})`, `${ref} is ${got.slice(0, 7)}, pinned ${sha.slice(0, 7)}`);
@@ -650,14 +739,29 @@ if (doFull) {
     // their names so lighthouse-summary.json's floors still resolve; floors untouched.
     devlog: '/field-journal/', 'devlog_zero-dollar-media-stack': '/field-journal/zero-dollar-media-stack/',
   };
-  const server = spawn('npx', ['astro', 'preview', '--port', '4399'], { cwd: ROOT, stdio: 'ignore' });
+  // astro's own entry under this node, not `npx astro`: spawn cannot start npx.cmd on Windows,
+  // and a shell wrapper would take the kill below while the preview server lived on.
+  const server = spawn(process.execPath, [join(ROOT, 'node_modules/astro/astro.js'), 'preview', '--port', '4399'], { cwd: ROOT, stdio: 'ignore' });
   try {
     await new Promise((r) => setTimeout(r, 4000));
     for (const [name, path] of Object.entries(PAGES)) {
-      const out = `/tmp/lh-gate-${name}.json`;
-      sh(`CHROME_PATH=/usr/bin/chromium npx --yes lighthouse "http://localhost:4399${path}" --quiet ` +
-         `--chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,seo ` +
-         `--output=json --output-path=${out} 2>/dev/null`);
+      if (!BROWSER) { fail(`lighthouse ${name}`, NO_BROWSER); continue; }
+      const out = join(tmpdir(), `lh-gate-${name}.json`);
+      rmSync(out, { force: true }); // a report left by an earlier run must not stand in for this one
+      try {
+        execSync(`npx --yes lighthouse "http://localhost:4399${path}" --quiet ` +
+           `--chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,seo ` +
+           `--output=json --output-path="${out}"`,
+           { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8', env: { ...process.env, CHROME_PATH: BROWSER } });
+      } catch (e) {
+        // Lighthouse saves the report and only then has chrome-launcher delete its temp
+        // profile; on Windows that rmSync hits EPERM while the browser still holds the profile,
+        // and Lighthouse exits 1 on a finished run (measured 2026-09-26). The report was removed
+        // above, so one on disk was written by this run and is scored; no report is a FAIL.
+        const why = `lighthouse exited ${e.status}: ${(e.stderr ?? '').trim().split('\n')[0]}`;
+        if (!existsSync(out)) { fail(`lighthouse ${name}`, why); continue; }
+        console.log(`  NOTE ${name}: ${why} (after writing its report, which is scored)`);
+      }
       const d = JSON.parse(readFileSync(out, 'utf8')).categories;
       const b = baseline[name];
       // Per-page perf tolerance, set to the measured run-to-run spread rather than
