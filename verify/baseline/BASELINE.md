@@ -7,6 +7,59 @@ Captured 2026-07-03 (issue 01). Every later gate compares against this.
 > site was before the site-v2 redesign. The values the gate reads today are in that section. Read
 > it first.
 
+## Load guard and quiet floors, 2026-09-29 (supersedes the floors in the next section)
+
+`--full` now reads each report's `environment.benchmarkIndex` (Lighthouse's CPU benchmark, taken once
+at the start of a run) and prints it on every Lighthouse line. At 1900 or above the perf floor is
+judged as before. Below 1900 the page gets no perf verdict: the gate prints `INCONCLUSIVE` and, if
+nothing failed, ends `GATE INCONCLUSIVE` with exit 2, meaning re-run when idle. a11y and seo are
+judged on every run. A report without a numeric benchmark is a FAIL, because `undefined < 1900` is
+false and a renamed field would otherwise switch the guard off in silence. `--full` also stopped
+hard-coding :4399: it asks the OS for a free port, and it measures nothing until the preview server
+returns this checkout's `dist/index.html` byte for byte.
+
+Floors, from the 2026-09-29 runs at benchmarkIndex 1900 or above only, same formula as before
+(`performance` = minimum, `perfTolerance` = spread floored at 0.02):
+
+| page | quiet n | quiet runs (bench >= 1900) | min | spread | floor | excluded as loaded (perf at bench) |
+|---|---|---|---|---|---|---|
+| home | 7 | 0.78, 0.65, 0.66, 0.78, 0.62, 0.66, 0.66 | 0.62 | 0.16 | 0.46 | 0.58 at 1660, 0.61 at 1212, 0.54 at 1010 |
+| call | 6 | 1.00, 0.99, 1.00, 0.99, 0.97, 0.98 | 0.97 | 0.03 | 0.94 | 0.93 at 1273, 0.96 at 1724, 0.93 at 963, 0.91 at 1088 |
+| devlog | 6 | 0.99, 0.95, 0.90, 0.90, 0.98, 0.89 | 0.89 | 0.10 | 0.79 | 0.86 at 1172, 0.88 at 1815, 0.84 at 1024, 0.85 at 1080 |
+| projects/deploylog | 6 | 0.83, 0.95, 0.96, 0.95, 0.94, 0.94 | 0.83 | 0.13 | 0.70 | 0.82 at 1336, 0.73 at 1364, 0.70 at 973, 0.73 at 1448 |
+| devlog post | 7 | 0.78, 0.77, 0.79, 0.78, 0.66, 0.68, 0.74 | 0.66 | 0.13 | 0.53 | 0.78 at 1882, 0.56 at 1088, 0.73 at 1864 |
+
+**Out of sample.** The threshold and the floors came from the same 50 runs, so the guarded gate then
+ran `--full` five more times: 25 page-runs, all quiet (benchmarkIndex 2128 to 2677), all PASS. home
+0.66 to 0.81, projects/deploylog 0.95 to 0.98, call 0.99 to 1.00, devlog 0.89 to 0.99, the post 0.72 to
+0.79.
+
+**Each arm watched failing (2026-09-29):**
+- Floor: a 3 s synchronous busy loop planted in the built `dist/call/index.html` (run with
+  `--no-build`, or the build erases the plant) took call to 0.47 at benchmarkIndex 2677, a FAIL.
+- Guard: all 12 cores loaded for four minutes put every page at benchmarkIndex 1201 to 1284; all five
+  read `INCONCLUSIVE`, the gate ended `GATE INCONCLUSIVE` with exit 2, and a11y, seo, the motion arm
+  and both main arms still passed. Unguarded, call's 0.95 and home's 0.60 from that run would have
+  been read as real scores.
+- Fail closed: a scratch copy reading a renamed benchmark field failed all five pages, naming the
+  missing field.
+- Port: a stale server on `[::1]:4399` (the address `astro preview` binds on Windows) with the gate
+  forced onto 4399 failed with "does not serve this checkout's dist", and nothing was measured. A
+  dummy on the wildcard address alone did not collide (Windows let astro take the specific `[::1]`),
+  and the check correctly passed there.
+
+**What each floor catches now.** The planted blocking script took call from 0.99 to 0.47, so call
+(0.94), projects/deploylog (0.70) and devlog (0.79) catch a real slowdown, not only a collapse. home
+(0.46) and the post (0.53) stay close to collapse detectors: home's spread is its aurora (two modes by
+first-paint timing), and the post's quiet set includes runs slowed by load that began after the
+benchmark was taken (0.66 at 2031), which no start-of-run benchmark can see.
+
+**Designed out, after a plan review.** Retrying a loaded or below-floor page up to three times and
+passing on the best: it would hide a regression that only sometimes lands below the floor, judge on
+a better statistic than the floors were pinned from, and add load of its own while the box is busy.
+An INCONCLUSIVE is a re-run by a person, not a loop. `BENCH_MIN` (1900) is this box's number: quiet
+runs read 1660 to 2542 and loaded ones 963 to 1448. A new machine re-measures it.
+
 ## Lighthouse floors re-measured, 2026-09-29 (Windows box, first measure since site-v3)
 
 The perf floors in `lighthouse-summary.json` were pinned on 2026-08-15. Site-v3 then changed every

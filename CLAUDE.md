@@ -15,8 +15,9 @@ contact him, checked by a cold read. Copy changes are still positioning changes.
   `.claude/rules/verification-before-completion.md` before re-pinning any of them. Runs on
   Linux and Windows (since 2026-09-26): the motion arm and `--full` use the first Chrome or
   Chromium installed (Edge last on Windows), or the browser named by `GATE_BROWSER`. The perf
-  floors were re-measured on Windows on 2026-09-29, the first measure since site-v3, and are
-  collapse detectors that include machine load (`verify/baseline/BASELINE.md`, top section).
+  floors come from quiet runs on Windows (2026-09-29). `--full` withholds a perf verdict when
+  Lighthouse's CPU benchmark reads a loaded machine: `GATE INCONCLUSIVE`, exit 2, re-run when idle
+  (`verify/baseline/BASELINE.md`, top section).
 - **Publishing:** posts live in `src/content/blog/*.mdx` and ship `draft: true`. The site filters on
   `draft` only, never on the date, so the flip **is** the publish. `scripts/publish-devlog.sh` in
   the monolith does it on a timer behind an approval sentinel.

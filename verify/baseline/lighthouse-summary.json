@@ -1,108 +1,79 @@
 {
   "home": {
-    "performance": 0.54,
+    "performance": 0.62,
     "accessibility": 1,
     "seo": 1,
-    "perfTolerance": 0.24,
+    "perfTolerance": 0.16,
     "_perfRuns": [
-      0.69,
-      0.67,
-      0.58,
       0.78,
       0.65,
       0.66,
       0.78,
-      0.68,
       0.62,
-      0.61,
       0.66,
-      0.54,
       0.66
     ],
-    "_n": 13
+    "_n": 7
   },
   "projects_deploylog": {
-    "performance": 0.7,
+    "performance": 0.83,
     "accessibility": 1,
     "seo": 1,
-    "perfTolerance": 0.28,
+    "perfTolerance": 0.13,
     "_perfRuns": [
-      0.96,
       0.83,
       0.95,
       0.96,
       0.95,
       0.94,
-      0.98,
-      0.82,
-      0.73,
-      0.94,
-      0.7,
-      0.73
+      0.94
     ],
-    "_n": 12
+    "_n": 6
   },
   "call": {
-    "performance": 0.91,
+    "performance": 0.97,
     "accessibility": 1,
     "seo": 1,
-    "perfTolerance": 0.09,
+    "perfTolerance": 0.03,
     "_perfRuns": [
-      0.99,
       1,
       0.99,
       1,
       0.99,
       0.97,
-      0.99,
-      0.93,
-      0.96,
-      0.98,
-      0.93,
-      0.91
+      0.98
     ],
-    "_n": 12
+    "_n": 6
   },
   "devlog": {
-    "performance": 0.84,
+    "performance": 0.89,
     "accessibility": 1,
     "seo": 1,
-    "perfTolerance": 0.15,
+    "perfTolerance": 0.1,
     "_perfRuns": [
-      0.91,
       0.99,
       0.95,
       0.9,
       0.9,
       0.98,
-      0.9,
-      0.86,
-      0.88,
-      0.89,
-      0.84,
-      0.85
+      0.89
     ],
-    "_n": 12
+    "_n": 6
   },
   "devlog_zero-dollar-media-stack": {
-    "performance": 0.56,
+    "performance": 0.66,
     "accessibility": 1,
     "seo": 1,
-    "perfTolerance": 0.23,
+    "perfTolerance": 0.13,
     "_perfRuns": [
-      0.79,
       0.78,
       0.77,
-      0.78,
       0.79,
       0.78,
-      0.74,
       0.66,
       0.68,
-      0.74,
-      0.56,
-      0.73
+      0.74
     ],
-    "_n": 12
+    "_n": 7
   }
 }
