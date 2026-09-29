@@ -7,6 +7,66 @@ Captured 2026-07-03 (issue 01). Every later gate compares against this.
 > site was before the site-v2 redesign. The values the gate reads today are in that section. Read
 > it first.
 
+## Lighthouse floors re-measured, 2026-09-29 (Windows box, first measure since site-v3)
+
+The perf floors in `lighthouse-summary.json` were pinned on 2026-08-15. Site-v3 then changed every
+gated page on 2026-08-23 (the aurora home in `a0e0833`, the display face, the bands, the journal
+move), and both site-v3 re-pins below left the floors untouched. So until today no floor had been
+measured against the site it gates. That is the "change that is supposed to move performance" the
+ratchet rule below allows a re-pin for; this is not a re-pin on a failure.
+
+Measured on the Windows 11 box: Lighthouse 13.5.0, HeadlessChrome 154, mobile form factor with
+simulated throttling, the gate's own invocation (`astro preview` on :4399, `npx --yes lighthouse`
+with `--headless --no-sandbox`, Chrome found by the gate's resolver). Every current-site run counts,
+in the order taken: a home probe and one `--full` run on 2026-09-26; on 2026-09-29 a night batch of
+five rounds (each round a fresh preview server and the five pages in the gate's order), one `--full`
+run, and a morning batch of five rounds. The site bytes were identical throughout (the commits
+between the two days touch only `verify/` and `CLAUDE.md`).
+
+| page | n | perf runs, in order | min | max | spread | pinned floor | a11y | seo |
+|---|---|---|---|---|---|---|---|---|
+| home | 13 | 0.69, 0.67 / 0.58, 0.78, 0.65, 0.66, 0.78 / 0.68 / 0.62, 0.61, 0.66, 0.54, 0.66 | 0.54 | 0.78 | 0.24 | 0.30 | 1.00 | 1.00 |
+| call | 12 | 0.99 / 1.00, 0.99, 1.00, 0.99, 0.97 / 0.99 / 0.93, 0.96, 0.98, 0.93, 0.91 | 0.91 | 1.00 | 0.09 | 0.82 | 1.00 | 1.00 |
+| devlog | 12 | 0.91 / 0.99, 0.95, 0.90, 0.90, 0.98 / 0.90 / 0.86, 0.88, 0.89, 0.84, 0.85 | 0.84 | 0.99 | 0.15 | 0.69 | 1.00 | 1.00 |
+| projects/deploylog | 12 | 0.96 / 0.83, 0.95, 0.96, 0.95, 0.94 / 0.98 / 0.82, 0.73, 0.94, 0.70, 0.73 | 0.70 | 0.98 | 0.28 | 0.42 | 1.00 | 1.00 |
+| devlog post | 12 | 0.79 / 0.78, 0.77, 0.78, 0.79, 0.78 / 0.74 / 0.66, 0.68, 0.74, 0.56, 0.73 | 0.56 | 0.79 | 0.23 | 0.33 | 1.00 | 1.00 |
+
+Same method as 2026-08-15: `performance` is the minimum, `perfTolerance` the spread floored at 0.02,
+so the floor is the minimum minus the spread. **a11y and seo read 1.00 on all 83 runs of 2026-09-29
+(the current site, the control and the aurora-off diagnostic below), so they stay absolute gates.**
+
+**Load is part of the sample, on purpose.** A first pin from the night batch alone (n=6, call 0.94,
+the post 0.75) failed on the very next run, the post at 0.74: a 0.02 band from six runs, the
+under-sample the 2026-08-15 section warns about. The morning batch then ran while other sessions
+worked the same machine: Lighthouse's `benchmarkIndex` fell to 963 at worst, 13 of its 25 runs under
+1500, against 1660 to 2542 in the night batch, and every page dropped together. This box is shared
+by design, so floors that ignore load fire whenever another session is busy. **Every floor above is
+a collapse detector:** it catches a page that falls well below its loaded minimum, never a slip of
+five or ten points. Before believing a red, read the other pages in the same run (the section below):
+if they all moved, the machine moved.
+
+**The machine is comparable; the pages changed.** Control: the site at `c5dba0b` (the 2026-08-15
+pin, pre-site-v3), built and measured on this box in five rounds, gave home 0.99 to 1.00,
+projects/deploylog 0.78 to 0.95, call 0.93 to 0.99, devlog 0.98 to 0.99 and the post 0.90 to 0.91,
+inside or next to the Arch ranges in the 2026-08-15 table below. Its one low call run (0.93) came in
+a round where `benchmarkIndex` fell to 1119. So the drop from the old floors is site-v3, not Windows.
+
+**Home, and why its floor carries the aurora (Marko, 2026-09-29, option A).** Forcing reduced motion
+(the poster instead of the WebGL canvas) put home at 0.96, 0.96, 0.96 with TBT about 59 ms. With the
+aurora running, headless Chrome renders the shader in software and TBT reaches 1.7 to 4.7 s whenever
+first paint lands early. Pinned as measured: the arm watches the page visitors get, and the aurora
+keeps its own byte budget and reduced-motion arm. Rejected option B was to run home's Lighthouse
+under reduced motion, which is tighter but stops measuring the aurora.
+
+**A tighter perf arm needs a load guard, not a narrower band.** Each report carries
+`environment.benchmarkIndex`; a gate that refused a perf verdict below a measured threshold could pin
+from quiet runs only. Not built here: it changes what the arm reports, so it is its own decision.
+
+**Separate finding, not fixed here:** home's CLS is 0.103 on every run, with or without the aurora.
+Lighthouse's `layout-shifts` audit names one shift on `section#hero > ul#receipts`, cause "Web font
+loaded" twice. It does not move the floors (the same value in every run) and is queued as its own
+task.
+
 ## Re-pin, 2026-08-23 (issues/16-captures-qa-cold-read-merge.md, site-v3 merged to main)
 
 `main-sha.txt` re-pinned to the site-v3 merge commit; `routes.txt` and `devlog-bodies.json` re-pinned from the dist built at that commit (25 routes, 5 posts; the bodies are unchanged by the merge). Expected gate after this: green on every arm including both `main untouched` arms.
