@@ -7,6 +7,9 @@
 //   node verify/gate.mjs --no-build reuse existing dist/
 //   node verify/gate.mjs --full     also run Lighthouse vs the 01 baseline (slow)
 //
+// Exit 0 GATE GREEN, 1 GATE FAILED, 2 GATE INCONCLUSIVE: no FAIL, but at least one Lighthouse
+// perf verdict was withheld because the machine was loaded (--full only; see BENCH_MIN).
+//
 // Checks: route parity, journal body equivalence (posts at /field-journal/<slug>),
 // token parity (light palette + night register + aurora ramp + brand type), weight budget (general + the aurora allowance), reduced-motion
 // render (only on a page carrying the aurora block), copy lint (every authored
@@ -121,8 +124,12 @@ const JOURNAL_DIR = 'field-journal';
 const FONT_MAP = { '--font-sans': 'body', '--font-mono': 'code' };
 
 const failures = [];
+const inconclusive = [];
 const ok = (name, msg) => console.log(`  PASS ${name}${msg ? ` (${msg})` : ''}`);
 const fail = (name, msg) => { failures.push(`${name}: ${msg}`); console.log(`  FAIL ${name}: ${msg}`); };
+// A verdict the gate could not reach, said out loud: neither a PASS it did not earn nor a FAIL
+// the page did not cause. Only the Lighthouse perf arm uses it, when the machine was loaded.
+const withheld = (name, msg) => { inconclusive.push(`${name}: ${msg}`); console.log(`  INCONCLUSIVE ${name}: ${msg}`); };
 // git through execFileSync, never a shell string: cmd.exe has no /dev/null, and a redirect
 // that fails there skips the command and runs the `||` fallback instead.
 const git = (...a) => execFileSync('git', a, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
@@ -739,17 +746,32 @@ if (doFull) {
     // their names so lighthouse-summary.json's floors still resolve; floors untouched.
     devlog: '/field-journal/', 'devlog_zero-dollar-media-stack': '/field-journal/zero-dollar-media-stack/',
   };
+  // A port the OS reports free, not a fixed 4399: on 2026-09-29 two checkouts ran Lighthouse at
+  // once, the second preview could not have 4399, and its Lighthouse measured the first
+  // checkout's build with no error. The port is released and handed to astro within
+  // milliseconds, and the identity check below catches the rare case where something takes it.
+  const LH_PORT = await new Promise((res, rej) => {
+    const probe = createServer();
+    probe.once('error', rej);
+    probe.listen(0, () => { const { port } = probe.address(); probe.close(() => res(port)); });
+  });
   // astro's own entry under this node, not `npx astro`: spawn cannot start npx.cmd on Windows,
   // and a shell wrapper would take the kill below while the preview server lived on.
-  const server = spawn(process.execPath, [join(ROOT, 'node_modules/astro/astro.js'), 'preview', '--port', '4399'], { cwd: ROOT, stdio: 'ignore' });
+  const server = spawn(process.execPath, [join(ROOT, 'node_modules/astro/astro.js'), 'preview', '--port', String(LH_PORT)], { cwd: ROOT, stdio: 'ignore' });
   try {
     await new Promise((r) => setTimeout(r, 4000));
-    for (const [name, path] of Object.entries(PAGES)) {
+    // Measure nothing until the server on LH_PORT is proven to serve THIS checkout's dist: the
+    // home page it returns must equal dist/index.html byte for byte.
+    const served = await fetch(`http://localhost:${LH_PORT}/`).then((r) => r.text()).catch((e) => `unreachable: ${e.message}`);
+    const own = served === readFileSync(join(ROOT, 'dist/index.html'), 'utf8');
+    if (!own) fail('lighthouse', `the preview server on :${LH_PORT} does not serve this checkout's dist/index.html (${served.slice(0, 60).replace(/\s+/g, ' ')}), so no page was measured`);
+    else console.log(`  NOTE preview on :${LH_PORT} serves this checkout's dist`);
+    for (const [name, path] of own ? Object.entries(PAGES) : []) {
       if (!BROWSER) { fail(`lighthouse ${name}`, NO_BROWSER); continue; }
       const out = join(tmpdir(), `lh-gate-${name}.json`);
       rmSync(out, { force: true }); // a report left by an earlier run must not stand in for this one
       try {
-        execSync(`npx --yes lighthouse "http://localhost:4399${path}" --quiet ` +
+        execSync(`npx --yes lighthouse "http://localhost:${LH_PORT}${path}" --quiet ` +
            `--chrome-flags="--headless --no-sandbox" --only-categories=performance,accessibility,seo ` +
            `--output=json --output-path="${out}"`,
            { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'], encoding: 'utf8', env: { ...process.env, CHROME_PATH: BROWSER } });
@@ -762,7 +784,9 @@ if (doFull) {
         if (!existsSync(out)) { fail(`lighthouse ${name}`, why); continue; }
         console.log(`  NOTE ${name}: ${why} (after writing its report, which is scored)`);
       }
-      const d = JSON.parse(readFileSync(out, 'utf8')).categories;
+      const lhr = JSON.parse(readFileSync(out, 'utf8'));
+      const d = lhr.categories;
+      const bench = lhr.environment?.benchmarkIndex;
       const b = baseline[name];
       // Per-page perf tolerance, set to the measured run-to-run spread rather than
       // a hopeful flat 0.02. Three back-to-back runs on 2026-08-15 put the devlog
@@ -773,8 +797,22 @@ if (doFull) {
       const tol = b.perfTolerance ?? 0.02;
       const perfOk = d.performance.score >= b.performance - tol;
       const rest = d.accessibility.score >= b.accessibility && d.seo.score >= b.seo;
-      const msg = `perf ${d.performance.score} (floor ${(b.performance - tol).toFixed(2)} = ${b.performance} - ${tol}) a11y ${d.accessibility.score} seo ${d.seo.score}`;
-      perfOk && rest ? ok(`lighthouse ${name}`, msg) : fail(`lighthouse ${name}`, msg);
+      const msg = `perf ${d.performance.score} (floor ${(b.performance - tol).toFixed(2)} = ${b.performance} - ${tol}) a11y ${d.accessibility.score} seo ${d.seo.score} bench ${Math.round(bench)}`;
+      // Load guard (2026-09-29, BASELINE.md top section). This box is shared, and perf falls on
+      // every page when other work loads it; `bench` is Lighthouse's CPU benchmark, taken once at
+      // the start of the run. The floors are pinned from runs at or above BENCH_MIN, so a run
+      // below it gets no perf verdict: the gate says INCONCLUSIVE instead of passing or failing
+      // a number it cannot read. a11y and seo do not move with load and are judged on every run.
+      // A report without a numeric benchmark is a FAIL: `undefined < BENCH_MIN` is false, so a
+      // renamed field would otherwise read as quiet and switch the guard off in silence.
+      // BENCH_MIN is this box's number (quiet runs 1660 to 2542, loaded 963 to 1448); a new
+      // machine re-measures it. It does not see load that starts mid-run, which is why the
+      // floors stay wide.
+      const BENCH_MIN = 1900;
+      if (!Number.isFinite(bench)) fail(`lighthouse ${name}`, `report has no numeric environment.benchmarkIndex (${bench}), so load cannot be told from a regression`);
+      else if (!rest) fail(`lighthouse ${name}`, msg);
+      else if (bench < BENCH_MIN) withheld(`lighthouse ${name}`, `perf not judged, benchmarkIndex ${Math.round(bench)} < ${BENCH_MIN} means a loaded machine; a11y and seo pass (${msg}). Re-run when idle.`);
+      else perfOk ? ok(`lighthouse ${name}`, msg) : fail(`lighthouse ${name}`, msg);
     }
   } finally { server.kill(); }
 }
@@ -786,7 +824,13 @@ function report() {
   if (failures.length) {
     console.log(`GATE FAILED (${failures.length}):`);
     for (const f of failures) console.log(`  - ${f}`);
+    for (const f of inconclusive) console.log(`  ~ ${f}`);
     process.exit(1);
+  }
+  if (inconclusive.length) {
+    console.log(`GATE INCONCLUSIVE (${inconclusive.length}), nothing failed:`);
+    for (const f of inconclusive) console.log(`  ~ ${f}`);
+    process.exit(2);
   }
   console.log('GATE GREEN');
   process.exit(0);
