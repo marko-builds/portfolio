@@ -85,6 +85,21 @@
   font-display: swap;
   src: url(/fonts/space-grotesk-600.woff2) format("woff2");
 }
+/* Body face, self-hosted 2026-09-29 for the home CLS (0.103): Geist v5 latin, the variable woff2
+   Google Fonts serves a Windows Chrome (29,400 B), weights 300 to 700 as the old css2 request
+   asked. Loaded through the async Google stylesheet, its @font-face only applied about 1 s in,
+   after first paint, so the hero CTAs painted in the fallback on one row and wrapped when Geist
+   swapped in (366 px of buttons in a 364 px row at 412 wide), dropping #receipts 61 px.
+   Declared here and preloaded in BaseLayout it is in before first paint, like Space Grotesk.
+   Latin only, like Space Grotesk: it holds every character the site renders today, and a
+   glyph outside it falls back to the next family in --font-sans. */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url(/fonts/geist-latin.woff2) format("woff2");
+}
 
 /* ─── Base ───────────────────────────────────────────────────────────── */
 /* Resolution invariance (Marko, 2026-08-24): one knob. 100vw/120 is exactly 16px at a

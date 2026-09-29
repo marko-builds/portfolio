@@ -91,19 +91,23 @@ const ogImageURL = ogImage
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Fonts -->
+    <!-- Fonts. Space Grotesk and Geist are self-hosted and declared in global.css, so a preload
+         has them in before first paint. JetBrains Mono still comes async from Google: it lands
+         after first paint and moves nothing when it swaps in (measured 2026-09-29, home at 412
+         wide). Geist left that stylesheet the same day, because its swap was the home CLS. -->
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/space-grotesk-600.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/geist-latin.woff2" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700&display=swap"
       onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700&display=swap"
         rel="stylesheet"
       />
     </noscript>
