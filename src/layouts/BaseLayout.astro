@@ -129,13 +129,23 @@ const ogImageURL = ogImage
          viewport come through the first callback. Counts against the unmarked budget. -->
     <script is:inline>document.documentElement.classList.add("js");var rvO=new IntersectionObserver(function(e){e.forEach(function(t){t.isIntersecting&&(t.target.classList.add("in"),rvO.unobserve(t.target))})},{threshold:.2,rootMargin:"0px 0px -18% 0px"});addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".reveal").forEach(function(e){rvO.observe(e)})})</script>
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-70DNV713QD"></script>
+    <!-- Google Analytics 4, production hostname only (2026-09-30). The tag used to load on every
+         host, so each `verify/gate.mjs --full` run counted: every Lighthouse pass is a fresh
+         mobile Chrome profile on localhost, and GA4 recorded each one as a new visitor on the
+         five gate pages. The loader is injected here rather than written as a <script src>, so a
+         dev server, a preview or a gate run sends nothing to Google. Counts against the
+         unmarked budget. -->
     <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-70DNV713QD');
+      if (location.hostname === 'markostankovic.org') {
+        var gaS = document.createElement('script');
+        gaS.async = true;
+        gaS.src = 'https://www.googletagmanager.com/gtag/js?id=G-70DNV713QD';
+        document.head.appendChild(gaS);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function(){dataLayer.push(arguments);};
+        gtag('js', new Date());
+        gtag('config', 'G-70DNV713QD');
+      }
     </script>
   </head>
 
