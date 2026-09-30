@@ -396,6 +396,9 @@ console.log('tokens:');
 // Remote <script src> is reported and NOT budgeted. Google Tag Manager and the
 // highlight.js CDN bundle are pre-existing deliberate choices; failing the gate
 // on them is a policy decision, not a re-baseline. Recorded in ticket 10.
+// Since 2026-09-30 Google Tag Manager is no <script src> in the HTML: BaseLayout
+// injects it from an inline block on the production hostname only, so that block
+// counts against the budget and the gtag.js URL no longer prints as a NOTE here.
 //
 // Carve-out, 2026-08-22 (map-site-v3 ticket 07): a block marked data-budget="aurora"
 // leaves the general budget and lands in the aurora allowance above. Everything unmarked
