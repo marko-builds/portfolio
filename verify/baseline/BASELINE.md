@@ -349,3 +349,9 @@ not branch vs the recorded absolute. a11y/seo stay absolute (they do not drift).
 Issue 06 adds a custom 404 page (src/pages/404.astro); GitHub Pages serves dist/404.html for
 unknown URLs automatically. Marko asked for the 404 template explicitly, so this is the one
 deliberate exception to "route sets identical": routes.txt now includes /404.html.
+
+## 2026-11-20: `/setup/` added to routes.txt
+
+One route appended by hand for the setup offer page (`src/pages/setup.astro`, copy pack
+`issues/copy-pack-setup-offer.md`). Nothing else re-pinned; the parity arm still fails on any
+other added or missing route.

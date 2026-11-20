@@ -4,6 +4,8 @@
 // plus the full-name wordmark in the display face (the wordmark hides below 480px,
 // where the name and five links do not fit), and the five labels
 // Artifacts · Field journal · Gadgets · Legend · Send word. `> ms` retired here.
+// 2026-11-20 (issues/copy-pack-setup-offer.md): plain labels on the selling surfaces,
+// Setup · Work · Field journal · Tools · About · Contact; the keys are unchanged.
 //
 // Two registers, one component. The default is the fixed light bar every inner page
 // carries. `register="night"` renders it in flow, inside the home hero band, in the
@@ -11,7 +13,7 @@
 //
 // The fold mark geometry is public/favicon.svg's path (the ticket 05 prototype that
 // generated it was deleted in slice 14); copied, not imported.
-type Key = "artifacts" | "journal" | "gadgets" | "legend" | "contact";
+type Key = "setup" | "artifacts" | "journal" | "gadgets" | "legend" | "contact";
 interface Props {
   active?: Key;
   register?: "light" | "night";
@@ -19,11 +21,12 @@ interface Props {
 const { active, register = "light" } = Astro.props;
 
 const links: { href: string; key: Key; label: string }[] = [
-  { href: "/#artifacts", key: "artifacts", label: "Artifacts" },
+  { href: "/setup", key: "setup", label: "Setup" },
+  { href: "/#artifacts", key: "artifacts", label: "Work" },
   { href: "/field-journal", key: "journal", label: "Field journal" },
-  { href: "/#gadgets", key: "gadgets", label: "Gadgets" },
-  { href: "/about", key: "legend", label: "Legend" },
-  { href: "/#contact", key: "contact", label: "Send word" },
+  { href: "/#gadgets", key: "gadgets", label: "Tools" },
+  { href: "/about", key: "legend", label: "About" },
+  { href: "/#contact", key: "contact", label: "Contact" },
 ];
 ---
 
