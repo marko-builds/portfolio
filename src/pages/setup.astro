@@ -1,0 +1,352 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteNav from "../components/SiteNav.astro";
+
+// The setup offer page. Copy: issues/copy-pack-setup-offer.md section 6, approved by Marko
+// 2026-11-20 with all four defaults (the LLC footer line, a working test command as a
+// prerequisite, the founding price only, a thirty-minute call). The example is
+// issues/ai-setup-offer-practice/case-study-draft.md in the monolith, approved the same day;
+// its opening paragraph is left out here because the lede above already says it.
+// Plain register on purpose (Marko, 2026-11-20): the expedition voice stays an accent on the
+// home bands, the field journal and the Legend, not on the page that asks for money.
+// Layout and night tokens follow call.astro, the page this one sends readers to.
+
+const PR_URL = "https://github.com/QuackbackIO/quackback/pull/1232";
+const FORK_URL = "https://github.com/marko-builds/quackback/tree/ai-setup";
+
+const pageTitle = "Claude Code, set up in your team's repo | Marko Stankovic";
+const pageDescription =
+  "A fixed-price Claude Code setup in your own repo: rules it reads, an interview before it plans, tests before code, and a review aimed at what agents get wrong. EUR 1,200, two weeks.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <style is:global>
+    /* Night register, the same body-level token remap as call.astro. */
+    body {
+      --color-bg: var(--color-night-bg);
+      --color-surface-veil: var(--color-night-surface);
+      --color-surface-raised: var(--color-night-surface);
+      --color-border: var(--color-night-border);
+      --color-border-strong: var(--color-night-border);
+      --color-text-primary: var(--color-night-text);
+      --color-text-secondary: var(--color-night-text-secondary);
+      --color-text-muted: var(--color-night-text-secondary);
+      --color-accent: var(--color-aurora-cyan);
+      --color-accent-dim: var(--color-night-border);
+      --color-grid: var(--color-night-border);
+      background-color: var(--color-night-bg);
+    }
+  </style>
+
+  <SiteNav active="setup" />
+
+  <main class="page">
+    <div class="head band">
+      <div class="frame">
+        <p class="entry-line">Setup</p>
+        <h1>Claude Code, set up in your team's repo</h1>
+        <p class="lede">
+          For small product teams already paying for Claude Code who get uneven results: some
+          days a clean fix, other days the wrong thing built well and tests that agree with its
+          own bug.
+        </p>
+        <a class="btn" href="/call">Book a call</a>
+      </div>
+    </div>
+
+    <div class="body band">
+      <div class="frame">
+        <section class="sec" id="what">
+          <h2>What you get</h2>
+          <ul class="list">
+            <li>
+              <strong>A <code>CLAUDE.md</code> and path rules</strong> written from an interview about
+              your codebase: your commands, your conventions, the mistakes an agent makes in your code.
+            </li>
+            <li>
+              <strong>The chain:</strong> an interview before anything is planned, a short PRD,
+              vertical-slice issues an agent can pick up, and test-first implementation.
+            </li>
+            <li>
+              <strong>A review pass</strong> with two reviewers: one checks the diff against your
+              rules, one checks it against its issue.
+            </li>
+            <li><strong>One ticket of yours</strong> taken through the whole chain, with me, in the final session.</li>
+            <li><strong>14 days of written follow-up</strong> after handover.</li>
+          </ul>
+          <p class="note">Everything is plain files in your repo. You own it when I leave.</p>
+        </section>
+
+        <section class="sec" id="how">
+          <h2>How it runs</h2>
+          <p class="prose">
+            Two weeks, remote. A kickoff interview about your code and your pain points, a read of
+            the codebase, the rules written and reviewed with you, the chain installed, one real
+            ticket from interview to merged, then handover. It runs on your team's Claude account,
+            never mine.
+          </p>
+        </section>
+
+        <section class="sec" id="price">
+          <h2>Price</h2>
+          <p class="prose">
+            <strong>EUR 1,200</strong>, the founding price, for a team that agrees to a case study
+            (named or anonymised, your choice, and you approve it before it goes anywhere). Half
+            upfront, half at handover.
+          </p>
+        </section>
+
+        <section class="sec" id="need">
+          <h2>You need</h2>
+          <ul class="list">
+            <li>Claude Code seats for the people who will use it.</li>
+            <li>A test command that runs. The test-first loop needs one.</li>
+          </ul>
+        </section>
+
+        <section class="sec" id="excluded">
+          <h2>Not included</h2>
+          <p class="prose">
+            Building features beyond the one ticket, security or compliance guarantees, tools other
+            than Claude Code, unattended agent loops, and support after the 14 days (that is a new
+            quote).
+          </p>
+        </section>
+
+        <section class="sec" id="example">
+          <h2>An example: Quackback</h2>
+          <p class="prose">
+            To show what that looks like, I ran it on Quackback, an open-source customer feedback
+            platform (TypeScript, Bun, 56 business-logic domains, about 790 merged PRs). No client,
+            no prior context, timed from the first minute.
+          </p>
+
+          <h3>What went into the repo</h3>
+          <ul class="list">
+            <li>
+              <strong><code>CLAUDE.md</code></strong>, written from reading the code and CI rather
+              than from a template: the exact commands CI runs, which tests need Postgres and which
+              run bare, where business logic and endpoints live, the commit style the last 500
+              commits follow.
+            </li>
+            <li>
+              <strong>Two path rules:</strong> one for server code (typed errors, constant-time
+              comparisons for secrets), one for tests (add the refused case next to every accepted
+              one when a fix touches security).
+            </li>
+            <li>
+              <strong>Five skills</strong> that take a change from idea to reviewed diff: an
+              alignment interview, a PRD, vertical-slice issues, test-first implementation, and a
+              two-reviewer diff review.
+            </li>
+          </ul>
+          <p class="prose">Two things the read turned up that a template would have missed:</p>
+          <ul class="list">
+            <li>
+              The repo's <code>.gitignore</code> excluded all of <code>.claude/</code>. Any shared
+              setup committed there would have stayed on one laptop with no error. The fix shares
+              rules and skills and keeps personal settings local. The installer now checks for this
+              on every repo.
+            </li>
+            <li>
+              Installed with a newer Bun than the one the repo pins, typecheck reported thousands of
+              errors in files nobody had touched. With the pinned version: zero. That is now one
+              line in <code>CLAUDE.md</code>, so no agent burns an afternoon on it.
+            </li>
+          </ul>
+
+          <h3>One open issue from their tracker, through the whole chain</h3>
+          <p class="prose">
+            Issue #818, reported by a user: a customer replies to a support email from Yahoo Mail,
+            Yahoo lowercases the reply address, the signed tag in it no longer matches, and the
+            reply opens a new conversation instead of threading.
+          </p>
+          <ul class="list">
+            <li>
+              <strong>Interview:</strong> three questions and a confirmation settled the approach
+              (compare case-insensitively, so every address already sent keeps working), how far to
+              fold, and what the PR would contain.
+            </li>
+            <li>
+              <strong>Tests first:</strong> each behaviour started as a failing test. The refusal
+              test was checked by removing the comparison from the verifier and watching it fail.
+            </li>
+            <li>
+              <strong>Review:</strong> the reviewer checking the diff against its issue found a real
+              bug in the first version. Full Unicode case folding turns the Kelvin sign into an
+              ASCII <code>k</code>, so a look-alike address could verify. It became a failing test,
+              then an ASCII-only fold.
+            </li>
+            <li>
+              <strong>Result:</strong> 89 tests pass, lint and typecheck clean, opened upstream as
+              <a class="inline-link" href={PR_URL} target="_blank" rel="noopener noreferrer">QuackbackIO/quackback#1232</a>.
+              The setup itself is on <a class="inline-link" href={FORK_URL} target="_blank" rel="noopener noreferrer">a public fork</a>.
+            </li>
+          </ul>
+
+          <h3>Time</h3>
+          <p class="prose">
+            51 minutes from first command to open PR, about 30 of them mine at the keyboard. With a
+            team, add the kickoff interview, a review of the rules with you, and one live session on
+            your own ticket. I expect most of the hours to go there; the first engagement's log will
+            show it.
+          </p>
+          <p class="metric">PR #1232: open, CLA signed, waiting on the maintainer.</p>
+        </section>
+
+        <section class="sec" id="book">
+          <h2>Book a call</h2>
+          <p class="prose">Thirty minutes about your repo and what goes wrong in it. English or Serbian.</p>
+          <a class="btn" href="/call">Book a call</a>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="band">
+    <div class="frame foot">
+      <p>&copy; 2026 Marko Stankovic. Services contracted and invoiced by Monolithiq LLC.</p>
+      <a class="foot-link" href="/">back to home</a>
+    </div>
+  </footer>
+</BaseLayout>
+
+<style>
+  /* Same frame, head, section and button rules as call.astro, so the two pages read as one
+     flow. Tokens are global.css's; nothing here is a literal. */
+  .band { padding-inline: 3.5rem; }
+  .frame { max-width: 62.5rem; margin-inline: auto; }
+
+  .head { padding-block: 8rem 3rem; }
+
+  .entry-line {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--color-text-muted);
+    margin: 0 0 1.25rem;
+  }
+
+  h1 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin: 0 0 1.25rem;
+  }
+  .lede {
+    color: var(--color-text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.625;
+    max-width: 42rem;
+    margin: 0 0 1.75rem;
+  }
+
+  .body { padding-block: 3.5rem 6rem; }
+
+  .sec > h2::before { content: none; }
+  .sec > h2 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem;
+  }
+  /* global.css sets h3 to mono unlayered; the display face is written here for that reason. */
+  .sec h3 {
+    font-family: var(--font-display, var(--font-sans));
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 2rem 0 0.75rem;
+  }
+  .sec h3::before { content: none; }
+  .sec + .sec {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .prose,
+  .note,
+  .list {
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 42em;
+    margin: 0 0 1rem;
+  }
+  .note { color: var(--color-text-primary); }
+  .list { padding-left: 1.2rem; display: grid; gap: 0.6rem; }
+  .list strong,
+  .prose strong { color: var(--color-text-primary); font-weight: 600; }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    color: var(--color-text-primary);
+  }
+
+  .metric {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+    margin: 1rem 0 0;
+  }
+
+  /* Buttons: outline on the night border, aurora cyan on hover, as on call.astro. */
+  .btn {
+    display: inline-block;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 0.375rem;
+    padding: 0.62rem 1.4rem;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .btn:hover {
+    color: var(--color-night-bg);
+    background: var(--color-aurora-cyan);
+    border-color: var(--color-aurora-cyan);
+  }
+
+  footer { border-top: 1px solid var(--color-border); }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 2rem;
+  }
+  .foot p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+  .foot-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .foot-link:hover { color: var(--color-text-secondary); }
+
+  @media (max-width: 720px) {
+    .band { padding-inline: 24px; }
+    .head { padding-block: 6.5rem 2.5rem; }
+    .body { padding-block: 2.5rem 4rem; }
+    .btn { min-height: 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .foot-link { transition: none; }
+  }
+</style>
