@@ -32,7 +32,7 @@ export const intros = {
 //   17 gh repo list marko-builds --visibility public --limit 100 --json isFork -q '[.[] | select(.isFork|not)] | length'
 // Receipt 3 links to the repositories tab with type=source so the page shows 17 (forks excluded).
 export const receipts = (postCount: number) => [
-  { n: String(postCount), label: "journal entries", note: "this site", href: "/field-journal" },
+  { n: String(postCount), label: "journal entries", note: "this site, Nov 2026", href: "/field-journal" },
   {
     n: "4",
     label: "plugins in the Omarchy (Linux desktop) marketplace",

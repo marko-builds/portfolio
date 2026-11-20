@@ -35,3 +35,4 @@
 /field-journal/zero-dollar-media-stack/
 /lab-notes/
 /projects/deploylog/
+/setup/
