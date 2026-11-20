@@ -29,6 +29,7 @@ const BOOKING_URL = "https://calendar.app.google/ZHVuzrAWxYp4YvhW9";
 const CONTACT_EMAIL = "contact@markostankovic.org";
 
 const purposes = [
+  "The Claude Code setup for my team",
   "Hiring for a role",
   "A project of mine",
   "Working on something together",
@@ -71,8 +72,8 @@ const pageDescription =
         </p>
         <h1>Book a call</h1>
         <p class="lede">
-          Pick a slot that suits you. Tell me what the expedition is about first and I
-          arrive with the map already open: the context read, the questions ready.
+          Pick a slot that suits you. If you tell me what the call is about first, I arrive
+          having read what you sent and with my questions ready.
         </p>
       </div>
     </div>
@@ -127,6 +128,7 @@ const pageDescription =
           <div class="field">
             <label for="cf-purpose">Purpose</label>
             <select id="cf-purpose" name="purpose">
+              <option value="">Choose one</option>
               {purposes.map((p) => <option value={p}>{p}</option>)}
             </select>
           </div>
@@ -202,7 +204,7 @@ const pageDescription =
     padding-block: 8rem 3rem;
   }
 
-  /* The mono entry line, "Send word · Book a call", same shape as the post pages
+  /* The mono entry line, "Contact · Book a call", same shape as the post pages
      and the DeployLog page; the band name is the way back to the home band. */
   .entry-line {
     font-family: var(--font-mono);

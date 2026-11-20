@@ -1,6 +1,6 @@
 # portfolio — markostankovic.org
 
-Astro 5 static site, Tailwind v4, deployed by Cloudflare Pages from `main`. An audience site in an
+Astro 5 static site, Tailwind v4, deployed by GitHub Pages from `main` (`.github/workflows/deploy.yml`; corrected 2026-11-20, the response headers say `server: GitHub.com`). An audience site in an
 expedition voice (PRD at `~/Projects/monolith/projects/portfolio-planning/issues/prd-site-v3-audience.md`): a night hero running the Borealis aurora live,
 alternating light and night bands, the Legend page, the approved copy on every surface. Recruiters
 are served as a floor, not the design target: what he does, one verifiable built thing, a way to

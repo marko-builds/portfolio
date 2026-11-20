@@ -8,21 +8,21 @@
 // - canvas data-aurora="canvas", poster <img> data-aurora="poster" (gate check 4b:
 //   under prefers-reduced-motion, or without WebGL2, the poster shows and the canvas
 //   stays display:none; the driver only flips .live after a context exists);
-// - cover mapping: the scene is composed in a REF_ASPECT (1.6) frame and scaled to cover
-//   the band, like the poster's object-fit: cover. A band narrower than 1.6 fits the
-//   height and crops the sides (the moon at x=0.78 falls out of frame on a phone,
-//   accepted in ticket 03). A wider band, which is every desktop (1920x720 is 2.67),
-//   fits the width and crops top and bottom: CROP_TOP (0.1) of the overflow comes off
-//   the sky, the rest off the ridge and water, which sit under the receipts and the veil
-//   anyway. 0.25 pushed the moon up across the nav's bottom border at 1920x1080 (measured
-//   2026-09-25 on the live page); at 0.1 it clears the nav. Until 2026-09-25 a wide band
-//   fitted the height too, which padded the scene sideways and drew the curtains at 60%
-//   of the band on a 1080p screen;
+// - mapping: the scene is composed in a REF_ASPECT (1.6) frame and always fits the band's
+//   HEIGHT, so sky, moon, curtains, ridge and water are in frame at every size. A band
+//   narrower than 1.6 crops the sides (the moon at x=0.78 falls out of frame on a phone,
+//   accepted in ticket 03). A wider band, which is every desktop, shows more sky to the
+//   sides: uv.x runs past 0..1 and the curtains, stars, ridge and water are free-running
+//   functions of uv.x, so they continue seamlessly; meteors start anywhere in -0.35..1.35.
+//   History: 2026-09-25 switched wide bands to a width-fit cover with CROP_TOP 0.1, which
+//   on a 2.66:1 band zoomed the scene ~1.7x and cropped the ridge and water off entirely
+//   (Marko's screen, 2026-11-20); reverted the same day after comparing three variants at
+//   2043x1038@1.25, 1920x1080, 1440x900 and 390x844 (Marko picked this one);
 // - the star grid is pinned to the reference framebuffer (1280x360: a 2560-wide hero at
 //   DPR 1 through the driver's 0.5 factor), not to `resolution` (2026-08-24): with the
 //   live framebuffer in the grid, star density and size changed per monitor — a 4K hero
 //   got ~4x more, smaller stars. The fixed constants render the same star field at every
-//   resolution. dither() and the ridge's 1.5-pixel edge (1.5 over the cover scale) stay
+//   resolution. dither() and the ridge's 1.5-pixel edge (1.5 over the band height) stay
 //   resolution-based on purpose: those are per-device-pixel effects, not composition;
 // - 30 fps cap, pauses when the tab is hidden, pointer-events: none;
 // - receipts as complete cards inside the band, veil bottom-only at 0.45.
@@ -88,7 +88,6 @@ uniform vec3 skyBase, skyAmp;
 out vec4 fragColor;
 const float WATERLINE = 0.82;
 const float REF_ASPECT = 1.6;
-const float CROP_TOP = 0.1;
 vec3 ramp(float p) {
 vec3 c = stop0.rgb;
 c = mix(c, stop1.rgb, clamp((p - stop0.w) / (stop1.w - stop0.w), 0.0, 1.0));
@@ -141,7 +140,7 @@ for (int i = 0; i < 2; i++) {
   float env = sqrt(sin(3.14159 * p));
   float theta = (0.20 + 0.25 * h3) * 3.14159;
   float sx = (h2 > 0.5) ? 1.0 : -1.0;
-  vec2 start = vec2((0.05 + 0.90 * fract(h1 * 7.31)) * aspect, 0.02 + 0.40 * fract(h3 * 5.17));
+  vec2 start = vec2((-0.35 + 1.70 * fract(h1 * 7.31)) * aspect, 0.02 + 0.40 * fract(h3 * 5.17));
   float dist = (0.25 + 0.25 * h2) * aspect;
   vec2 dir = normalize(vec2(cos(theta) * sx, sin(theta)));
   vec2 head = start + dir * dist * p;
@@ -196,7 +195,7 @@ float hcell = hash21(vec2(cell, 3.7));
 float th = (hcell < 0.12) ? 0.0 : 0.005 + 0.011 * hcell;
 float spike = 1.0 - abs(fract(fx * tw) * 2.0 - 1.0);
 float silTop = ridgeTop - th * spike;
-float px = 1.5 / max(resolution.y, resolution.x / REF_ASPECT);
+float px = 1.5 / resolution.y;
 float m = smoothstep(silTop - px, silTop + px, uv.y);
 if (m > 0.0) {
   float into = clamp((uv.y - ridgeTop) / max(1.0 - ridgeTop, 0.001), 0.0, 1.0);
@@ -207,9 +206,7 @@ if (m > 0.0) {
 return col;
 }
 void main() {
-float cs = max(resolution.y, resolution.x / REF_ASPECT);
-float vf = resolution.y / cs;
-vec2 uv = vec2(0.5 + (gl_FragCoord.x - 0.5 * resolution.x) / (cs * REF_ASPECT), CROP_TOP * (1.0 - vf) + (1.0 - gl_FragCoord.y / resolution.y) * vf);
+vec2 uv = vec2(0.5 + (gl_FragCoord.x - 0.5 * resolution.x) / (resolution.y * REF_ASPECT), 1.0 - gl_FragCoord.y / resolution.y);
 float t = time;
 vec3 col;
 if (uv.y >= WATERLINE) {
